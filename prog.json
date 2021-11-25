@@ -1,0 +1,89 @@
+{
+  "sys": "class",
+  "name": "test",
+  "vars": [
+    {
+      "sys": "init",
+      "name": "tmp1",
+      "val": {
+        "sys": "val",
+        "type": "int",
+        "v": 0
+      },
+      "access": "public"
+    },
+    {
+      "sys": "decl",
+      "name": "tmp2",
+      "type": "bool"
+    }
+  ],
+  "procs": [
+    {
+      "sys": "procs",
+      "name": "testProcedure",
+      "access": "public",
+      "args": [
+        {
+          "sys": "arg",
+          "name": "i1",
+          "type": "int"
+        }
+      ],
+      "lines": [
+        {
+          "sys": "asgn",
+          "left": "$this.tmp1",
+          "op": "=",
+          "right": "$i1"
+        },
+        {
+          "sys": "decl",
+          "name": "b1",
+          "type": "bool"
+        },
+        {
+          "sys": "asgn",
+          "left": "b1",
+          "op": "=",
+          "right": {
+            "sys": "bex",
+            "left": "$this.tmp1",
+            "op": "==",
+            "right": "$i1"
+          }
+        },
+        {
+          "sys": "if",
+          "bex": {
+            "sys": "bex",
+            "left": "$this.tmp1",
+            "op": ">",
+            "right": 0
+          },
+          "equ": "true",
+          "then": [
+            {
+              "sys": "ret",
+              "val": {
+                "sys": "val",
+                "type": "int",
+                "v": 1
+              }
+            }
+          ],
+          "else": [
+            {
+              "sys": "ret",
+              "val": {
+                "sys": "val",
+                "type": "int",
+                "v": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
