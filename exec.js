@@ -127,6 +127,16 @@ grammar.class_procs_lines = ["asgn", "if"];
 
 grammar.call_required = ["sys", "name", "args"];
 grammar.call_optional = [];
+grammar.op_asgn_init = ["="];
+grammar.type_base = ["int", "bool", "string"];
+
+var LOGGING = true;
+
+function wr(s) {
+	if(LOGGING === true) {
+		console.log(s);
+	}
+}
 
 function executeClass(prog) {
 	if(prog.hasOwnProperty("call") === true && prog.call !== null) {
@@ -137,16 +147,69 @@ function executeClass(prog) {
 			var progProcLines = progProc.lines;
 			for(var i = 0; i < progProcLines.length; i++) {
 				var progProcLine = progProcLines[i];
-				executeProcLine(progProcLine, callName, callArgs, prog);
+				executeProcLine(progProcLine, callName, callArgs, prog, progProc);
 			}
 		} else {
-			console.log("Error: executing class missing call function");
+			wr("Error: executing class missing call function");
 		}
 	}
 }
 
-function executeProcLine(procLine, callName, callArgs, prog) {
+function findVar(name, prog, proc, useProg) {
+	if(useProg === true) {
+		for(var i = 0; i < prog.vars.length; i++) {
+			if(prog.vars[i].name === name) {
+				return prog.vars[i];
+			}
+		}
+	} else {
+		for(var i = 0; i < proc.vars.length; i++) {
+			if(proc.vars[i].name === name) {
+				return proc.vars[i];
+			}
+		}		
+	}
+	return null;
+}
+
+function processVarString(varString, prog, proc) {
+	var thisStr = "$this.";
+	var nonThisStr = "$";
+	var idxThis = varString.indexOf(thisStr);
+	var idxDs = varString.indexOf(nonThisStr);
+	var varName = null;
+	var fnd = null;
 	
+	if(idxThis !== -1) {
+		varName = varString.substring(thisStr.length);
+		fnd = findVar(varName, prog, proc, true);
+	} else if(idxDs !== -1) {
+		varName = varString.substring(nonThisStr.length);
+		fnd = findVar(varName, proc, proc, false);
+	}
+	wr("processVarString: Found var name: " + varName);
+
+	if(fnd === null) {
+		wr("Error: Could not find variable with name, '" + varName + "'.");
+	}
+	return fnd;
+}
+
+function executeProcLine(procLine, callName, callArgs, prog, proc) {
+	if(procLine.sys === "asgn") {
+		var left = procLine.left;
+		var op = procLine.op;
+		var right = procLine.right;
+		var leftVar = processVarString(left, prog, proc);
+		var rightVar = processVarString(right, prog, proc);
+		if(rightVar === null) {
+			
+		} else if(leftVar === null) {
+			
+		} else if(leftVar.type === rightVar.type) {
+			
+		}
+	}
 }
 
 function findProc(prog, name) {
@@ -156,6 +219,14 @@ function findProc(prog, name) {
 		}
 	}
 	return null;
+}
+
+function validateOpAsgnInit(opString) {
+	if(grammar.op_asgn_init.indexOf(opString) === -1) {
+		return false;
+	} else {
+		return true;
+	}
 }
 
 function validateGrammarClass(prog) {
