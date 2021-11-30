@@ -17,7 +17,12 @@ var code = {
     {
       "sys": "decl",
       "name": "tmp2",
-      "type": "bool"
+	  "val": {
+		"sys": "val",
+		"type": "bool",
+		"v": false
+	  },
+	  "access": "public"
     }
   ],
   "procs": [
@@ -29,14 +34,22 @@ var code = {
         {
           "sys": "arg",
           "name": "i1",
-          "type": "int"
+		  "val": {
+			"sys": "val",
+			"type": "int",
+			"v": 0
+		  }
         }
       ],
 	  "vars": [
         {
           "sys": "decl",
           "name": "b1",
-          "type": "bool"
+		  "val": {
+			"sys": "val",
+			"type": "bool",
+			"v": false
+		  }
         }	  
 	  ],
       "lines": [
@@ -98,24 +111,20 @@ grammar.class_required = ["sys", "name", "access", "vars"];
 grammar.class_optional = ["procs", "call"];
 
 grammar.class_vars = ["init", "decl"];
-grammar.class_vars_required_init = ["sys", "name", "type", "val", "access"];
-grammar.class_vars_optional_init = [];
-grammar.class_vars_required_decl = ["sys", "name", "type", "access"];
-grammar.class_vars_optional_decl = [];
+grammar.class_vars_required = ["sys", "name", "val", "access"];
+grammar.class_vars_optional = [];
 
 grammar.class_procs = ["proc"];
-grammar.class_procs_required_proc = ["sys", "name", "access", "lines"];
-grammar.class_procs_optional_proc = [];
+grammar.class_procs_required = ["sys", "name", "access", "lines"];
+grammar.class_procs_optional = [];
 
 grammar.class_procs_args = ["arg"];
-grammar.class_procs_args_required_arg = ["sys", "name", "type"];
-grammar.class_procs_args_optional_arg = ["v"];
+grammar.class_procs_args_required = ["sys", "name", "val"];
+grammar.class_procs_args_optional = ["v"];
 
 grammar.class_procs_vars = ["init", "decl"];
-grammar.class_procs_vars_required_init = ["sys", "name", "type", "val"];
-grammar.class_procs_vars_optional_init = [];
-grammar.class_procs_vars_required_decl = ["sys", "name", "type"];
-grammar.class_procs_vars_optional_decl = [];
+grammar.class_procs_vars_required = ["sys", "name", "val"];
+grammar.class_procs_vars_optional = [];
 
 grammar.val_required = ["sys", "type", "v"];
 grammar.val_optional = [];
@@ -127,6 +136,7 @@ grammar.class_procs_lines = ["asgn", "if"];
 
 grammar.call_required = ["sys", "name", "args"];
 grammar.call_optional = [];
+
 grammar.op_asgn_init = ["="];
 grammar.type_base = ["int", "bool", "string"];
 
@@ -172,25 +182,42 @@ function findVar(name, prog, proc, useProg) {
 	return null;
 }
 
+function findArg(name, proc) {
+	for(var i = 0; i < proc.args.length; i++) {
+		if(proc.args[i].name === name) {
+			return proc.args[i];
+		}
+	}
+	return null;
+}
+
 function processVarString(varString, prog, proc) {
+	wr("Notice: processVarString: Processing var string, '" + varString + "'");
 	var thisStr = "$this.";
 	var nonThisStr = "$";
-	var idxThis = varString.indexOf(thisStr);
-	var idxDs = varString.indexOf(nonThisStr);
+	var idxThis = String(varString).indexOf(thisStr);
+	var idxDs = String(varString).indexOf(nonThisStr);
 	var varName = null;
 	var fnd = null;
 	
 	if(idxThis !== -1) {
 		varName = varString.substring(thisStr.length);
 		fnd = findVar(varName, prog, proc, true);
+
 	} else if(idxDs !== -1) {
+		//check proc vars
 		varName = varString.substring(nonThisStr.length);
-		fnd = findVar(varName, proc, proc, false);
+		fnd = findVar(varName, prog, proc, false);
+
+		if(fnd === null) {
+			//check proc args
+			fnd = findArg(varName, proc);
+		}
 	}
-	wr("processVarString: Found var name: " + varName);
+	wr("Notice: processVarString: Found var name, '" + varName + "'");
 
 	if(fnd === null) {
-		wr("Error: Could not find variable with name, '" + varName + "'.");
+		wr("Error: Could not find variable with name, '" + varName + "'");
 	}
 	return fnd;
 }
@@ -202,12 +229,32 @@ function executeProcLine(procLine, callName, callArgs, prog, proc) {
 		var right = procLine.right;
 		var leftVar = processVarString(left, prog, proc);
 		var rightVar = processVarString(right, prog, proc);
+		
 		if(rightVar === null) {
+			wr("Error: Right value of assignment statement is null");
+			return false;
 			
 		} else if(leftVar === null) {
+			wr("Error: Left value of assignment statement is null");			
+			return false;
 			
-		} else if(leftVar.type === rightVar.type) {
+		} else if(leftVar.val.type.trim() !== rightVar.val.type.trim()) {
+			wr("Error: Right value type and left value type do not match, left type, '" + leftVar.val.type + "', right type, '" + rightVar.val.type + "'");
+			return false;
 			
+		} else if(validateOpAsgnInit(op) === false) {
+			wr("Error: Operator is not valid, '" + op + "'");
+			return false;
+			
+		} else if(rightVar.val.v === null) {
+			wr("Error: The right value has not been assigned to and is null.");
+			return false;
+			
+		}
+		
+		if(op === "=") {
+			wr("Notice: executeProcLine: Setting '" + leftVar.name + "' to the value of '" + rightVar.name + "', value, " + rightVar.val.v);
+			leftVar.val.v = rightVar.val.v;
 		}
 	}
 }
@@ -241,11 +288,16 @@ function validateGrammarClassVars(prog) {
 	if(prog.hasOwnProperty("vars") === true) {
 		for(var i = 0; i < prog.vars.length; i++) {
 			var progVar = prog.vars[i];
-			if(progVar.hasOwnProperty("sys") === false || grammar.class_vars.indexOf(progVar.sys) === -1) {
-				console.log("Error: invalid var entry: " + JSON.stringify(progVar));
-				return false;
-			}
+			validateGrammarVar(progVar);
 		}
+	}
+	return true;
+}
+
+function validateGrammarVar(varEntry) {
+	if(varEntry.hasOwnProperty("sys") === false || grammar.class_vars.indexOf(varEntry.sys) === -1) {
+		console.log("Error: validateGrammarVar: Invalid var entry: " + JSON.stringify(varEntry));
+		return false;
 	}
 	return true;
 }
@@ -279,7 +331,7 @@ function validateGrammarClassProcs(prog) {
 		for(var i = 0; i < prog.procs.length; i++) {
 			var proc = prog.procs[i];
 			//proc
-			if(validateProperties(proc, grammar.class_procs_required_proc) === false) {
+			if(validateProperties(proc, grammar.class_procs_required) === false) {
 				console.log("Error: invalid proc entry: " + JSON.stringify(proc));
 				return false;
 				
@@ -292,7 +344,7 @@ function validateGrammarClassProcs(prog) {
 				if(proc.hasOwnProperty("args") === true) {
 					for(var i = 0; i < proc.args.length; i++) {
 						var procArg = proc.args[i];
-						if(validateProperties(procArg, grammar.class_procs_args_required_arg) === false) {
+						if(validateProperties(procArg, grammar.class_procs_args_required) === false) {
 							console.log("Error: invalid proc arg entry: " + JSON.stringify(procArg));
 							return false;
 							
@@ -308,14 +360,10 @@ function validateGrammarClassProcs(prog) {
 				if(proc.hasOwnProperty("vars") === true) {
 					for(var i = 0; i < proc.vars.length; i++) {
 						var procVar = proc.vars[i];						
-						if(procVar.hasOwnProperty("sys") === true && procVar.sys === "init" && validateProperties(procArg, grammar.class_procs_vars_required_init) === false) {
+						if(procVar.hasOwnProperty("sys") === true && validateProperties(procArg, grammar.class_procs_vars_required) === false) {
 							console.log("Error: invalid proc arg entry: " + JSON.stringify(procVar));
 							return false;
-							
-						} else if(procVar.hasOwnProperty("sys") === true && procVar.sys === "decs" && validateProperties(procArg, grammar.class_procs_vars_required_decl) === false) {
-							console.log("Error: invalid proc arg entry: " + JSON.stringify(procVar));							
-							return false;
-							
+														
 						} else if(procVar.hasOwnProperty("sys") === false || grammar.class_procs_vars.indexOf(procVar.sys) === -1) {
 							console.log("Error: invalid proc var entry: " + JSON.stringify(procVar));
 							return false;
@@ -343,5 +391,5 @@ function validateGrammarClassProcs(prog) {
 console.log("test");
 validateGrammarClass(prog);
 validateGrammarClassVars(prog);
-validateGrammarClassProcs(prog
-execClass(prog);
+validateGrammarClassProcs(prog);
+executeClass(prog);
