@@ -61,7 +61,13 @@ var code = {
         },
         {
           "sys": "asgn",
-          "left": "b1",
+          "left": "$this.tmp1",
+          "op": "=",
+          "right": {"sys":"decl", "name":"const", "val":{"sys":"val", "type":"int", "v":25}}
+        },		
+        {
+          "sys": "asgn",
+          "left": "$b1",
           "op": "=",
           "right": {
             "sys": "bex",
@@ -70,6 +76,8 @@ var code = {
             "right": "$i1"
           }
         },
+		
+		/*
         {
           "sys": "if",
           "bex": {
@@ -100,6 +108,8 @@ var code = {
             }
           ]
         }
+		*/
+		
       ]
     }
   ]
@@ -138,17 +148,107 @@ grammar.call_required = ["sys", "name", "args"];
 grammar.call_optional = [];
 
 grammar.op_asgn_init = ["="];
-grammar.type_base = ["int", "bool", "string"];
+grammar.op_bex = ["==", "!=", "<", "<=", ">", ">=", "&&", "||"];
+grammar.op_exp = ["+", "-", "/", "*"];
+grammar.type_base = ["float", "int", "bool", "string"];
 
 var LOGGING = true;
+var VAR_THIS = "$this.";
+var VAR_NON_THIS = "$";
 
+
+//UTIL FUNCTIONS
 function wr(s) {
 	if(LOGGING === true) {
 		console.log(s);
 	}
 }
 
-function executeClass(prog) {
+function isSysObjBex(obj) {
+	if(isSysObj(obj) === true && obj.sys === "bex") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function isSysObjExp(obj) {
+	if(isSysObj(obj) === true && obj.sys === "exp") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function isSysObjVal(obj) {
+	if(isSysObj(obj) === true && obj.sys === "val") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function isSysObjConst(obj) {
+	if(isSysObj(obj) === true && obj.sys === "decl" && obj.name === "const") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function isSysObj(obj) {
+	if(obj.hasOwnProperty("sys") === true) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function getSysObjType(obj) {
+	if(isSysObj(obj) === true) {
+		return obj.sys;
+	} else {
+		return null;
+	}
+}
+
+function isVarString(str) {
+	if(str.indexOf("$") !== -1) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function isVarThis(str) {
+	if(str.indexOf(VAR_THIS) !== -1) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function idxVarThis(str) {
+	return str.indexOf(VAR_THIS);
+}
+
+function isVarNonThis(str) {
+	if(str.indexOf(VAR_NON_THIS) !== -1) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function idxVarNonThis(str) {
+	return str.indexOf(VAR_NON_THIS);
+}
+
+
+//EXECUTION METHODS
+function executeProgram(prog) {
+	wr("");
+	wr("Executing program: " + prog.name);
 	if(prog.hasOwnProperty("call") === true && prog.call !== null) {
 		var callName = prog.call.name;
 		var callArgs = prog.call.args;
@@ -157,14 +257,109 @@ function executeClass(prog) {
 			var progProcLines = progProc.lines;
 			for(var i = 0; i < progProcLines.length; i++) {
 				var progProcLine = progProcLines[i];
-				executeProcLine(progProcLine, callName, callArgs, prog, progProc);
+				if(getSysObjType(progProcLine) === "asgn") {
+					executeProcedureLine(progProcLine, callName, callArgs, prog, progProc, i);
+				}
 			}
 		} else {
-			wr("Error: executing class missing call function");
+			wr("executeProgram: Error: Executing class missing call function");
+			return false;
 		}
+	} else {
+		wr("executeProgram: Notice: Executing class no call function");
+		return false;		
+	}
+	return true;
+}
+
+function executeProcedureLine(procLine, callName, callArgs, prog, proc, lineNum) {	
+	if(procLine.sys === "asgn") {
+		wr("");
+		wr("Execute procedure line number: " + lineNum + " with source: " + JSON.stringify(procLine));
+		
+		//handle assignment line
+		var left = procLine.left;
+		var op = procLine.op;
+		var right = procLine.right;
+		
+		var leftVar = null;
+		var leftVarType = null;
+		var rightVar = null;
+		var rightVarType = null;
+		
+		//left arg
+		if(isSysObj(left) === true) {
+			wr("executeProcLine: Error: Left-hand value cannot be an object");
+			return false;
+		
+		} else if(isVarString(left) === true) {
+			leftVar = processVarString(left, prog, proc);
+		
+		} else {
+			wr("executeProcLine: Error: Left-hand value must be a var string");
+			return false;
+		}
+		leftVarType = leftVar.sys;
+		
+		//right arg
+		if(isSysObj(right) === true) {
+			if(isSysObjBex(right) === true) {
+				rightVar = processBexObject(right, prog, proc);
+			} else if(isSysObjConst(right) === true) {
+				rightVar = right;				
+			}
+			
+		} else if(isVarString(right) === true) {
+			rightVar = processVarString(right, prog, proc);
+						
+		} else {
+			wr("executeProcLine: Error: Left-hand value must be a var string");
+			return false;
+		}
+		rightVarType = rightVar.sys;		
+		
+		wr("executeProcLine: Notice: Checking left: '" + JSON.stringify(leftVar));
+		wr("executeProcLine: Notice: Checking right: '" + JSON.stringify(rightVar));		
+		if(rightVar === null) {
+			wr("executeProcLine: Error: Right value of assignment statement is null");
+			return false;
+			
+		} else if(leftVar === null) {
+			wr("executeProcLine: Error: Left value of assignment statement is null");			
+			return false;
+		
+		} else if(validateOpAsgnInit(op) === false) {
+			wr("executeProcLine: Error: Operator is not valid, '" + op + "'");
+			return false;
+			
+		} else if(rightVar.val === null) {
+			wr("executeProcLine: Error: The right val is null.");
+			return false;
+			
+		} else if(leftVar.val === null) {
+			wr("executeProcLine: Error: The left val is null.");
+			return false;
+			
+		} else if(rightVar.val.v === null) {
+			wr("executeProcLine: Error: The right value has not been assigned to and is null.");
+			return false;
+			
+		} else if(leftVar.val.type.trim() !== rightVar.val.type.trim()) {
+			wr("executeProcLine: Error: Right value type and left value type do not match, left type, '" + leftVar.val.type + "', right type, '" + rightVar.val.type + "'");
+			return false;			
+		}
+		
+		if(op === "=") {
+			wr("executeProcLine: Notice: Setting '" + leftVar.name + "' to the value of '" + rightVar.name + "', value, " + rightVar.val.v);
+			leftVar.val.v = rightVar.val.v;
+		}
+	} else {
+		return false;
 	}
 }
 
+
+//FIND FUNCTIONS
 function findVar(name, prog, proc, useProg) {
 	if(useProg === true) {
 		for(var i = 0; i < prog.vars.length; i++) {
@@ -191,6 +386,17 @@ function findArg(name, proc) {
 	return null;
 }
 
+function findProc(prog, name) {
+	for(var i = 0; i < prog.procs.length; i++) {
+		if(prog.procs[i].name === name) {
+			return prog.procs[i];
+		}
+	}
+	return null;
+}
+
+
+//PROCESS METHODS
 function processVarString(varString, prog, proc) {
 	wr("Notice: processVarString: Processing var string, '" + varString + "'");
 	var thisStr = "$this.";
@@ -214,62 +420,140 @@ function processVarString(varString, prog, proc) {
 			fnd = findArg(varName, proc);
 		}
 	}
-	wr("Notice: processVarString: Found var name, '" + varName + "'");
+	wr("processVarString: Notice: Found var name, '" + varName + "'");
 
 	if(fnd === null) {
-		wr("Error: Could not find variable with name, '" + varName + "'");
+		wr("processVarString: Error: Could not find variable with name, '" + varName + "'");
 	}
+	
+	wr("processVarString: Notice: Returning '" + JSON.stringify(fnd) + "'");
 	return fnd;
 }
 
-function executeProcLine(procLine, callName, callArgs, prog, proc) {
-	if(procLine.sys === "asgn") {
-		var left = procLine.left;
-		var op = procLine.op;
-		var right = procLine.right;
-		var leftVar = processVarString(left, prog, proc);
-		var rightVar = processVarString(right, prog, proc);
-		
-		if(rightVar === null) {
-			wr("Error: Right value of assignment statement is null");
-			return false;
-			
-		} else if(leftVar === null) {
-			wr("Error: Left value of assignment statement is null");			
-			return false;
-			
-		} else if(leftVar.val.type.trim() !== rightVar.val.type.trim()) {
-			wr("Error: Right value type and left value type do not match, left type, '" + leftVar.val.type + "', right type, '" + rightVar.val.type + "'");
-			return false;
-			
-		} else if(validateOpAsgnInit(op) === false) {
-			wr("Error: Operator is not valid, '" + op + "'");
-			return false;
-			
-		} else if(rightVar.val.v === null) {
-			wr("Error: The right value has not been assigned to and is null.");
-			return false;
-			
+function processBexObject(bexObject, prog, proc) {
+	wr("processBexObject: Notice: Processing bex object, '" + JSON.stringify(bexObject) + "'");
+	var left = bexObject.left;
+	var op = bexObject.op;
+	var right = bexObject.right;
+
+	var leftVar = null;
+	var leftVarType = null;
+	var rightVar = null;
+	var rightVarType = null;
+	
+	//left arg
+	if(isSysObj(left) === true) {
+		if(isSysObjBex(left) === true) {
+			leftVar = processBexObject(left, prog, proc);
+		} else if(isSysObjConst(left) === true) {
+			leftVar = left;
 		}
 		
-		if(op === "=") {
-			wr("Notice: executeProcLine: Setting '" + leftVar.name + "' to the value of '" + rightVar.name + "', value, " + rightVar.val.v);
-			leftVar.val.v = rightVar.val.v;
-		}
+	} else if(isVarString(left) === true) {
+		leftVar = processVarString(left, prog, proc);
+		
+	} else {
+		wr("processBexObject: Error: Left-hand value is invalid");
+		return false;
 	}
+	leftVarType = leftVar.sys;
+	
+	//right arg
+	if(isSysObj(right) === true) {
+		if(isSysObjBex(right) === true) {
+			rightVar = processBexObject(right, prog, proc);
+		} else if(isSysObjConst(right) === true) {
+			rightVar = right;
+		}
+		
+	} else if(isVarString(right) === true) {
+		rightVar = processVarString(right, prog, proc);
+					
+	} else {
+		wr("processBexObject: Error: Right-hand value is invalid");
+		return false;
+	}
+	rightVarType = rightVar.sys;
+	
+	if(rightVar === null) {
+		wr("processBexObject: Error: Right value of assignment statement is null");
+		return false;
+		
+	} else if(leftVar === null) {
+		wr("processBexObject: Error: Left value of assignment statement is null");			
+		return false;
+	
+	} else if(validateOpBex(op) === false) {
+		wr("processBexObject: Error: Operator is not valid, '" + op + "'");
+		return false;
+		
+	} else if(rightVar.val === null) {
+		wr("processBexObject: Error: The right val is null");
+		return false;
+		
+	} else if(leftVar.val === null) {
+		wr("processBexObject: Error: The left val is null");
+		return false;
+		
+	} else if(rightVar.val.v === null) {
+		wr("processBexObject: Error: The right value has not been assigned to and is null");
+		return false;
+		
+	} else if(leftVar.val.v === null) {
+		wr("processBexObject: Error: The left value has not been assigned to and is null");
+		return false;		
+		
+	} else if(leftVar.val.type.trim() !== rightVar.val.type.trim()) {
+		wr("processBexObject: Error: Right value type and left value type do not match, left type, '" + leftVar.val.type + "', right type, '" + rightVar.val.type + "'");
+		return false;			
+	}
+	
+	wr("processBexObject: Notice: Comparing with: " + op);
+	var res = null;
+	var ret = null;
+	if(op === "==") {
+		res = (leftVar.val.v === rightVar.val.v);
+
+	} else if(op === "!=") {
+		res = (leftVar.val.v !== rightVar.val.v);
+		
+	} else if(op === "<") {
+		res = (leftVar.val.v < rightVar.val.v);
+		
+	} else if(op === ">") {
+		res = (leftVar.val.v > rightVar.val.v);		
+
+	} else if(op === "<=") {
+		res = (leftVar.val.v <= rightVar.val.v);
+
+	} else if(op === ">=") {
+		res = (leftVar.val.v >= rightVar.val.v);
+
+	} else if(op === "&&") {
+		res = (leftVar.val.v && rightVar.val.v);
+
+	} else if(op === "||") {
+		res = (leftVar.val.v || rightVar.val.v);
+	}
+	
+	ret = {"sys":"decl", "name":"processBexObject", "val":{"sys":"val", "type":"bool", "v":res}};
+	wr("processBexObject: Notice: Comparing '" + leftVar.val.v + "' to the value of '" + rightVar.val.v + "', value, (" + res + "), operator, '" + op + "'");
+	wr("processBexObject: Notice: Returning '" + JSON.stringify(ret));
+	return ret; 
 }
 
-function findProc(prog, name) {
-	for(var i = 0; i < prog.procs.length; i++) {
-		if(prog.procs[i].name === name) {
-			return prog.procs[i];
-		}
-	}
-	return null;
-}
 
+//VALIDATE FUNCTIONS
 function validateOpAsgnInit(opString) {
 	if(grammar.op_asgn_init.indexOf(opString) === -1) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function validateOpBex(opString) {
+	if(grammar.op_bex.indexOf(opString) === -1) {
 		return false;
 	} else {
 		return true;
@@ -388,8 +672,19 @@ function validateGrammarClassProcs(prog) {
 	return true;
 }
 
-console.log("test");
-validateGrammarClass(prog);
-validateGrammarClassVars(prog);
-validateGrammarClassProcs(prog);
-executeClass(prog);
+
+//MAIN EXEC
+var lres = false;
+console.log("STARTING JSON-PL EXEC:");
+
+lres = validateGrammarClass(prog);
+console.log("Validate Grammar: Class: " + lres);
+
+lres = validateGrammarClassVars(prog);
+console.log("Validate Grammar: Class Variables: " + lres);
+
+lres = validateGrammarClassProcs(prog);
+console.log("Validate Grammar: Class Procedures: " + lres);
+
+lres = executeProgram(prog);
+console.log("Execute Class: " + lres);
