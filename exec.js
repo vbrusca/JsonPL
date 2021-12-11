@@ -45,11 +45,11 @@ var code = {
         {
           "sys": "decl",
           "name": "b1",
-		  "val": {
-			"sys": "val",
-			"type": "bool",
-			"v": false
-		  }
+        "val": {
+         "sys": "val",
+         "type": "bool",
+         "v": false
+        }
         }	  
 	  ],
       "lines": [
@@ -69,12 +69,7 @@ var code = {
           "sys": "asgn",
           "left": "$b1",
           "op": "=",
-          "right": {
-            "sys": "bex",
-            "left": "$this.tmp1",
-            "op": "==",
-            "right": "$i1"
-          }
+          "right": {"sys": "bex", "left": "$this.tmp1", "op": "==", "right": "$i1"}
         },
 		
 		/*
