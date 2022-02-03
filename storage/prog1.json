@@ -1,0 +1,100 @@
+var code = {
+    "sys": "class",
+    "name": "test",
+    "access": "public",
+    "call": { "sys": "call", "name": "testProcedure", "args": [] },
+    "vars": [
+        {
+            "sys": "init",
+            "name": "tmp1",
+            "val": {
+                "sys": "val",
+                "type": "int",
+                "v": 0
+            },
+            "access": "public"
+        },
+        {
+            "sys": "decl",
+            "name": "tmp2",
+            "val": {
+                "sys": "val",
+                "type": "bool",
+                "v": false
+            },
+            "access": "public"
+        }
+    ],
+    "procs": [
+        {
+            "sys": "proc",
+            "name": "testProcedure",
+            "access": "public",
+            "args": [
+                {
+                    "sys": "arg",
+                    "name": "i1",
+                    "val": {
+                        "sys": "val",
+                        "type": "int",
+                        "v": 0
+                    }
+                }
+            ],
+            "vars": [
+                {
+                    "sys": "decl",
+                    "name": "b1",
+                    "val": {
+                        "sys": "val",
+                        "type": "bool",
+                        "v": false
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "sys": "asgn",
+                    "left": "$this.tmp1",
+                    "op": "=",
+                    "right": "$i1"
+                },
+                {
+                    "sys": "asgn",
+                    "left": "$this.tmp1",
+                    "op": "=",
+                    "right": { "sys": "decl", "name": "const", "val": { "sys": "val", "type": "int", "v": 25 } }
+                },
+                {
+                    "sys": "asgn",
+                    "left": "$i1",
+                    "op": "=",
+                    "right": { "sys": "decl", "name": "const", "val": { "sys": "val", "type": "int", "v": 25 } }
+                },
+                {
+                    "sys": "asgn",
+                    "left": "$b1",
+                    "op": "=",
+                    "right": { "sys": "bex", "left": "$this.tmp1", "op": "==", "right": "$i1" }
+                },
+                {
+                    "sys": "asgn",
+                    "left": "$b1",
+                    "op": "=",
+                    "right": { "sys": "bex", "left": { "sys": "decl", "name": "const", "val": { "sys": "val", "type": "int", "v": 25 } }, "op": "==", "right": "$i1" }
+                },
+                {
+                    "sys": "if",
+                    "left": "$b1",
+                    "op": "==",
+                    "right": { "sys": "decl", "name": "const", "val": { "sys": "val", "type": "bool", "v": true } },
+                    "if_lines": [
+
+                    ],
+                    "else_lines": [
+                    ]
+                }
+            ]
+        }
+    ]
+};
