@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--
+/*
+ * JSON Programming Language
+ * Victor G. Brusca 
+ * Created on 02/03/2022 1:57 PM EDT
+ * Licensed under GNU General Public License v3.0
+ */
+-->
+<html>
+   <head>
+      <title>JsonPL IDE v0.01</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script type="text/javascript" src="./exec.js"></script>
+      <script type="text/javascript">
+         var currentCursor = "";
+         var moveSlider = false;
+         var slider = null;
+         
+         function init() {
+            wr("init");
+            slider = document.getElementById('slider');            
+            // event.offsetX, event.offsetY gives the (x,y) offset from the edge of the canvas.
+            // Add the event listeners for mousedown, mousemove, and mouseup
+            slider.addEventListener('mousedown', e => {
+               x = e.offsetX;
+               y = e.offsetY;
+               wr("mousedown: " + x + ", " + y);
+            });
+
+            slider.addEventListener('mousemove', e => {
+               x = e.offsetX;
+               y = e.offsetY;
+               wr("mousemove: " + x + ", " + y);
+            });
+         }
+
+         /*
+         window.addEventListener('mouseup', e => {
+           if (isDrawing === true) {
+             drawLine(context, x, y, e.offsetX, e.offsetY);
+             x = 0;
+             y = 0;
+             isDrawing = false;
+           }
+         });   
+   
+         function OnSliderMouseMove(obj) {
+            wr("OnSliderMouseMove: " + JSON.stringify(obj));
+            //document.body.style.cursor = "crosshair";
+         }
+
+         function OnSliderMouseOut(obj) {
+            wr("OnSliderMouseOut: " + JSON.stringify(obj));
+            document.body.style.cursor = currentCursor;
+         }
+
+         function OnSliderMouseEnter(obj) {
+            wr("OnSliderMouseEnter: " + JSON.stringify(obj));
+            currentCursor = document.body.style.cursor;
+         }
+
+         function OnSliderMouseUp(obj) {
+            wr("OnSliderMouseUp");
+         }
+
+         function OnSliderMouseDown(obj) {
+            wr("OnSliderMouseDown");
+         } 
+         */      
+      </script>
+   </head>
+   <body style="padding: 4px;" onload="init()">
+      <div id="mainDiv" style="width: 800px; height: 700px; background-color: #cccccc;">
+         <div id="leftPane" style="float: left; background-color: #cccccc; width: 49%; height: 100%;">
+            
+         </div>
+         <div id="slider" style="float: left; background-color: #eeeeee; width: 2%; height: 100%;">
+            
+         </div>
+         <div id="rightPane" style="float: left; background-color: #bbbbbb; width: 49%; height: 100%;">
+            
+         </div>
+      </div>
+   </body>
+</html>
