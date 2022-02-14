@@ -1,9 +1,95 @@
 /*
  * JSON Programming Language
+ * EXEC JS
  * Victor G. Brusca 
  * Created on 02/03/2022 1:57 PM EDT
  * Licensed under GNU General Public License v3.0
  */
+function createObjProgram() {
+   return {
+      "sys": "class",
+      "name": "program1",
+      "access": "public",
+      "call": {},
+      "vars": [],
+      "procs": [],
+      "funcs": [],
+      "ret": {}
+   };
+}
+
+function createObjCall() {
+   return {
+      "sys": "call",
+      "name": "procedure1",
+      "args": [],
+      "ret": {}
+   };
+}
+
+function createObjFcall() {
+   return {
+      "sys": "fcall",
+      "name": "function1",
+      "arg": {},
+      "ret": {}
+   };
+}
+
+function createObjVal() {
+   return {
+      "sys": "val",
+      "type": "int",
+      "v": 0
+   };
+}
+
+function createObjRet() {
+   return {
+      "sys": "ret",
+      "name": "ret1",
+      "val": {}
+   };
+}
+
+function createObjArg() {
+   return {
+      "sys": "arg",
+      "name": "arg1",
+      "val": {}
+   };
+}
+
+function createObjDecl() {
+   return {
+      "sys": "decl",
+      "name": "decl1",
+      "val": {},
+      "access": "public"
+   };
+}
+
+function createObjInit() {
+   return {
+      "sys": "init",
+      "name": "init1",
+      "val": {},
+      "access": "public"
+   };
+}
+
+function createObjProc() {
+   return {
+      "sys": "proc",
+      "name": "proc1",
+      "access": "public",
+      "args": [],
+      "vars": [],
+      "ret": {},
+      "lines": []
+   };
+}
+
 var code = {
    "sys": "class",
    "name": "test",
@@ -154,7 +240,11 @@ var code = {
             }
          ]
       }
-   ]
+   ],
+   "funcs": [      
+   ],
+   "ret": {      
+   }
 };
 
 var prog = code;
@@ -786,34 +876,57 @@ function executeProcedureLineIf(procLine, callName, callArgs, prog, proc, lineNu
 
       //left arg
       if (isSysObj(left) === true) {
-         if (isSysObjBex(left) === true) {
+         if (isSysObjBex(right) === true) {
             leftVar = processBexObject(left, prog, proc);
+         } else if (isSysObjExp(right) === true) {
+            //TODO: Implement this
+            leftVar = processExpObject(left, prog, proc);
+            wr("executeProcedureLineAsgn: Error: processExpObject not implemented yet");
+            WR_PREFIX = prevPrefix;
+            return false;
          } else if (isSysObjConst(left) === true) {
             leftVar = left;
+         } else {         
+            wr("executeProcedureLineAsgn: Error: left value unsupported object");
+            WR_PREFIX = prevPrefix;
+            return false;
          }
       } else if (isVarString(left) === true) {
          leftVar = processVarString(left, prog, proc);
       } else {
-         wr("executeProcedureLineIf: Error: left value must be a $VAR");
+         wr("executeProcedureLineAsgn: Error: left value unsupported");
+         WR_PREFIX = prevPrefix;
          return false;
       }
-      leftVarType = leftVar.sys;
-
+      leftVarType = leftVar.sys;     
+     
+     
       //right arg
       if (isSysObj(right) === true) {
          if (isSysObjBex(right) === true) {
             rightVar = processBexObject(right, prog, proc);
+         } else if (isSysObjExp(right) === true) {
+            //TODO: Implement this
+            rightVar = processExpObject(right, prog, proc);
+            wr("executeProcedureLineAsgn: Error: right value unsupported object");
+            WR_PREFIX = prevPrefix;
+            return false;
          } else if (isSysObjConst(right) === true) {
             rightVar = right;
+         } else {         
+            wr("executeProcedureLineAsgn: Error: right value unsupported object");
+            WR_PREFIX = prevPrefix;
+            return false;
          }
       } else if (isVarString(right) === true) {
          rightVar = processVarString(right, prog, proc);
       } else {
-         wr("executeProcedureLineIf: Error: left value must be a $VAR");
+         wr("executeProcedureLineAsgn: Error: right value must be a $VAR");
+         WR_PREFIX = prevPrefix;
          return false;
       }
-      rightVarType = rightVar.sys;
-
+      rightVarType = rightVar.sys;     
+     
       if (rightVar === null) {
          wr("executeProcedureLineIf: Error: right value of assignment statement is null");
          return false;
@@ -942,13 +1055,25 @@ function executeProcedureLineAsgn(procLine, callName, callArgs, prog, proc, line
 
       //left arg
       if (isSysObj(left) === true) {
-         wr("executeProcedureLineAsgn: Error: left value cannot be an object");
-         WR_PREFIX = prevPrefix;
-         return false;
+         if (isSysObjBex(left) === true) {
+            leftVar = processBexObject(left, prog, proc);
+         } else if (isSysObjExp(left) === true) {
+            //TODO: Implement this
+            leftVar = processExpObject(left, prog, proc);
+            wr("executeProcedureLineAsgn: Error: processExpObject not implemented yet");
+            WR_PREFIX = prevPrefix;
+            return false;
+         } else if (isSysObjConst(left) === true) {
+            leftVar = left;
+         } else {
+            wr("executeProcedureLineAsgn: Error: left value unsupported object");
+            WR_PREFIX = prevPrefix;
+            return false;
+         }
       } else if (isVarString(left) === true) {
          leftVar = processVarString(left, prog, proc);
       } else {
-         wr("executeProcedureLineAsgn: Error: left value must be a $VAR");
+         wr("executeProcedureLineAsgn: Error: left value unsupported");
          WR_PREFIX = prevPrefix;
          return false;
       }
@@ -958,13 +1083,23 @@ function executeProcedureLineAsgn(procLine, callName, callArgs, prog, proc, line
       if (isSysObj(right) === true) {
          if (isSysObjBex(right) === true) {
             rightVar = processBexObject(right, prog, proc);
+         } else if (isSysObjExp(right) === true) {
+            //TODO: Implement this
+            rightVar = processExpObject(right, prog, proc);
+            wr("executeProcedureLineAsgn: Error: right value unsupported object");
+            WR_PREFIX = prevPrefix;
+            return false;
          } else if (isSysObjConst(right) === true) {
             rightVar = right;
+         } else {         
+            wr("executeProcedureLineAsgn: Error: right value unsupported object");
+            WR_PREFIX = prevPrefix;
+            return false;
          }
       } else if (isVarString(right) === true) {
          rightVar = processVarString(right, prog, proc);
       } else {
-         wr("executeProcedureLineAsgn: Error: left value must be a $VAR");
+         wr("executeProcedureLineAsgn: Error: right value unsupported");
          WR_PREFIX = prevPrefix;
          return false;
       }
@@ -1061,12 +1196,16 @@ function executeProcedureLineFor(procLine, callName, callArgs, prog, proc, lineN
             WR_PREFIX = prevPrefix;
             return false;
          } else if (isSysObjExp(start) === true) {
-            //process exp
-            wr("executeProcedureLineFor: Error: start value cannot be an EXP object");
+            //TODO: implement this
+            wr("executeProcedureLineFor: Error: start value cannot be an EXP object yet");
             WR_PREFIX = prevPrefix;
             return false;
          } else if (isSysObjConst(start) === true) {
             startVar = start;
+         } else {
+            wr("executeProcedureLineAsgn: Error: start value unsupported object");
+            WR_PREFIX = prevPrefix;
+            return false;
          }
       } else if (isVarString(start) === true) {
          startVar = processVarString(start, prog, proc);
@@ -1081,16 +1220,20 @@ function executeProcedureLineFor(procLine, callName, callArgs, prog, proc, lineN
       if (isSysObj(stop) === true) {
          if (isSysObjBex(stop) === true) {
             //error
-            wr("executeProcedureLineFor: Error: start value cannot be a BEX object");
+            wr("executeProcedureLineFor: Error: stop value cannot be a BEX object");
             WR_PREFIX = prevPrefix;
             return false;
          } else if (isSysObjExp(stop) === true) {
-            //process exp
-            wr("executeProcedureLineFor: Error: start value cannot be an EXP object");
+            //TODO: implement this
+            wr("executeProcedureLineFor: Error: stop value cannot be an EXP object");
             WR_PREFIX = prevPrefix;
             return false;
          } else if (isSysObjConst(stop) === true) {
             stopVar = stop;
+         } else {
+            wr("executeProcedureLineAsgn: Error: stop value unsupported object");
+            WR_PREFIX = prevPrefix;
+            return false;
          }
       } else if (isVarString(stop) === true) {
          stopVar = processVarString(stop, prog, proc);
@@ -1109,12 +1252,16 @@ function executeProcedureLineFor(procLine, callName, callArgs, prog, proc, lineN
             WR_PREFIX = prevPrefix;
             return false;
          } else if (isSysObjExp(inc) === true) {
-            //process exp
+            //TODO: implement this
             wr("executeProcedureLineFor: Error: inc value cannot be an EXP object");
             WR_PREFIX = prevPrefix;
             return false;
          } else if (isSysObjConst(inc) === true) {
             incVar = inc;
+         } else {
+            wr("executeProcedureLineFor: Error: inc value unsupported object");
+            WR_PREFIX = prevPrefix;
+            return false;
          }
       } else if (isVarString(inc) === true) {
          incVar = processVarString(inc, prog, proc);
@@ -1200,7 +1347,6 @@ function executeProcedureLineFor(procLine, callName, callArgs, prog, proc, lineN
       
       wr("For Start: " + lineNum + "================================================================");
       for (var i = startVar.val.v; i < stopVar.val.v; i += incVar.val.v) {
-         //wr("executeProcedureLineFor: loop iteration: " + i);
          obj.val.v = i;
          wr("");
          wr("Iteration Start: " + i + "================================================================");
@@ -1259,16 +1405,20 @@ function executeProcedureLineFuncCall(procLine, callName, callArgs, prog, proc, 
       if (isSysObj(name) === true) {
          if (isSysObjBex(name) === true) {
             //error
-            wr("executeProcedureLineFuncCall: Error: name value can't ba a BEX object");
+            wr("executeProcedureLineFuncCall: Error: name value can't be a BEX object");
             WR_PREFIX = prevPrefix;
             return false;
          } else if(isSysObjExp(name) === true) {
-            //error
-            wr("executeProcedureLineFuncCall: Error: name value can't ba a EXP object");            
+            //TODO: implement this
+            wr("executeProcedureLineFuncCall: Error: name value can't be a EXP object");            
             WR_PREFIX = prevPrefix;
             return false;
          } else if (isSysObjConst(name) === true) {
             nameVar = name;
+         } else {
+            wr("executeProcedureLineFuncCall: Error: name value unsupported object");
+            WR_PREFIX = prevPrefix;
+            return false;
          }
       } else if (isVarString(name) === true) {
          nameVar = processVarString(name, prog, proc);
@@ -1305,7 +1455,7 @@ function executeProcedureLineFuncCall(procLine, callName, callArgs, prog, proc, 
                WR_PREFIX = prevPrefix;
                return false;
             } else if (isSysObjExp(arg) === true) {
-               //process exp
+               //TODO: implement this
                wr("executeProcedureLineFuncCall: Error: start value cannot be an EXP object");
                WR_PREFIX = prevPrefix;
                return false;

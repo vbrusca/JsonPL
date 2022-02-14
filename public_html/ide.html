@@ -13,6 +13,7 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <script type="text/javascript" src="./exec.js"></script>
+      <script type="text/javascript" src="./ide.js"></script>      
       <script type="text/javascript">
          var currentCursor = "";
          var moveSlider = false;
@@ -20,6 +21,7 @@
          
          function init() {
             wr("init");
+            /*
             slider = document.getElementById('slider');            
             // event.offsetX, event.offsetY gives the (x,y) offset from the edge of the canvas.
             // Add the event listeners for mousedown, mousemove, and mouseup
@@ -34,6 +36,7 @@
                y = e.offsetY;
                wr("mousemove: " + x + ", " + y);
             });
+            */
          }
 
          /*
@@ -68,20 +71,22 @@
          function OnSliderMouseDown(obj) {
             wr("OnSliderMouseDown");
          } 
-         */      
+         */
       </script>
    </head>
    <body style="padding: 4px;" onload="init()">
       <div id="mainDiv" style="width: 800px; height: 700px; background-color: #cccccc;">
-         <div id="leftPane" style="float: left; background-color: #cccccc; width: 49%; height: 100%;">
+         <div id="leftPane" style="float: left; background-color: #cccccc; width: 100%; height: 100%;">
             
          </div>
+         <!--
          <div id="slider" style="float: left; background-color: #eeeeee; width: 2%; height: 100%;">
             
          </div>
          <div id="rightPane" style="float: left; background-color: #bbbbbb; width: 49%; height: 100%;">
             
          </div>
+         -->
       </div>
    </body>
 </html>
