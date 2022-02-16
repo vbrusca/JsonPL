@@ -5,7 +5,7 @@
  * Created on 02/12/2022 4:41 PM EDT
  * Licensed under GNU General Public License v3.0
  */
-var rows = [];
+var rows = {};
 var row = -1;
 
 function cont(arr, elm) {
@@ -19,51 +19,101 @@ function cont(arr, elm) {
 
 function createHtmlForm(ideObj, indent, cfg) {
    row++;
+   cfg.row = row;
    var props = Object.keys(ideObj);
-   var offsetY = 0;
-   var offsetX = 0;
-   var line = 0;
-   var len = props.length;
-   
+  
    //Add open/close support to the main form
-   var main = createHtmlDiv(0, cfg);
-   main.style.clear = "both";
-   //main.style.width = "100%";
+   var dvMain = createHtmlDiv(0, cfg);
+   dvMain.style.clear = "both";
+   dvMain.id = "mainDiv_" + row;
+   //dvMain.style.width = "100%";
 
    var attr = ideObj.lookup.properName;
-   var dv = createHtmlDiv(indent, cfg);
+   var dvName = createHtmlDiv(indent, cfg);
+   dvName.id = "mainNameDiv_" + row;
    //dv.style.width = "100%";
+   dvName.style.clear = "both";
    
+   var dvInner = createHtmlDiv(indent, cfg);   
+   dvInner.id = "mainInnerDiv_" + row;
    var span = createHtmlSpan(attr, cfg);
-   dv.appendChild(span);
-   dv.appendChild(createHtmlBr(cfg));
-   main.appendChild(dv);
+
+   dvInner.appendChild(span);
+   dvInner.appendChild(createHtmlBr(cfg));
+   dvName.appendChild(dvInner);   
+   dvMain.appendChild(dvName);
+   
+   var dvOpen = createHtmlDiv(0, cfg);
+   dvOpen.id = "mainOpenDiv_" + row;
+   dvOpen.style.clear = "both";
+
+   var dvClosed = createHtmlDiv(0, cfg);
+   dvClosed.id = "mainCloseDiv_" + row;            
+
+   dvClosed.appendChild(createHtmlSpan("+", cfg));
+   dvClosed.style.display = "none";   
+   //dvClosed.style.clear = "both";
+   
+   this.hndl = function(e) {
+      wr("Click handler");
+      if(this.closed.style.display === "none") {
+         this.open.style.display = "none";
+         this.closed.style.display = "";
+      } else {
+         this.open.style.display = "";
+         this.closed.style.display = "none";                  
+      }
+   }.bind({"row": row, "elem": sel, "open": dvOpen, "closed": dvClosed});
+   dvName.addEventListener('click', hndl, false);            
+
+   this.hndl = function(e) {
+      wr("Click handler");
+      if(this.closed.style.display === "none") {
+         this.open.style.display = "none";
+         this.closed.style.display = "";
+      } else {
+         this.open.style.display = "";
+         this.closed.style.display = "none";                  
+      }
+   }.bind({"row": row, "elem": sel, "open": dvOpen, "closed": dvClosed});            
+   dvClosed.addEventListener('click', hndl, false);  
+            
+   dvMain.appendChild(dvClosed);
+   dvMain.appendChild(dvOpen);
+   
+   row++;
+   cfg.row = row;   
    
    for(var p in props) {
       attr = props[p];
       if(attr !== "lookup") {
          if(cont(ideObj.lookup.visible, attr) === true) {
-            var dvMain = createHtmlDiv(indent, cfg);
+            var dvRowMain = createHtmlDiv(indent, cfg);
             if(row % 2 === 0) {
-               dvMain.style.backgroundColor = "#cccccc";
+               dvRowMain.style.backgroundColor = "#cccccc";
             } else {
-               dvMain.style.backgroundColor = "#eeeeee";               
+               dvRowMain.style.backgroundColor = "#eeeeee";               
             }
             
-            dvMain.style.border = "1px solid black";
-            dvMain.style.width = "100%";            
-            dvMain.id = "row" + row;
-            dvMain.style.clear = "both";
+            dvRowMain.style.border = "1px solid black";
+            dvRowMain.style.width = "100%";            
+            dvRowMain.id = "rowDiv_" + row;
+            dvRowMain.style.clear = "both";
             
-            var dvName = createHtmlDiv(0, cfg);
+            var dvRowName = createHtmlDiv(0, cfg);
+            dvRowName.id = "nameDiv_" + row;
             span = createHtmlSpan(attr + ":", cfg);
-            dvName.appendChild(span);
-            dvMain.appendChild(dvName);
+            dvRowName.appendChild(span);
+            dvRowMain.appendChild(dvRowName);
             
-            var dvOpen = createHtmlDiv(0, cfg);
-            var dvClosed = createHtmlDiv(0, cfg);
-            dvClosed.appendChild(createHtmlSpan("+", cfg));
-            dvClosed.style.display = "none";
+            var dvRowOpen = createHtmlDiv(0, cfg);
+            dvRowOpen.id = "openDiv_" + row;
+            
+            var dvRowClosed = createHtmlDiv(0, cfg);
+            dvRowClosed.id = "closeDiv_" + row;            
+            
+            dvRowClosed.appendChild(createHtmlSpan("+", cfg));
+            dvRowClosed.style.display = "none";
             
             this.hndl = function(e) {
                wr("Click handler");
@@ -74,8 +124,8 @@ function createHtmlForm(ideObj, indent, cfg) {
                   this.open.style.display = "";
                   this.closed.style.display = "none";                  
                }
-            }.bind({"row": row, "elem": sel, "open": dvOpen, "closed": dvClosed});
-            dvName.addEventListener('click', hndl, false);            
+            }.bind({"row": row, "elem": sel, "open": dvRowOpen, "closed": dvRowClosed});
+            dvRowName.addEventListener('click', hndl, false);            
 
             this.hndl = function(e) {
                wr("Click handler");
@@ -86,26 +136,24 @@ function createHtmlForm(ideObj, indent, cfg) {
                   this.open.style.display = "";
                   this.closed.style.display = "none";                  
                }
-            }.bind({"row": row, "elem": sel, "open": dvOpen, "closed": dvClosed});            
-            dvClosed.addEventListener('click', hndl, false);            
+            }.bind({"row": row, "elem": sel, "open": dvRowOpen, "closed": dvRowClosed});            
+            dvRowClosed.addEventListener('click', hndl, false);            
 
-            dvMain.appendChild(dvClosed);
-            dvMain.appendChild(dvOpen);
-            dv = dvOpen;
-            
-            //make this full data driven
+            dvRowMain.appendChild(dvRowClosed);
+            dvRowMain.appendChild(dvRowOpen);
+                        
+            wr("=============================:" + ideObj.lookup[attr]);
             if(ideObj.lookup[attr] === "string") {
-               dv.appendChild(createHtmlInputText(ideObj[attr], cfg));
+               //TODO: Add event call back to update ide data
+               //bind attr and ideObj
+               dvRowOpen.appendChild(createHtmlInputText(ideObj[attr], cfg));
 
             } else if(ideObj.lookup[attr].indexOf("obj::sys::val") === 0) {               
-               dv.appendChild(createHtmlForm(createObjVal(), (indent + 1), cfg));
+               dvRowOpen.appendChild(createHtmlForm(createObjVal(), (indent + 1), cfg));
                
             } else if(ideObj.lookup[attr].indexOf("obj::sys::ret") === 0) {               
-               dv.appendChild(createHtmlForm(createObjRet(), (indent + 1), cfg));               
-               
-            //} else if(ideObj.lookup[attr].indexOf("obj::sys::") === 0) {
-            //   dv.appendChild(createHtmlInputSelect(cfg));   
-               
+               dvRowOpen.appendChild(createHtmlForm(createObjRet(), (indent + 1), cfg));               
+                              
             } else if(cont(ideObj.lookup.add, attr) === true) {
                wr("Found data type for add: " + ideObj.lookup[attr]);
                if(ideObj.lookup[attr].indexOf("array::") !== -1) {
@@ -116,13 +164,18 @@ function createHtmlForm(ideObj, indent, cfg) {
                   var v = null;                  
                   var sdv = createHtmlDiv(0, cfg);                  
                   var sel = createHtmlInputSelect(cfg);
-                  sel.setAttribute("id", "add" + row);
+                  sel.setAttribute("id", "add_" + row);
                   sel.setAttribute("data", "add");                  
                   
                   for(var i = 0; i < vals.length; i++) {
                      if(vals[i].indexOf("=") !== -1) {
                         v = vals[i].split("=");
-                        addOption(sel, v[1], v[0], cfg);
+                        if(v[1].indexOf("^") === -1) {
+                           addOption(sel, v[1], v[0], cfg);                           
+                        } else {
+                           v = v[1].split("^");
+                           addOption(sel, v[0], v[1], cfg);
+                        }
                      } else {
                         v = vals[i];
                         addOption(sel, v, v, cfg);
@@ -130,39 +183,47 @@ function createHtmlForm(ideObj, indent, cfg) {
                   }
                   
                   sdv.appendChild(sel);
-                  dv.appendChild(sdv);                  
+                  dvRowOpen.appendChild(sdv);                  
                   
                   this.hndl = function(e) {
                      var selOpt = this.elem.options[this.elem.selectedIndex];
                      var data = this.elem.getAttribute("data");
                      if(data === "add") {
                         if(selOpt.value === "obj::sys::decl") {
-                           this.parent.appendChild(createHtmlForm(createObjDecl(), (this.indent + 1), this.cfg));
+                           this.parent.appendChild(createHtmlForm(createObjDecl(), this.indent, this.cfg));
+                           
                         } else if(selOpt.value === "obj::sys::init") {
-                           this.parent.appendChild(createHtmlForm(createObjInit(), (this.indent + 1), this.cfg));
+                           this.parent.appendChild(createHtmlForm(createObjInit(), this.indent, this.cfg));
+                        
                         } else if(selOpt.value === "obj::sys::proc") {
-                           this.parent.appendChild(createHtmlForm(createObjProc(), (this.indent + 1), this.cfg));
+                           this.parent.appendChild(createHtmlForm(createObjProc(), this.indent, this.cfg));
+                        
                         } else if(selOpt.value === "obj::sys::func") {
-                           this.parent.appendChild(createHtmlForm(createObjFunc(), (this.indent + 1), this.cfg));
+                           this.parent.appendChild(createHtmlForm(createObjFunc(), this.indent, this.cfg));
+                        
                         } else if(selOpt.value === "obj::sys::asign") {
-                           this.parent.appendChild(createHtmlForm(createObjAsign(), (this.indent + 1), this.cfg));                           
+                           this.parent.appendChild(createHtmlForm(createObjAsign(), this.indent, this.cfg));                           
+                        
                         }
+                        //TODO: Check for type
                      }
                      wr(this.row + " Selected Index: " + this.elem.selectedIndex + " Row: " + row + " Val: " + selOpt.value + " Txt: " + selOpt.text + " Data: " + this.elem.getAttribute("data")); 
                   
-                  }.bind({"row": row, "elem": sel, "parent": dv, "cfg": cfg, "indent": indent});
+                  }.bind({"row": row, "elem": sel, "parent": dvRowMain, "cfg": cfg, "indent": (indent + 1)});
                   sel.addEventListener('change', hndl, false);            
                }
             }
             
-            main.appendChild(dvMain);
-            rows[row] = {"div": dvMain, "ideObj": ideObj};
+            dvOpen.appendChild(dvRowMain);
+            dvMain.appendChild(dvOpen);
+            rows[dvRowMain.id] = {"div": dvRowMain, "ideObj": ideObj};
             row++;
+            cfg.row = row;
          }
       }
    }
    
-   return main;
+   return dvMain;
 }
 
 function createHtmlSpan(txt, cfg) {
@@ -206,13 +267,14 @@ function createHtmlBr(cfg) {
 }
 
 function createHtmlDiv(indent, cfg) {
-   var ret = document.createElement("div");
    var indt = (indent * 30) + 4;
+   var ret = document.createElement("div");
+   ret.id = "div_" + cfg.row;
    ret.setAttribute("style", "float: left; margin: " + cfg.margin + "px; width: auto;");
    
    var child = document.createElement("div");
-   child.style.width = indt;
-   child.setAttribute("style", "float: left; margin: " + cfg.margin + "px;");   
+   child.id = "spacerDiv_" + cfg.row;
+   child.setAttribute("style", "float: left; margin: " + cfg.margin + "px; width: " + indt + "px;");   
 
    ret.appendChild(child);
    return ret;
@@ -291,11 +353,11 @@ function createObjVal() {
       "lookup": {
          "properName": "Value Obj",
          "sys": "string",
-         "type": "array::{string=Integer,string=Boolean,string=String,string=Float}",
+         "type": "array::{string=Integer^int,string=Boolean^bool,string=String^string,string=Float^float}",
          "v": "string",
          "visible": ["type", "v"],
          "invisible": ["sys"],
-         "add": []
+         "add": ["type"]
       }      
    };
 }
