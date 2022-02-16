@@ -18,9 +18,17 @@
          var currentCursor = "";
          var moveSlider = false;
          var slider = null;
+         var mainDiv = null;
+         var indent = 0;
+         var cfg = {};
+         cfg.margin = 4;
+         cfg.fontSize = 12;
          
          function init() {
             wr("init");
+            mainDiv = document.getElementById('leftPane');
+            mainDiv.appendChild(createHtmlForm(createObjProgram(), indent, cfg));
+            
             /*
             slider = document.getElementById('slider');            
             // event.offsetX, event.offsetY gives the (x,y) offset from the edge of the canvas.
@@ -76,7 +84,7 @@
    </head>
    <body style="padding: 4px;" onload="init()">
       <div id="mainDiv" style="width: 800px; height: 700px; background-color: #cccccc;">
-         <div id="leftPane" style="float: left; background-color: #cccccc; width: 100%; height: 100%;">
+         <div id="leftPane" style="margin: 4px; float: left; background-color: #cccccc; width: 100%; height: 100%; overflow: auto;">
             
          </div>
          <!--
