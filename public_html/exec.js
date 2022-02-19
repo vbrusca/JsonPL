@@ -5,11 +5,11 @@
  * Created on 02/03/2022 1:57 PM EDT
  * Licensed under GNU General Public License v3.0
  */
-var code = {
+var code1 = {
    "sys": "class",
-   "name": "test",
+   "name": "test1",
    "access": "public",
-   "call": {"sys": "call", "name": "testProcedure", "args": []},
+   "call": {"sys": "call", "name": "testProcedure1", "args": ["$this.tmp1"]},
    "vars": [
       {
          "sys": "init",
@@ -100,6 +100,160 @@ var code = {
                "right": {"sys": "bex", "left": {"sys": "decl", "name": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": "==", "right": "$i1"}
             },
             {
+               "sys": "asgn",
+               "left": "$i1",
+               "op": "=",
+               "right": {"sys": "exp", "left": {"sys": "decl", "name": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": "+", "right": "$i1"}
+            }
+         ]
+      },
+      {
+         "sys": "proc",
+         "name": "testProcedure1",
+         "access": "public",
+         "args": [
+            {
+               "sys": "arg",
+               "name": "i1",
+               "val": {
+                  "sys": "val",
+                  "type": "int",
+                  "v": 0
+               }
+            }
+         ],
+         "vars": [
+            {
+               "sys": "decl",
+               "name": "b1",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": false
+               }
+            }
+         ],
+         "ret": {
+            "sys": "ret",
+            "name": "r1",
+            "val": {
+               "sys": "val",
+               "type": "bool",
+               "v": false
+            }
+         },
+         "lines": [
+            {"sys": "call", "name": "testProcedure", "args": ["$this.tmp1"]}
+         ]
+      }      
+   ],
+   "funcs": [      
+   ],
+   "ret": {      
+   }
+};
+
+var code = {
+   "sys": "class",
+   "name": "test",
+   "access": "public",
+   "call": {"sys": "call", "name": "testProcedure", "args": [{"sys": "init", "name": "i1", "val": {"sys": "val", "type": "int", "v": 13}}]},
+   "vars": [
+      {
+         "sys": "init",
+         "name": "tmp1",
+         "val": {
+            "sys": "val",
+            "type": "int",
+            "v": 0
+         },
+         "access": "public"
+      },
+      {
+         "sys": "decl",
+         "name": "tmp2",
+         "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         },
+         "access": "public"
+      }
+   ],
+   "procs": [
+      {
+         "sys": "proc",
+         "name": "testProcedure",
+         "access": "public",
+         "args": [
+            {
+               "sys": "arg",
+               "name": "i1",
+               "val": {
+                  "sys": "val",
+                  "type": "int",
+                  "v": 0
+               }
+            }
+         ],
+         "vars": [
+            {
+               "sys": "decl",
+               "name": "b1",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": false
+               }
+            }
+         ],
+         "ret": {
+            "sys": "ret",
+            "name": "r1",
+            "val": {
+               "sys": "val",
+               "type": "bool",
+               "v": false
+            }
+         },
+         "lines": [
+            {
+               "sys": "asgn",
+               "left": "$this.tmp1",
+               "op": "=",
+               "right": "$i1"
+            },
+            {
+               "sys": "asgn",
+               "left": "$this.tmp1",
+               "op": "=",
+               "right": {"sys": "decl", "name": "const", "val": {"sys": "val", "type": "int", "v": 25}}
+            },
+            {
+               "sys": "asgn",
+               "left": "$i1",
+               "op": "=",
+               "right": {"sys": "decl", "name": "const", "val": {"sys": "val", "type": "int", "v": 25}}
+            },
+            {
+               "sys": "asgn",
+               "left": "$b1",
+               "op": "=",
+               "right": {"sys": "bex", "left": "$this.tmp1", "op": "==", "right": "$i1"}
+            },
+            {
+               "sys": "asgn",
+               "left": "$b1",
+               "op": "=",
+               "right": {"sys": "bex", "left": {"sys": "decl", "name": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": "==", "right": "$i1"}
+            },
+            {
+               "sys": "asgn",
+               "left": "$i1",
+               "op": "=",
+               "right": {"sys": "exp", "left": {"sys": "decl", "name": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": "+", "right": "$i1"}
+            },                        
+            {
                "sys": "for",
                "start": {"sys": "decl", "name": "const", "val": {"sys": "val", "type": "int", "v": 0}},
                "stop": {"sys": "decl", "name": "const", "val": {"sys": "val", "type": "int", "v": 10}},
@@ -109,6 +263,16 @@ var code = {
                   {"sys": "fcall", "name": "int2str", "arg": "$LOOP_VAR_0"}
                ]
             },
+            {
+               "sys": "for",
+               "start": {"sys": "exp", "left": {"sys": "decl", "name": "const", "val": {"sys": "val", "type": "int", "v": 0}}, "op": "*", "right": "$i1"},
+               "stop": {"sys": "decl", "name": "const", "val": {"sys": "val", "type": "int", "v": 10}},
+               "inc": {"sys": "decl", "name": "const", "val": {"sys": "val", "type": "int", "v": 1}},
+               "for_lines": [
+                  {"sys": "fcall", "name": "print", "arg": {"sys": "decl", "name": "const", "val": {"sys": "val", "type": "string", "v": "test"}}},
+                  {"sys": "fcall", "name": "int2str", "arg": "$LOOP_VAR_0"}
+               ]
+            },            
             {
                "sys": "if",
                "left": "$b1",
@@ -162,7 +326,7 @@ var code = {
    }
 };
 
-var prog = code;
+var prog = code1;
 var grammar = {};
 
 //GRAMMAR
@@ -232,6 +396,8 @@ grammar.op_exp = ["+", "-", "/", "*"];
 
 //TYPES
 grammar.type_base = ["float", "int", "bool", "string"];
+
+var procedures = [];
 
 var functions = [];
 functions.push({
@@ -491,56 +657,17 @@ function executeProgram(prog) {
    if (prog !== null && prog.hasOwnProperty("call") === true && prog.call !== null && (isSysObjProcCall(prog.call) === true || isSysObjFuncCall(prog.call) === true)) {
       var callName = prog.call.name;
       var callArgs = prog.call.args;
+      wr("executeProgram: Call Name: " + callName);
+      var progProc = findProc(callName, prog);
+      var res = false;
       
-      //TODO: Add support to branch and handle func calls
-      var progProc = findProc(prog, callName);
-
       if (progProc !== null) {
-         var progProcLines = progProc.lines;
-   
-         var progProcLine = null;
-         var objType = null;
-         var res = false;
-         for (var i = 0; i < progProcLines.length; i++) {
-            progProcLine = progProcLines[i];
-            objType = getSysObjType(progProcLine);
-            
-            wr("");
-            wr("Line Start: " + i + ":================================================================");
-            //line processing
-            if (objType === "asgn") {
-               res = executeProcedureLineAsgn(progProcLine, callName, callArgs, prog, progProc, i);
-
-            } else if (objType === "if") {
-               res = executeProcedureLineIf(progProcLine, callName, callArgs, prog, progProc, i);
-
-            } else if (objType === "for") {
-               res = executeProcedureLineFor(progProcLine, callName, callArgs, prog, progProc, i);
-
-            } else if (objType === "fcall") {
-               res = executeProcedureLineFuncCall(progProcLine, callName, callArgs, prog, progProc, i);
-               
-            } else if (objType === "call") {
-               //TODO: Implement this
-               res = executeProcedureLineProcCall(progProcLine, callName, callArgs, prog, progProc, i);               
-               wr("executeProgram: Error: executeProcedureLineProcCall not implemented");
-               return false;
-               
-            } else {
-               wr("executeProgram: Error: unsupported line type: " + objType + " at line number: " + i);
-               return false;
-            }
-            
-            if(!res) {
-               wr("executeProgram: Error: exception encountered on line: " + i);
-               return false;
-            }
-            
-            wr("Line Stop: " + i + ":================================================================");            
+         res = executeProcedure(callName, callArgs, prog, progProc, 0);
+         if(!res) {
+            wr("executeProgram: Error: executing procedure");
+            WR_PREFIX = prevPrefix;
+            return false;            
          }
-
-         WR_PREFIX = prevPrefix;
-         return true;
       } else {
          wr("executeProgram: Error: executing program missing CALL procedure in CLASS object");
          WR_PREFIX = prevPrefix;
@@ -552,6 +679,62 @@ function executeProgram(prog) {
       WR_PREFIX = prevPrefix;
       return false;
    }
+}
+
+function executeFunction(callName, callArg, prog, proc, lineNum) {
+   wr("executeFunction: PASSTHROUGH!");
+   return executeProcedure(callName, [callArg], prog, proc, lineNum);
+}
+
+function executeProcedure(callName, callArgs, prog, proc, lineNum) {
+   var prevPrefix = WR_PREFIX;
+   WR_PREFIX += "\t";
+   
+   var progProcLines = proc.lines;
+   var progProcLine = null;
+   var objType = null;
+   var res = false;
+
+   for (var i = 0; i < progProcLines.length; i++) {
+      progProcLine = progProcLines[i];
+      objType = getSysObjType(progProcLine);
+
+      wr("");
+      wr("Line Start: " + i + ":================================================================");
+      //line processing
+      if (objType === "asgn") {
+         res = executeProcedureLineAsgn(progProcLine, callName, callArgs, prog, proc, (lineNum + i));
+      } else if (objType === "if") {
+         res = executeProcedureLineIf(progProcLine, callName, callArgs, prog, proc, (lineNum + i));
+      } else if (objType === "for") {
+         res = executeProcedureLineFor(progProcLine, callName, callArgs, prog, proc, (lineNum + i));
+      } else if (objType === "fcall") {
+         var lCallName = progProcLine.name;
+         var lCallArgs = [progProcLine.arg];
+         lCallArgs = lCallArgs.concat(callArgs);
+         res = executeProcedureLineFuncCall(progProcLine, lCallName, lCallArgs, prog, proc, (lineNum + i));
+
+      } else if (objType === "call") {
+         var lCallName = progProcLine.name;
+         var lCallArgs = progProcLine.args;
+         lCallArgs = lCallArgs.concat(callArgs);         
+         res = executeProcedureLineProcCall(progProcLine, lCallName, lCallArgs, prog, proc, (lineNum + i));               
+
+      } else {
+         wr("executeProcedure: Error: unsupported line type: " + objType + " at line number: " + i);
+         return false;
+      }
+
+      if(!res) {
+         wr("executeProcedure: Error: exception encountered on line: " + i);
+         return false;
+      }
+
+      wr("Line Stop: " + i + ":================================================================");            
+   }
+
+   WR_PREFIX = prevPrefix;
+   return true;
 }
 
 function executeProcedureLineForClause(procLine, callName, callArgs, prog, proc, lineNum) {
@@ -591,10 +774,7 @@ function executeProcedureLineForClause(procLine, callName, callArgs, prog, proc,
                res = executeProcedureLineFuncCall(progProcLine, callName, callArgs, prog, proc, (lineNum + i));
 
             } else if (objType === "call") {
-               //TODO: Implement this
                res = executeProcedureLineProcCall(progProcLine, callName, callArgs, prog, proc, (lineNum + i));
-               wr("executeProgram: Error: executeProcedureLineProcCall not implemented");
-               return false;
 
             } else {
                wr("executeProcedureLineForClause: Error: unsupported line type: " + objType + " at line number: " + lineNum + " inner line: " + i);
@@ -661,10 +841,7 @@ function executeProcedureLineIfClause(procLine, callName, callArgs, prog, proc, 
                res = executeProcedureLineFuncCall(progProcLine, callName, callArgs, prog, proc, (lineNum + i));
 
             } else if (objType === "call") {
-               //TODO: Implement this
                res = executeProcedureLineProcCall(progProcLine, callName, callArgs, prog, proc, (lineNum + i));
-               wr("executeProgram: Error: executeProcedureLineProcCall not implemented");
-               return false;
 
             } else {
                wr("executeProgram: Error: unsupported line type: " + objType + " at line number: " + (lineNum + i));
@@ -732,10 +909,7 @@ function executeProcedureLineElseClause(procLine, callName, callArgs, prog, proc
                res = executeProcedureLineFuncCall(progProcLine, callName, callArgs, prog, proc, (lineNum + i));
 
             } else if (objType === "call") {
-               //TODO: Implement this
                res = executeProcedureLineProcCall(progProcLine, callName, callArgs, prog, proc, (lineNum + i));
-               wr("executeProgram: Error: executeProcedureLineProcCall not implemented");
-               return false;
 
             } else {
                wr("executeProcedureLineElseClause: Error: unsupported line type: " + objType + " at line number: " + lineNum + " inner line: " + i);
@@ -792,13 +966,9 @@ function executeProcedureLineIf(procLine, callName, callArgs, prog, proc, lineNu
       //left arg
       if (isSysObj(left) === true) {
          if (isSysObjBex(right) === true) {
-            leftVar = processBexObject(left, prog, proc);
+            leftVar = processBexObject(left, prog, proc, callArgs);
          } else if (isSysObjExp(right) === true) {
-            //TODO: Implement this
-            leftVar = processExpObject(left, prog, proc);
-            wr("executeProcedureLineAsgn: Error: processExpObject not implemented yet");
-            WR_PREFIX = prevPrefix;
-            return false;
+            leftVar = processExpObject(left, prog, proc, callArgs);
          } else if (isSysObjConst(left) === true) {
             leftVar = left;
          } else {         
@@ -807,7 +977,7 @@ function executeProcedureLineIf(procLine, callName, callArgs, prog, proc, lineNu
             return false;
          }
       } else if (isVarString(left) === true) {
-         leftVar = processVarString(left, prog, proc);
+         leftVar = processVarString(left, prog, proc, callArgs);
       } else {
          wr("executeProcedureLineAsgn: Error: left value unsupported");
          WR_PREFIX = prevPrefix;
@@ -819,13 +989,9 @@ function executeProcedureLineIf(procLine, callName, callArgs, prog, proc, lineNu
       //right arg
       if (isSysObj(right) === true) {
          if (isSysObjBex(right) === true) {
-            rightVar = processBexObject(right, prog, proc);
+            rightVar = processBexObject(right, prog, proc, callArgs);
          } else if (isSysObjExp(right) === true) {
-            //TODO: Implement this
-            rightVar = processExpObject(right, prog, proc);
-            wr("executeProcedureLineAsgn: Error: right value unsupported object");
-            WR_PREFIX = prevPrefix;
-            return false;
+            rightVar = processExpObject(right, prog, proc, callArgs);
          } else if (isSysObjConst(right) === true) {
             rightVar = right;
          } else {         
@@ -834,7 +1000,7 @@ function executeProcedureLineIf(procLine, callName, callArgs, prog, proc, lineNu
             return false;
          }
       } else if (isVarString(right) === true) {
-         rightVar = processVarString(right, prog, proc);
+         rightVar = processVarString(right, prog, proc, callArgs);
       } else {
          wr("executeProcedureLineAsgn: Error: right value must be a $VAR");
          WR_PREFIX = prevPrefix;
@@ -844,30 +1010,37 @@ function executeProcedureLineIf(procLine, callName, callArgs, prog, proc, lineNu
      
       if (rightVar === null) {
          wr("executeProcedureLineIf: Error: right value of assignment statement is null");
+         WR_PREFIX = prevPrefix;
          return false;
 
       } else if (leftVar === null) {
          wr("executeProcedureLineIf: Error: left value of assignment statement is null");
+         WR_PREFIX = prevPrefix;
          return false;
 
       } else if (validateOpBex(op) === false) {
          wr("executeProcedureLineIf: Error: operator is not a valid BEX operator, '" + op + "'");
+         WR_PREFIX = prevPrefix;
          return false;
 
       } else if (rightVar.val === null) {
          wr("executeProcedureLineIf: Error: the right val is null.");
+         WR_PREFIX = prevPrefix;
          return false;
 
       } else if (leftVar.val === null) {
          wr("executeProcedureLineIf: Error: the left val is null.");
+         WR_PREFIX = prevPrefix;
          return false;
 
       } else if (rightVar.val.v === null) {
          wr("executeProcedureLineIf: Error: the right value has not been assigned to and is null.");
+         WR_PREFIX = prevPrefix;
          return false;
 
       } else if (leftVar.val.type.trim() !== rightVar.val.type.trim()) {
          wr("executeProcedureLineIf: Error: right value type and left value type do not match, left type, '" + leftVar.val.type + "', right type, '" + rightVar.val.type + "'");
+         WR_PREFIX = prevPrefix;
          return false;
       }
       
@@ -881,6 +1054,12 @@ function executeProcedureLineIf(procLine, callName, callArgs, prog, proc, lineNu
             res = executeProcedureLineElseClause(procLine, callName, callArgs, prog, proc, lineNum);
          }
 
+         if(!res) {
+            wr("executeProcedureLineIf: Error: processing if statement");
+            WR_PREFIX = prevPrefix;
+            return false;            
+         }
+         
       } else if (op === "!=") {
          if (leftVar.val.v !== rightVar.val.v) {
             wr("executeProcedureLineIf: Result: TRUE: names: '" + leftVar.name + "' != '" + rightVar.name + "', values " + leftVar.val.v + " != " + rightVar.val.v);
@@ -890,6 +1069,12 @@ function executeProcedureLineIf(procLine, callName, callArgs, prog, proc, lineNu
             res = executeProcedureLineElseClause(procLine, callName, callArgs, prog, proc, lineNum);
          }
 
+         if(!res) {
+            wr("executeProcedureLineIf: Error: processing if statement");
+            WR_PREFIX = prevPrefix;
+            return false;            
+         }
+         
       } else if (op === "<=") {
          if (leftVar.val.v <= rightVar.val.v) {
             wr("executeProcedureLineIf: Result: TRUE: names: '" + leftVar.name + "' <= '" + rightVar.name + "', values " + leftVar.val.v + " = " + rightVar.val.v);
@@ -899,6 +1084,12 @@ function executeProcedureLineIf(procLine, callName, callArgs, prog, proc, lineNu
             res = executeProcedureLineElseClause(procLine, callName, callArgs, prog, proc, lineNum);
          }
 
+         if(!res) {
+            wr("executeProcedureLineIf: Error: processing if statement");
+            WR_PREFIX = prevPrefix;
+            return false;            
+         }
+         
       } else if (op === ">=") {
          if (leftVar.val.v >= rightVar.val.v) {
             wr("executeProcedureLineIf: Result: TRUE: names: '" + leftVar.name + "' >= '" + rightVar.name + "', values " + leftVar.val.v + " = " + rightVar.val.v);
@@ -908,6 +1099,12 @@ function executeProcedureLineIf(procLine, callName, callArgs, prog, proc, lineNu
             res = executeProcedureLineElseClause(procLine, callName, callArgs, prog, proc, lineNum);
          }
 
+         if(!res) {
+            wr("executeProcedureLineIf: Error: processing if statement");
+            WR_PREFIX = prevPrefix;
+            return false;            
+         }
+         
       } else if (op === "<") {
          if (leftVar.val.v < rightVar.val.v) {
             wr("executeProcedureLineIf: Result: TRUE: names: '" + leftVar.name + "' < '" + rightVar.name + "', values " + leftVar.val.v + " = " + rightVar.val.v);
@@ -917,6 +1114,12 @@ function executeProcedureLineIf(procLine, callName, callArgs, prog, proc, lineNu
             res = executeProcedureLineElseClause(procLine, callName, callArgs, prog, proc, lineNum);
          }
 
+         if(!res) {
+            wr("executeProcedureLineIf: Error: processing if statement");
+            WR_PREFIX = prevPrefix;
+            return false;            
+         }
+         
       } else if (op === ">") {
          if (leftVar.val.v > rightVar.val.v) {
             wr("executeProcedureLineIf: Result: TRUE: names: '" + leftVar.name + "' > '" + rightVar.name + "', values " + leftVar.val.v + " = " + rightVar.val.v);
@@ -925,9 +1128,16 @@ function executeProcedureLineIf(procLine, callName, callArgs, prog, proc, lineNu
             wr("executeProcedureLineIf: Result: FALSE: names: '" + leftVar.name + "' > '" + rightVar.name + "', values " + leftVar.val.v + " = " + rightVar.val.v);
             res = executeProcedureLineElseClause(procLine, callName, callArgs, prog, proc, lineNum);
          }
+         
+         if(!res) {
+            wr("executeProcedureLineIf: Error: processing if statement");
+            WR_PREFIX = prevPrefix;
+            return false;            
+         }
 
       } else {
          wr("executeProcedureLineIf: Error: unknown boolean operand");
+            WR_PREFIX = prevPrefix;
          return false;
       }
       
@@ -970,23 +1180,11 @@ function executeProcedureLineAsgn(procLine, callName, callArgs, prog, proc, line
 
       //left arg
       if (isSysObj(left) === true) {
-         if (isSysObjBex(left) === true) {
-            leftVar = processBexObject(left, prog, proc);
-         } else if (isSysObjExp(left) === true) {
-            //TODO: Implement this
-            leftVar = processExpObject(left, prog, proc);
-            wr("executeProcedureLineAsgn: Error: processExpObject not implemented yet");
-            WR_PREFIX = prevPrefix;
-            return false;
-         } else if (isSysObjConst(left) === true) {
-            leftVar = left;
-         } else {
-            wr("executeProcedureLineAsgn: Error: left value unsupported object");
-            WR_PREFIX = prevPrefix;
-            return false;
-         }
+         wr("executeProcedureLineAsgn: Error: left value unsupported object");
+         WR_PREFIX = prevPrefix;
+         return false;
       } else if (isVarString(left) === true) {
-         leftVar = processVarString(left, prog, proc);
+         leftVar = processVarString(left, prog, proc, callArgs);
       } else {
          wr("executeProcedureLineAsgn: Error: left value unsupported");
          WR_PREFIX = prevPrefix;
@@ -997,13 +1195,9 @@ function executeProcedureLineAsgn(procLine, callName, callArgs, prog, proc, line
       //right arg
       if (isSysObj(right) === true) {
          if (isSysObjBex(right) === true) {
-            rightVar = processBexObject(right, prog, proc);
+            rightVar = processBexObject(right, prog, proc, callArgs);
          } else if (isSysObjExp(right) === true) {
-            //TODO: Implement this
-            rightVar = processExpObject(right, prog, proc);
-            wr("executeProcedureLineAsgn: Error: right value unsupported object");
-            WR_PREFIX = prevPrefix;
-            return false;
+            rightVar = processExpObject(right, prog, proc, callArgs);
          } else if (isSysObjConst(right) === true) {
             rightVar = right;
          } else {         
@@ -1012,7 +1206,7 @@ function executeProcedureLineAsgn(procLine, callName, callArgs, prog, proc, line
             return false;
          }
       } else if (isVarString(right) === true) {
-         rightVar = processVarString(right, prog, proc);
+         rightVar = processVarString(right, prog, proc, callArgs);
       } else {
          wr("executeProcedureLineAsgn: Error: right value unsupported");
          WR_PREFIX = prevPrefix;
@@ -1111,10 +1305,7 @@ function executeProcedureLineFor(procLine, callName, callArgs, prog, proc, lineN
             WR_PREFIX = prevPrefix;
             return false;
          } else if (isSysObjExp(start) === true) {
-            //TODO: implement this
-            wr("executeProcedureLineFor: Error: start value cannot be an EXP object yet");
-            WR_PREFIX = prevPrefix;
-            return false;
+            startVar = processExpObject(start, prog, proc, callArgs);
          } else if (isSysObjConst(start) === true) {
             startVar = start;
          } else {
@@ -1123,7 +1314,7 @@ function executeProcedureLineFor(procLine, callName, callArgs, prog, proc, lineN
             return false;
          }
       } else if (isVarString(start) === true) {
-         startVar = processVarString(start, prog, proc);
+         startVar = processVarString(start, prog, proc, callArgs);
       } else {
          wr("executeProcedureLineFor: Error: start value must be a $VAR");
          WR_PREFIX = prevPrefix;
@@ -1139,10 +1330,7 @@ function executeProcedureLineFor(procLine, callName, callArgs, prog, proc, lineN
             WR_PREFIX = prevPrefix;
             return false;
          } else if (isSysObjExp(stop) === true) {
-            //TODO: implement this
-            wr("executeProcedureLineFor: Error: stop value cannot be an EXP object");
-            WR_PREFIX = prevPrefix;
-            return false;
+            stopVar = processExpObject(stop, prog, proc, callArgs);
          } else if (isSysObjConst(stop) === true) {
             stopVar = stop;
          } else {
@@ -1151,7 +1339,7 @@ function executeProcedureLineFor(procLine, callName, callArgs, prog, proc, lineN
             return false;
          }
       } else if (isVarString(stop) === true) {
-         stopVar = processVarString(stop, prog, proc);
+         stopVar = processVarString(stop, prog, proc, callArgs);
       } else {
          wr("executeProcedureLineFor: Error: stop value must be a $VAR");
          WR_PREFIX = prevPrefix;
@@ -1167,10 +1355,7 @@ function executeProcedureLineFor(procLine, callName, callArgs, prog, proc, lineN
             WR_PREFIX = prevPrefix;
             return false;
          } else if (isSysObjExp(inc) === true) {
-            //TODO: implement this
-            wr("executeProcedureLineFor: Error: inc value cannot be an EXP object");
-            WR_PREFIX = prevPrefix;
-            return false;
+            incVar = processExpObject(inc, prog, proc, callArgs);
          } else if (isSysObjConst(inc) === true) {
             incVar = inc;
          } else {
@@ -1179,7 +1364,7 @@ function executeProcedureLineFor(procLine, callName, callArgs, prog, proc, lineN
             return false;
          }
       } else if (isVarString(inc) === true) {
-         incVar = processVarString(inc, prog, proc);
+         incVar = processVarString(inc, prog, proc, callArgs);
       } else {
          wr("executeProcedureLineFor: Error: inc value must be a $VAR");
          WR_PREFIX = prevPrefix;
@@ -1295,7 +1480,7 @@ function executeProcedureLineFuncCall(procLine, callName, callArgs, prog, proc, 
    WR_PREFIX += "\t";
    
    if (isSysObjFuncCall(procLine) === true) {
-      if (validateGrammarClassProcsFuncCall(procLine) === false) {
+      if (validateGrammarClassFuncCall(procLine) === false) {
          wr("executeProcedureLineFuncCall: Error: can't validate CALL line number: " + lineNum + " with source: " + JSON.stringify(procLine));
          WR_PREFIX = prevPrefix;
          return false;
@@ -1322,21 +1507,20 @@ function executeProcedureLineFuncCall(procLine, callName, callArgs, prog, proc, 
             //error
             wr("executeProcedureLineFuncCall: Error: name value can't be a BEX object");
             WR_PREFIX = prevPrefix;
-            return false;
+            return false;            
          } else if(isSysObjExp(name) === true) {
-            //TODO: implement this
             wr("executeProcedureLineFuncCall: Error: name value can't be a EXP object");            
             WR_PREFIX = prevPrefix;
             return false;
-         } else if (isSysObjConst(name) === true) {
-            nameVar = name;
+         } else if (isSysObjConst(name) === true && name.val.type === "string") {
+            nameVar = name;            
          } else {
             wr("executeProcedureLineFuncCall: Error: name value unsupported object");
             WR_PREFIX = prevPrefix;
             return false;
          }
       } else if (isVarString(name) === true) {
-         nameVar = processVarString(name, prog, proc);
+         nameVar = processVarString(name, prog, proc, callArgs);
       } else if (isString(name) === true) {
          //generate var string
          nameVar = { "sys": "decl", "name": "const", "val": { "sys": "val", "type": "string", "v": name } };               
@@ -1347,14 +1531,35 @@ function executeProcedureLineFuncCall(procLine, callName, callArgs, prog, proc, 
       }
       nameVarType = nameVar.sys;
 
-      //args arg
+      //arg arg
+      var isSysFunc = false;
       var sysFunc = findSystemFunc(name);
+      if(sysFunc === null) {
+         sysFunc = findFunc(name, prog);
+         if(sysFunc === null) {
+            wr("executeProcedureLineFuncCall: Error: could not find function with name: " + name);
+            WR_PREFIX = prevPrefix;
+            return false;
+         } else {
+            wr("executeProcedureLineFuncCall: Found program function with name: " + name);
+         }
+      } else {
+         isSysFunc = true;
+         wr("executeProcedureLineFuncCall: Found system function with name: " + name);         
+      }
+            
+      var res = false;
       if(arg === null) {
          if(sysFunc !== null && isSysObjFunc(sysFunc) === true) {
             if(sysFunc.hasOwnProperty("arg") === false || sysFunc.arg === null) {
                //execute the system function
-               processSystemFunc(sysFunc, argVar, prog, proc);
+               res = processSystemFunc(sysFunc, argVar, prog, proc, callArgs);
                wr("executeProcedureLineFuncCall: Found result " + sysFunc.ret.val.v);
+               if(!res) {
+                  wr("executeProcedureLineFuncCall: Error: expected no arguments for system function '" + name + "'");
+                  WR_PREFIX = prevPrefix;
+                  return false;
+               }
             } else {
                wr("executeProcedureLineFuncCall: Error: expected no arguments for system function '" + name + "'");
                WR_PREFIX = prevPrefix;
@@ -1388,7 +1593,7 @@ function executeProcedureLineFuncCall(procLine, callName, callArgs, prog, proc, 
                argVar = arg;
             }
          } else if (isVarString(arg) === true) {
-            argVar = processVarString(arg, prog, proc);
+            argVar = processVarString(arg, prog, proc, callArgs);
          } else {
             wr("executeProcedureLineFuncCall: Error: start value must be a $VAR");
             WR_PREFIX = prevPrefix;
@@ -1396,29 +1601,219 @@ function executeProcedureLineFuncCall(procLine, callName, callArgs, prog, proc, 
          }
          argVarType = argVar.sys;
 
-         var sysFunc = findSystemFunc(name);
+         res = false;
          if(sysFunc !== null && isSysObjFunc(sysFunc) === true) {
+            //TODO: check callArgs here
             if(findFuncArgMatch(sysFunc, argVar) === true) {
-               //execute the system function
-               processSystemFunc(sysFunc, argVar, prog, proc);
+               if(isSysFunc) {
+                  //execute the system function
+                  //TODO:: combine args, change function signature
+                  res = processSystemFunc(sysFunc, argVar, prog, proc, callArgs);
+                  if(!res) {
+                     wr("executeProcedureLineFuncCall: Error: error processing system function call");
+                     WR_PREFIX = prevPrefix;
+                     return false;                     
+                  }
+               } else {
+                  //execute the program function
+                  //TODO:: combine args, change function signature
+                  res = processProgFunc(sysFunc, argVar, prog, proc, callArgs);
+                  if(!res) {
+                     wr("executeProcedureLineFuncCall: Error: error processing program function call");
+                     WR_PREFIX = prevPrefix;
+                     return false;                     
+                  }                  
+               }
             } else {
                wr("executeProcedureLineFuncCall: Error: could not find matching arguments for system function '" + name + "'");
                WR_PREFIX = prevPrefix;
                return false;
             }
          }
-
-         //General process
-         //find the function in the system list
-         //find the function in the prodecure list
-         //find the function in the class list
-         //match args
       }
 
       WR_PREFIX = prevPrefix;
       return true;
    } else {
-      wr("executeProcedureLineFuncCall: Error: not a CALL object");
+      wr("executeProcedureLineFuncCall: Error: not a FCALL object");
+      WR_PREFIX = prevPrefix;      
+      return false;
+   }
+}
+
+function executeProcedureLineProcCall(procLine, callName, callArgs, prog, proc, lineNum) {
+   var prevPrefix = WR_PREFIX;
+   WR_PREFIX += "\t";
+   
+   if (isSysObjProcCall(procLine) === true) {
+      if (validateGrammarClassProcCall(procLine) === false) {
+         wr("executeProcedureLineProcCall: Error: can't validate CALL line number: " + lineNum + " with source: " + JSON.stringify(procLine));
+         WR_PREFIX = prevPrefix;
+         return false;
+      }
+
+      if(PRINT_LINE_OBJ) {
+         wr("executeProcedureLineProcCall: line number: " + lineNum + " with source: " + JSON.stringify(procLine));
+      } else {
+         wr("executeProcedureLineProcCall: line number: " + lineNum);
+      }
+      
+      //handle call line
+      var name = procLine.name;
+      var args = procLine.args;
+      var nameVar = null;
+      var nameVarType = null;
+      
+      var arg = null;
+      var argVar = null;
+      var argVarType = null;
+      var argVars = [];
+      var argVarTypes = [];
+
+      //name arg     
+      if (isSysObj(name) === true) {
+         if (isSysObjBex(name) === true) {
+            //error
+            wr("executeProcedureLineProcCall: Error: name value can't be a BEX object");
+            WR_PREFIX = prevPrefix;
+            return false;            
+         } else if(isSysObjExp(name) === true) {
+            wr("executeProcedureLineProcCall: Error: name value can't be a EXP object");            
+            WR_PREFIX = prevPrefix;
+            return false;
+         } else if (isSysObjConst(name) === true && name.val.type === "string") {
+            nameVar = name;            
+         } else {
+            wr("executeProcedureLineProcCall: Error: name value unsupported object");
+            WR_PREFIX = prevPrefix;
+            return false;
+         }
+      } else if (isVarString(name) === true) {
+         nameVar = processVarString(name, prog, proc, callArgs);
+      } else if (isString(name) === true) {
+         //generate var string
+         nameVar = { "sys": "decl", "name": "const", "val": { "sys": "val", "type": "string", "v": name } };               
+      } else {
+         wr("executeProcedureLineProcCall: Error: name value must be a $VAR");
+         WR_PREFIX = prevPrefix;
+         return false;
+      }
+      nameVarType = nameVar.sys;
+
+      //args arg
+      var isSysFunc = false;
+      var sysFunc = findSystemProc(name);
+      if(sysFunc === null) {
+         sysFunc = findProc(name, prog);
+         if(sysFunc === null) {
+            wr("executeProcedureLineProcCall: Error: could not find function with name: " + name);
+            WR_PREFIX = prevPrefix;
+            return false;
+         } else {
+            wr("executeProcedureLineProcCall: Found program function with name: " + name);
+         }
+      } else {
+         isSysFunc = true;
+         wr("executeProcedureLineProcCall: Found system function with name: " + name);         
+      }
+            
+      var res = false;
+      if(args === null) {
+         if(sysFunc !== null && isSysObjFunc(sysFunc) === true) {
+            if(sysFunc.hasOwnProperty("args") === false || sysFunc.args === null) {
+               //execute the system function
+               //TODO:: combine args, change function signature
+               res = processSystemProc(sysFunc, argVars, prog, proc, callArgs);
+               wr("executeProcedureLineProcCall: Found result " + sysFunc.ret.val.v);
+               if(!res) {
+                  wr("executeProcedureLineProcCall: Error: expected no arguments for system function '" + name + "'");
+                  WR_PREFIX = prevPrefix;
+                  return false;
+               }
+            } else {
+               wr("executeProcedureLineProcCall: Error: expected no arguments for system function '" + name + "'");
+               WR_PREFIX = prevPrefix;
+               return false;
+            }
+         }            
+      } else {
+         //args arg
+         for(var i = 0; i < args.length; i++) {
+            var arg = args[i];
+            wr("executeProcedureLineProcCall: Processing arg: " + arg);
+            if (isSysObj(arg) === true) {
+               if (isSysObjBex(arg) === true) {
+                  //error
+                  wr("executeProcedureLineProcCall: Error: arg value cannot be a BEX object");
+                  WR_PREFIX = prevPrefix;
+                  return false;
+               } else if (isSysObjExp(arg) === true) {
+                  //TODO: implement this
+                  wr("executeProcedureLineProcCall: Error: arg value cannot be an EXP object");
+                  WR_PREFIX = prevPrefix;
+                  return false;
+               } else if (isSysObjFuncCall(arg) === true) {
+                  //call func
+                  wr("executeProcedureLineProcCall: Error: arg value cannot be an FCALL object");
+                  WR_PREFIX = prevPrefix;
+                  return false;
+               } else if (isSysObjProcCall(arg) === true) {
+                  //call proc
+                  wr("executeProcedureLineProcCall: Error: arg value cannot be an CALL object");
+                  WR_PREFIX = prevPrefix;
+                  return false;
+               } else if (isSysObjConst(arg) === true) {
+                  argVar = arg;
+               }
+            } else if (isVarString(arg) === true) {
+               argVar = processVarString(arg, prog, proc, callArgs);
+            } else {
+               wr("executeProcedureLineProcCall: Error: start value must be a $VAR");
+               WR_PREFIX = prevPrefix;
+               return false;
+            }
+            argVarType = argVar.sys;
+            
+            argVars.push(argVar);
+            argVarTypes.push(argVarType);
+         }
+
+         res = false;
+         if(sysFunc !== null && isSysObjFunc(sysFunc) === true) {
+            //TODO: check callArgs here
+            //TODO: Make procedure specific call
+            if(findProcArgMatch(sysFunc, argVars) === true) {
+               if(isSysFunc) {
+                  //execute the system function
+                  //TODO:: combine args, change function signature
+                  res = processSystemProc(sysFunc, argVars, prog, proc, callArgs);
+                  if(!res) {
+                     wr("executeProcedureLineProcCall: Error: error processing system function call");
+                     WR_PREFIX = prevPrefix;
+                     return false;                     
+                  }
+               } else {
+                  //execute the program function
+                  //TODO:: combine args, change function signature
+                  res = processProgProc(sysFunc, argVars, prog, proc, callArgs);
+                  if(!res) {
+                     wr("executeProcedureLineProcCall: Error: error processing program function call");
+                     WR_PREFIX = prevPrefix;
+                     return false;                     
+                  }                  
+               }
+            } else {
+               wr("executeProcedureLineProcCall: Error: could not find matching arguments for system function '" + name + "'");
+               WR_PREFIX = prevPrefix;
+               return false;
+            }
+         }
+      }
+
+      WR_PREFIX = prevPrefix;
+      return true;
+   } else {
+      wr("executeProcedureLineProcCall: Error: not a CALL object");
       WR_PREFIX = prevPrefix;      
       return false;
    }
@@ -1459,6 +1854,33 @@ function findSystemFunc(name) {
    for (var i = 0; i < functions.length; i++) {
       if (functions[i].name === name) {
          return functions[i];
+      }
+   }
+   return null;
+}
+
+function findFunc(name, prog) {
+   for (var i = 0; i < prog.funcs.length; i++) {
+      if (prog.funcs[i].name === name) {
+         return prog.funcs[i];
+      }
+   }
+   return null;
+}
+
+function findSystemProc(name) {
+   for (var i = 0; i < procedures.length; i++) {
+      if (procedures[i].name === name) {
+         return procedures[i];
+      }
+   }
+   return null;
+}
+
+function findProc(name, prog) {
+   for (var i = 0; i < prog.procs.length; i++) {
+      if (prog.procs[i].name === name) {
+         return prog.procs[i];
       }
    }
    return null;
@@ -1529,7 +1951,8 @@ function findArg(name, proc) {
    return null;
 }
 
-function findProc(prog, name) {
+/*
+function findProc(name, prog) {
    for (var i = 0; i < prog.procs.length; i++) {
       if (prog.procs[i].name === name) {
          return prog.procs[i];
@@ -1537,11 +1960,40 @@ function findProc(prog, name) {
    }
    return null;
 }
-
+*/
 
 //PROCESS METHODS
+function processProgFunc(progFunc, arg, prog, proc, lineNum, callArgs) {
+   var prevPrefix = WR_PREFIX;
+   WR_PREFIX += "\t";
+   
+   var func = null;
+   for(var i = 0; i < prog.funcs.length; i++) {
+      if(prog.funcs[i].name === progFunc.name) {
+         func = prog.funcs[i]; 
+         break;
+      }
+   }
+   
+   var res = false;
+   if(func !== null) {
+      res = executeFunction(progFunc.name, arg, prog, proc, lineNum);
+      if(!res) {
+         wr("processProgFunc: Error: executing program function with name: " + progFunc.name + ", " + arg.val.v);
+         WR_PREFIX = prevPrefix;
+         return false;
+      }
+   } else {
+      wr("processProgFunc: Error: could not find matching program function with name: " + progFunc.name + ", " + arg.val.v);
+      WR_PREFIX = prevPrefix;
+      return false;
+   }
+   
+   WR_PREFIX = prevPrefix;
+   return true;
+}
 
-function processSystemFunc(sysFunc, arg, prog, proc) {
+function processSystemFunc(sysFunc, arg, prog, proc, callArgs) {
    var prevPrefix = WR_PREFIX;
    WR_PREFIX += "\t";
    
@@ -1549,37 +2001,75 @@ function processSystemFunc(sysFunc, arg, prog, proc) {
       wr(JSON.stringify(arg));
       wr("processSystemFunc: Name: " + sysFunc.name + ", " + arg.val.v);      
       sysFunc.ret.val.v = Number(arg.val.v);
+      sysFunc.ret.val.type = String(arg.val.type);
       
    } else if(sysFunc.name === "print") {      
       wr(JSON.stringify(arg));
       wr("processSystemFunc: Name: " + sysFunc.name + ", " + arg.val.v);
-   
-      /*
-      if (isSysObj(left) === true) {
-         if (isSysObjBex(left) === true) {
-            leftVar = processBexObject(left, prog, proc);
-         } else if (isSysObjConst(left) === true) {
-            leftVar = left;
-         }
 
-      } else if (isVarString(left) === true) {
-         leftVar = processVarString(left, prog, proc);
-
-      } else {
-         wr("processBexObject: Error: left value is invalid");
-         return false;
-      }
-       */
    }
    WR_PREFIX = prevPrefix;
+   return true;
 }
 
-//process a variable string
-function processVarString(varString, prog, proc) {
+function processProgProc(progProc, args, prog, proc, lineNum, callArgs) {
    var prevPrefix = WR_PREFIX;
    WR_PREFIX += "\t";
    
-   wr("processVarString: processing var string, '" + varString + "'");   
+   var proc = null;
+   for(var i = 0; i < prog.procs.length; i++) {
+      if(prog.procs[i].name === progProc.name) {
+         proc = prog.procs[i]; 
+         break;
+      }
+   }
+   
+   var res = false;
+   if(proc !== null) {
+      res = executeProcedure(progProc.name, args, prog, proc, lineNum);
+      if(!res) {
+         wr("processProgProc: Error: executing program function with name: " + progProc.name + ", " + args.length);
+         WR_PREFIX = prevPrefix;
+         return false;
+      }
+   } else {
+      wr("processProgProc: Error: could not find matching program function with name: " + progProc.name + ", " + args.length);
+      WR_PREFIX = prevPrefix;
+      return false;
+   }
+   
+   WR_PREFIX = prevPrefix;
+   return true;
+}
+
+function processSystemProc(sysProc, args, prog, proc, callArgs) {
+   var prevPrefix = WR_PREFIX;
+   WR_PREFIX += "\t";
+   
+   /*
+   if(sysFunc.name === "int2str") {
+      wr(JSON.stringify(arg));
+      wr("processSystemFunc: Name: " + sysFunc.name + ", " + arg.val.v);      
+      sysFunc.ret.val.v = Number(arg.val.v);
+      sysFunc.ret.val.type = String(arg.val.type);
+      
+   } else if(sysFunc.name === "print") {      
+      wr(JSON.stringify(arg));
+      wr("processSystemFunc: Name: " + sysFunc.name + ", " + arg.val.v);
+
+   }
+   */
+  
+   WR_PREFIX = prevPrefix;
+   return true;
+}
+
+//process a variable string
+function processVarString(varString, prog, proc, callArgs) {
+   var prevPrefix = WR_PREFIX;
+   WR_PREFIX += "\t";
+   
+   wr("processVarString: processing var string, '" + varString + "' with callArgs: " + JSON.stringify(callArgs));   
    
    var thisStr = VAR_THIS;
    var nonThisStr = VAR_NON_THIS;
@@ -1593,14 +2083,41 @@ function processVarString(varString, prog, proc) {
       fnd = findVar(varName, prog, proc, true);
 
    } else if (idxDs !== -1) {
-      //check proc vars
       varName = varString.substring(nonThisStr.length);
-      fnd = findVar(varName, prog, proc, false);
 
+      //check for provided call arguments
+      if(fnd === null && callArgs !== null) {
+         for(var i = 0; i < callArgs.length; i++) {
+            if(isSysObj(callArgs[i])) {
+               wr("processVarString: Notice: " + callArgs[i].name);
+               if(callArgs[i].name === varName) {
+                  wr("processVarString: Notice: found var name in call args: '" + varName + "'");
+                  fnd = callArgs[i];
+                  break;
+               }
+            }
+         }
+      }
+
+      //check vars
+      if(fnd === null) {
+         fnd = findVar(varName, prog, proc, false);         
+      }
+
+      //check for argument definition defaults
       if (fnd === null) {
          //check proc args
+         wr("processVarString: Notice: found var name in args: '" + varName + "'");
          fnd = findArg(varName, proc);
       }
+      
+      if(fnd === null) {
+         if(prog.ret.name === varName) {
+            wr("processVarString: Notice: found var name in ret: '" + varName + "'");
+            fnd = prog.ret;
+
+         }
+      }     
    }
    wr("processVarString: Notice: found var name, '" + varName + "'");
 
@@ -1614,14 +2131,126 @@ function processVarString(varString, prog, proc) {
 }
 
 //process numeric expression object
-function processExpObject(expObject, prog, proc) {
-   if (isSysObjBex(expObject) === true) {
-      
+function processExpObject(expObject, prog, proc, callArgs) {
+   var prevPrefix = WR_PREFIX;
+   WR_PREFIX += "\t";
+
+   if (isSysObjExp(expObject) === true) {      
+      wr("processExpObject: Notice: processing exp object, '" + JSON.stringify(expObject) + "'");         
+         
+      var left = expObject.left;
+      var op = expObject.op;
+      var right = expObject.right;
+
+      var leftVar = null;
+      var leftVarType = null;
+      var rightVar = null;
+      var rightVarType = null;
+
+      //left arg
+      if (isSysObj(left) === true) {
+         if (isSysObjBex(left) === true) {
+            leftVar = processBexObject(left, prog, proc, callArgs);
+         } else if(isSysObjExp(left) === true) {
+            leftVar = processExpObject(left, prog, proc, callArgs);
+         } else if (isSysObjConst(left) === true) {
+            leftVar = left;
+         }
+      } else if (isVarString(left) === true) {
+         leftVar = processVarString(left, prog, proc, callArgs);
+      } else {
+         wr("processExpObject: Error: left value is invalid");
+         WR_PREFIX = prevPrefix;
+         return false;
+      }
+      leftVarType = leftVar.sys;
+
+      //right arg
+      if (isSysObj(right) === true) {
+         if (isSysObjBex(right) === true) {
+            rightVar = processBexObject(right, prog, proc, callArgs);
+         } else if(isSysObjExp(right) === true) {
+            rightVar = processExpObject(right, prog, proc, callArgs);
+         } else if (isSysObjConst(right) === true) {
+            rightVar = right;
+         }
+      } else if (isVarString(right) === true) {
+         rightVar = processVarString(right, prog, proc, callArgs);
+      } else {
+         wr("processExpObject: Error: right value is invalid");
+         WR_PREFIX = prevPrefix;
+         return false;
+      }
+      rightVarType = rightVar.sys;
+
+      if (rightVar === null) {
+         wr("processExpObject: Error: right value of assignment statement is null");
+         WR_PREFIX = prevPrefix;
+         return false;
+
+      } else if (leftVar === null) {
+         wr("processExpObject: Error: left value of assignment statement is null");
+         WR_PREFIX = prevPrefix;
+         return false;
+
+      } else if (validateOpExp(op) === false) {
+         wr("processExpObject: Error: operator is not valid, '" + op + "'");
+         WR_PREFIX = prevPrefix;
+         return false;
+
+      } else if (rightVar.val === null) {
+         wr("processExpObject: Error: the right val is null");
+         WR_PREFIX = prevPrefix;
+         return false;
+
+      } else if (leftVar.val === null) {
+         wr("processExpObject: Error: the left val is null");
+         WR_PREFIX = prevPrefix;
+         return false;
+
+      } else if (rightVar.val.v === null) {
+         wr("processExpObject: Error: the right value has not been assigned to and is null");
+         WR_PREFIX = prevPrefix;
+         return false;
+
+      } else if (leftVar.val.v === null) {
+         wr("processExpObject: Error: the left value has not been assigned to and is null");
+         WR_PREFIX = prevPrefix;
+         return false;
+
+      } else if (leftVar.val.type.trim() !== rightVar.val.type.trim()) {
+         wr("processExpObject: Error: right value type and left value type do not match, left type, '" + leftVar.val.type + "', right type, '" + rightVar.val.type + "'");
+         WR_PREFIX = prevPrefix;
+         return false;
+      }
+
+      wr("processExpObject: Notice: comparing with: " + op);
+      var res = null;
+      var ret = null;
+      if (op === "+") {
+         res = (leftVar.val.v + rightVar.val.v);
+      } else if (op === "-") {
+         res = (leftVar.val.v - rightVar.val.v);
+      } else if (op === "/") {
+         res = (leftVar.val.v / rightVar.val.v);
+      } else if (op === "*") {
+         res = (leftVar.val.v * rightVar.val.v);
+      }
+
+      ret = {"sys": "decl", "name": "processExpObject", "val": {"sys": "val", "type": leftVar.val.type, "v": res}};
+      wr("processExpObject: Notice: comparing '" + leftVar.val.v + "' to the value of '" + rightVar.val.v + "', value, (" + res + "), operator, '" + op + "'");      
+      wr("processExpObject: Notice: returning '" + JSON.stringify(ret));
+      WR_PREFIX = prevPrefix;      
+      return ret;
+   } else {
+      wr("processExpObject: Error: not a BEX object");
+      WR_PREFIX = prevPrefix;
+      return null;
    }   
 }
 
 //process boolean expression object
-function processBexObject(bexObject, prog, proc) {
+function processBexObject(bexObject, prog, proc, callArgs) {
    var prevPrefix = WR_PREFIX;
    WR_PREFIX += "\t";
 
@@ -1640,7 +2269,7 @@ function processBexObject(bexObject, prog, proc) {
       //left arg
       if (isSysObj(left) === true) {
          if (isSysObjBex(left) === true) {
-            leftVar = processBexObject(left, prog, proc);
+            leftVar = processBexObject(left, prog, proc, callArgs);
          } else if(isSysObjExp(left) === true) {
             wr("processBexObject: Error: left var can't be an EXP object.... yet");
             WR_PREFIX = prevPrefix;
@@ -1650,7 +2279,7 @@ function processBexObject(bexObject, prog, proc) {
          }
 
       } else if (isVarString(left) === true) {
-         leftVar = processVarString(left, prog, proc);
+         leftVar = processVarString(left, prog, proc, callArgs);
 
       } else {
          wr("processBexObject: Error: left value is invalid");
@@ -1662,13 +2291,13 @@ function processBexObject(bexObject, prog, proc) {
       //right arg
       if (isSysObj(right) === true) {
          if (isSysObjBex(right) === true) {
-            rightVar = processBexObject(right, prog, proc);
+            rightVar = processBexObject(right, prog, proc, callArgs);
          } else if (isSysObjConst(right) === true) {
             rightVar = right;
          }
 
       } else if (isVarString(right) === true) {
-         rightVar = processVarString(right, prog, proc);
+         rightVar = processVarString(right, prog, proc, callArgs);
 
       } else {
          wr("processBexObject: Error: right value is invalid");
@@ -1772,6 +2401,14 @@ function validateOpAsgnInit(opString) {
 //validate operation boolean expression
 function validateOpBex(opString) {
    if (grammar.op_bex.indexOf(opString) === -1) {
+      return false;
+   } else {
+      return true;
+   }
+}
+
+function validateOpExp(opString) {
+   if (grammar.op_exp.indexOf(opString) === -1) {
       return false;
    } else {
       return true;
@@ -1918,7 +2555,7 @@ function validateGrammarClassProcsFor(procLine) {
    }
 }
 
-function validateGrammarClassProcsCall(procLine) {
+function validateGrammarClassProcCall(procLine) {
    if (procLine !== null && validateProperties(procLine, grammar.call_required) === false) {
       wr("validateGrammarClassProcsCall: Error: invalid for line entry: " + JSON.stringify(procLine));
       return false;
@@ -1927,9 +2564,9 @@ function validateGrammarClassProcsCall(procLine) {
    }
 }
 
-function validateGrammarClassProcsFuncCall(procLine) {
+function validateGrammarClassFuncCall(procLine) {
    if (procLine !== null && validateProperties(procLine, grammar.fcall_required) === false) {
-      wr("validateGrammarClassProcsFuncCall: Error: invalid for line entry: " + JSON.stringify(procLine));
+      wr("validateGrammarClassFuncCall: Error: invalid for line entry: " + JSON.stringify(procLine));
       return false;
    } else {
       return true;
