@@ -7,11 +7,13 @@
  */
 
 //, {"sys": "ref", "path": "$.vars.tmp1"}, {"sys": "const", "val":{"sys": "val", "type": "bool", "v": true}}
+//  {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}}
+//  {"sys": "return", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}}
 
 var code = {
    "sys": "class",
    "name": "test1",
-   "call": {"sys": "call", "name": "testFunction1", "args": [{"sys": "ref", "path": "#.vars.tmp1"}]},
+   "call": {"sys": "call", "name": "testFunction1", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}]},
    "vars": [
       {
          "sys": "var",
@@ -32,7 +34,7 @@ var code = {
          }         
       }
    ],
-   "funcs": [      
+   "funcs": [
       {
          "sys": "func",
          "name": "testFunction1",
@@ -64,7 +66,7 @@ var code = {
             "v": false
          },
          "lines": [
-            {"sys": "call", "name": "testProcedure", "args": [{"sys": "ref", "path": "$.vars.tmp1"}]}
+            {"sys": "call", "name": "testFunction3", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}]}
          ]
       },
       {
@@ -100,42 +102,76 @@ var code = {
          "lines": [
             {
                "sys": "asgn",
-               "left": {"sys":"ref", "path":"$.vars.tmp1"},
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}},
                "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys":"ref", "path":"#.args.i1"}
+               "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}
             },
             {
                "sys": "asgn",
-               "left": {"sys":"ref", "path":"$.vars.tmp1"},
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}},
                "op": {"sys":"op", "type":"asgn", "v":"="},
                "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
             },
             {
                "sys": "asgn",
-               "left": {"sys":"ref", "path":"#.args.i1"},
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
                "op": {"sys":"op", "type":"asgn", "v":"="},
                "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
             },
             {
                "sys": "asgn",
-               "left": {"sys":"ref", "path":"#.vars.b1"},
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
                "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "bex", "left": {"sys":"ref", "path":"$.vars.tmp1"}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "path":"#.args.i1"}}
+               "right": {"sys": "bex", "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
             },
             {
                "sys": "asgn",
-               "left": {"sys":"ref", "path":"#.vars.b1"},
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
                "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "bex", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "path":"#.args.i1"}}
+               "right": {"sys": "bex", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
             },
             {
                "sys": "asgn",
-               "left": {"sys":"ref", "path":"#.args.i1"},
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
                "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "path":"#.args.i1"}}
+               "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
             }
          ]
-      }   
+      },
+      {
+         "sys": "func",
+         "name": "testFunction3",
+         "args": [
+            {
+               "sys": "arg",
+               "name": "i1",
+               "val": {
+                  "sys": "val",
+                  "type": "int",
+                  "v": 0
+               }
+            }
+         ],
+         "vars": [
+            {
+               "sys": "var",
+               "name": "b1",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": false
+               }
+            }
+         ],
+         "ret": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         },
+         "lines": [
+            {"sys":"return", "val": {"sys": "val", "type": "bool", "v":"true"}}
+         ]
+      }
    ],
    "ret": {
       "sys": "val",
@@ -182,9 +218,9 @@ jsonPlState.processRef = function(obj, func) {
    var fnd;
    var prog = this.program;
    
-   if(obj.path.indexOf("#.") === 0) {
+   if(obj.val.v.indexOf("#.") === 0) {
       //program/class var, arg
-      path = obj.path.substring(2);
+      path = obj.val.v.substring(2);
       vls = path.split(".");
       if(vls[0] === "vars") {
          fnd = this.findVar(vls[1], prog);
@@ -192,7 +228,7 @@ jsonPlState.processRef = function(obj, func) {
             this.wr("processRef: found reference result: " + JSON.stringify(fnd));
             return fnd;
          } else {
-            this.wr("processRef: Error: could not find var with name '" + vls[1] + "' in program");
+            this.wr("processRef: Error: could not find var with name '" + vls[1] + "' in program func: " + JSON.stringify(func));
             return null;            
          }
       } else if(vls[0] === "args") {
@@ -201,7 +237,7 @@ jsonPlState.processRef = function(obj, func) {
             this.wr("processRef: found reference result: " + JSON.stringify(fnd));            
             return fnd;
          } else {
-            this.wr("processRef: Error: could not find arg with name '" + vls[1] + "' in program");
+            this.wr("processRef: Error: could not find arg with name '" + vls[1] + "' in program func: " + JSON.stringify(func));
             return null;
          }         
       } else {
@@ -209,9 +245,9 @@ jsonPlState.processRef = function(obj, func) {
          return null;
       }
       
-   } else if(obj.path.indexOf("$.") === 0) {
+   } else if(obj.val.v.indexOf("$.") === 0) {
       //func var, arg
-      path = obj.path.substring(2);
+      path = obj.val.v.substring(2);
       vls = path.split(".");
       if(vls[0] === "vars") {
          fnd = this.findVar(vls[1], func);
@@ -219,7 +255,7 @@ jsonPlState.processRef = function(obj, func) {
             this.wr("processRef: found reference result: " + JSON.stringify(fnd));            
             return fnd;
          } else {
-            this.wr("processRef: Error: could not find var with name '" + vls[1] + "' in func");
+            this.wr("processRef: Error: could not find var with name '" + vls[1] + "' in func: " + JSON.stringify(func));
             return null;            
          }
       } else if(vls[0] === "args") {
@@ -228,7 +264,7 @@ jsonPlState.processRef = function(obj, func) {
             this.wr("processRef: found reference result: " + JSON.stringify(fnd));            
             return fnd;
          } else {
-            this.wr("processRef: Error: could not find arg with name '" + vls[1] + "' in func");
+            this.wr("processRef: Error: could not find arg with name '" + vls[1] + "' in func: " + JSON.stringify(func));
             return null;            
          }         
       } else {
@@ -238,7 +274,39 @@ jsonPlState.processRef = function(obj, func) {
    }
 };
 
-jsonPlState.execFunction = function(func, funcArgs) {
+jsonPlState.execAsn = function(left, op, right, func) {
+   if(this.isSysObjRef(left)) {
+      left = this.processRef(left, func);
+   }
+   
+   if(this.isSysObjRef(right)) {   
+      right = this.processRef(right, func);
+      
+   } else if(this.isSysObjBex(right)) {
+      right = this.processBex(right, func);
+      
+   } else if(this.isSysObjExp(right)) {
+      right = this.processExp(right, func);      
+      
+   } else if(this.isSysObjConst(right)) {
+      //do nothing
+      
+   } else if(this.isSysObjCall(right)) {      
+      //call function      
+   }
+   
+   if(left.val.type === right.val.type) {
+      //wr assigning right value to left value
+      left.val.v = right.val.v;
+      return true;
+      
+   } else {
+      //wr type mismatch
+      return false;      
+   }
+};
+
+jsonPlState.execFunction = function(func, funcArgs, lineNum) {
    //process ref args
    for(var i = 0; i < funcArgs.length; i++) {
       if(this.isSysObjRef(funcArgs[i])) {
@@ -246,9 +314,12 @@ jsonPlState.execFunction = function(func, funcArgs) {
       }
    }  
    
+   //this.wr("Args: " + JSON.stringify(funcArgs));
+   
    //check if args match up
    if(func.args.length === funcArgs.length) {
       for(var i = 0; i < funcArgs.length; i++) {
+         //this.wr(i + ": " + JSON.stringify(funcArgs[i]));
          if(funcArgs[i].val.type !== func.args[i].val.type) {
             this.wr("execFunction: Error: argument type mismatch at argument index " + i);
             return null;
@@ -267,11 +338,20 @@ jsonPlState.execFunction = function(func, funcArgs) {
    func.ret.v_def = func.ret.v;
    
    //process function
+   var obj = {};
    for(var i = 0; i < func.lines.length; i++) {
       this.wr("");
-      this.wr("Processing Line: " + i + " with source: " + JSON.stringify(func.lines[i]));
+      this.wr("execFunction: Processing Line: " + i + " with source: " + JSON.stringify(func.lines[i]));
       if(this.isSysObjAsgn(func.lines[i])) {
          //process asgn
+         this.wr("execFunction: Process asgn");         
+         obj = {};
+         obj.asgn = func.lines[i];
+         var lleft = obj.asgn.left;
+         var lop = obj.asgn.op;
+         var lright = obj.asgn.right;
+         var res = this.execAsgn(lleft, lop, lright);
+         obj.ret = res;
          
       } else if(this.isSysObjIf(func.lines[i])) {
          //process if
@@ -281,14 +361,43 @@ jsonPlState.execFunction = function(func, funcArgs) {
          
       } else if(this.isSysObjReturn(func.lines[i])) {
          //process return
+         this.wr("execFunction: Process return");
+         obj = {};
+         obj.ret = func.lines[i].val;      
+         break;
          
       } else if(this.isSysObjCall(func.lines[i])) {
-         //process call 
-         
+         //process call
+         this.wr("execFunction: Process call");         
+         obj = {};
+         obj.call = func.lines[i];
+         var lfuncName = obj.call.name;
+         var lfuncArgs = obj.call.args;         
+         var lfunc = this.findFunc(lfuncName);
+         this.wr("execFunction: Looking for function with name: " + lfuncName + " with args: " + JSON.stringify(lfuncArgs));
+         if(lfunc !== null) {
+            var res = this.execFunction(lfunc, lfuncArgs, lineNum);
+            if(res === null) {
+               this.wr("execFunction: Error: executing function: " + lfuncName + " with args:" + JSON.stringify(lfuncArgs));
+               return false;
+            } else {
+               this.wr("execFunction: setting return value to result: '" + res.v + "' with args:" + JSON.stringify(res));
+               obj = {};
+               obj.ret = res;               
+            }
+         } else {
+            this.wr("execFunction: Error: no class function found");
+            return false;            
+         }
       }
    }
    
-   var ret = {"sys": "val", "type": func.ret.type, "v": func.ret.v};
+   if(obj === null || obj.ret === null || obj.ret === "") {
+      obj = {};
+      obj.ret = {"sys": "val", "type": "bool", "v": "false"};
+   }
+   
+   var ret = {"sys": "val", "type": obj.ret.type, "v": obj.ret.v};
    
    //reset ret default value
    func.ret = {"sys": "val", "type": func.ret.type, "v": func.ret.v_def}; 
@@ -312,12 +421,12 @@ jsonPlState.execProgram = function() {
          this.wr("Looking for function with name: " + funcName);
          if(func !== null) {
             if(func.ret.type === obj.ret.type) {
-               var res = this.execFunction(func, funcArgs);
+               var res = this.execFunction(func, funcArgs, 0);
                if(res === null) {
                   this.wr("execProgram: Error: executing function: " + funcName + " with args:" + JSON.stringify(funcArgs));
                   return false;
                } else {
-                  this.wr("execProgram: setting return value to result: '" + res.v + "'");
+                  this.wr("execProgram: setting return value to result: '" + res.v + "' with args:" + JSON.stringify(res));
                   obj.ret.v = res.v;
                }
             } else {
@@ -337,6 +446,7 @@ jsonPlState.execProgram = function() {
       return false;
    }
    
+   this.wr("execPogram: program returned: " + JSON.stringify(obj.ret));
    return true;
 };
 
@@ -508,7 +618,12 @@ jsonPlState.validateSysObjAsgn = function(obj) {
             if(!this.validateSysObjBex(tobj)) {
                this.wr("validateSysObjAsgn: Error: could not validate right obj as bex");
                return false;
-            }                            
+            }
+         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if(!this.validateSysObjCall(tobj)) {
+               this.wr("validateSysObjAsgn: Error: could not validate right obj as call");
+               return false;
+            }            
          } else {
             this.wr("validateSysObjAsgn: Error: could not validate obj as right");
             return false;
@@ -747,7 +862,10 @@ jsonPlState.validateSysObjVal = function(obj) {
 };
 
 jsonPlState.validateSysObjRef = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "ref" && this.validateProperties(obj, ["sys", "path"]) && this.isString(obj.path)) {
+   if(this.isSysObj(obj) && this.getSysObjType(obj) === "ref" && this.validateProperties(obj, ["sys", "val"])) {
+      if(!this.isSysObjVal(obj.val)) {
+         return false;
+      }
       return true;
    }
    return false;
@@ -755,7 +873,7 @@ jsonPlState.validateSysObjRef = function(obj) {
 
 jsonPlState.validateSysObjReturn = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "return" && this.validateProperties(obj, ["sys", "val"])) {
-      if(!this.isSysObjRef(obj.val) && !this.isSysObjConst(obj.val)) {
+      if(!this.isSysObjVal(obj.val)) {
          return false;
       }
       return true;
@@ -771,7 +889,7 @@ jsonPlState.validateProperties = function(obj, req) {
    for (var i = 0; i < req.length; i++) {
       var r = req[i];
       if (obj.hasOwnProperty(r) === false) {
-         wr("validateProperties: Error: missing property: " + r);
+         this.wr("validateProperties: Error: missing property: " + r);
          return false;
       }
    }
