@@ -274,7 +274,7 @@ jsonPlState.processRef = function(obj, func) {
    }
 };
 
-jsonPlState.execAsn = function(left, op, right, func) {
+jsonPlState.execAsn = function(left, op, right, func, lineNum) {
    if(this.isSysObjRef(left)) {
       left = this.processRef(left, func);
    }
@@ -283,25 +283,45 @@ jsonPlState.execAsn = function(left, op, right, func) {
       right = this.processRef(right, func);
       
    } else if(this.isSysObjBex(right)) {
-      right = this.processBex(right, func);
+      right = this.execBex(right, func);
       
    } else if(this.isSysObjExp(right)) {
-      right = this.processExp(right, func);      
+      right = this.execExp(right, func);      
       
    } else if(this.isSysObjConst(right)) {
-      //do nothing
+      //do nothing, already in proper format
       
    } else if(this.isSysObjCall(right)) {      
-      //call function      
+      //call function
+      this.wr("execAsn: Process call");         
+      var obj = {};
+      obj.call = right;
+      var lfuncName = obj.call.name;
+      var lfuncArgs = obj.call.args;         
+      var lfunc = this.findFunc(lfuncName);
+      this.wr("execAsn: Looking for function with name: " + lfuncName + " with args: " + JSON.stringify(lfuncArgs));
+      if(lfunc !== null) {
+         var res = this.execFunction(lfunc, lfuncArgs, lineNum);
+         if(res === null) {
+            this.wr("execAsn: Error: executing function: " + lfuncName + " with args:" + JSON.stringify(lfuncArgs));
+            return false;
+         } else {
+            this.wr("execAsn: setting return value to result: '" + res.v + "' with args:" + JSON.stringify(res));
+            right = res;               
+         }
+      } else {
+         this.wr("execAsn: Error: no class function found");
+         return false;            
+      }
    }
    
    if(left.val.type === right.val.type) {
-      //wr assigning right value to left value
+      this.wr("execAsn: assigning right value: " + right.val.v + " to right value");
       left.val.v = right.val.v;
       return true;
-      
+
    } else {
-      //wr type mismatch
+      this.wr("execAsn: Error: type mismatch left type: " + left.val.type + " is not equal to right type: " + right.val.type);
       return false;      
    }
 };
@@ -659,6 +679,10 @@ jsonPlState.validateSysObjBex = function(obj) {
             if(!this.validateSysObjBex(tobj)) {
                return false;
             }
+         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if(!this.validateSysObjCall(tobj)) {
+               return false;
+            }            
          } else {
             return false;
          }
@@ -700,7 +724,11 @@ jsonPlState.validateSysObjBex = function(obj) {
          } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
             if(!this.validateSysObjBex(tobj)) {
                return false;
-            }                            
+            }
+         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if(!this.validateSysObjCall(tobj)) {
+               return false;
+            }            
          } else {
             return false;
          }
@@ -732,6 +760,10 @@ jsonPlState.validateSysObjExp = function(obj) {
             }
          } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
             if(!this.validateSysObjBex(tobj)) {
+               return false;
+            }
+         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if(!this.validateSysObjCall(tobj)) {
                return false;
             }
          } else {
@@ -775,7 +807,11 @@ jsonPlState.validateSysObjExp = function(obj) {
          } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
             if(!this.validateSysObjBex(tobj)) {
                return false;
-            }                            
+            }
+         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if(!this.validateSysObjCall(tobj)) {
+               return false;
+            }
          } else {
             return false;
          }
