@@ -194,6 +194,9 @@ var jsonPlState = {
 
       ]
    },
+   "lineNumCurrent": 0,
+   "lineNumPrev": 0,
+   "linNumNext": 0,
    "program": {},
    "LOGGING": true,
    "WR_PREFIX": ""   
@@ -1017,7 +1020,119 @@ jsonPlState.getSysObjType = function(obj) {
    }
 };
 
-//returns true/false
+/*
+{
+   "sys": "if",
+   "left": {},
+   "op": {},
+   "right": {}
+}
+*/
+jsonPlState.processIf = function(objIf, func) {
+
+};
+
+jsonPlState.processFor = function(objFor, func) {
+   var start = null;
+   var stop = null;
+   var inc = null;
+   var line = null;
+
+   if(!this.isSysObjFor(objFor)) {
+      this.wr("processFor: Error: argument objRef is not a call func");
+      return null;
+   } else if(!this.isSysObjFunc(func)) {
+      this.wr("processFor: Error: argument func is not a func obj");
+      return null;
+   }
+
+   start = objFor.start;
+   if(this.isSysObjRef(start)) {
+      start = this.processRef(start, func);
+   } else if(this.isSysObjExp(start)) {
+      start = this.processExp(start, func);
+   } else {
+      this.wr("processFor: Error: argument start unsuppoorted type: " + start.sys);
+      return null;
+   }
+
+   if(start === null) {
+      this.wr("processFor: Error: argument start is null");
+      return null;
+   }
+
+   stop = objFor.stop;
+   if(this.isSysObjRef(stop)) {
+      stop = this.processRef(stop, func);
+   } else if(this.isSysObjExp(stop)) {
+      stop = this.processExp(stop, func);
+   } else {
+      this.wr("processFor: Error: argument stop unsuppoorted type: " + stop.sys);
+      return null;
+   }
+
+   if(stop === null) {
+      this.wr("processFor: Error: argument stop is null");
+      return null;
+   }
+
+   inc = objFor.inc;
+   if(this.isSysObjRef(inc)) {
+      inc = this.processRef(inc, func);
+   } else if(this.isSysObjExp(inc)) {
+      inc = this.processExp(inc, func);
+   } else {
+      this.wr("processFor: Error: argument inc unsuppoorted type: " + inc.sys);
+      return null;
+   }
+
+   if(inc === null) {
+      this.wr("processFor: Error: argument inc is null");
+      return null;
+   }
+
+   if(start.val.type !== "int") {
+      this.wr("processFor: Error: argument start unsuppoorted type: " + start.sys);
+      return null;
+
+   } else if(stop.val.type !== "int") {
+      this.wr("processFor: Error: argument stop unsuppoorted type: " + stop.sys);
+      return null;
+
+   } else if(inc.val.type !== "int") {
+      this.wr("processFor: Error: argument inc unsuppoorted type: " + inc.sys);
+      return null;
+   }
+
+   var res = {};
+   res.sys = "val";
+   res.type = "bool";
+   res.v = true;
+
+   for(var i = start.val.v; i < stop.val.v; i++) {
+      for(var j = 0; j < objFor.lines.length; j++) {
+         line = objFor.lines[i];
+      
+         if(this.isSysObjAsgn(line)) {
+            this.processAsgn(line, func);
+         
+         } else if(this.isSysObjCall(line)) {
+            this.processCall(line, func);
+      
+         } else if(this.isSysObjFor(line)) {
+            this.processFor(line, func);         
+      
+         } else if(this.isSysObjIf(line)) {
+            this.processIf(line, func);
+
+         }
+      }
+   }
+   
+   return res;
+};
+
+//returns objVal
 jsonPlState.processAsgn = function(objAsgn, func) {
    var left = null;
    var op = null;
@@ -1025,11 +1140,11 @@ jsonPlState.processAsgn = function(objAsgn, func) {
 
    if(!this.isSysObjAsgn(objAsgn)) {
       this.wr("processAsgn: Error: argument objRef is not a asgn obj");
-      return false;
+      return null;
       
    } else if(!this.isSysObjFunc(func)) {
       this.wr("processAsgn: Error: argument func is not a func obj");
-      return false;
+      return null;
    }
    
    left = objAsgn.left;
@@ -1039,7 +1154,7 @@ jsonPlState.processAsgn = function(objAsgn, func) {
    left = this.processRef(left, func);
    if(left === null) {
       this.wr("processAsgn: Error: error processing left");
-      return false;
+      return null;
    }
 
    if(this.isSysObjConst(right)) {
@@ -1058,7 +1173,7 @@ jsonPlState.processAsgn = function(objAsgn, func) {
       
    } else {
       this.wr("processAsgn: Error: argument right is an unknown obj: " + this.getSysObjType(right));
-      return false;
+      return null;
    }
    
    if(right === null) {
@@ -1068,12 +1183,16 @@ jsonPlState.processAsgn = function(objAsgn, func) {
    
    if(left.val.type === right.val.type) {
       left.val.v = right.val.v;
+
+      var res = {};
+      res.sys = "val";
+      res.type = "bool";
+      res.v = true;
+      return res;
    } else {
       this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type);
-      return false;      
+      return null;      
    }
-   
-   return true;
 };
 
 //returns objVal
@@ -1084,11 +1203,11 @@ jsonPlState.processBex = function(objBex, func) {
 
    if(!this.isSysObjBex(objBex)) {
       this.wr("processBex: Error: argument objRef is not a asgn obj");
-      return false;
+      return null;
       
    } else if(!this.isSysObjFunc(func)) {
       this.wr("processBex: Error: argument func is not a func obj");
-      return false;
+      return null;
    }
    
    left = objBex.left;
@@ -1109,12 +1228,12 @@ jsonPlState.processBex = function(objBex, func) {
       
    } else {
       this.wr("processBex: Error: argument left must be a ref obj");
-      return false;
+      return null;
    }
    
    if(left === null) {
       this.wr("processBex: Error: error processing left");
-      return false;
+      return null;
    }
 
    if(this.isSysObjRef(right)) {      
@@ -1131,12 +1250,12 @@ jsonPlState.processBex = function(objBex, func) {
 
    } else {
       this.wr("processBex: Error: argument right is an unknown obj: " + this.getSysObjType(right));
-      return false;
+      return null;
    }
    
    if(right === null) {
       this.wr("processBex: Error: error processing right");
-      return false;
+      return null;
    }   
    
    if(left.val.type === right.val.type) {
@@ -1195,14 +1314,14 @@ jsonPlState.processBex = function(objBex, func) {
          
       } else {
          this.wr("processBex: Error: unknown operator: " + op.v);
-         return false;               
+         return null;               
       }
    } else {
       this.wr("processBex: Error: type mismatch: " + left.val.type + " - " + right.val.type);
-      return false;
+      return null;
    }
    
-   return true;
+   return null;
 };
 
 //returns objVal
@@ -1213,8 +1332,9 @@ jsonPlState.processFunc = function(objFunc) {
    }
 
    var func = objFunc;
+   var line = null;
    for(var i = 0; i < objFunc.lines.length; i++) {
-      var line = objFunc.lines[i];
+      line = objFunc.lines[i];
       
       if(this.isSysObjAsgn(line)) {
          this.processAsgn(line, objFunc);
@@ -1230,10 +1350,11 @@ jsonPlState.processFunc = function(objFunc) {
       
       } else if(this.isSysObjReturn(line)) {
          if(line.val.type === objFunc.ret.type) {
-            return line.val;
+            objFunc.ret = line.val;
             
          } else {
             this.wr("processFunc: Error: argument return value is not the correct type: " + line.val.type + " instead of " + objFunc.ret.type);
+            return null;
          }
       }
    }
@@ -1322,11 +1443,11 @@ jsonPlState.processExp = function(objExp, func) {
 
    if(!this.isSysObjExp(objExp)) {
       this.wr("processExp: Error: argument objRef is not a asgn obj");
-      return false;
+      return null;
       
    } else if(!this.isSysObjFunc(func)) {
       this.wr("processExp: Error: argument func is not a func obj");
-      return false;
+      return null;
    }
    
    left = objExp.left;
@@ -1347,12 +1468,12 @@ jsonPlState.processExp = function(objExp, func) {
       
    } else {
       this.wr("processBex: Error: argument left must be a ref obj");
-      return false;
+      return null;
    }
    
    if(left === null) {
       this.wr("processBex: Error: error processing left");
-      return false;
+      return null;
    }
 
    if(this.isSysObjRef(right)) {      
@@ -1369,12 +1490,12 @@ jsonPlState.processExp = function(objExp, func) {
       
    } else {
       this.wr("processBex: Error: argument right is an unknown obj: " + this.getSysObjType(right));
-      return false;
+      return null;
    }
    
    if(right === null) {
       this.wr("processBex: Error: error processing right");
-      return false;
+      return null;
    }   
    
    if(left.val.type === right.val.type) {
@@ -1394,7 +1515,7 @@ jsonPlState.processExp = function(objExp, func) {
       } else if(op.v === "/") {
          if(right.val.v !== 0) {
             this.wr("processExp: Error: divide by zero error");
-            return false;
+            return null;
             
          } else {
             ret.v = left.val.v / right.val.v;
@@ -1407,14 +1528,14 @@ jsonPlState.processExp = function(objExp, func) {
          
       } else {
          this.wr("processExp: Error: unknown operator: " + op.v);
-         return false;               
+         return null;               
       }
    } else {
       this.wr("processExp: Error: type mismatch: " + left.val.type + " - " + right.val.type);
-      return false;
+      return null;
    }
    
-   return true;
+   return null;
 };
 
 jsonPlState.program = code;
