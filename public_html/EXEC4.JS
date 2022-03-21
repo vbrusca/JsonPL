@@ -206,11 +206,12 @@ function jsonPlState() {
    this.lineNumPrev = 0;
    this.linNumNext = 0;
    
-   this.lastForReturn = 0;
-   this.lastIfReturn = false;
-   this.lastBexReturn = false;
-   this.lastExpReturn = 0;
-   this.lastAsgnReturn = false;
+   this.lastForReturn = null;
+   this.lastIfReturn = null;
+   this.lastBexReturn = null;
+   this.lastExpReturn = null;
+   this.lastAsgnReturn = null;
+   this.lastProgramReturn = null;
    
    this.program = {};
    this.LOGGING = true;
@@ -276,8 +277,10 @@ jsonPlState.prototype.runProgram = function() {
    var callFuncName = callObj.name;
    this.wr("runProgram: RUN PROGRAM: " + callFuncName);
    var callFunc = this.findFunc(callFuncName);   
-   res = this.processCall(callObj, callFunc);
-   this.wrObj(res);   
+   var ret = this.processCall(callObj, callFunc);
+   this.lastProgramReturn = ret;
+   //this.wrObj(res); 
+   return ret;
 };
 
 
@@ -2295,8 +2298,8 @@ jsonPlState.prototype.processCall = function(objCall, func) {
             funcDef.ret_def = JSON.parse(JSON.stringify(funcDef.ret));    
             ret = this.processFunc(funcDef);
             
-            this.wr("RET_DEF");
-            this.wrObj(funcDef.ret_def);
+            //this.wr("RET_DEF");
+            //this.wrObj(funcDef.ret_def);
             
             if(ret.val.type !== funcDef.ret_def.type) {
                this.wr("processCall: Error: function return type mismatch, return type " + ret.val.type + " expected " + funcDef.ret_def.type);
@@ -2591,3 +2594,26 @@ tmp = jpl.program;
 jpl.wr("====================== TEST 10: Full Program ======================");
 jpl.wrObj(tmp);
 jpl.runProgram();
+
+jpl.wr("====================== TEST 11: Example Use ======================");
+var jplData = [ 33, true ];
+var jplCode = JSON.parse(JSON.stringify(code));
+
+function test(dataFromAjax, jplCodeFromAjax) {
+   console.log("test method");
+   var jpl = new jsonPlState();
+   jpl.program = jplCodeFromAjax;
+   jpl.program.vars[0].val.v = dataFromAjax[0];
+   jpl.program.vars[1].val.v = dataFromAjax[1];   
+   var tmp = jpl.runProgram();
+   return tmp.val.v;
+}
+
+jpl.wr("TEST METHOD");
+jpl.wr(test.toString());
+
+jpl.wr("TEST METHOD DATA");
+jpl.wr(jplData.toString());
+
+var jplRes = test(jplData, jplCode);
+jpl.wr("Example Code Result: " + jplRes);
