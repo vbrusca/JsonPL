@@ -5,11 +5,10 @@
  * Created on 02/03/2022 1:57 PM EDT
  * Licensed under GNU General Public License v3.0
  */
-
 var code = {
    "sys": "class",
    "name": "test1",
-   "call": {"sys": "call", "name": "testFunction2", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}]},
+   "call": {"sys": "call", "name": "testFunction1", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}]},
    "vars": [
       {
          "sys": "var",
@@ -109,37 +108,15 @@ var code = {
                "sys": "asgn",
                "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}},
                "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}
+               "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
             },
             {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
-            },
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
-            },
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "bex", "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
-            },
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "bex", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
-            },
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
+               "sys": "return",
+               "val": {
+                     "sys": "val",
+                     "type": "bool",
+                     "v": true
+               }
             }
          ]
       },
@@ -174,6 +151,7 @@ var code = {
             "v": false
          },
          "lines": [
+            {"sys": "call", "name": "SYS::wr", "args": [{"sys": "const", "val":{"sys": "val", "type": "string", "v": "hello world"}}]},         
             {"sys":"return", "val": {"sys": "val", "type": "bool", "v":"true"}}
          ]
       }
@@ -185,32 +163,121 @@ var code = {
    }
 };
 
+/*
+,
+            {
+               "sys": "asgn",
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}},
+               "op": {"sys":"op", "type":"asgn", "v":"="},
+               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
+            },
+            {
+               "sys": "asgn",
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
+               "op": {"sys":"op", "type":"asgn", "v":"="},
+               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
+            },
+            {
+               "sys": "asgn",
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
+               "op": {"sys":"op", "type":"asgn", "v":"="},
+               "right": {"sys": "bex", "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
+            },
+            {
+               "sys": "asgn",
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
+               "op": {"sys":"op", "type":"asgn", "v":"="},
+               "right": {"sys": "bex", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
+            },
+            {
+               "sys": "asgn",
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
+               "op": {"sys":"op", "type":"asgn", "v":"="},
+               "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
+            }
+*/
+
 /* 
  * Name: jsonPlState
  * Desc: Main object. Programming language state.
  */
-var jsonPlState = {
-   "system": {
-      "procedures": [
-
-      ],
-      "functions":[
-
-      ]
-   },
-   "lineNumCurrent": 0,
-   "lineNumPrev": 0,
-   "linNumNext": 0,
+function jsonPlState() {
+   this.lineNumCurrent = 0;
+   this.lineNumPrev = 0;
+   this.linNumNext = 0;
    
-   "lastForReturn": 0,
-   "lastIfReturn": false,
-   "lastBexReturn": false,
-   "lastExpReturn": 0,
-   "lastAsgnReturn": false,
+   this.lastForReturn = 0;
+   this.lastIfReturn = false;
+   this.lastBexReturn = false;
+   this.lastExpReturn = 0;
+   this.lastAsgnReturn = false;
    
-   "program": {},
-   "LOGGING": true,
-   "WR_PREFIX": ""   
+   this.program = {};
+   this.LOGGING = true;
+   this.WR_PREFIX = "";
+}
+
+/*
+ * TODO
+ * Name: findArg
+ * Desc: Search the provided object for an argument with the given name.
+ * Arg1: name(string to find)
+ * Arg2: obj(func obj, sys=func)
+ * Returns: {null | (arg obj, sys=arg)}
+ */
+jsonPlState.prototype.sysWr = function(args) {
+   var s = args[0].val.v;
+   console.log("sysWr: " + s);
+};
+
+/*
+ * TODO
+ * Name: findArg
+ * Desc: Search the provided object for an argument with the given name.
+ * Arg1: name(string to find)
+ * Arg2: obj(func obj, sys=func)
+ * Returns: {null | (arg obj, sys=arg)}
+ */
+jsonPlState.prototype.system = {
+   "procedures": [
+
+   ],
+   "functions":[
+      {
+         "sys": "func", 
+         "name": "SYS::wr",
+         "fname": "sysWr",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "s",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }
+         ]
+      }
+   ]
+};
+
+
+/*
+ * TODO
+ * Name: findArg
+ * Desc: Search the provided object for an argument with the given name.
+ * Arg1: name(string to find)
+ * Arg2: obj(func obj, sys=func)
+ * Returns: {null | (arg obj, sys=arg)}
+ */
+jsonPlState.prototype.runProgram = function() {
+   var callObj = this.program.call;
+   var callFuncName = callObj.name;
+   this.wr("runProgram: RUN PROGRAM: " + callFuncName);
+   var callFunc = this.findFunc(callFuncName);   
+   res = this.processCall(callObj, callFunc);
+   this.wrObj(res);   
 };
 
 
@@ -222,7 +289,7 @@ var jsonPlState = {
  * Arg2: obj(func obj, sys=func)
  * Returns: {null | (arg obj, sys=arg)}
  */
-jsonPlState.findArg = function(name, obj) {
+jsonPlState.prototype.findArg = function(name, obj) {
    for (var i = 0; i < obj.args.length; i++) {
       if (obj.args[i].name === name) {
          return obj.args[i];
@@ -238,7 +305,7 @@ jsonPlState.findArg = function(name, obj) {
  * Arg2: obj{(func obj, sys=func) | (class obj, sys=class)}
  * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
  */
-jsonPlState.findVar = function(name, obj) {
+jsonPlState.prototype.findVar = function(name, obj) {
    for (var i = 0; i < obj.vars.length; i++) {
       if (obj.vars[i].name === name) {
          return obj.vars[i];
@@ -253,11 +320,22 @@ jsonPlState.findVar = function(name, obj) {
  * Arg1: name(string to find)
  * Returns: {null | (func obj, sys=func)}
  */
-jsonPlState.findFunc = function(name) {
+jsonPlState.prototype.findFunc = function(name) {
    var prog = this.program;
    for (var i = 0; i < prog.funcs.length; i++) {
       if (prog.funcs[i].name === name) {
          return prog.funcs[i];
+      }
+   }
+   return null;
+};
+
+//TODO
+jsonPlState.prototype.findSysFunc = function(name) {
+   var prog = this;
+   for (var i = 0; i < prog.system.functions.length; i++) {
+      if (prog.system.functions[i].name === name) {
+         return prog.system.functions[i];
       }
    }
    return null;
@@ -281,7 +359,7 @@ jsonPlState.findFunc = function(name) {
       }
    -!>
  */
-jsonPlState.validateSysObjIf = function(obj) {
+jsonPlState.prototype.validateSysObjIf = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "if" && this.validateProperties(obj, ["sys", "left", "op", "right", "thn", "els"])) {
       var tobj = null;
       if(obj.left !== null) {
@@ -415,7 +493,7 @@ jsonPlState.validateSysObjIf = function(obj) {
       }
    -!>
  */
-jsonPlState.validateSysObjFor = function(obj) {
+jsonPlState.prototype.validateSysObjFor = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "for" && this.validateProperties(obj, ["sys", "start", "stop", "inc", "lines"])) {
       var tobj = null;
       if(obj.start !== null) {
@@ -554,7 +632,7 @@ jsonPlState.validateSysObjFor = function(obj) {
    }
    -!>
  */
-jsonPlState.validateSysObjClass = function(obj) {
+jsonPlState.prototype.validateSysObjClass = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "class" && this.validateProperties(obj, ["sys", "name", "vars", "funcs", "ret", "call"])) {
       if(!this.validateSysObjVal(obj.ret)) {
          this.wr("validateSysObjClass: Error: could not validate obj as val");
@@ -594,7 +672,7 @@ jsonPlState.validateSysObjClass = function(obj) {
    [asgn | for | if | return | call]
    -!>
  */
-jsonPlState.validateSysObjFuncLine = function(obj) {
+jsonPlState.prototype.validateSysObjFuncLine = function(obj) {
    if(this.isSysObj(obj)) {
       if(this.getSysObjType(obj) === "asgn") {
          if(!this.validateSysObjAsgn(obj)) {
@@ -644,7 +722,7 @@ jsonPlState.validateSysObjFuncLine = function(obj) {
       }
    -!>
  */
-jsonPlState.validateSysObjFunc = function(obj) {
+jsonPlState.prototype.validateSysObjFunc = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "func" && this.validateProperties(obj, ["sys", "name", "args", "vars", "ret", "lines"])) {
       if(!this.validateSysObjVal(obj.ret)) {
          this.wr("validateSysObjFunc: Error: could not validate obj as val");
@@ -691,7 +769,7 @@ jsonPlState.validateSysObjFunc = function(obj) {
       }
    -!>
  */
-jsonPlState.validateSysObjAsgn = function(obj) {
+jsonPlState.prototype.validateSysObjAsgn = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "asgn" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
       var tobj = null;
       if(obj.left !== null) {
@@ -787,7 +865,7 @@ jsonPlState.validateSysObjAsgn = function(obj) {
       }
    -!>
  */
-jsonPlState.validateSysObjBex = function(obj) {
+jsonPlState.prototype.validateSysObjBex = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "bex" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
       var tobj = null;
       if(obj.left !== null) {
@@ -884,7 +962,7 @@ jsonPlState.validateSysObjBex = function(obj) {
       }
    -!>
  */
-jsonPlState.validateSysObjExp = function(obj) {
+jsonPlState.prototype.validateSysObjExp = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "exp" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
       var tobj = null;
       if(obj.left !== null) {
@@ -980,7 +1058,7 @@ jsonPlState.validateSysObjExp = function(obj) {
       }
    -!>
  */
-jsonPlState.validateSysObjCall = function(obj) {
+jsonPlState.prototype.validateSysObjCall = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "call" && this.validateProperties(obj, ["sys", "name", "args"])) {
       if(obj.args !== null) {
          for(var i = 0; i < obj.args.length; i++) {
@@ -1016,7 +1094,7 @@ jsonPlState.validateSysObjCall = function(obj) {
       }
    -!>
  */
-jsonPlState.validateSysObjOp = function(obj) {
+jsonPlState.prototype.validateSysObjOp = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "op" && this.validateProperties(obj, ["sys", "type", "v"])) {
       if(!(obj.type === "asgn" || obj.type === "bex" || obj.type === "exp")) {
          return false;
@@ -1038,7 +1116,7 @@ jsonPlState.validateSysObjOp = function(obj) {
       }
    -!>
  */
-jsonPlState.validateSysObjConst = function(obj) {
+jsonPlState.prototype.validateSysObjConst = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "const" && this.validateProperties(obj, ["sys", "val"])) {
       if(!this.validateSysObjVal(obj.val)) {
          return false;
@@ -1061,7 +1139,7 @@ jsonPlState.validateSysObjConst = function(obj) {
       }
    -!>
  */
-jsonPlState.validateSysObjVar = function(obj) {
+jsonPlState.prototype.validateSysObjVar = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "var" && this.validateProperties(obj, ["sys", "name", "val"])) {
       if(!this.validateSysObjVal(obj.val)) {
          return false;
@@ -1084,7 +1162,7 @@ jsonPlState.validateSysObjVar = function(obj) {
       }
    -!>
  */
-jsonPlState.validateSysObjArg = function(obj) {
+jsonPlState.prototype.validateSysObjArg = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "arg" && this.validateProperties(obj, ["sys", "name", "val"])) {
       if(!this.validateSysObjVal(obj.val)) {
          return false;
@@ -1107,7 +1185,7 @@ jsonPlState.validateSysObjArg = function(obj) {
       }
    -!>
  */
-jsonPlState.validateSysObjVal = function(obj) {
+jsonPlState.prototype.validateSysObjVal = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "val" && this.validateProperties(obj, ["sys", "type", "v"])) {
       if(!(obj.type === "int" || obj.type === "float" || obj.type === "string" || obj.type === "bool")) {
          return false;
@@ -1129,7 +1207,7 @@ jsonPlState.validateSysObjVal = function(obj) {
       }  
    -!>(with value like #.vars.tmp1 or $.vars.tmp1)
  */
-jsonPlState.validateSysObjRef = function(obj) {
+jsonPlState.prototype.validateSysObjRef = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "ref" && this.validateProperties(obj, ["sys", "val"])) {
       if(!this.isSysObjVal(obj.val)) {
          return false;
@@ -1151,7 +1229,7 @@ jsonPlState.validateSysObjRef = function(obj) {
       }  
    -!>
  */
-jsonPlState.validateSysObjReturn = function(obj) {
+jsonPlState.prototype.validateSysObjReturn = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "return" && this.validateProperties(obj, ["sys", "val"])) {
       if(!this.isSysObjVal(obj.val)) {
          return false;
@@ -1168,7 +1246,7 @@ jsonPlState.validateSysObjReturn = function(obj) {
  * Arg2: req(array of attribute name to check for)
  * Returns: {false | true}
  */
-jsonPlState.validateProperties = function(obj, req) {
+jsonPlState.prototype.validateProperties = function(obj, req) {
    if (obj === null || req === null) {
       return false;
    }
@@ -1191,7 +1269,7 @@ jsonPlState.validateProperties = function(obj, req) {
  *       Sets the WR_PREFIX to each string written. 
  * Arg1: s(string to write)
  */
-jsonPlState.wr = function(s) {
+jsonPlState.prototype.wr = function(s) {
    if (this.LOGGING === true) {
       console.log(this.WR_PREFIX + s);
    }
@@ -1204,7 +1282,7 @@ jsonPlState.wr = function(s) {
  *       Prints object using pretty JSON.stringify call. 
  * Arg1: s(string to write)
  */
-jsonPlState.wrObj = function(s) {
+jsonPlState.prototype.wrObj = function(s) {
    if (this.LOGGING === true) {
       console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
    }
@@ -1218,7 +1296,7 @@ jsonPlState.wrObj = function(s) {
  * Arg1: arg(JSON object)
  * Returns: (true | false)
  */
-jsonPlState.isObject = function(arg) {
+jsonPlState.prototype.isObject = function(arg) {
    if(arg === null) {
       return false;
    } else if(typeof arg === "object") {
@@ -1234,7 +1312,7 @@ jsonPlState.isObject = function(arg) {
  * Arg1: arg(javascript array)
  * Returns: (true | false)
  */
-jsonPlState.isArray = function(arg) {
+jsonPlState.prototype.isArray = function(arg) {
    if (arg === null) {
       return false;
    } else {
@@ -1248,7 +1326,7 @@ jsonPlState.isArray = function(arg) {
  * Arg1: arg(some string)
  * Returns: (true | false)
  */
-jsonPlState.isString = function(arg) {
+jsonPlState.prototype.isString = function(arg) {
    if (arg === null) {
       return false;
    } else if (typeof arg === 'string' || arg instanceof String) {
@@ -1266,7 +1344,7 @@ jsonPlState.isString = function(arg) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObjIf = function(obj) {
+jsonPlState.prototype.isSysObjIf = function(obj) {
    if (this.isSysObj(obj) === true && obj.sys === "if") {
       return true;
    } else {
@@ -1280,7 +1358,7 @@ jsonPlState.isSysObjIf = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObjRef = function(obj) {
+jsonPlState.prototype.isSysObjRef = function(obj) {
    if (this.isSysObj(obj) === true && obj.sys === "ref") {
       return true;
    } else {
@@ -1294,7 +1372,7 @@ jsonPlState.isSysObjRef = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObjBex = function(obj) {
+jsonPlState.prototype.isSysObjBex = function(obj) {
    if (this.isSysObj(obj) === true && obj.sys === "bex") {
       return true;
    } else {
@@ -1308,7 +1386,7 @@ jsonPlState.isSysObjBex = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObjExp = function(obj) {
+jsonPlState.prototype.isSysObjExp = function(obj) {
    if (this.isSysObj(obj) === true && obj.sys === "exp") {
       return true;
    } else {
@@ -1322,7 +1400,7 @@ jsonPlState.isSysObjExp = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObjVal = function(obj) {
+jsonPlState.prototype.isSysObjVal = function(obj) {
    if (this.isSysObj(obj) === true && obj.sys === "val") {
       return true;
    } else {
@@ -1336,7 +1414,7 @@ jsonPlState.isSysObjVal = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObjAsgn = function(obj) {
+jsonPlState.prototype.isSysObjAsgn = function(obj) {
    if (this.isSysObj(obj) === true && obj.sys === "asgn") {
       return true;
    } else {
@@ -1350,7 +1428,7 @@ jsonPlState.isSysObjAsgn = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObjConst = function(obj) {
+jsonPlState.prototype.isSysObjConst = function(obj) {
    if (this.isSysObj(obj) === true && obj.sys === "const") {
       return true;
    } else {
@@ -1364,7 +1442,7 @@ jsonPlState.isSysObjConst = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObjVar = function(obj) {
+jsonPlState.prototype.isSysObjVar = function(obj) {
    if (this.isSysObj(obj) === true && obj.sys === "var") {
       return true;
    } else {
@@ -1378,7 +1456,7 @@ jsonPlState.isSysObjVar = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObjCall = function(obj) {
+jsonPlState.prototype.isSysObjCall = function(obj) {
    if (this.isSysObj(obj) === true && obj.sys === "call") {
       return true;
    } else {
@@ -1392,7 +1470,7 @@ jsonPlState.isSysObjCall = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObjFunc = function(obj) {
+jsonPlState.prototype.isSysObjFunc = function(obj) {
    if (this.isSysObj(obj) === true && obj.sys === "func") {
       return true;
    } else {
@@ -1406,7 +1484,7 @@ jsonPlState.isSysObjFunc = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObjFor = function(obj) {
+jsonPlState.prototype.isSysObjFor = function(obj) {
    if (this.isSysObj(obj) === true && obj.sys === "for") {
       return true;
    } else {
@@ -1420,7 +1498,7 @@ jsonPlState.isSysObjFor = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObjReturn = function(obj) {
+jsonPlState.prototype.isSysObjReturn = function(obj) {
    if (this.isSysObj(obj) === true && obj.sys === "return") {
       return true;
    } else {
@@ -1434,7 +1512,7 @@ jsonPlState.isSysObjReturn = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.isSysObj = function(obj) {
+jsonPlState.prototype.isSysObj = function(obj) {
    if (obj !== null && obj.hasOwnProperty("sys") === true && this.isObject(obj) === true) {
       return true;
    } else {
@@ -1448,7 +1526,7 @@ jsonPlState.isSysObj = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.getSysObjType = function(obj) {
+jsonPlState.prototype.getSysObjType = function(obj) {
    if (this.isSysObj(obj) === true) {
       return obj.sys;
    } else {
@@ -1465,7 +1543,7 @@ jsonPlState.getSysObjType = function(obj) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
  */
-jsonPlState.processRef = function(objRef, func) {
+jsonPlState.prototype.processRef = function(objRef, func) {
    var path = null;
    var vls = null;
    var fnd = null;
@@ -1478,6 +1556,9 @@ jsonPlState.processRef = function(objRef, func) {
       this.wr("processRef: Error: argument objRef is not a func obj");
       return null;
    }   
+   
+   //this.wr("OBJ REF");
+   //this.wrObj(objRef);
    
    if(objRef.val.v.indexOf("#.") === 0) {
       //program/class var
@@ -1514,9 +1595,11 @@ jsonPlState.processRef = function(objRef, func) {
          fnd = this.findArg(vls[1], func);
          if(fnd !== null) {
             //this.wr("processRef: found reference result: " + this.wrObj(fnd));            
+            //this.wrObj(func.args);
             return fnd;
          } else {
             this.wr("processRef: Error: could not find arg with name '" + vls[1] + "' in func: " + func.name);
+            //this.wrObj(func.args);
             return null;            
          }         
       } else {
@@ -1533,7 +1616,7 @@ jsonPlState.processRef = function(objRef, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const)}
  */
-jsonPlState.processIf = function(objIf, func) {
+jsonPlState.prototype.processIf = function(objIf, func) {
    var left = null;
    var op = null;
    var right = null;
@@ -1687,7 +1770,7 @@ jsonPlState.processIf = function(objIf, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
  */
-jsonPlState.processIfForLines = function(objLines, func) {
+jsonPlState.prototype.processIfForLines = function(objLines, func) {
    if(objLines !== null && this.isArray(objLines) && objLines.length > 0) {
       var j = 0;
       var len = objLines.length;
@@ -1741,7 +1824,7 @@ jsonPlState.processIfForLines = function(objLines, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
  */
-jsonPlState.processFor = function(objFor, func) {
+jsonPlState.prototype.processFor = function(objFor, func) {
    var start = null;
    var stop = null;
    var inc = null;
@@ -1880,7 +1963,7 @@ jsonPlState.processFor = function(objFor, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const)}
  */
-jsonPlState.processAsgn = function(objAsgn, func) {
+jsonPlState.prototype.processAsgn = function(objAsgn, func) {
    var left = null;
    var op = null;
    var right = null;
@@ -1956,7 +2039,7 @@ jsonPlState.processAsgn = function(objAsgn, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const)}
  */
-jsonPlState.processBex = function(objBex, func) {
+jsonPlState.prototype.processBex = function(objBex, func) {
    var left = null;
    var op = null;
    var right = null;
@@ -2087,55 +2170,54 @@ jsonPlState.processBex = function(objBex, func) {
 };
 
 
-
-//TODO: finish func support, carry return statement from if or for statements and exit the method
-//returns objVal
-jsonPlState.processFunc = function(objFunc) {
+/*
+ * Name: processFunc
+ * Desc: Processes a function's lines. Returns last statement or return value.
+ * Arg1: objFunc(bex obj, sys=func)
+ * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
+ */
+jsonPlState.prototype.processFunc = function(objFunc) {
    if(!this.isSysObjFunc(objFunc)) {
       this.wr("processFunc: Error: argument objRef is not a call func");
       return null;
    }
-
-   var func = objFunc;
-   var line = null;
-   for(var i = 0; i < objFunc.lines.length; i++) {
-      line = objFunc.lines[i];
-      
-      if(this.isSysObjAsgn(line)) {
-         this.processAsgn(line, objFunc);
-         
-      } else if(this.isSysObjCall(line)) {
-         this.processCall(line, objFunc);
-      
-      } else if(this.isSysObjFor(line)) {
-         this.processFor(line, objFunc);         
-      
-      } else if(this.isSysObjIf(line)) {
-         this.processIf(line, objFunc);
-      
-      } else if(this.isSysObjReturn(line)) {
-         if(line.val.type === objFunc.ret.type) {
-            objFunc.ret = line.val;
-            
-         } else {
-            this.wr("processFunc: Error: argument return value is not the correct type: " + line.val.type + " instead of " + objFunc.ret.type);
-            return null;
-         }
-      }
-   }
    
-   return objFunc.ret;
+   var ret3 = null;   
+   ret3 = this.processIfForLines(objFunc.lines, objFunc);      
+   return ret3;
 };
 
-//TODO: finish call support, carry return statement from if or for statements and exit the method
-//returns objVal
-jsonPlState.processCall = function(objCall, func) {
+
+/*
+{
+   "sys": "call", 
+   "name": "testFunction2", 
+   "args": [
+      {
+         "sys": "ref", 
+         "val":{
+            "sys": "val", 
+            "type": "int", 
+            "v": "#.vars.tmp1"
+         }
+      }
+   ]
+}
+*/
+/*
+ * Name: processFunc
+ * Desc: Processes a function's lines. Returns last statement or return value.
+ * Arg1: objFunc(bex obj, sys=func)
+ * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
+ */
+jsonPlState.prototype.processCall = function(objCall, func) {
    var name = null;
    var args = null;
    var funcDef = null;
    var funcArgs = null;
    var tmpArg = null;   
-   var res = null;
+   var ret = null;
+   var sysFunc = false;
    
    if(!this.isSysObjCall(objCall)) {
       this.wr("processCall: Error: argument objRef is not a call obj");
@@ -2147,14 +2229,20 @@ jsonPlState.processCall = function(objCall, func) {
    }
    
    name = objCall.name;
-   args = objCall.args;
+   args = JSON.parse(JSON.stringify(objCall.args));
    funcDef = this.findFunc(name);
    if(funcDef !== null) {
       funcArgs = funcDef.args;
       
    } else {
-      this.wr("processCall: Error: no function found with name: " + name);
-      return null;
+      sysFunc = true;
+      funcDef = this.findSysFunc(name);
+      if(funcDef !== null) {
+         funcArgs = funcDef.args;
+      } else {
+         this.wr("processCall: Error: no function found with name: " + name);
+         return null;         
+      }
    }
    
    if(funcArgs !== null) {
@@ -2170,6 +2258,7 @@ jsonPlState.processCall = function(objCall, func) {
                tmpArg = this.processRef(args[i], func);
                if(tmpArg !== null) {
                   args[i].val.v = tmpArg.val.v;
+                  args[i].name = funcArgs[i].name;
                } else {
                   this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
                   return null;
@@ -2177,20 +2266,49 @@ jsonPlState.processCall = function(objCall, func) {
             }
          }
          
-         //backup default args
-         funcDef.args_def = funcDef.args;
-         funcDef.args = args;
-         
-         //backup default ret
-         funcDef.ret_def = funcDef.ret;
-         
-         //res = this.processFunc(funcDef);
-         
-         //restore args and ret
-         funcDef.args = funcDef.args_def;
-         funcDef.ret = funcDef.ret_def;
-         
-         return res;
+         if(sysFunc) {
+            var err = true;
+            try {
+               this[funcDef.fname](args);            
+               err = false;
+            } catch (e) {
+               err = true;
+            }
+            
+            var ret = {};
+            ret.sys = "val";
+            ret.type = "bool";
+            ret.v = err;
+
+            var ret2 = {};
+            ret2.sys = "const";
+            ret2.val = ret;  
+            ret = ret2;
+            return ret;
+            
+         } else {
+            //backup default args
+            funcDef.args_def = JSON.parse(JSON.stringify(funcDef.args));
+            funcDef.args = args;
+            
+            //backup default ret
+            funcDef.ret_def = JSON.parse(JSON.stringify(funcDef.ret));    
+            ret = this.processFunc(funcDef);
+            
+            this.wr("RET_DEF");
+            this.wrObj(funcDef.ret_def);
+            
+            if(ret.val.type !== funcDef.ret_def.type) {
+               this.wr("processCall: Error: function return type mismatch, return type " + ret.val.type + " expected " + funcDef.ret_def.type);
+               return null;
+            }
+            
+            //restore args and ret
+            funcDef.args = JSON.parse(JSON.stringify(funcDef.args_def));
+            funcDef.ret = JSON.parse(JSON.stringify(funcDef.ret_def));
+            
+            return ret;
+         }
       } else {
          this.wr("processCall: Error: function argument length mismatch, func arg def: " + funcArgs.length + ", call arg: " + args.length);
          return null;         
@@ -2210,7 +2328,7 @@ jsonPlState.processCall = function(objCall, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const)}
  */
-jsonPlState.processExp = function(objExp, func) {
+jsonPlState.prototype.processExp = function(objExp, func) {
    var left = null;
    var op = null;
    var right = null;
@@ -2322,25 +2440,32 @@ jsonPlState.processExp = function(objExp, func) {
 
 
 /////////////////////////TEST SECTION
-jsonPlState.program = code;
+var jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
 
 var res = null;
 var tmp = null;
 
 tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}};
-jsonPlState.wr("REF 1:");
-res = jsonPlState.processRef(tmp, code.funcs[0]);
-jsonPlState.wrObj(res);
+jpl.wr("====================== TEST 1: Class Variable Reference ======================");
+jpl.wrObj(tmp);
+jpl.wr("REF 1:");
+res = jpl.processRef(tmp, code.funcs[0]);
+jpl.wrObj(res);
 
 tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}};
-jsonPlState.wr("REF 2:");
-res = jsonPlState.processRef(tmp, code.funcs[0]);
-jsonPlState.wrObj(res);
+jpl.wr("====================== TEST 2: Function Argument Reference ======================");
+jpl.wrObj(tmp);
+jpl.wr("REF 2:");
+res = jpl.processRef(tmp, code.funcs[0]);
+jpl.wrObj(res);
 
 tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.vars.b1"}};
-jsonPlState.wr("REF 3:");
-res = jsonPlState.processRef(tmp, code.funcs[0]);
-jsonPlState.wrObj(res);
+jpl.wr("====================== TEST 3: Function Variable Reference ======================");
+jpl.wrObj(tmp);
+jpl.wr("REF 3:");
+res = jpl.processRef(tmp, code.funcs[0]);
+jpl.wrObj(res);
 
 tmp = {
    "sys": "asgn",
@@ -2348,9 +2473,11 @@ tmp = {
    "op": {"sys":"op", "type":"asgn", "v":"="},
    "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}
 };
-res = jsonPlState.processAsgn(tmp, code.funcs[0]);
-jsonPlState.wr("ASGN:");
-jsonPlState.wrObj(res);
+jpl.wr("====================== TEST 4: Assignment ======================");
+jpl.wrObj(tmp);
+res = jpl.processAsgn(tmp, code.funcs[0]);
+jpl.wr("ASGN:");
+jpl.wrObj(res);
 
 tmp = {
    "sys": "bex", 
@@ -2358,9 +2485,11 @@ tmp = {
    "op": {"sys":"op", "type":"bex", "v":"=="}, 
    "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
 };
-res = jsonPlState.processBex(tmp, code.funcs[0]);
-jsonPlState.wr("BEX:");
-jsonPlState.wrObj(res);
+jpl.wr("====================== TEST 5: Boolean Expression ======================");
+jpl.wrObj(tmp);
+res = jpl.processBex(tmp, code.funcs[0]);
+jpl.wr("BEX:");
+jpl.wrObj(res);
 
 tmp = {
    "sys": "exp", 
@@ -2368,9 +2497,11 @@ tmp = {
    "op": {"sys":"op", "type":"exp", "v":"+"}, 
    "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
 };
-res = jsonPlState.processExp(tmp, code.funcs[0]);
-jsonPlState.wr("EXP:");
-jsonPlState.wrObj(res);
+jpl.wr("====================== TEST 6: Expression ======================");
+jpl.wrObj(tmp);
+res = jpl.processExp(tmp, code.funcs[0]);
+jpl.wr("EXP:");
+jpl.wrObj(res);
 
 tmp = {
    "sys": "call", 
@@ -2386,9 +2517,13 @@ tmp = {
       }
    ]   
 };
-res = jsonPlState.processCall(tmp, code.funcs[0]);
-jsonPlState.wr("CALL:");
-jsonPlState.wrObj(res);
+jpl.wr("====================== TEST 7: Function Call ======================");
+jpl.wrObj(tmp);
+res = jpl.processCall(tmp, code.funcs[0]);
+jpl.wr("CALL:");
+jpl.wrObj(res);
+jpl.wr("CALL 2:");
+jpl.wrObj(code.funcs[1].args);
 
 tmp = {
    "sys": "if",
@@ -2412,9 +2547,11 @@ tmp = {
       }
    ]
 };
-res = jsonPlState.processIf(tmp, code.funcs[0]);
-jsonPlState.wr("IF:");
-jsonPlState.wrObj(res);
+jpl.wr("====================== TEST 8: If Statement ======================");
+jpl.wrObj(tmp);
+res = jpl.processIf(tmp, code.funcs[0]);
+jpl.wr("IF:");
+jpl.wrObj(res);
 
 tmp = {
    "sys": "for",
@@ -2430,6 +2567,27 @@ tmp = {
       }
    ]
 };
-res = jsonPlState.processFor(tmp, code.funcs[0]);
-jsonPlState.wr("FOR:");
-jsonPlState.wrObj(res);
+jpl.wr("====================== TEST 9: For Loop ======================");
+jpl.wrObj(tmp);
+res = jpl.processFor(tmp, code.funcs[0]);
+jpl.wr("FOR:");
+jpl.wrObj(res);
+
+
+var callObj = code.call;
+var callFuncName = callObj.name;
+var callFunc = jpl.findFunc(callFuncName);
+res = jpl.processCall(callObj, callFunc);
+jpl.wr("RUN PROGRAM: " + callFuncName);
+jpl.wrObj(res);
+
+res = jpl.processCall(callObj, callFunc);
+jpl.wr("RUN PROGRAM 2: " + callFuncName);
+jpl.wrObj(res);
+
+jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+tmp = jpl.program;
+jpl.wr("====================== TEST 10: Full Program ======================");
+jpl.wrObj(tmp);
+jpl.runProgram();
