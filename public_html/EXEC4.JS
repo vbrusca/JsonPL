@@ -5,6 +5,7 @@
  * Created on 02/03/2022 1:57 PM EDT
  * Licensed under GNU General Public License v3.0
  */
+ 
 var code = {
    "sys": "class",
    "name": "test1",
@@ -163,6 +164,100 @@ var code = {
    }
 };
 
+var code2 = {
+   "sys": "class",
+   "name": "test2",
+   "call": {"sys": "call", "name": "main", "args": []},
+   "vars": [
+      {
+         "sys": "var",
+         "name": "tmp1",
+         "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         }
+      },
+      {
+         "sys": "var",
+         "name": "tmp2",
+         "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         }         
+      },
+      {
+         "sys": "var",
+         "name": "tmp3",
+         "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         }         
+      }      
+   ],
+   "funcs": [
+      {
+         "sys": "func",
+         "name": "main",
+         "args": [],
+         "vars": [],
+         "ret": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         },
+         "lines": [
+            {
+               "sys": "asgn",
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}},
+               "op": {"sys":"op", "type":"asgn", "v":"="},
+               "right": {"sys": "call", "name": "SYS::job1", "args": []}
+            },
+            {
+               "sys": "if",
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}},
+               "op": {"sys":"op", "type":"bex", "v":"=="},
+               "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": true}},
+               "thn": [
+                  {
+                     "sys": "asgn",
+                     "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp2"}},
+                     "op": {"sys":"op", "type":"asgn", "v":"="},
+                     "right": {"sys": "call", "name": "SYS::job2", "args": []}
+                  },
+                  {
+                     "sys": "if",
+                     "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp2"}},
+                     "op": {"sys":"op", "type":"bex", "v":"=="},
+                     "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": true}},
+                     "thn": [
+                        {
+                           "sys": "asgn",
+                           "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp3"}},
+                           "op": {"sys":"op", "type":"asgn", "v":"="},
+                           "right": {"sys": "call", "name": "SYS::job3", "args": []}
+                        }
+                     ],
+                     "els": [
+                     ]
+                  }            
+               ],
+               "els": [
+               ]
+            }
+         ]
+      }
+   ],
+   "ret": {
+      "sys": "val",
+      "type": "bool",
+      "v": false
+   }
+};
+
+
 /*
 ,
             {
@@ -219,30 +314,79 @@ function jsonPlState() {
 }
 
 /*
- * TODO
- * Name: findArg
- * Desc: Search the provided object for an argument with the given name.
- * Arg1: name(string to find)
- * Arg2: obj(func obj, sys=func)
- * Returns: {null | (arg obj, sys=arg)}
+ * Name: sysWr
+ * Desc: A system level write function.
+ * Arg1: args(arg obj, sys=arg & array of)
+ * Returns: {(const obj, sys=const)}
  */
 jsonPlState.prototype.sysWr = function(args) {
    var s = args[0].val.v;
    console.log("sysWr: " + s);
+
+   var ret = {};
+   ret.sys = "val";
+   ret.type = "bool";
+   ret.v = true;
+   
+   var ret2 = {};
+   ret2.sys = "const";
+   ret2.val = ret;   
+   ret = ret2;   
+   
+   return ret;
 };
 
+//TODO
+jsonPlState.prototype.getConstBool = function() {
+   var ret = {};
+   ret.sys = "val";
+   ret.type = "bool";
+   ret.v = false;
+   
+   var ret2 = {};
+   ret2.sys = "const";
+   ret2.val = ret;   
+   ret = ret2;   
+   
+   return ret; 
+};
+
+//TODO
+jsonPlState.prototype.sysJob1 = function(args) {
+   this.wr("sysJob1");
+   var ret = this.getConstBool();
+   if(!err) {
+      ret.val.v = true;
+   }
+   return ret;
+};
+
+//TODO
+jsonPlState.prototype.sysJob2 = function(args) {
+   this.wr("sysJob2");
+   var ret = this.getConstBool();
+   if(!err) {
+      ret.val.v = true;
+   }
+   return ret;
+};
+
+//TODO
+jsonPlState.prototype.sysJob3 = function(args) {
+   this.wr("sysJob3");
+   var ret = this.getConstBool();
+   if(!err) {
+      ret.val.v = true;
+   }
+   return ret;
+};
+
+
 /*
- * TODO
- * Name: findArg
- * Desc: Search the provided object for an argument with the given name.
- * Arg1: name(string to find)
- * Arg2: obj(func obj, sys=func)
- * Returns: {null | (arg obj, sys=arg)}
+ * Name: system
+ * Desc: Define system functions.
  */
 jsonPlState.prototype.system = {
-   "procedures": [
-
-   ],
    "functions":[
       {
          "sys": "func", 
@@ -259,18 +403,33 @@ jsonPlState.prototype.system = {
                }
             }
          ]
-      }
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::job1",
+         "fname": "sysJob1",
+         "args": []
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::job2",
+         "fname": "sysJob2",
+         "args": []
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::job3",
+         "fname": "sysJob3",
+         "args": []
+      }            
    ]
 };
 
 
 /*
- * TODO
- * Name: findArg
- * Desc: Search the provided object for an argument with the given name.
- * Arg1: name(string to find)
- * Arg2: obj(func obj, sys=func)
- * Returns: {null | (arg obj, sys=arg)}
+ * Name: runProgram
+ * Desc: Executes the current program and returns the result.
+ * Returns: {(some sys obj)}
  */
 jsonPlState.prototype.runProgram = function() {
    var callObj = this.program.call;
@@ -333,7 +492,12 @@ jsonPlState.prototype.findFunc = function(name) {
    return null;
 };
 
-//TODO
+/*
+ * Name: findSysFunc
+ * Desc: Search the current program's sytem functions for a func with the given name.
+ * Arg1: name(string to find)
+ * Returns: {null | (func obj, sys=func)}
+ */
 jsonPlState.prototype.findSysFunc = function(name) {
    var prog = this;
    for (var i = 0; i < prog.system.functions.length; i++) {
@@ -357,8 +521,8 @@ jsonPlState.prototype.findSysFunc = function(name) {
          "left": {ref | const | exp | bex | call},
          "op": {bex},
          "right": {ref | const | exp | bex | call},
-         "then": [asgn | if | for | call | return],
-         "else": [asgn | if | for | call | return]
+         "thn": [asgn | if | for | call | return],
+         "els": [asgn | if | for | call | return]
       }
    -!>
  */
@@ -1782,6 +1946,12 @@ jsonPlState.prototype.processIfForLines = function(objLines, func) {
       
       for(j = 0; j < len; j++) {
          line = objLines[j];
+         
+         //support comments
+         if(line.hasOwnProperty("active") && line.active === false) {
+            continue;
+         }
+                  
          if(this.isSysObjAsgn(line)) {
             ret = this.processAsgn(line, func);
          
@@ -2208,9 +2378,10 @@ jsonPlState.prototype.processFunc = function(objFunc) {
 }
 */
 /*
- * Name: processFunc
- * Desc: Processes a function's lines. Returns last statement or return value.
- * Arg1: objFunc(bex obj, sys=func)
+ * Name: processCall
+ * Desc: Processes a function call. Returns last statement or return value from executing the function's lines.
+ * Arg1: objCall(call obj, sys=call)
+ * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
  */
 jsonPlState.prototype.processCall = function(objCall, func) {
@@ -2271,24 +2442,28 @@ jsonPlState.prototype.processCall = function(objCall, func) {
          
          if(sysFunc) {
             var err = true;
+            var lret = null;
             try {
-               this[funcDef.fname](args);            
+               lret = this[funcDef.fname](args);            
                err = false;
             } catch (e) {
                err = true;
             }
             
-            var ret = {};
-            ret.sys = "val";
-            ret.type = "bool";
-            ret.v = err;
+            if(lret === null) {               
+               var ret = {};
+               ret.sys = "val";
+               ret.type = "bool";
+               ret.v = err;
 
-            var ret2 = {};
-            ret2.sys = "const";
-            ret2.val = ret;  
-            ret = ret2;
-            return ret;
-            
+               var ret2 = {};
+               ret2.sys = "const";
+               ret2.val = ret;  
+               ret = ret2;
+               return ret;
+            } else {
+               return lret;
+            }            
          } else {
             //backup default args
             funcDef.args_def = JSON.parse(JSON.stringify(funcDef.args));
@@ -2591,11 +2766,11 @@ jpl.wrObj(res);
 jpl = new jsonPlState();
 jpl.program = JSON.parse(JSON.stringify(code));
 tmp = jpl.program;
-jpl.wr("====================== TEST 10: Full Program ======================");
+jpl.wr("====================== TEST 10: Full Program 1 ======================");
 jpl.wrObj(tmp);
 jpl.runProgram();
 
-jpl.wr("====================== TEST 11: Example Use ======================");
+jpl.wr("====================== TEST 11: Example Use 1 ======================");
 var jplData = [ 33, true ];
 var jplCode = JSON.parse(JSON.stringify(code));
 
@@ -2617,3 +2792,10 @@ jpl.wr(jplData.toString());
 
 var jplRes = test(jplData, jplCode);
 jpl.wr("Example Code Result: " + jplRes);
+
+jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code2));
+tmp = jpl.program;
+jpl.wr("====================== TEST 12: Full Program 2 ======================");
+jpl.wrObj(tmp);
+jpl.runProgram();

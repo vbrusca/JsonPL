@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<!--
+/*
+ * JSON Programming Language
+ * Victor G. Brusca 
+ * Created on 02/03/2022 1:57 PM EDT
+ * Licensed under GNU General Public License v3.0
+ */
+-->
+<html>
+   <head>
+      <title>JsonPL IDE v0.01</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script type="text/javascript" src="./ide4.js"></script>      
+      <script type="text/javascript">
+         var programUi = null;      
+         var program = null;
+      
+         var mainDiv = null;
+         var indent = 0;
+         var indentInc = 15;
+         
+         var config = {};
+         config.margin = 4;
+         config.fontSize = 12;
+         config.width = "98%";
+         config.row = 0;
+         
+         function wr(s) {
+            console.log(s);
+         }
+         
+         function incIndnt() {
+            indent += indentInc;
+         }
+         
+         function decIndnt() {
+            indent -= indentInc;
+         }         
+         
+         function incRow() {
+            row++;
+         }
+         
+         function decRow() {
+            row--;
+         }         
+         
+         //TODO finish this function         
+         function createValEntry(idnt, cfg, name) {
+            //{"sys": "val", "type": "int", "v": "#.vars.tmp1"}
+         }
+         
+         //TODO finish this function         
+         function createArgEntryRef(idnt, cfg, name) {                  
+            //{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}
+         }
+         
+         //TODO finish this function
+         function createArgEntryConst(idnt, cfg, name) {                  
+            //{"sys": "const", "val":{"sys": "val", "type": "string", "v": "hello world"}}      
+         }         
+         
+         //TODO add ID fields to the UI object
+         function createCallEntry(idnt, cfg, name) {
+            var row = createHtmlDiv(idnt, cfg, name + "_main");
+            //Call label
+            row.appendChild(createLabelDiv("Call:", name + "_label", idnt, cfg));
+            row.appendChild(createHtmlDivClear(idnt, cfg, name + "_clear_1"));
+            
+            //Sys
+            row.appendChild(createLabelInputPairDiv("Sys:", name + "_sys", "call", idnt, cfg));
+            row.appendChild(createHtmlDivClear(idnt, cfg, name + "_clear_2"));
+
+            //Name
+            row.appendChild(createLabelSelectPairDiv("Function Name:", name + "_name", "SomeFunctionName1", idnt, cfg));
+            row.appendChild(createHtmlDivClear(idnt, cfg, name + "_clear_3"));
+            var callUi = {};
+            callUi.argsCount = 0;
+            callUi.argsUi = [];
+
+            //Args label
+            row.appendChild(createLabelDiv("Args:", name + "_args_label", idnt, cfg));
+            var btn = null;
+            var tmp = null;
+            
+            //Arg Block Decl
+            var block = createHtmlDiv(idnt, cfg, name + "_args_block");
+            
+            //Add Ref btn
+            btn = createHtmlInputButton(name + "_btn_ref_add", "Add Ref Arg", cfg);
+            callUi.callBtnAddArg = btn;
+            tmp = createHtmlDiv(idnt, cfg, name + "_div_btn_ref_add");
+            tmp.appendChild(btn);
+            row.appendChild(tmp);
+            
+            btn.addEventListener("click", function() {
+               console.log("clicked! " + programUi.callUi.argsCount);            
+            });
+
+            //Add Const btn
+            btn = createHtmlInputButton(name + "_btn_const_add", "Add Const Arg", cfg);
+            callUi.callBtnAddArg = btn;
+            tmp = createHtmlDiv(idnt, cfg, name + "_div_btn_const_add");
+            tmp.appendChild(btn);
+            row.appendChild(tmp);
+            
+            btn.addEventListener("click", function() {
+               console.log("clicked! " + programUi.callUi.argsCount);            
+            });
+
+            //Remove btn
+            btn = createHtmlInputButton(name + "_btn_remove", "Remove Arg(s)", cfg);
+            callUi.callBtnRemoveArg = btn;
+            tmp = createHtmlDiv(idnt, cfg, name + "_div_btn_remove");
+            tmp.appendChild(btn);
+            row.appendChild(tmp);
+            
+            btn.addEventListener("click", function() {
+               console.log("clicked!");
+            });            
+            
+            row.appendChild(createHtmlDivClear(idnt, cfg, name + "_clear_4"));
+
+            //Arg block Cont 
+            row.appendChild(block);
+            callUi.callDivArgsBlock = block;
+
+            callUi.callDivMain = row;
+            if(callUi.callDivMain === null) {
+               wr("createCallEntry: Error: could not find element with id, 'call_main'");
+            }
+            
+            callUi.callInSys = row.querySelector("#txt_call_sys");
+            if(callUi.callInSys === null) {
+               wr("createCallEntry: Error: could not find element with id, 'txt_call_sys'");
+            }
+            
+            callUi.callInName = row.querySelector("#txt_call_name");
+            if(callUi.callInName === null) {
+               wr("createCallEntry: Error: could not find element with id, 'txt_call_name'");
+            }
+            
+            callUi.callArgsDiv = row.querySelector("#call_args_block");
+            if(callUi.callArgsDiv === null) {
+               wr("createCallEntry: Error: could not find element with id, 'call_args_block'");
+            }            
+            
+            return [row, callUi];
+         }
+                  
+         function createProgramEntry(idnt, cfg, name) {
+            var programUi = {};
+            var row = createHtmlDiv(idnt, cfg, name + "_main");
+            
+            //Program label
+            row.appendChild(createLabelDiv("Program:", name + "_label", idnt, cfg));
+            row.appendChild(createHtmlDivClear(idnt, cfg, name + "_clear_1"));
+            
+            //Sys
+            row.appendChild(createLabelInputPairDiv("Sys:", name + "_sys", "class", idnt, cfg));
+            row.appendChild(createHtmlDivClear(idnt, cfg, name + "_clear_2"));
+            
+            //Name
+            row.appendChild(createLabelInputPairDiv("Program Name:", name + "_name", "Program1", idnt, cfg));
+            row.appendChild(createHtmlDivClear(idnt, cfg, name + "_clear_3"));
+            
+            //Call            
+            var block = createHtmlDiv(idnt, cfg, name + "_call_block");
+            row.appendChild(block);
+                        
+            var res = createCallEntry(idnt, cfg, "call");            
+            block.appendChild(res[0]);
+            
+            programUi.callUi = res[1];                        
+            programUi.programDivMain = row;
+            programUi.programDivMainId = name + "_main";            
+            if(programUi.programDivMain === null) {
+               wr("createProgramEntry: Error: could not find element with id, '" + name + "_main'");
+            }
+            
+            programUi.programInSys = row.querySelector("#" + name + "_sys_txt");
+            programUi.programInSysId = name + "_sys_txt";
+            if(programUi.programInSys === null) {
+               wr("createProgramEntry: Error: could not find element with id, '" + name + "_sys_txt'");
+            }
+            
+            programUi.programInName = row.querySelector("#" + name + "_name_txt");
+            programUi.programInNameId = name + "_name_txt";
+            if(programUi.programInName === null) {
+               wr("createProgramEntry: Error: could not find element with id, '" + name + "_name_txt'");
+            }
+            
+            programUi.programDivCall = row.querySelector("#" + name + "_call_block");
+            programUi.programDivCallId = name + "_call_block";
+            if(programUi.programDivCall === null) {
+               wr("createProgramEntry: Error: could not find element with id, '" + name + "_call_block'");
+            }
+            
+            return [row, programUi];
+         }
+                  
+         function createLabelInputPairDiv(lbl, name, val, idnt, cfg) {
+            var row = createHtmlDiv(idnt, cfg, name + "_main");
+            var lbl = createHtmlSpan(lbl, name + "_lbl", cfg);
+            var txt = createHtmlInputText(name + "_txt", cfg); 
+            txt.value = val;
+            row.appendChild(lbl);
+            row.appendChild(txt);
+            return row;
+         }
+         
+         function createLabelDiv(lbl, name, idnt, cfg) {
+            var row = createHtmlDiv(idnt, cfg, name + "_main");
+            var lbl = createHtmlSpan(lbl, name + "_lbl", cfg);
+            row.appendChild(lbl);
+            return row;
+         }         
+         
+         function createLabelSelectPairDataDiv(lbl, name, val, idnt, keys, vals, cfg) {
+            var row = createHtmlDiv(idnt, cfg, name + "_main");
+            var lbl = createHtmlSpan(lbl, name + "_lbl", cfg);
+            var sel = createHtmlInputSelect(name + "_sel", cfg); 
+            sel.selectedIndex = val;
+            
+            for(var i = 0; i < keys.length; i++) {
+               addOption(sel, keys[i], vals[i], cfg);
+            }
+            
+            row.appendChild(lbl);
+            row.appendChild(sel);
+            return row;
+         }
+
+         function createLabelSelectPairDiv(lbl, name, val, idnt, cfg) {
+            var row = createHtmlDiv(idnt, cfg, name + "_main");
+            var lbl = createHtmlSpan(lbl, name + "_lbl", cfg);
+            var sel = createHtmlInputSelect(name + "_sel", cfg); 
+            sel.selectedIndex = val;
+            row.appendChild(lbl);
+            row.appendChild(sel);
+            return row;
+         }         
+         
+         function createLabelInputPairDivHidden(lbl, name, val, idnt, cfg) {
+            var row = createHtmlDivHidden(idnt, cfg, name + "_main");
+            var lbl = createHtmlSpan(lbl, name + "_lbl", cfg);
+            var txt = createHtmlInputText(name + "_txt", cfg);
+            txt.value = val;
+            row.appendChild(lbl);
+            row.appendChild(txt);
+            return row;
+         }         
+         
+         function init() {
+            wr("init");
+            mainDiv = document.getElementById('mainPane');
+            
+            var res = createProgramEntry(indent, config, "program");            
+            programUi = res[1];
+            mainDiv.appendChild(res[0]);
+         }
+      </script>
+   </head>
+   <body style="padding: 4px;" onload="init()">
+      <div id="mainDiv" style="width: 800px; height: 700px; background-color: #cccccc;">
+         <div id="mainPane" style="margin: 4px; float: left; background-color: #cccccc; width: 100%; height: 100%; overflow: auto;">
+            
+         </div>
+         <br/><br/>
+         <textarea cols="120" rows="30" id="mainTextArea">
+         </textarea>
+         <br/>
+      </div>
+   </body>
+</html>
