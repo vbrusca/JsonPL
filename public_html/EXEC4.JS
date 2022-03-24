@@ -257,41 +257,40 @@ var code2 = {
    }
 };
 
-
+//EXTRA DEMO CODE
 /*
-,
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
-            },
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
-            },
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "bex", "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
-            },
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "bex", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
-            },
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
-            }
+    ,
+   {
+      "sys": "asgn",
+      "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}},
+      "op": {"sys":"op", "type":"asgn", "v":"="},
+      "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
+   },
+   {
+      "sys": "asgn",
+      "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
+      "op": {"sys":"op", "type":"asgn", "v":"="},
+      "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
+   },
+   {
+      "sys": "asgn",
+      "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
+      "op": {"sys":"op", "type":"asgn", "v":"="},
+      "right": {"sys": "bex", "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
+   },
+   {
+      "sys": "asgn",
+      "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
+      "op": {"sys":"op", "type":"asgn", "v":"="},
+      "right": {"sys": "bex", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
+   },
+   {
+      "sys": "asgn",
+      "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
+      "op": {"sys":"op", "type":"asgn", "v":"="},
+      "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
+   }
 */
-
 /* 
  * Name: jsonPlState
  * Desc: Main object. Programming language state.
@@ -381,7 +380,6 @@ jsonPlState.prototype.sysJob3 = function(args) {
    return ret;
 };
 
-
 /*
  * Name: system
  * Desc: Define system functions.
@@ -425,7 +423,6 @@ jsonPlState.prototype.system = {
    ]
 };
 
-
 /*
  * Name: runProgram
  * Desc: Executes the current program and returns the result.
@@ -441,7 +438,6 @@ jsonPlState.prototype.runProgram = function() {
    //this.wrObj(res); 
    return ret;
 };
-
 
 /////////////////////////SEARCH METHODS
 /*
@@ -508,7 +504,6 @@ jsonPlState.prototype.findSysFunc = function(name) {
    return null;
 };
 
-
 /////////////////////////VALIDATION METHODS
 /*
  * Name: validateSysObjIf
@@ -519,7 +514,7 @@ jsonPlState.prototype.findSysFunc = function(name) {
       {
          "sys": "if",
          "left": {ref | const | exp | bex | call},
-         "op": {bex},
+         "op": {op & type of bex},
          "right": {ref | const | exp | bex | call},
          "thn": [asgn | if | for | call | return],
          "els": [asgn | if | for | call | return]
@@ -1428,7 +1423,6 @@ jsonPlState.prototype.validateProperties = function(obj, req) {
    return true;
 };
 
-
 /////////////////////////UTILITY METHODS
 /*
  * Name: wr
@@ -1454,7 +1448,6 @@ jsonPlState.prototype.wrObj = function(s) {
       console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
    }
 };
-
 
 /////////////////////////GENERIC OBJECT ID METHODS
 /*
@@ -1502,7 +1495,6 @@ jsonPlState.prototype.isString = function(arg) {
       return false;
    }
 };
-
 
 /////////////////////////SYS OBJECT ID METHODS
 /*
@@ -1700,7 +1692,6 @@ jsonPlState.prototype.getSysObjType = function(obj) {
       return null;
    }
 };
-
 
 /////////////////////////PROCESS METHODS
 /*
@@ -2342,7 +2333,6 @@ jsonPlState.prototype.processBex = function(objBex, func) {
    return null;
 };
 
-
 /*
  * Name: processFunc
  * Desc: Processes a function's lines. Returns last statement or return value.
@@ -2359,7 +2349,6 @@ jsonPlState.prototype.processFunc = function(objFunc) {
    ret3 = this.processIfForLines(objFunc.lines, objFunc);      
    return ret3;
 };
-
 
 /*
 {
@@ -2497,8 +2486,6 @@ jsonPlState.prototype.processCall = function(objCall, func) {
    }      
 };
 
-
-
 /*
  * Name: processExp
  * Desc: Processes an expression. Returns the value of the expression.
@@ -2574,7 +2561,7 @@ jsonPlState.prototype.processExp = function(objExp, func) {
       return null;
    }   
    
-   if(left.val.type === right.val.type) {
+   if(left.val.type === right.val.type && (left.val.type === "int" || left.val.type === "float" || left.val.type === "bool")) {
       var ret = {};
       ret.sys = "val";
       ret.type = left.val.type;
@@ -2585,10 +2572,10 @@ jsonPlState.prototype.processExp = function(objExp, func) {
       ret2.val = ret;         
          
       if(op.v === "+") {
-         ret.v = left.val.v + right.val.v; 
+         ret.v = Number(left.val.v) + Number(right.val.v); 
          
       } else if(op.v === "-") {
-         ret.v = left.val.v - right.val.v;
+         ret.v = Number(left.val.v) - Number(right.val.v);
          
       } else if(op.v === "/") {
          if(right.val.v !== 0) {
@@ -2596,15 +2583,23 @@ jsonPlState.prototype.processExp = function(objExp, func) {
             return null;
             
          } else {
-            ret.v = left.val.v / right.val.v;
+            ret.v = Number(left.val.v) / Number(right.val.v);
          }
          
       } else if(op.v === "*") {
-         ret.v = left.val.v * right.val.v;
+         ret.v = Number(left.val.v) * Number(right.val.v);
          
       } else {
          this.wr("processExp: Error: unknown operator: " + op.v);
          return null;               
+      }
+      
+      if(left.val.type === "int") {
+         ret.v = parseInt(ret.v);
+      } else if(left.val.type === "float") {
+         ret.v = parseFloat(ret.v);         
+      } else if(left.val.type === "bool") {
+         ret.v = parseInt(ret.v);
       }
       
       ret = ret2;         
@@ -2616,7 +2611,6 @@ jsonPlState.prototype.processExp = function(objExp, func) {
    return null;
 };
 
-
 /////////////////////////TEST SECTION
 var jpl = new jsonPlState();
 jpl.program = JSON.parse(JSON.stringify(code));
@@ -2624,58 +2618,130 @@ jpl.program = JSON.parse(JSON.stringify(code));
 var res = null;
 var tmp = null;
 
+/////////////////////////TESTS: REFERENCE
 tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}};
-jpl.wr("====================== TEST 1: Class Variable Reference ======================");
+jpl.wr("====================== TEST 1.00: Class Variable Reference ======================");
 jpl.wrObj(tmp);
 jpl.wr("REF 1:");
 res = jpl.processRef(tmp, code.funcs[0]);
 jpl.wrObj(res);
 
 tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}};
-jpl.wr("====================== TEST 2: Function Argument Reference ======================");
+jpl.wr("====================== TEST 1.10: Function Argument Reference ======================");
 jpl.wrObj(tmp);
 jpl.wr("REF 2:");
 res = jpl.processRef(tmp, code.funcs[0]);
 jpl.wrObj(res);
 
 tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.vars.b1"}};
-jpl.wr("====================== TEST 3: Function Variable Reference ======================");
+jpl.wr("====================== TEST 1.20: Function Variable Reference ======================");
 jpl.wrObj(tmp);
 jpl.wr("REF 3:");
 res = jpl.processRef(tmp, code.funcs[0]);
 jpl.wrObj(res);
 
+/////////////////////////TESTS: ASSIGNMENT
+/*
+<!-  
+   {
+      "sys": "asgn",
+      "left": {ref},
+      "op": {op & type of asgn}, 
+      "right": {ref | const | exp | bex | call}
+   }
+-!>
+*/
 tmp = {
    "sys": "asgn",
    "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
    "op": {"sys":"op", "type":"asgn", "v":"="},
    "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}
 };
-jpl.wr("====================== TEST 4: Assignment ======================");
+jpl.wr("====================== TEST 2.00: Assignment (Class variable to function argument) ======================");
 jpl.wrObj(tmp);
 res = jpl.processAsgn(tmp, code.funcs[0]);
 jpl.wr("ASGN:");
 jpl.wrObj(res);
 
 tmp = {
+   "sys": "asgn",
+   "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
+   "op": {"sys":"op", "type":"asgn", "v":"="},
+   "right": {"sys":"const", "val":{"sys": "val", "type": "int", "v": "32"}}
+};
+jpl.wr("====================== TEST 2.10: Assignment (Constant value to function argument) ======================");
+jpl.wrObj(tmp);
+res = jpl.processAsgn(tmp, code.funcs[0]);
+jpl.wr("ASGN:");
+jpl.wrObj(res);
+
+tmp = {
+   "sys": "asgn",
+   "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
+   "op": {"sys":"op", "type":"asgn", "v":"="},
+   "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}}
+};
+jpl.wr("====================== TEST 2.20: Assignment (Expression value to function argument) ======================");
+jpl.wrObj(tmp);
+res = jpl.processAsgn(tmp, code.funcs[0]);
+jpl.wr("ASGN:");
+jpl.wrObj(res);
+
+tmp = {
+   "sys": "asgn",
+   "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.b1"}},
+   "op": {"sys":"op", "type":"asgn", "v":"="},
+   "right": {"sys": "bex", "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}}
+};
+jpl.wr("====================== TEST 2.30: Assignment (Boolean Expression value to function variable) ======================");
+jpl.wrObj(tmp);
+res = jpl.processAsgn(tmp, code.funcs[0]);
+jpl.wr("ASGN:");
+jpl.wrObj(res);
+
+tmp = {
+   "sys": "asgn",
+   "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.b1"}},
+   "op": {"sys":"op", "type":"asgn", "v":"="},
+   "right": {"sys": "call", "name": "testFunction3", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}]}
+};
+jpl.wr("====================== TEST 2.40: Assignment (Function Call value to function variable) ======================");
+jpl.wrObj(tmp);
+res = jpl.processAsgn(tmp, code.funcs[0]);
+jpl.wr("ASGN:");
+jpl.wrObj(res);
+
+///////////////////////////TESTS: BOOLEAN EXPRESSIONS
+/* 
+<!-  
+   {
+      "sys": "bex",
+      "left": {ref | const | exp | bex | call},
+      "op": {op & type of bex}, 
+      "right": {ref | const | exp | bex | call}
+   }
+-!>
+*/   
+tmp = {
    "sys": "bex", 
    "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, 
    "op": {"sys":"op", "type":"bex", "v":"=="}, 
    "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
 };
-jpl.wr("====================== TEST 5: Boolean Expression ======================");
+jpl.wr("====================== TEST 3.00: Boolean Expression (Function argument to Constant value) ======================");
 jpl.wrObj(tmp);
 res = jpl.processBex(tmp, code.funcs[0]);
 jpl.wr("BEX:");
 jpl.wrObj(res);
 
+//TESTS: NUMERIC EXPRESSIONS
 tmp = {
    "sys": "exp", 
    "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, 
    "op": {"sys":"op", "type":"exp", "v":"+"}, 
    "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
 };
-jpl.wr("====================== TEST 6: Expression ======================");
+jpl.wr("====================== TEST 6.00: Expression ======================");
 jpl.wrObj(tmp);
 res = jpl.processExp(tmp, code.funcs[0]);
 jpl.wr("EXP:");
@@ -2695,7 +2761,7 @@ tmp = {
       }
    ]   
 };
-jpl.wr("====================== TEST 7: Function Call ======================");
+jpl.wr("====================== TEST 7.00: Function Call ======================");
 jpl.wrObj(tmp);
 res = jpl.processCall(tmp, code.funcs[0]);
 jpl.wr("CALL:");
@@ -2725,7 +2791,7 @@ tmp = {
       }
    ]
 };
-jpl.wr("====================== TEST 8: If Statement ======================");
+jpl.wr("====================== TEST 8.00: If Statement ======================");
 jpl.wrObj(tmp);
 res = jpl.processIf(tmp, code.funcs[0]);
 jpl.wr("IF:");
@@ -2745,7 +2811,7 @@ tmp = {
       }
    ]
 };
-jpl.wr("====================== TEST 9: For Loop ======================");
+jpl.wr("====================== TEST 9.00: For Loop ======================");
 jpl.wrObj(tmp);
 res = jpl.processFor(tmp, code.funcs[0]);
 jpl.wr("FOR:");
@@ -2766,11 +2832,11 @@ jpl.wrObj(res);
 jpl = new jsonPlState();
 jpl.program = JSON.parse(JSON.stringify(code));
 tmp = jpl.program;
-jpl.wr("====================== TEST 10: Full Program 1 ======================");
+jpl.wr("====================== TEST 10.00: Full Program 1 ======================");
 jpl.wrObj(tmp);
 jpl.runProgram();
 
-jpl.wr("====================== TEST 11: Example Use 1 ======================");
+jpl.wr("====================== TEST 11.00: Example Use 1 ======================");
 var jplData = [ 33, true ];
 var jplCode = JSON.parse(JSON.stringify(code));
 
@@ -2796,6 +2862,6 @@ jpl.wr("Example Code Result: " + jplRes);
 jpl = new jsonPlState();
 jpl.program = JSON.parse(JSON.stringify(code2));
 tmp = jpl.program;
-jpl.wr("====================== TEST 12: Full Program 2 ======================");
+jpl.wr("====================== TEST 12.00: Full Program 2 ======================");
 jpl.wrObj(tmp);
 jpl.runProgram();
