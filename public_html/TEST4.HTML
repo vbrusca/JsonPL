@@ -1,6 +1,6 @@
 <html>
    <head>
-      <title>JsonPL Test v0.01</title>
+      <title>JsonPL Test v0.5.1</title>
       <script type="text/javascript" src="exec4.js"></script>
       <script type="text/javascript">
          var code = {
@@ -624,7 +624,7 @@
             jpl.wr("LAST ASGN VALUE:");
             jpl.wrObj(res);
 
-            jpl.wr("====================== TEST 8.00: Call Tests 2 ======================");
+            jpl.wr("====================== TEST 8.00: Call Statement ======================");
             var callObj = code.call;
             var callFuncName = callObj.name;
             var callFunc = jpl.findFunc(callFuncName);
@@ -643,7 +643,7 @@
             jpl.wrObj(tmp);
             jpl.runProgram();
 
-            jpl.wr("====================== TEST 9.10: Full Program 2 ======================");
+            jpl.wr("====================== TEST 10.00: Full Program 2 ======================");
             var jplData = [ 33, true ];
             var jplCode = JSON.parse(JSON.stringify(code));
 
@@ -669,7 +669,7 @@
             jpl = new jsonPlState();
             jpl.program = JSON.parse(JSON.stringify(code2));
             tmp = jpl.program;
-            jpl.wr("====================== TEST 9.20: Full Program 3 ======================");
+            jpl.wr("====================== TEST 11.00: Full Program 3 ======================");
             jpl.wrObj(tmp);
             jpl.runProgram();
          }

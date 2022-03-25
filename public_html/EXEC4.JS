@@ -11,7 +11,7 @@
  * Desc: Main object. Programming language state.
  */
 function jsonPlState() {
-   this.version = "0.0.5";
+   this.version = "0.5.1";
    this.lineNumCurrent = 0;
    this.lineNumPrev = 0;
    this.linNumNext = 0;
