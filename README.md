@@ -1,4 +1,20 @@
 # JsonPL Version 0.5.1
+
+## JsonPL General Use Case
+In the following code snippet we're looking at a hypothetical example where the data and the JsonPL code are being brought down from AJAX calls. Notice that in this case the executable code is data driven along with the data.
+
+<pre>
+function test(dataFromAjax, jplCodeFromAjax) {
+   console.log("test method");
+   var jpl = new jsonPlState();
+   jpl.program = jplCodeFromAjax;
+   jpl.program.vars[0].val.v = dataFromAjax[0];
+   jpl.program.vars[1].val.v = dataFromAjax[1];
+   var tmp = jpl.runProgram();
+   return tmp.val.v;
+}
+</pre>
+
 ## JsonPL Details
 Some details about the scripting language as it exists in version 0.5.1.
 
@@ -39,6 +55,7 @@ In this section we'll take a look at all of the different JSON objects supported
 
 [Exp Object](#exp-object-argument-object)
 
+
 ## JsonPL Examples
 A list of example snippets showing code and output associated with different JsonPL objects.
 
@@ -47,6 +64,20 @@ A list of example snippets showing code and output associated with different Jso
 [Example 2: Assignment](#example-2-assignment)
 
 [Example 3: Boolean Expressions](#example-3-boolean-expressions)
+
+[Example 4: Numeric Expression](#example-4-numeric-expression)
+
+[Example 6: If Statement](#example-6-if-statement)
+
+[Example 7: For Loop](#example-7-for-loop)
+
+[Example 8: Call Test 2](#example-8-call-test-2)
+
+[Example 9-0: Full Program Run 1](#example-9-0-full-program-run-1)
+
+[Example 9-1: Full Program Run 2](#example-9-1-full-program-run-2)
+
+[Example 9-2: Full Program Run 3](#example-9-2-full-program-run-3)
 
 ### Class Object
 The class object is the highest level object and is used to define a class or a program. A class is a module of code that contains functions and variables.
@@ -462,6 +493,11 @@ This section contains a number of code examples. Some of the examples focus on o
 ### Example 1: Class Variable Reference
 <pre>
 //Code: TEST 1.00: Class Variable Reference
+var jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+var res = null;
+var tmp = null;
+
 tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}};
 jpl.wr("====================== TEST 1.00: Class Variable Reference ======================");
 jpl.wrObj(tmp);
@@ -496,6 +532,11 @@ REF 1:
 ### Example 2: Assignment
 <pre>
 //Code: TEST 2.00: Assignment (Class variable to function argument)
+var jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+var res = null;
+var tmp = null;
+
 tmp = {
    "sys": "asgn",
    "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
@@ -576,8 +617,13 @@ REF #.vars.tmp1 VAL:
 </pre>
 
 ### Example 3: Boolean Expressions
-//Code:TEST 3.00: Boolean Expression (Function argument to Constant value)
+//Code: TEST 3.00: Boolean Expression (Function argument to Constant value)
 <pre>
+var jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+var res = null;
+var tmp = null;
+
 tmp = {
    "sys": "bex", 
    "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, 
@@ -596,33 +642,326 @@ jpl.wrObj(res);
 </pre>
 
 <pre>
-//Output:TEST 3.00: Boolean Expression (Function argument to Constant value)
-====================== TEST 2.00: Assignment (Class variable to function argument) ======================
+//Output: TEST 3.00: Boolean Expression (Function argument to Constant value)
+====================== TEST 3.00: Boolean Expression (Function argument to Constant value) ======================
 {
-  "sys": "asgn",
+  "sys": "bex",
   "left": {
-    "sys": "ref",
+    "sys": "const",
     "val": {
       "sys": "val",
       "type": "int",
-      "v": "$.args.i1"
+      "v": 25
     }
   },
   "op": {
     "sys": "op",
-    "type": "asgn",
-    "v": "="
+    "type": "bex",
+    "v": "=="
   },
   "right": {
     "sys": "ref",
     "val": {
       "sys": "val",
       "type": "int",
-      "v": "#.vars.tmp1"
+      "v": "$.args.i1"
     }
   }
 }
-ASGN RESULT:
+BEX RESULT: (EXPECTS: FALSE)
+{
+  "sys": "const",
+  "val": {
+    "sys": "val",
+    "type": "bool",
+    "v": false
+  }
+}
+REF $.args.i1 VAL:
+{
+  "sys": "arg",
+  "name": "i1",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 57
+  }
+}
+</pre>
+
+### Example 4: Numeric Expression
+<pre>
+//Code: TEST 4.00: Expression
+var jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+var res = null;
+var tmp = null;
+
+tmp = {
+   "sys": "exp", 
+   "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, 
+   "op": {"sys":"op", "type":"exp", "v":"+"}, 
+   "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
+};
+jpl.wr("====================== TEST 4.00: Expression ======================");
+jpl.wrObj(tmp);
+res = jpl.processExp(tmp, code.funcs[0]);
+jpl.wr("EXP RESULT:");
+jpl.wrObj(res);
+tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}};
+jpl.wr("REF $.args.i1 VAL:");
+res = jpl.processRef(tmp, code.funcs[0]);
+jpl.wrObj(res);
+</pre>
+
+<pre>
+Output: TEST 4.00: Expression
+====================== TEST 4.00: Expression ======================
+{
+  "sys": "exp",
+  "left": {
+    "sys": "const",
+    "val": {
+      "sys": "val",
+      "type": "int",
+      "v": 25
+    }
+  },
+  "op": {
+    "sys": "op",
+    "type": "exp",
+    "v": "+"
+  },
+  "right": {
+    "sys": "ref",
+    "val": {
+      "sys": "val",
+      "type": "int",
+      "v": "$.args.i1"
+    }
+  }
+}
+EXP RESULT:
+{
+  "sys": "const",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 82
+  }
+}
+REF $.args.i1 VAL:
+{
+  "sys": "arg",
+  "name": "i1",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 57
+  }
+}
+</pre>
+
+### Example 5: Function Call
+<pre>
+//Code: TEST 5.00: Function Call
+var jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+var res = null;
+var tmp = null;
+
+tmp = {
+   "sys": "call", 
+   "name": "testFunction2", 
+   "args": [
+      {
+         "sys": "ref", 
+         "val":{
+            "sys": "val", 
+            "type": "int", 
+            "v": "#.vars.tmp1"
+         }
+      }
+   ]   
+};
+jpl.wr("====================== TEST 5.00: Function Call ======================");
+jpl.wrObj(tmp);
+res = jpl.processCall(tmp, code.funcs[0]);
+jpl.wr("CALL RESULT:");
+jpl.wrObj(res);
+jpl.wr("CALL FUNCS[1] ARGS:");
+jpl.wrObj(code.funcs[1].args);
+</pre>
+
+<pre>
+//Output: TEST 5.00: Function Call
+====================== TEST 5.00: Function Call ======================
+{
+  "sys": "call",
+  "name": "testFunction2",
+  "args": [
+    {
+      "sys": "ref",
+      "val": {
+        "sys": "val",
+        "type": "int",
+        "v": "#.vars.tmp1"
+      }
+    }
+  ]
+}
+CALL RESULT:
+{
+  "sys": "return",
+  "val": {
+    "sys": "val",
+    "type": "bool",
+    "v": true
+  }
+}
+CALL FUNCS[1] ARGS:
+[
+  {
+    "sys": "arg",
+    "name": "i1",
+    "val": {
+      "sys": "val",
+      "type": "int",
+      "v": 0
+    }
+  }
+]
+</pre>
+
+### Example 6: If Statement
+<pre>
+//Code: TEST 6.00: If Statement
+var jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+var res = null;
+var tmp = null;
+            
+tmp = {
+   "sys": "if",
+   "left": {"sys": "const", "val": {"sys": "val","type": "bool","v": true}},
+   "op": {"sys":"op", "type":"bex", "v":"=="},
+   "right": {"sys": "const", "val": {"sys": "val","type": "bool","v": true}},
+   "thn": [
+      {
+         "sys": "asgn",
+         "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
+         "op": {"sys":"op", "type":"asgn", "v":"="},
+         "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}
+      }
+   ],
+   "els": [
+      {
+         "sys": "asgn",
+         "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
+         "op": {"sys":"op", "type":"asgn", "v":"="},
+         "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}
+      }
+   ]
+};
+jpl.wr("====================== TEST 6.00: If Statement ======================");
+jpl.wrObj(tmp);
+res = jpl.processIf(tmp, code.funcs[0]);
+jpl.wr("IF RESULT:");
+jpl.wrObj(res);
+tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}};
+jpl.wr("REF $.args.i1 VAL:");
+res = jpl.processRef(tmp, code.funcs[0]);
+jpl.wrObj(res);
+tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}};
+jpl.wr("REF #.vars.tmp1 VAL:");
+res = jpl.processRef(tmp, code.funcs[0]);
+jpl.wrObj(res);
+tmp = {"sys": "call", "name": "SYS::getLastAsgnValue", "args": []};
+res = jpl.processCall(tmp, code.funcs[0]);
+jpl.wr("LAST ASGN VALUE:");
+jpl.wrObj(res); 
+</pre>
+
+<pre>
+//Output: TEST 6.00: If Statement
+====================== TEST 6.00: If Statement ======================
+{
+  "sys": "if",
+  "left": {
+    "sys": "const",
+    "val": {
+      "sys": "val",
+      "type": "bool",
+      "v": true
+    }
+  },
+  "op": {
+    "sys": "op",
+    "type": "bex",
+    "v": "=="
+  },
+  "right": {
+    "sys": "const",
+    "val": {
+      "sys": "val",
+      "type": "bool",
+      "v": true
+    }
+  },
+  "thn": [
+    {
+      "sys": "asgn",
+      "left": {
+        "sys": "ref",
+        "val": {
+          "sys": "val",
+          "type": "int",
+          "v": "$.args.i1"
+        }
+      },
+      "op": {
+        "sys": "op",
+        "type": "asgn",
+        "v": "="
+      },
+      "right": {
+        "sys": "ref",
+        "val": {
+          "sys": "val",
+          "type": "int",
+          "v": "#.vars.tmp1"
+        }
+      }
+    }
+  ],
+  "els": [
+    {
+      "sys": "asgn",
+      "left": {
+        "sys": "ref",
+        "val": {
+          "sys": "val",
+          "type": "int",
+          "v": "$.args.i1"
+        }
+      },
+      "op": {
+        "sys": "op",
+        "type": "asgn",
+        "v": "="
+      },
+      "right": {
+        "sys": "ref",
+        "val": {
+          "sys": "val",
+          "type": "int",
+          "v": "#.vars.tmp1"
+        }
+      }
+    }
+  ]
+}
+IF RESULT:
 {
   "sys": "const",
   "val": {
@@ -631,7 +970,7 @@ ASGN RESULT:
     "v": true
   }
 }
-LAST ASGN VALUE:
+REF $.args.i1 VAL:
 {
   "sys": "arg",
   "name": "i1",
@@ -651,4 +990,690 @@ REF #.vars.tmp1 VAL:
     "v": 5
   }
 }
+LAST ASGN VALUE:
+{
+  "sys": "arg",
+  "name": "i1",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 5
+  }
+}
+</pre>
+
+### Example 7: For Loop
+<pre>
+//Code: TEST 7.00: For Loop
+var jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+var res = null;
+var tmp = null;
+
+tmp = {
+   "sys": "for",
+   "start": {"sys": "const", "val": {"sys": "val","type": "int","v": 0}},
+   "stop": {"sys": "const", "val": {"sys": "val","type": "int","v": 10}},
+   "inc": {"sys": "const", "val": {"sys": "val","type": "int","v": 1}},
+   "lines": [
+      {
+         "sys": "asgn",
+         "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
+         "op": {"sys":"op", "type":"asgn", "v":"="},
+         "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}
+      }
+   ]
+};
+jpl.wr("====================== TEST 7.00: For Loop ======================");
+jpl.wrObj(tmp);
+res = jpl.processFor(tmp, code.funcs[0]);
+jpl.wr("FOR RESULT:");
+jpl.wrObj(res);
+tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}};
+jpl.wr("REF $.args.i1 VAL:");
+res = jpl.processRef(tmp, code.funcs[0]);
+jpl.wrObj(res);
+tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}};
+jpl.wr("REF #.vars.tmp1 VAL:");
+res = jpl.processRef(tmp, code.funcs[0]);
+jpl.wrObj(res);
+tmp = {"sys": "call", "name": "SYS::getLastAsgnValue", "args": []};
+res = jpl.processCall(tmp, code.funcs[0]);
+jpl.wr("LAST ASGN VALUE:");
+jpl.wrObj(res);
+</pre>
+
+<pre>
+//Output: TEST 7.00: For Loop
+====================== TEST 7.00: For Loop ======================
+{
+  "sys": "for",
+  "start": {
+    "sys": "const",
+    "val": {
+      "sys": "val",
+      "type": "int",
+      "v": 0
+    }
+  },
+  "stop": {
+    "sys": "const",
+    "val": {
+      "sys": "val",
+      "type": "int",
+      "v": 10
+    }
+  },
+  "inc": {
+    "sys": "const",
+    "val": {
+      "sys": "val",
+      "type": "int",
+      "v": 1
+    }
+  },
+  "lines": [
+    {
+      "sys": "asgn",
+      "left": {
+        "sys": "ref",
+        "val": {
+          "sys": "val",
+          "type": "int",
+          "v": "$.args.i1"
+        }
+      },
+      "op": {
+        "sys": "op",
+        "type": "asgn",
+        "v": "="
+      },
+      "right": {
+        "sys": "ref",
+        "val": {
+          "sys": "val",
+          "type": "int",
+          "v": "#.vars.tmp1"
+        }
+      }
+    }
+  ]
+}
+FOR RESULT:
+{
+  "sys": "const",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 9
+  }
+}
+REF $.args.i1 VAL:
+{
+  "sys": "arg",
+  "name": "i1",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 5
+  }
+}
+REF #.vars.tmp1 VAL:
+{
+  "sys": "var",
+  "name": "tmp1",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 5
+  }
+}
+LAST ASGN VALUE:
+{
+  "sys": "arg",
+  "name": "i1",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 5
+  }
+}
+</pre>
+
+### Example 8: Call Test 2
+<pre>
+//Code: TEST 8.00: Call Tests 2
+jpl.wr("====================== TEST 8.00: Call Tests 2 ======================");
+var jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+var res = null;
+var tmp = null;
+
+var callObj = code.call;
+var callFuncName = callObj.name;
+var callFunc = jpl.findFunc(callFuncName);
+res = jpl.processCall(callObj, callFunc);
+jpl.wr("RUN FUNCTION 1: " + callFuncName);
+jpl.wrObj(res);
+
+res = jpl.processCall(callObj, callFunc);
+jpl.wr("RUN FUNCTION 2: " + callFuncName);
+jpl.wrObj(res);
+</pre>
+
+<pre>
+//Output: TEST 8.00: Call Tests 2
+====================== TEST 8.00: Call Tests 2 ======================
+RUN FUNCTION 1: testFunction1
+{
+  "sys": "return",
+  "val": {
+    "sys": "val",
+    "type": "bool",
+    "v": "true"
+  }
+}
+RUN FUNCTION 2: testFunction1
+{
+  "sys": "return",
+  "val": {
+    "sys": "val",
+    "type": "bool",
+    "v": "true"
+  }
+}
+</pre>
+
+### Example 9-0: Full Program Run 1
+<pre>
+//Code: TEST 9.00: Full Program 1
+var jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+var res = null;
+var tmp = null;
+
+jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+tmp = jpl.program;
+jpl.wr("====================== TEST 9.00: Full Program 1 ======================");
+jpl.wrObj(tmp);
+jpl.runProgram();
+</pre>
+
+<pre>
+//Output: TEST 9.00: Full Program 1
+====================== TEST 9.00: Full Program 1 ======================
+{
+  "sys": "class",
+  "name": "test1",
+  "call": {
+    "sys": "call",
+    "name": "testFunction1",
+    "args": [
+      {
+        "sys": "ref",
+        "val": {
+          "sys": "val",
+          "type": "int",
+          "v": "#.vars.tmp1"
+        }
+      }
+    ]
+  },
+  "vars": [
+    {
+      "sys": "var",
+      "name": "tmp1",
+      "val": {
+        "sys": "val",
+        "type": "int",
+        "v": 5
+      }
+    },
+    {
+      "sys": "var",
+      "name": "tmp2",
+      "val": {
+        "sys": "val",
+        "type": "bool",
+        "v": false
+      }
+    }
+  ],
+  "funcs": [
+    {
+      "sys": "func",
+      "name": "testFunction1",
+      "args": [
+        {
+          "sys": "arg",
+          "name": "i1",
+          "val": {
+            "sys": "val",
+            "type": "int",
+            "v": 15
+          }
+        }
+      ],
+      "vars": [
+        {
+          "sys": "var",
+          "name": "b1",
+          "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": "true"
+          }
+        }
+      ],
+      "ret": {
+        "sys": "val",
+        "type": "bool",
+        "v": false
+      },
+      "lines": [
+        {
+          "sys": "call",
+          "name": "testFunction3",
+          "args": [
+            {
+              "sys": "ref",
+              "val": {
+                "sys": "val",
+                "type": "int",
+                "v": "$.args.i1"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sys": "func",
+      "name": "testFunction2",
+      "args": [
+        {
+          "sys": "arg",
+          "name": "i1",
+          "val": {
+            "sys": "val",
+            "type": "int",
+            "v": 0
+          }
+        }
+      ],
+      "vars": [
+        {
+          "sys": "var",
+          "name": "b1",
+          "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+          }
+        },
+        {
+          "sys": "var",
+          "name": "tmp1",
+          "val": {
+            "sys": "val",
+            "type": "int",
+            "v": 5
+          }
+        }
+      ],
+      "ret": {
+        "sys": "val",
+        "type": "bool",
+        "v": false
+      },
+      "lines": [
+        {
+          "sys": "asgn",
+          "left": {
+            "sys": "ref",
+            "val": {
+              "sys": "val",
+              "type": "int",
+              "v": "$.vars.tmp1"
+            }
+          },
+          "op": {
+            "sys": "op",
+            "type": "asgn",
+            "v": "="
+          },
+          "right": {
+            "sys": "ref",
+            "val": {
+              "sys": "val",
+              "type": "int",
+              "v": "$.args.i1"
+            }
+          }
+        },
+        {
+          "sys": "return",
+          "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": true
+          }
+        }
+      ]
+    },
+    {
+      "sys": "func",
+      "name": "testFunction3",
+      "args": [
+        {
+          "sys": "arg",
+          "name": "i1",
+          "val": {
+            "sys": "val",
+            "type": "int",
+            "v": 0
+          }
+        }
+      ],
+      "vars": [
+        {
+          "sys": "var",
+          "name": "b1",
+          "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+          }
+        }
+      ],
+      "ret": {
+        "sys": "val",
+        "type": "bool",
+        "v": false
+      },
+      "lines": [
+        {
+          "sys": "call",
+          "name": "SYS::wr",
+          "args": [
+            {
+              "sys": "const",
+              "val": {
+                "sys": "val",
+                "type": "string",
+                "v": "hello world"
+              }
+            }
+          ]
+        },
+        {
+          "sys": "return",
+          "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "ret": {
+    "sys": "val",
+    "type": "bool",
+    "v": false
+  }
+}
+</pre>
+
+### Example 9-1: Full Program Run 2
+<pre>
+//Code: TEST 9.10: Full Program 2
+jpl.wr("====================== TEST 9.10: Full Program 2 ======================");
+var jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+var res = null;
+var tmp = null;
+
+var jplData = [ 33, true ];
+var jplCode = JSON.parse(JSON.stringify(code));
+
+function test(dataFromAjax, jplCodeFromAjax) {
+   console.log("test method");
+   var jpl = new jsonPlState();
+   jpl.program = jplCodeFromAjax;
+   jpl.program.vars[0].val.v = dataFromAjax[0];
+   jpl.program.vars[1].val.v = dataFromAjax[1];   
+   var tmp = jpl.runProgram();
+   return tmp.val.v;
+}
+
+jpl.wr("TEST METHOD");
+jpl.wr(test.toString());
+
+jpl.wr("TEST METHOD DATA");
+jpl.wr(jplData.toString());
+
+var jplRes = test(jplData, jplCode);
+jpl.wr("Example Code Result: " + jplRes);
+</pre>
+
+<pre>
+//Output: TEST 9.10: Full Program 2
+runProgram: RUN PROGRAM: testFunction1
+====================== TEST 9.10: Full Program 2 ======================
+TEST METHOD
+function test(dataFromAjax, jplCodeFromAjax) {
+               console.log("test method");
+               var jpl = new jsonPlState();
+               jpl.program = jplCodeFromAjax;
+               jpl.program.vars[0].val.v = dataFromAjax[0];
+               jpl.program.vars[1].val.v = dataFromAjax[1];   
+               var tmp = jpl.runProgram();
+               return tmp.val.v;
+            }
+TEST METHOD DATA
+33,true
+runProgram: RUN PROGRAM: testFunction1
+Example Code Result: true
+</pre>
+
+### Example 9-2: Full Program Run 3
+<pre>
+//Code: TEST 9.20: Full Program 3
+var jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code));
+var res = null;
+var tmp = null;
+
+jpl = new jsonPlState();
+jpl.program = JSON.parse(JSON.stringify(code2));
+tmp = jpl.program;
+jpl.wr("====================== TEST 9.20: Full Program 3 ======================");
+jpl.wrObj(tmp);
+jpl.runProgram();
+</pre>
+
+<pre>
+//Output: TEST 9.20: Full Program 3
+====================== TEST 9.20: Full Program 3 ======================
+{
+  "sys": "class",
+  "name": "test2",
+  "call": {
+    "sys": "call",
+    "name": "main",
+    "args": []
+  },
+  "vars": [
+    {
+      "sys": "var",
+      "name": "tmp1",
+      "val": {
+        "sys": "val",
+        "type": "bool",
+        "v": false
+      }
+    },
+    {
+      "sys": "var",
+      "name": "tmp2",
+      "val": {
+        "sys": "val",
+        "type": "bool",
+        "v": false
+      }
+    },
+    {
+      "sys": "var",
+      "name": "tmp3",
+      "val": {
+        "sys": "val",
+        "type": "bool",
+        "v": false
+      }
+    }
+  ],
+  "funcs": [
+    {
+      "sys": "func",
+      "name": "main",
+      "args": [],
+      "vars": [],
+      "ret": {
+        "sys": "val",
+        "type": "bool",
+        "v": false
+      },
+      "lines": [
+        {
+          "sys": "asgn",
+          "left": {
+            "sys": "ref",
+            "val": {
+              "sys": "val",
+              "type": "int",
+              "v": "#.vars.tmp1"
+            }
+          },
+          "op": {
+            "sys": "op",
+            "type": "asgn",
+            "v": "="
+          },
+          "right": {
+            "sys": "call",
+            "name": "SYS::job1",
+            "args": []
+          }
+        },
+        {
+          "sys": "if",
+          "left": {
+            "sys": "ref",
+            "val": {
+              "sys": "val",
+              "type": "int",
+              "v": "#.vars.tmp1"
+            }
+          },
+          "op": {
+            "sys": "op",
+            "type": "bex",
+            "v": "=="
+          },
+          "right": {
+            "sys": "const",
+            "val": {
+              "sys": "val",
+              "type": "bool",
+              "v": true
+            }
+          },
+          "thn": [
+            {
+              "sys": "asgn",
+              "left": {
+                "sys": "ref",
+                "val": {
+                  "sys": "val",
+                  "type": "int",
+                  "v": "#.vars.tmp2"
+                }
+              },
+              "op": {
+                "sys": "op",
+                "type": "asgn",
+                "v": "="
+              },
+              "right": {
+                "sys": "call",
+                "name": "SYS::job2",
+                "args": []
+              }
+            },
+            {
+              "sys": "if",
+              "left": {
+                "sys": "ref",
+                "val": {
+                  "sys": "val",
+                  "type": "int",
+                  "v": "#.vars.tmp2"
+                }
+              },
+              "op": {
+                "sys": "op",
+                "type": "bex",
+                "v": "=="
+              },
+              "right": {
+                "sys": "const",
+                "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": true
+                }
+              },
+              "thn": [
+                {
+                  "sys": "asgn",
+                  "left": {
+                    "sys": "ref",
+                    "val": {
+                      "sys": "val",
+                      "type": "int",
+                      "v": "#.vars.tmp3"
+                    }
+                  },
+                  "op": {
+                    "sys": "op",
+                    "type": "asgn",
+                    "v": "="
+                  },
+                  "right": {
+                    "sys": "call",
+                    "name": "SYS::job3",
+                    "args": []
+                  }
+                }
+              ],
+              "els": []
+            }
+          ],
+          "els": []
+        }
+      ]
+    }
+  ],
+  "ret": {
+    "sys": "val",
+    "type": "bool",
+    "v": false
+  }
+}
+runProgram: RUN PROGRAM: main
+sysJob1
+sysJob2
+sysJob3
 </pre>
