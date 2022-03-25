@@ -1,10 +1,14 @@
-# JsonPL Version 0.5.1
+# JsonPL Version 0.5.1 - The Json Programming Language
 
 ## JsonPL Project Files
-EXEC4.JS: The JsonPL main class and interpreter, functional.
+A description of the project's current contents.
+
+<pre>
+EXEC4.JS:   The JsonPL main class and interpreter, functional.
 TEST4.HTML: An html file that tests JsonPL objects, functional.
-IDE4.JS: JsonPL IDE JS, very early stages, not functional.
-IDE4.HTML: JsonPL JS, very early stages, not functional.
+IDE4.JS:    JsonPL IDE JS, very early stages, not functional.
+IDE4.HTML:  JsonPL JS, very early stages, not functional.
+</pre>
 
 ## JsonPL General Use Case
 In the following code snippet we're looking at a hypothetical example where the data and the JsonPL code are being brought down from AJAX calls. Notice that in this case the executable code is data driven along with the data.
