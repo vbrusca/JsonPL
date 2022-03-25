@@ -5,308 +5,27 @@
  * Created on 02/03/2022 1:57 PM EDT
  * Licensed under GNU General Public License v3.0
  */
- 
-var code = {
-   "sys": "class",
-   "name": "test1",
-   "call": {"sys": "call", "name": "testFunction1", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}]},
-   "vars": [
-      {
-         "sys": "var",
-         "name": "tmp1",
-         "val": {
-            "sys": "val",
-            "type": "int",
-            "v": 5
-         }
-      },
-      {
-         "sys": "var",
-         "name": "tmp2",
-         "val": {
-            "sys": "val",
-            "type": "bool",
-            "v": false
-         }         
-      }
-   ],
-   "funcs": [
-      {
-         "sys": "func",
-         "name": "testFunction1",
-         "args": [ 
-            {
-               "sys": "arg",
-               "name": "i1",
-               "val": {
-                  "sys": "val",
-                  "type": "int",
-                  "v": 0
-               }
-            }
-         ],
-         "vars": [
-            {
-               "sys": "var",
-               "name": "b1",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": false
-               }
-            }
-         ],
-         "ret": {
-            "sys": "val",
-            "type": "bool",
-            "v": false
-         },
-         "lines": [
-            {"sys": "call", "name": "testFunction3", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}]}
-         ]
-      },
-      {
-         "sys": "func",
-         "name": "testFunction2",
-         "args": [
-            {
-               "sys": "arg",
-               "name": "i1",
-               "val": {
-                  "sys": "val",
-                  "type": "int",
-                  "v": 0
-               }
-            }
-         ],
-         "vars": [
-            {
-               "sys": "var",
-               "name": "b1",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": false
-               }
-            },
-            {
-               "sys": "var",
-               "name": "tmp1",
-               "val": {
-                  "sys": "val",
-                  "type": "int",
-                  "v": 5
-               }
-            }            
-         ],
-         "ret": {
-            "sys": "val",
-            "type": "bool",
-            "v": false
-         },
-         "lines": [
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
-            },
-            {
-               "sys": "return",
-               "val": {
-                     "sys": "val",
-                     "type": "bool",
-                     "v": true
-               }
-            }
-         ]
-      },
-      {
-         "sys": "func",
-         "name": "testFunction3",
-         "args": [
-            {
-               "sys": "arg",
-               "name": "i1",
-               "val": {
-                  "sys": "val",
-                  "type": "int",
-                  "v": 0
-               }
-            }
-         ],
-         "vars": [
-            {
-               "sys": "var",
-               "name": "b1",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": false
-               }
-            }
-         ],
-         "ret": {
-            "sys": "val",
-            "type": "bool",
-            "v": false
-         },
-         "lines": [
-            {"sys": "call", "name": "SYS::wr", "args": [{"sys": "const", "val":{"sys": "val", "type": "string", "v": "hello world"}}]},         
-            {"sys":"return", "val": {"sys": "val", "type": "bool", "v":"true"}}
-         ]
-      }
-   ],
-   "ret": {
-      "sys": "val",
-      "type": "bool",
-      "v": false
-   }
-};
 
-var code2 = {
-   "sys": "class",
-   "name": "test2",
-   "call": {"sys": "call", "name": "main", "args": []},
-   "vars": [
-      {
-         "sys": "var",
-         "name": "tmp1",
-         "val": {
-            "sys": "val",
-            "type": "bool",
-            "v": false
-         }
-      },
-      {
-         "sys": "var",
-         "name": "tmp2",
-         "val": {
-            "sys": "val",
-            "type": "bool",
-            "v": false
-         }         
-      },
-      {
-         "sys": "var",
-         "name": "tmp3",
-         "val": {
-            "sys": "val",
-            "type": "bool",
-            "v": false
-         }         
-      }      
-   ],
-   "funcs": [
-      {
-         "sys": "func",
-         "name": "main",
-         "args": [],
-         "vars": [],
-         "ret": {
-            "sys": "val",
-            "type": "bool",
-            "v": false
-         },
-         "lines": [
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "call", "name": "SYS::job1", "args": []}
-            },
-            {
-               "sys": "if",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}},
-               "op": {"sys":"op", "type":"bex", "v":"=="},
-               "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": true}},
-               "thn": [
-                  {
-                     "sys": "asgn",
-                     "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp2"}},
-                     "op": {"sys":"op", "type":"asgn", "v":"="},
-                     "right": {"sys": "call", "name": "SYS::job2", "args": []}
-                  },
-                  {
-                     "sys": "if",
-                     "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp2"}},
-                     "op": {"sys":"op", "type":"bex", "v":"=="},
-                     "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": true}},
-                     "thn": [
-                        {
-                           "sys": "asgn",
-                           "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp3"}},
-                           "op": {"sys":"op", "type":"asgn", "v":"="},
-                           "right": {"sys": "call", "name": "SYS::job3", "args": []}
-                        }
-                     ],
-                     "els": [
-                     ]
-                  }            
-               ],
-               "els": [
-               ]
-            }
-         ]
-      }
-   ],
-   "ret": {
-      "sys": "val",
-      "type": "bool",
-      "v": false
-   }
-};
-
-//EXTRA DEMO CODE
-/*
-    ,
-   {
-      "sys": "asgn",
-      "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}},
-      "op": {"sys":"op", "type":"asgn", "v":"="},
-      "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
-   },
-   {
-      "sys": "asgn",
-      "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
-      "op": {"sys":"op", "type":"asgn", "v":"="},
-      "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
-   },
-   {
-      "sys": "asgn",
-      "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
-      "op": {"sys":"op", "type":"asgn", "v":"="},
-      "right": {"sys": "bex", "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
-   },
-   {
-      "sys": "asgn",
-      "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
-      "op": {"sys":"op", "type":"asgn", "v":"="},
-      "right": {"sys": "bex", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
-   },
-   {
-      "sys": "asgn",
-      "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
-      "op": {"sys":"op", "type":"asgn", "v":"="},
-      "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
-   }
-*/
 /* 
  * Name: jsonPlState
  * Desc: Main object. Programming language state.
  */
 function jsonPlState() {
+   this.version = "0.0.5";
    this.lineNumCurrent = 0;
    this.lineNumPrev = 0;
    this.linNumNext = 0;
    
    this.lastForReturn = null;
    this.lastIfReturn = null;
-   this.lastBexReturn = null;
-   this.lastExpReturn = null;
-   this.lastAsgnReturn = null;
-   this.lastProgramReturn = null;
    
+   this.lastBexReturn = null;   
+   this.lastExpReturn = null;
+   
+   this.lastAsgnReturn = null;
+   this.lastAsgnValue = null;
+   
+   this.lastProgramReturn = null;
    this.program = {};
    this.LOGGING = true;
    this.WR_PREFIX = "";
@@ -333,6 +52,16 @@ jsonPlState.prototype.sysWr = function(args) {
    ret = ret2;   
    
    return ret;
+};
+
+//TODO
+jsonPlState.prototype.sysGetLastAsgnValue = function() {   
+   return this.lastAsgnValue;
+};
+
+//TODO
+jsonPlState.prototype.sysGetLastExpReturn = function() {   
+   return this.lastExpReturn;
 };
 
 //TODO
@@ -384,8 +113,22 @@ jsonPlState.prototype.sysJob3 = function(args) {
  * Name: system
  * Desc: Define system functions.
  */
-jsonPlState.prototype.system = {
+jsonPlState.prototype.system = {   
    "functions":[
+      {
+         "sys": "func", 
+         "name": "SYS::getLastExpReturn",
+         "fname": "sysGetLastExpReturn",
+         "args": [
+         ]
+      },   
+      {
+         "sys": "func", 
+         "name": "SYS::getLastAsgnValue",
+         "fname": "sysGetLastAsgnValue",
+         "args": [
+         ]
+      },   
       {
          "sys": "func", 
          "name": "SYS::wr",
@@ -1437,6 +1180,21 @@ jsonPlState.prototype.wr = function(s) {
 };
 
 /*
+ * TODO
+ */
+jsonPlState.prototype.getVersion = function() {
+   this.wr(this.lastAsgnValue);
+   return this.lastAsgnValue;
+};
+
+/*
+ * TODO
+ */
+jsonPlState.prototype.cloneJsonObj = function(jsonObj) {
+   return JSON.parse(JSON.stringify(jsonObj));
+};
+
+/*
  * Name: wrObj
  * Desc: Writes a JSON object to standard output if LOGGING is on.
  *       Sets the WR_PREFIX to each object written.
@@ -2188,6 +1946,7 @@ jsonPlState.prototype.processAsgn = function(objAsgn, func) {
       ret2.val = ret;
       
       ret = ret2;
+      this.lastAsgnValue = this.cloneJsonObj(left);
       this.lastAsgnReturn = ret;
       return ret;
    } else {
@@ -2392,7 +2151,7 @@ jsonPlState.prototype.processCall = function(objCall, func) {
    }
    
    name = objCall.name;
-   args = JSON.parse(JSON.stringify(objCall.args));
+   args = this.cloneJsonObj(objCall.args);
    funcDef = this.findFunc(name);
    if(funcDef !== null) {
       funcArgs = funcDef.args;
@@ -2455,11 +2214,11 @@ jsonPlState.prototype.processCall = function(objCall, func) {
             }            
          } else {
             //backup default args
-            funcDef.args_def = JSON.parse(JSON.stringify(funcDef.args));
+            funcDef.args_def = this.cloneJsonObj(funcDef.args);
             funcDef.args = args;
             
             //backup default ret
-            funcDef.ret_def = JSON.parse(JSON.stringify(funcDef.ret));    
+            funcDef.ret_def = this.cloneJsonObj(funcDef.ret);    
             ret = this.processFunc(funcDef);
             
             //this.wr("RET_DEF");
@@ -2471,8 +2230,8 @@ jsonPlState.prototype.processCall = function(objCall, func) {
             }
             
             //restore args and ret
-            funcDef.args = JSON.parse(JSON.stringify(funcDef.args_def));
-            funcDef.ret = JSON.parse(JSON.stringify(funcDef.ret_def));
+            funcDef.args = this.cloneJsonObj(funcDef.args_def);
+            funcDef.ret = this.cloneJsonObj(funcDef.ret_def);
             
             return ret;
          }
@@ -2602,7 +2361,8 @@ jsonPlState.prototype.processExp = function(objExp, func) {
          ret.v = parseInt(ret.v);
       }
       
-      ret = ret2;         
+      ret = ret2;
+      this.lastExpReturn = ret;
       return ret;      
    } else {
       this.wr("processExp: Error: type mismatch: " + left.val.type + " - " + right.val.type);
@@ -2610,258 +2370,3 @@ jsonPlState.prototype.processExp = function(objExp, func) {
    }   
    return null;
 };
-
-/////////////////////////TEST SECTION
-var jpl = new jsonPlState();
-jpl.program = JSON.parse(JSON.stringify(code));
-
-var res = null;
-var tmp = null;
-
-/////////////////////////TESTS: REFERENCE
-tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}};
-jpl.wr("====================== TEST 1.00: Class Variable Reference ======================");
-jpl.wrObj(tmp);
-jpl.wr("REF 1:");
-res = jpl.processRef(tmp, code.funcs[0]);
-jpl.wrObj(res);
-
-tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}};
-jpl.wr("====================== TEST 1.10: Function Argument Reference ======================");
-jpl.wrObj(tmp);
-jpl.wr("REF 2:");
-res = jpl.processRef(tmp, code.funcs[0]);
-jpl.wrObj(res);
-
-tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.vars.b1"}};
-jpl.wr("====================== TEST 1.20: Function Variable Reference ======================");
-jpl.wrObj(tmp);
-jpl.wr("REF 3:");
-res = jpl.processRef(tmp, code.funcs[0]);
-jpl.wrObj(res);
-
-/////////////////////////TESTS: ASSIGNMENT
-/*
-<!-  
-   {
-      "sys": "asgn",
-      "left": {ref},
-      "op": {op & type of asgn}, 
-      "right": {ref | const | exp | bex | call}
-   }
--!>
-*/
-tmp = {
-   "sys": "asgn",
-   "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
-   "op": {"sys":"op", "type":"asgn", "v":"="},
-   "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}
-};
-jpl.wr("====================== TEST 2.00: Assignment (Class variable to function argument) ======================");
-jpl.wrObj(tmp);
-res = jpl.processAsgn(tmp, code.funcs[0]);
-jpl.wr("ASGN:");
-jpl.wrObj(res);
-
-tmp = {
-   "sys": "asgn",
-   "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
-   "op": {"sys":"op", "type":"asgn", "v":"="},
-   "right": {"sys":"const", "val":{"sys": "val", "type": "int", "v": "32"}}
-};
-jpl.wr("====================== TEST 2.10: Assignment (Constant value to function argument) ======================");
-jpl.wrObj(tmp);
-res = jpl.processAsgn(tmp, code.funcs[0]);
-jpl.wr("ASGN:");
-jpl.wrObj(res);
-
-tmp = {
-   "sys": "asgn",
-   "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
-   "op": {"sys":"op", "type":"asgn", "v":"="},
-   "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}}
-};
-jpl.wr("====================== TEST 2.20: Assignment (Expression value to function argument) ======================");
-jpl.wrObj(tmp);
-res = jpl.processAsgn(tmp, code.funcs[0]);
-jpl.wr("ASGN:");
-jpl.wrObj(res);
-
-tmp = {
-   "sys": "asgn",
-   "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.b1"}},
-   "op": {"sys":"op", "type":"asgn", "v":"="},
-   "right": {"sys": "bex", "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}}
-};
-jpl.wr("====================== TEST 2.30: Assignment (Boolean Expression value to function variable) ======================");
-jpl.wrObj(tmp);
-res = jpl.processAsgn(tmp, code.funcs[0]);
-jpl.wr("ASGN:");
-jpl.wrObj(res);
-
-tmp = {
-   "sys": "asgn",
-   "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.b1"}},
-   "op": {"sys":"op", "type":"asgn", "v":"="},
-   "right": {"sys": "call", "name": "testFunction3", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}]}
-};
-jpl.wr("====================== TEST 2.40: Assignment (Function Call value to function variable) ======================");
-jpl.wrObj(tmp);
-res = jpl.processAsgn(tmp, code.funcs[0]);
-jpl.wr("ASGN:");
-jpl.wrObj(res);
-
-///////////////////////////TESTS: BOOLEAN EXPRESSIONS
-/* 
-<!-  
-   {
-      "sys": "bex",
-      "left": {ref | const | exp | bex | call},
-      "op": {op & type of bex}, 
-      "right": {ref | const | exp | bex | call}
-   }
--!>
-*/   
-tmp = {
-   "sys": "bex", 
-   "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, 
-   "op": {"sys":"op", "type":"bex", "v":"=="}, 
-   "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
-};
-jpl.wr("====================== TEST 3.00: Boolean Expression (Function argument to Constant value) ======================");
-jpl.wrObj(tmp);
-res = jpl.processBex(tmp, code.funcs[0]);
-jpl.wr("BEX:");
-jpl.wrObj(res);
-
-//TESTS: NUMERIC EXPRESSIONS
-tmp = {
-   "sys": "exp", 
-   "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, 
-   "op": {"sys":"op", "type":"exp", "v":"+"}, 
-   "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
-};
-jpl.wr("====================== TEST 6.00: Expression ======================");
-jpl.wrObj(tmp);
-res = jpl.processExp(tmp, code.funcs[0]);
-jpl.wr("EXP:");
-jpl.wrObj(res);
-
-tmp = {
-   "sys": "call", 
-   "name": "testFunction2", 
-   "args": [
-      {
-         "sys": "ref", 
-         "val":{
-            "sys": "val", 
-            "type": "int", 
-            "v": "#.vars.tmp1"
-         }
-      }
-   ]   
-};
-jpl.wr("====================== TEST 7.00: Function Call ======================");
-jpl.wrObj(tmp);
-res = jpl.processCall(tmp, code.funcs[0]);
-jpl.wr("CALL:");
-jpl.wrObj(res);
-jpl.wr("CALL 2:");
-jpl.wrObj(code.funcs[1].args);
-
-tmp = {
-   "sys": "if",
-   "left": {"sys": "const", "val": {"sys": "val","type": "bool","v": true}},
-   "op": {"sys":"op", "type":"bex", "v":"=="},
-   "right": {"sys": "const", "val": {"sys": "val","type": "bool","v": true}},
-   "thn": [
-      {
-         "sys": "asgn",
-         "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
-         "op": {"sys":"op", "type":"asgn", "v":"="},
-         "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}
-      }
-   ],
-   "els": [
-      {
-         "sys": "asgn",
-         "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
-         "op": {"sys":"op", "type":"asgn", "v":"="},
-         "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}
-      }
-   ]
-};
-jpl.wr("====================== TEST 8.00: If Statement ======================");
-jpl.wrObj(tmp);
-res = jpl.processIf(tmp, code.funcs[0]);
-jpl.wr("IF:");
-jpl.wrObj(res);
-
-tmp = {
-   "sys": "for",
-   "start": {"sys": "const", "val": {"sys": "val","type": "int","v": 0}},
-   "stop": {"sys": "const", "val": {"sys": "val","type": "int","v": 10}},
-   "inc": {"sys": "const", "val": {"sys": "val","type": "int","v": 1}},
-   "lines": [
-      {
-         "sys": "asgn",
-         "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
-         "op": {"sys":"op", "type":"asgn", "v":"="},
-         "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}
-      }
-   ]
-};
-jpl.wr("====================== TEST 9.00: For Loop ======================");
-jpl.wrObj(tmp);
-res = jpl.processFor(tmp, code.funcs[0]);
-jpl.wr("FOR:");
-jpl.wrObj(res);
-
-
-var callObj = code.call;
-var callFuncName = callObj.name;
-var callFunc = jpl.findFunc(callFuncName);
-res = jpl.processCall(callObj, callFunc);
-jpl.wr("RUN PROGRAM: " + callFuncName);
-jpl.wrObj(res);
-
-res = jpl.processCall(callObj, callFunc);
-jpl.wr("RUN PROGRAM 2: " + callFuncName);
-jpl.wrObj(res);
-
-jpl = new jsonPlState();
-jpl.program = JSON.parse(JSON.stringify(code));
-tmp = jpl.program;
-jpl.wr("====================== TEST 10.00: Full Program 1 ======================");
-jpl.wrObj(tmp);
-jpl.runProgram();
-
-jpl.wr("====================== TEST 11.00: Example Use 1 ======================");
-var jplData = [ 33, true ];
-var jplCode = JSON.parse(JSON.stringify(code));
-
-function test(dataFromAjax, jplCodeFromAjax) {
-   console.log("test method");
-   var jpl = new jsonPlState();
-   jpl.program = jplCodeFromAjax;
-   jpl.program.vars[0].val.v = dataFromAjax[0];
-   jpl.program.vars[1].val.v = dataFromAjax[1];   
-   var tmp = jpl.runProgram();
-   return tmp.val.v;
-}
-
-jpl.wr("TEST METHOD");
-jpl.wr(test.toString());
-
-jpl.wr("TEST METHOD DATA");
-jpl.wr(jplData.toString());
-
-var jplRes = test(jplData, jplCode);
-jpl.wr("Example Code Result: " + jplRes);
-
-jpl = new jsonPlState();
-jpl.program = JSON.parse(JSON.stringify(code2));
-tmp = jpl.program;
-jpl.wr("====================== TEST 12.00: Full Program 2 ======================");
-jpl.wrObj(tmp);
-jpl.runProgram();
