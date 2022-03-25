@@ -7,7 +7,7 @@ Some details about the scripting language as it exists in version 0.5.1.
 3. JsonPL inherently supports late binding and easy transmission of programs as text.
 
 ## JsonPL Objects
-In this section we'll take a look at all of the different JSON objects supported by JsonPL. Links to JsonPL object definitions.
+In this section we'll take a look at all of the different JSON objects supported by JsonPL. Links to JsonPL object definitions are as follows.
 
 [Class Object](#class-object)
 
@@ -17,6 +17,36 @@ In this section we'll take a look at all of the different JSON objects supported
 
 [Arg Object](#arg-object)
 
+[Val Object](#val-object-sub-object)
+
+[Ref Object](#ref-object-argument-object)
+
+[Const Object](#const-object-argument-object)
+
+[Call Object Standard](#call-object-argument-line-object)
+
+[Call Object System Function](#call-object-system-function-call)
+
+[Return Object](#return-object-line-object)
+
+[Op Objects](#op-objects-special-operator-object)
+
+[Asgn Object](#asgn-object-line-object)
+
+[Func Object](#func-object)
+
+[Bex Object](#bex-object-argument-object)
+
+[Exp Object](#exp-object-argument-object)
+
+## JsonPL Examples
+A list of example snippets showing code and output associated with different JsonPL objects.
+
+[Example 1: Class Veriable Reference](#example-1-class-variable-reference)
+
+[Example 2: Assignment](#example-2-assignment)
+
+[Example 3: Boolean Expressions](#example-3-boolean-expressions)
 
 ### Class Object
 The class object is the highest level object and is used to define a class or a program. A class is a module of code that contains functions and variables.
@@ -398,5 +428,227 @@ Object Definition:
    "left": {ref | const | exp | bex | call},
    "op": {op & type of bex}, 
    "right": {ref | const | exp | bex | call}
+}
+</pre>
+
+The bex object is defined by a sys attribute with a value of "bex". The left attribute can be a ref, const, exp, bex, or call object. The op attribute expects an op object of type bex. The right attribute can be a ref, const, exp, bex, or call object.
+
+### Exp Object (Argument Object)
+The exp object is short for expression object and it's used to describe a numeric expression.
+
+<pre>
+{
+   "sys": "exp", 
+   "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, 
+   "op": {"sys":"op", "type":"exp", "v":"+"}, 
+   "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}
+}
+</pre>
+
+<pre>
+{
+   "sys": "exp",
+   "left": {ref | const | exp | bex | call},
+   "op": {op & type of exp}, 
+   "right": {ref | const | exp | bex | call}
+}
+</pre>
+
+The exp object is defined by a sys attribute with a value of "exp". The left attribute can be a ref, const, exp, bex, or call object. The op attribute expects an op object of type exp. The right attribute can be a ref, const, exp, bex, or call object.
+
+## Code Examples
+This section contains a number of code examples. Some of the examples focus on only one or two object while some are full programs. Pay close attention to the objects defined and their context.
+
+### Example 1: Class Variable Reference
+<pre>
+//Code: TEST 1.00: Class Variable Reference
+tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}};
+jpl.wr("====================== TEST 1.00: Class Variable Reference ======================");
+jpl.wrObj(tmp);
+jpl.wr("REF 1:");
+res = jpl.processRef(tmp, code.funcs[0]);
+jpl.wrObj(res);
+</pre>
+
+<pre>
+//Output: TEST 1.00: Output
+====================== TEST 1.00: Class Variable Reference ======================
+{
+  "sys": "ref",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": "#.vars.tmp1"
+  }
+}
+REF 1:
+{
+  "sys": "var",
+  "name": "tmp1",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 5
+  }
+}
+</pre>
+
+### Example 2: Assignment
+<pre>
+//Code: TEST 2.00: Assignment (Class variable to function argument)
+tmp = {
+   "sys": "asgn",
+   "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
+   "op": {"sys":"op", "type":"asgn", "v":"="},
+   "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}
+};
+jpl.wr("====================== TEST 2.00: Assignment (Class variable to function argument) ======================");
+jpl.wrObj(tmp);
+res = jpl.processAsgn(tmp, code.funcs[0]);
+jpl.wr("ASGN RESULT:");
+jpl.wrObj(res);
+tmp = {"sys": "call", "name": "SYS::getLastAsgnValue", "args": []};
+res = jpl.processCall(tmp, code.funcs[0]);
+jpl.wr("LAST ASGN VALUE:");
+jpl.wrObj(res);
+tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}};
+jpl.wr("REF #.vars.tmp1 VAL:");
+res = jpl.processRef(tmp, code.funcs[0]);
+jpl.wrObj(res);
+</pre>
+
+<pre>
+//Output: TEST 2.00: Output
+====================== TEST 2.00: Assignment (Class variable to function argument) ======================
+{
+  "sys": "asgn",
+  "left": {
+    "sys": "ref",
+    "val": {
+      "sys": "val",
+      "type": "int",
+      "v": "$.args.i1"
+    }
+  },
+  "op": {
+    "sys": "op",
+    "type": "asgn",
+    "v": "="
+  },
+  "right": {
+    "sys": "ref",
+    "val": {
+      "sys": "val",
+      "type": "int",
+      "v": "#.vars.tmp1"
+    }
+  }
+}
+ASGN RESULT:
+{
+  "sys": "const",
+  "val": {
+    "sys": "val",
+    "type": "bool",
+    "v": true
+  }
+}
+LAST ASGN VALUE:
+{
+  "sys": "arg",
+  "name": "i1",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 5
+  }
+}
+REF #.vars.tmp1 VAL:
+{
+  "sys": "var",
+  "name": "tmp1",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 5
+  }
+}
+</pre>
+
+### Example 3: Boolean Expressions
+//Code:TEST 3.00: Boolean Expression (Function argument to Constant value)
+<pre>
+tmp = {
+   "sys": "bex", 
+   "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, 
+   "op": {"sys":"op", "type":"bex", "v":"=="}, 
+   "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
+};
+jpl.wr("====================== TEST 3.00: Boolean Expression (Function argument to Constant value) ======================");
+jpl.wrObj(tmp);
+res = jpl.processBex(tmp, code.funcs[0]);
+jpl.wr("BEX RESULT: (EXPECTS: FALSE)");
+jpl.wrObj(res);            
+tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}};
+jpl.wr("REF $.args.i1 VAL:");
+res = jpl.processRef(tmp, code.funcs[0]);
+jpl.wrObj(res);
+</pre>
+
+<pre>
+//Output:TEST 3.00: Boolean Expression (Function argument to Constant value)
+====================== TEST 2.00: Assignment (Class variable to function argument) ======================
+{
+  "sys": "asgn",
+  "left": {
+    "sys": "ref",
+    "val": {
+      "sys": "val",
+      "type": "int",
+      "v": "$.args.i1"
+    }
+  },
+  "op": {
+    "sys": "op",
+    "type": "asgn",
+    "v": "="
+  },
+  "right": {
+    "sys": "ref",
+    "val": {
+      "sys": "val",
+      "type": "int",
+      "v": "#.vars.tmp1"
+    }
+  }
+}
+ASGN RESULT:
+{
+  "sys": "const",
+  "val": {
+    "sys": "val",
+    "type": "bool",
+    "v": true
+  }
+}
+LAST ASGN VALUE:
+{
+  "sys": "arg",
+  "name": "i1",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 5
+  }
+}
+REF #.vars.tmp1 VAL:
+{
+  "sys": "var",
+  "name": "tmp1",
+  "val": {
+    "sys": "val",
+    "type": "int",
+    "v": 5
+  }
 }
 </pre>
