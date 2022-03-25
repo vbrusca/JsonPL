@@ -356,3 +356,15 @@ The func object is used to define a function in a class.
 }
 </pre>
 
+<pre>
+Object Definition:
+{
+   "sys": "func",
+   "name": "some name",
+   "args": [arg], 
+   "vars": [var],
+   "ret": {val},
+   "lines": [asgn | for | if | return | call]
+}
+</pre>
+
