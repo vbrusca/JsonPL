@@ -1196,7 +1196,7 @@ RUN FUNCTION 2: testFunction1
 
 ### Example 9: Full Program Run 1
 <pre>
-//Code: TEST 9: Full Program 1
+//Code: TEST 9.00: Full Program 1
 var jpl = new jsonPlState();
 jpl.program = JSON.parse(JSON.stringify(code));
 var res = null;
@@ -1205,14 +1205,14 @@ var tmp = null;
 jpl = new jsonPlState();
 jpl.program = JSON.parse(JSON.stringify(code));
 tmp = jpl.program;
-jpl.wr("====================== TEST 9: Full Program 1 ======================");
+jpl.wr("====================== TEST 9.00: Full Program 1 ======================");
 jpl.wrObj(tmp);
 jpl.runProgram();
 </pre>
 
 <pre>
-//Output: TEST 9: Full Program 1
-====================== TEST 9: Full Program 1 ======================
+//Output: TEST 9.00: Full Program 1
+====================== TEST 9.00: Full Program 1 ======================
 {
   "sys": "class",
   "name": "test1",
@@ -1438,8 +1438,8 @@ jpl.runProgram();
 
 ### Example 10: Full Program Run 2
 <pre>
-//Code: TEST 10: Full Program 2
-jpl.wr("====================== TEST 10: Full Program 2 ======================");
+//Code: TEST 10.00: Full Program 2
+jpl.wr("====================== TEST 10.00: Full Program 2 ======================");
 var jpl = new jsonPlState();
 jpl.program = JSON.parse(JSON.stringify(code));
 var res = null;
@@ -1469,9 +1469,9 @@ jpl.wr("Example Code Result: " + jplRes);
 </pre>
 
 <pre>
-//Output: TEST 10: Full Program 2
+//Output: TEST 10.00: Full Program 2
 runProgram: RUN PROGRAM: testFunction1
-====================== TEST 10: Full Program 2 ======================
+====================== TEST 10.00: Full Program 2 ======================
 TEST METHOD
 function test(dataFromAjax, jplCodeFromAjax) {
                console.log("test method");
@@ -1490,7 +1490,7 @@ Example Code Result: true
 
 ### Example 11: Full Program Run 3
 <pre>
-//Code: TEST 11: Full Program 3
+//Code: TEST 11.00: Full Program 3
 var jpl = new jsonPlState();
 jpl.program = JSON.parse(JSON.stringify(code));
 var res = null;
@@ -1499,14 +1499,14 @@ var tmp = null;
 jpl = new jsonPlState();
 jpl.program = JSON.parse(JSON.stringify(code2));
 tmp = jpl.program;
-jpl.wr("====================== TEST 11: Full Program 3 ======================");
+jpl.wr("====================== TEST 11.00: Full Program 3 ======================");
 jpl.wrObj(tmp);
 jpl.runProgram();
 </pre>
 
 <pre>
-//Output: TEST 11: Full Program 3
-====================== TEST 11: Full Program 3 ======================
+//Output: TEST 11.00: Full Program 3
+====================== TEST 11.00: Full Program 3 ======================
 {
   "sys": "class",
   "name": "test2",
