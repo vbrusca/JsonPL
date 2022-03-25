@@ -33,7 +33,7 @@ var code = {
 </pre>
 
 <pre>
-Struct Definition:  
+Object Definition:  
 {
    "sys": "class",
    "name": "some name",
@@ -45,6 +45,19 @@ Struct Definition:
 </pre>
 
 The class object is denoted by the sys attribute value, "sys": "class". The object supports a name attribute which designates the name of the class. If this class is executeable, a program, then the call attribute will be set with a valid call object. The class variables are defined in the vars section while the associated class functions are defined in the funcs attribute. Lastly the ret attribute defines the return type of this class when it's executed as a program. The next object we'll look at is the var object.
+
+### Ret Quasi Object
+The ret object is a quasi object. Its only purpose is as a placeholder that denotes the return type of a class or function.
+
+<pre>
+{
+   "sys": "val",
+   "type": "bool",
+   "v": false
+}
+</pre>
+
+Note that this object is actually just a val object. I'm only mentioning it here as a quasi object because of how it functions as a placeholder.
 
 ### Var Object
 The var object is used to define variables that are associated with a class or a function. An example with two variable entries is shown here.
@@ -161,7 +174,7 @@ A call object is the first object we've reviewed that can be used as a function,
 </pre>
 
 <pre>
-Struct Definition: 
+Object Definition: 
 {
    "sys": "call", 
    "name": "some name", 
@@ -170,6 +183,103 @@ Struct Definition:
 </pre>
 
 The call object is denoted by the sys attribute value, "sys": "call". This object is used in a few different places. First it's used as part of a program, a class object with a defined call attribute. It's also used as an argument in many, but not all, places. Lastly, it can be used as a line in a function, for, or if object. The name attribute should be the name of the function. The value of the name attribute should be unique to its class. The next attribute args is an array that holds ref or const objects.
+
+### Call Object (System Function Call)
+You can call system functions by using the "SYS::" prefix and a defined system function as the name of a call object. An example is as follows.
+
+<pre>
+{
+   "sys": "call", 
+   "name": "SYS::wr", 
+   "args": [
+      {
+         "sys": "const", 
+         "val": {
+            "sys": "val", 
+            "type": "string", 
+            "v": "hello world"
+         }
+      }
+   ]
+}
+</pre>
+
+To open up a system function you must have the signature of the function defined in the jsonPlState class.
+A system function can't be used unless it's defined here and also defined as part of the jsonPlState class.
+<pre>
+jsonPlState.prototype.system = {   
+   "functions":[
+      {
+         "sys": "func", 
+         "name": "SYS::getLastExpReturn",
+         "fname": "sysGetLastExpReturn",
+         "args": [
+         ]
+      },   
+      {
+         "sys": "func", 
+         "name": "SYS::getLastAsgnValue",
+         "fname": "sysGetLastAsgnValue",
+         "args": [
+         ]
+      },   
+      {
+         "sys": "func", 
+         "name": "SYS::wr",
+         "fname": "sysWr",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "s",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }
+         ]
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::job1",
+         "fname": "sysJob1",
+         "args": []
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::job2",
+         "fname": "sysJob2",
+         "args": []
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::job3",
+         "fname": "sysJob3",
+         "args": []
+      }            
+   ]
+};
+</pre>
+
+An example of defining the actual system function. In the following example the sysWr system function is defined.
+<pre>
+jsonPlState.prototype.sysWr = function(args) {
+   var s = args[0].val.v;
+   console.log("sysWr: " + s);
+
+   var ret = {};
+   ret.sys = "val";
+   ret.type = "bool";
+   ret.v = true;
+   
+   var ret2 = {};
+   ret2.sys = "const";
+   ret2.val = ret;   
+   ret = ret2;   
+   
+   return ret;
+};
+</pre>
 
 ### Return Object (Line Object)
 The return object is a line object. This means that it can only be used in the lines of a function, for, or if object. 
@@ -187,6 +297,17 @@ The return object is a line object. This means that it can only be used in the l
 
 The call object is denoted by the sys attribute value, "sys": "return". The return object has a structure similar to objects we've seen before. It only has a val attribute defined. As mentioned earlier, this object can be used in a function, for, or if object and it triggers a return from the current function.
 
+### Op Objects (Special Operator Object)
+Op objects are used to describe an operator that is used as an argument in asgn, bex, exp objects.
+
+<pre>
+{"sys":"op", "type":"asgn", "v":"="}
+{"sys":"op", "type":"bex", "v":"== | <= | >= | < | > | !="}
+{"sys":"op", "type":"exp", "v":"+ | - | / | *"}
+</pre>
+
+Operator object have a sys value of op. There are three types of operator objects, shown previously. They are used as arguments in the corresponding object denoted by the type.
+
 ### Asgn Object (Line Object)
 The asgn object is used to assign value to a ref object. The left attribute has to be a ref object but the right attribute can take a ref, const, exp, bex, or call object.
 
@@ -200,7 +321,7 @@ The asgn object is used to assign value to a ref object. The left attribute has 
 </pre>
 
 <pre>
-Struct Definition:
+Object Definition:
 {
    "sys": "asgn",
    "left": {ref},
@@ -208,3 +329,30 @@ Struct Definition:
    "right": {ref | const | exp | bex | call}
 }
 </pre>
+
+The asgn object is denoted by the sys attribute value, "sys": "asgn". As mentioned earlier the left attribute has to be a class or function level reference (# or $). The op attribute has to be an op object of type asgn. This object can have a value of only "=", currently.
+
+### Func Object
+The func object is used to define a function in a class.
+
+<pre>
+{
+   "sys": "func",
+   "name": "TestFunction1",
+   "args": [
+      ...
+   ],
+   "vars": [
+      ...
+   ],
+   "ret": {
+      "sys": "val",
+      "type": "bool",
+      "v": false
+   },
+   "lines": [
+      ...
+   ]
+}
+</pre>
+
