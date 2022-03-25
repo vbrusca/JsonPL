@@ -33,7 +33,7 @@ var code = {
 </pre>
 
 <pre>
-Struct: <!-  
+Struct Definition:  
 {
    "sys": "class",
    "name": "some name",
@@ -42,7 +42,6 @@ Struct: <!-
    "funcs": [func],
    "ret": {val}
 }
--!>
 </pre>
 
 The class object is denoted by the sys attribute value, "sys": "class". The object supports a name attribute which designates the name of the class. If this class is executeable, a program, then the call attribute will be set with a valid call object. The class variables are defined in the vars section while the associated class functions are defined in the funcs attribute. Lastly the ret attribute defines the return type of this class when it's executed as a program. The next object we'll look at is the var object.
@@ -162,13 +161,12 @@ A call object is the first object we've reviewed that can be used as a function,
 </pre>
 
 <pre>
-Struct: <!-  
+Struct Definition: 
 {
    "sys": "call", 
    "name": "some name", 
    "args": [ref | const]
 }
--!>
 </pre>
 
 The call object is denoted by the sys attribute value, "sys": "call". This object is used in a few different places. First it's used as part of a program, a class object with a defined call attribute. It's also used as an argument in many, but not all, places. Lastly, it can be used as a line in a function, for, or if object. The name attribute should be the name of the function. The value of the name attribute should be unique to its class. The next attribute args is an array that holds ref or const objects.
@@ -202,12 +200,11 @@ The asgn object is used to assign value to a ref object. The left attribute has 
 </pre>
 
 <pre>
-Struct: <!-  
+Struct Definition:
 {
    "sys": "asgn",
    "left": {ref},
    "op": {op & type of asgn}, 
    "right": {ref | const | exp | bex | call}
 }
--!>
 </pre>
