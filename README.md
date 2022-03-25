@@ -7,7 +7,16 @@ Some details about the scripting language as it exists in version 0.5.1.
 3. JsonPL inherently supports late binding and easy transmission of programs as text.
 
 ## JsonPL Objects
-In this section we'll take a look at all of the different JSON objects supported by JsonPL.
+In this section we'll take a look at all of the different JSON objects supported by JsonPL. Links to JsonPL object definitions.
+
+[Class Object](#class-object)
+
+[Ret Quasi Object](#ret-quasi-object)
+
+[Var Object](#var-object)
+
+[Arg Object](#arg-object)
+
 
 ### Class Object
 The class object is the highest level object and is used to define a class or a program. A class is a module of code that contains functions and variables.
@@ -368,3 +377,26 @@ Object Definition:
 }
 </pre>
 
+The func object is defined by a sys attribute with a value of "func". The name attribute has to be a unique name for the function in the given class. The args and vars attributes are arrays that allow you to define function variables and expected arguments. The ret attribute, a quasi object, is a val object indicating the expected return type. The lines attribute is an array that holds the lines that belong to this method. 
+
+### Bex Object (Argument Object)
+THe bex object is short for boolean expression, it's used to describe a boolean expression using other JsonPL objects.
+
+<pre>
+{
+   "sys": "bex", 
+   "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}}, 
+   "op": {"sys":"op", "type":"bex", "v":"=="}, 
+   "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}
+}
+</pre>
+
+<pre>
+Object Definition: 
+{
+   "sys": "bex",
+   "left": {ref | const | exp | bex | call},
+   "op": {op & type of bex}, 
+   "right": {ref | const | exp | bex | call}
+}
+</pre>
