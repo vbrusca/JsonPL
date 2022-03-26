@@ -1711,9 +1711,11 @@ For this example we'll use the following Script Includes.
 
 1. Jcl3: Defines the core language, JSON interpreter.
 
-![Jcl3 Sc2](storage/images/jsonpl_jcl_sc2.jpg)
+![Jcl3 Script Include Sc2](https://github.com/vbrusca/JsonPL/blob/27b4db67330316e79796ff13cd00d57d75e969f4/storage/images/jsonpl_jcl_sc2.jpg)
 
 2. Jcl3Test: Defines a code module by late binding functions to the core JsonPL language.
+
+![Jcl3Test Script Include Sc3](https://github.com/vbrusca/JsonPL/blob/27b4db67330316e79796ff13cd00d57d75e969f4/storage/images/jsonpl_jcl_sc3.jpg)
 
 We'll also need a UI Action to connect the code demonstration to a button click.
 
