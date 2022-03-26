@@ -3,6 +3,18 @@
 ## JsonPL Project Files
 A description of the project's current contents.
 
+Main Sections:
+
+[JsonPL General Use Case](#-jsonpl-general-use-case)
+
+[JsonPL ServiceNow Use Case](#-jsonpl-servicenow-use-case)
+
+[JsonPL Details](#jsonpl-details)
+
+[JsonPL Objects](#jsonpl-objects)
+
+[JsonPL Examples](#jsonpl-examples)
+
 <pre>
 EXEC4.JS:   The JsonPL main class and interpreter, functional.
 TEST4.HTML: An html file that tests JsonPL objects, functional.
@@ -1687,3 +1699,109 @@ sysJob1
 sysJob2
 sysJob3
 </pre>
+
+## JsonPL ServiceNow Use Case
+This use case details implementing the JsonPL programming language as a server-side job control language, JCL, in ServiceNow.
+For this example we'll use the following Script Includes.
+
+1. Jcl3: Defines the core language, JSON interpreter.
+2. Jcl3Test: Defines a code module by late binding functions to the core JsonPL language.
+
+We'll also need a UI Action to connect the code demonstration to a button click.
+
+1. Jcl3UiActionTest: UI action used to run the demonstration.
+
+And we've defined the following table with key fields.
+
+1. jcl3: Custom Functions, Program
+
+The Custom Functions field is used to hold the signatures of system functions. These can be referenced by the JsonPL code stored in the Program field.
+In this case the record constitutes a program and a set of function signatures.
+
+### Explanation of the Implementation
+The code for the UI action is as follows. It is used to start the demonstration by creating a new Jcl3Test class instance in response to a button click.
+
+<pre>
+//UI Action:Jcl3UiActionTest
+gs.addInfoMessage("Jcl3Test UI Action");
+var jplt = new Jcl3Test();
+jplt.runTest();
+</pre>
+
+The next piece of code we'll look at is the Jcl3Test class. This class is defined in a Script Include, Jcl3Test. This Script Include is responsible for
+creating a new instance of the Jcl3 class, this class constitutes our JsonPL interpreter.
+
+<pre>
+//Script Include: Jcl3Test
+var Jcl3Test = Class.create();
+Jcl3Test.prototype = {
+    initialize: function() {
+
+    },
+	
+	 runTest: function() {
+		gs.addInfoMessage("Jcl3Test.runTest");
+		
+		var code3 = null;
+		var funcs3 = null;
+		var gr1 = new GlideRecord('x_rtsuo_jcl_3_jcl3');
+		gr1.addQuery('number', 'JCL0001022');
+		gr1.query();
+		if(gr1.next()) {
+			code3 = gr1.getValue('program');
+			funcs3 = gr1.getValue('custom_functions');			
+		}
+		
+		//Define new function code in JS
+		var jpl = new Jcl3();
+		jpl.newMethod3 = function() {
+			gs.addInfoMessage("Jcl3Test.jcl.newMethod3");
+		};
+		
+		//Describe new function signature
+		var newMethod3Entry = JSON.parse(funcs3);
+		jpl.system.functions.push(newMethod3Entry);
+		
+		jpl.program = JSON.parse(code3);
+		gs.addInfoMessage("Jcl3Test.runTest 2: Code 3");
+				
+		jpl.wr("====================== TEST: Full Program ======================");
+		jpl.runProgram();
+	},
+		
+    type: 'Jcl3Test'
+};
+</pre>
+
+Notice in the previously listed example that the 'JCL0001022' record is pulled to get the Custom Functions and Program values stored in the record.
+The new function defined in the Custom Function field of the 'JCL0001022' record is defined in the following code snippet.
+
+<pre>
+var jpl = new Jcl3();
+jpl.newMethod3 = function() {
+   gs.addInfoMessage("Jcl3Test.jcl.newMethod3");
+};
+</pre>
+
+Next, the function signatures are added to the JsonPL parse using this snippet of code. Note that the JSON string is converted to an object and added the
+interpreter's current list of system methods.
+
+<pre>
+var newMethod3Entry = JSON.parse(funcs3);
+jpl.system.functions.push(newMethod3Entry);
+</pre>
+
+At this point in the demonstration we've defined a module. A module is an extension of the core JsonPL language that defines system methods that belong together.
+You can add another level of abstraction using the same approach, this is called a group because it adds a group of closely related methods to the interpreter's system functions.
+
+<pre>
+jpl.program = JSON.parse(code3);
+gs.addInfoMessage("Jcl3Test.runTest 2: Code 3");
+      
+jpl.wr("====================== TEST: Full Program ======================");
+jpl.runProgram();
+</pre>
+
+The last snippet of code shows the conversion of the program string to an object, then the JsonPL program is run with a call to the runProgram function.
+This is an example of a late bound function and also demonstrates locking the API to the set of available system function listed in the module or module, group 
+setup by the JsonPL implementation.
