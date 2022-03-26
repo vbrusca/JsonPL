@@ -26,6 +26,7 @@ IDE4.HTML:  JsonPL JS, very early stages, not functional.
 In the following code snippet we're looking at a hypothetical example where the data and the JsonPL code are being brought down from AJAX calls. Notice that in this case the executable code is data driven along with the data.
 
 <pre>
+//psuedo-code
 function test(dataFromAjax, jplCodeFromAjax) {
    console.log("test method");
    var jpl = new jsonPlState();
@@ -88,6 +89,8 @@ A list of example snippets showing code and output associated with different Jso
 [Example 3: Boolean Expressions](#example-3-boolean-expressions)
 
 [Example 4: Numeric Expression](#example-4-numeric-expression)
+
+[Example 5: Function Call](#example-5-function-call)
 
 [Example 6: If Statement](#example-6-if-statement)
 
@@ -223,9 +226,9 @@ The ref object is used to reference a variable or an argument at the class or lo
 
 The ref object is denoted by the sys attribute value, "sys": "ref". The ref object has one attribute val, which contains a special val object. This val object has to be set to the type of the target variable or argument. It also must use a special string to denote which variable or argument it references. In this case we have two options.
 
-1. Class Variable: $.vars.some_variable_name
-2. Function Variables: #.vars.some_variable_name
-3. Function Arguments: #.args.some_variable_name
+1. Class Variable: #.vars.some_variable_name
+2. Function Variables: $.vars.some_variable_name
+3. Function Arguments: $.args.some_variable_name
 
 Ref objects can be used as arguments to asgn, exp, bex, call, for, and if objects. Another object that can also be used in this fashion is the const object. Let's take a look.
 
@@ -470,7 +473,7 @@ THe bex object is short for boolean expression, it's used to describe a boolean 
    "sys": "bex", 
    "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}}, 
    "op": {"sys":"op", "type":"bex", "v":"=="}, 
-   "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}
+   "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.i1"}}
 }
 </pre>
 
@@ -494,11 +497,12 @@ The exp object is short for expression object and it's used to describe a numeri
    "sys": "exp", 
    "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, 
    "op": {"sys":"op", "type":"exp", "v":"+"}, 
-   "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}
+   "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.i1"}}
 }
 </pre>
 
 <pre>
+Object Definition:
 {
    "sys": "exp",
    "left": {ref | const | exp | bex | call},
@@ -639,8 +643,9 @@ REF #.vars.tmp1 VAL:
 </pre>
 
 ### Example 3: Boolean Expressions
-//Code: TEST 3.00: Boolean Expression (Function argument to Constant value)
+
 <pre>
+//Code: TEST 3.00: Boolean Expression (Function argument to Constant value)
 var jpl = new jsonPlState();
 jpl.program = JSON.parse(JSON.stringify(code));
 var res = null;
