@@ -1711,19 +1711,23 @@ For this example we'll use the following Script Includes.
 
 1. Jcl3: Defines the core language, JSON interpreter.
 
-![Jcl3 Script Include Sc2](https://github.com/vbrusca/JsonPL/blob/27b4db67330316e79796ff13cd00d57d75e969f4/storage/images/jsonpl_jcl_sc2.jpg)
+![Jcl3 Script Include Sc2](storage/images/jsonpl_jcl_sc2.jpg)
 
 2. Jcl3Test: Defines a code module by late binding functions to the core JsonPL language.
 
-![Jcl3Test Script Include Sc3](https://github.com/vbrusca/JsonPL/blob/27b4db67330316e79796ff13cd00d57d75e969f4/storage/images/jsonpl_jcl_sc3.jpg)
+![Jcl3Test Script Include Sc3](storage/images/jsonpl_jcl_sc3.jpg)
 
 We'll also need a UI Action to connect the code demonstration to a button click.
 
 1. Jcl3UiActionTest: UI action used to run the demonstration.
 
+![Jcl3Test Script Include Sc3](storage/images/jsonpl_jcl_sc4.jpg)
+
 And we've defined the following table with key fields.
 
 1. jcl3: Custom Functions, Program
+
+![Jcl3Test Script Include Sc3](storage/images/jsonpl_jcl_sc1.jpg)
 
 The Custom Functions field is used to hold the signatures of system functions. These can be referenced by the JsonPL code stored in the Program field.
 In this case the record constitutes a program and a set of function signatures.
@@ -1751,7 +1755,7 @@ Jcl3Test.prototype = {
 	
 	 runTest: function() {
 		gs.addInfoMessage("Jcl3Test.runTest");
-		
+
 		var code3 = null;
 		var funcs3 = null;
 		var gr1 = new GlideRecord('x_rtsuo_jcl_3_jcl3');
@@ -1761,20 +1765,20 @@ Jcl3Test.prototype = {
 			code3 = gr1.getValue('program');
 			funcs3 = gr1.getValue('custom_functions');			
 		}
-		
+
 		//Define new function code in JS
 		var jpl = new Jcl3();
 		jpl.newMethod3 = function() {
 			gs.addInfoMessage("Jcl3Test.jcl.newMethod3");
 		};
-		
+
 		//Describe new function signature
 		var newMethod3Entry = JSON.parse(funcs3);
 		jpl.system.functions.push(newMethod3Entry);
-		
+
 		jpl.program = JSON.parse(code3);
 		gs.addInfoMessage("Jcl3Test.runTest 2: Code 3");
-				
+
 		jpl.wr("====================== TEST: Full Program ======================");
 		jpl.runProgram();
 	},
@@ -1815,3 +1819,16 @@ jpl.runProgram();
 The last snippet of code shows the conversion of the program string to an object, then the JsonPL program is run with a call to the runProgram function.
 This is an example of a late bound function and also demonstrates locking the API to the set of available system function listed in the module or module, group 
 setup by the JsonPL implementation.
+
+![Jcl3Test Script Include Sc3](storage/images/jsonpl_jcl_sc5.jpg)
+
+An example of the output from clicking the UI Action and running the demonstration. Notice that the function names called at the end of the output are all executed
+by the JsonPL program. Also note that the late bound method, newMethod3, is defined at the last moment before the JsonPL program is sent to the interpreter.
+
+This setup adds the following attributes to coding on ServiceNow backend.
+
+1. Protected environment by defining what system methods can be used by JsonPL. You can create job level function or lower level function like a strict API.
+2. Late binding, the ability to define functions at the last moment before the JsonPL interpreter is called.
+3. Low code/no code design. The JsonPL language is designed to be built using simple forms that create and manipulate the JSON objects that define a JsonPL program.
+4. Ability to move executable programs around as strings.
+5. Movement of some code up to the content level as you can now define a certain level of program functionality using JsonPL.
