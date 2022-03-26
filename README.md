@@ -5,9 +5,9 @@ A description of the project's current contents.
 
 Main Sections:
 
-[JsonPL General Use Case](#-jsonpl-general-use-case)
+[JsonPL General Use Case](#jsonpl-general-use-case)
 
-[JsonPL ServiceNow Use Case](#-jsonpl-servicenow-use-case)
+[JsonPL ServiceNow Use Case](#jsonpl-servicenow-use-case)
 
 [JsonPL Details](#jsonpl-details)
 
@@ -1710,6 +1710,9 @@ This use case details implementing the JsonPL programming language as a server-s
 For this example we'll use the following Script Includes.
 
 1. Jcl3: Defines the core language, JSON interpreter.
+
+![Jcl3 Sc2](storage/images/jsonpl_jcl_sc2.jpg)
+
 2. Jcl3Test: Defines a code module by late binding functions to the core JsonPL language.
 
 We'll also need a UI Action to connect the code demonstration to a button click.
