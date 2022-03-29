@@ -1,9 +1,6 @@
 # JsonPL Version 0.5.1 - The Json Programming Language
 
-## JsonPL Project Files
-A description of the project's current contents.
-
-Main Sections:
+## Main Sections:
 
 [JsonPL General Use Case](#jsonpl-general-use-case)
 
@@ -15,11 +12,20 @@ Main Sections:
 
 [JsonPL Examples](#jsonpl-examples)
 
+## JsonPL Project Files
+A description of the project's current contents.
+
 <pre>
+JS AND HTML JsonPL Interpreter v0.5.1 Implementation: public_html
 EXEC4.JS:   The JsonPL main class and interpreter, functional.
 TEST4.HTML: An html file that tests JsonPL objects, functional.
 IDE4.JS:    JsonPL IDE JS, very early stages, not functional.
 IDE4.HTML:  JsonPL JS, very early stages, not functional.
+</pre>
+
+<pre>
+JAVA JsonPL Interpreter v0.5.1 Implementation: NetBeans_IDE
+JsonPL:   A Java CLI implmentation of the 0.5.1 JsonPL interpreter.
 </pre>
 
 ## JsonPL General Use Case
