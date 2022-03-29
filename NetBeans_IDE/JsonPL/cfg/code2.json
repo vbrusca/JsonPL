@@ -1,0 +1,92 @@
+{
+   "sys": "class",
+   "name": "test2",
+   "call": {"sys": "call", "name": "main", "args": []},
+   "vars": [
+      {
+         "sys": "var",
+         "name": "tmp1",
+         "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         }
+      },
+      {
+         "sys": "var",
+         "name": "tmp2",
+         "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         }         
+      },
+      {
+         "sys": "var",
+         "name": "tmp3",
+         "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         }         
+      }      
+   ],
+   "funcs": [
+      {
+         "sys": "func",
+         "name": "main",
+         "args": [],
+         "vars": [],
+         "ret": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         },
+         "lines": [
+            {
+               "sys": "asgn",
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}},
+               "op": {"sys":"op", "type":"asgn", "v":"="},
+               "right": {"sys": "call", "name": "SYS::job1", "args": []}
+            },
+            {
+               "sys": "if",
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}},
+               "op": {"sys":"op", "type":"bex", "v":"=="},
+               "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": true}},
+               "thn": [
+                  {
+                     "sys": "asgn",
+                     "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp2"}},
+                     "op": {"sys":"op", "type":"asgn", "v":"="},
+                     "right": {"sys": "call", "name": "SYS::job2", "args": []}
+                  },
+                  {
+                     "sys": "if",
+                     "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp2"}},
+                     "op": {"sys":"op", "type":"bex", "v":"=="},
+                     "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": true}},
+                     "thn": [
+                        {
+                           "sys": "asgn",
+                           "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp3"}},
+                           "op": {"sys":"op", "type":"asgn", "v":"="},
+                           "right": {"sys": "call", "name": "SYS::job3", "args": []}
+                        }
+                     ],
+                     "els": [
+                     ]
+                  }            
+               ],
+               "els": [
+               ]
+            }
+         ]
+      }
+   ],
+   "ret": {
+      "sys": "val",
+      "type": "bool",
+      "v": false
+   }
+}

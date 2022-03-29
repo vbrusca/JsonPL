@@ -1,0 +1,157 @@
+{
+   "sys": "class",
+   "name": "test1",
+   "call": {"sys": "call", "name": "testFunction1", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}]},
+   "vars": [
+      {
+         "sys": "var",
+         "name": "tmp1",
+         "val": {
+            "sys": "val",
+            "type": "int",
+            "v": 5
+         }
+      },
+      {
+         "sys": "var",
+         "name": "tmp2",
+         "val": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         }         
+      }
+   ],
+   "funcs": [
+      {
+         "sys": "func",
+         "name": "testFunction1",
+         "args": [ 
+            {
+               "sys": "arg",
+               "name": "i1",
+               "val": {
+                  "sys": "val",
+                  "type": "int",
+                  "v": 0
+               }
+            }
+         ],
+         "vars": [
+            {
+               "sys": "var",
+               "name": "b1",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": false
+               }
+            }
+         ],
+         "ret": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         },
+         "lines": [
+            {"sys": "call", "name": "testFunction3", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}]}
+         ]
+      },
+      {
+         "sys": "func",
+         "name": "testFunction2",
+         "args": [
+            {
+               "sys": "arg",
+               "name": "i1",
+               "val": {
+                  "sys": "val",
+                  "type": "int",
+                  "v": 0
+               }
+            }
+         ],
+         "vars": [
+            {
+               "sys": "var",
+               "name": "b1",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": false
+               }
+            },
+            {
+               "sys": "var",
+               "name": "tmp1",
+               "val": {
+                  "sys": "val",
+                  "type": "int",
+                  "v": 5
+               }
+            }            
+         ],
+         "ret": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         },
+         "lines": [
+            {
+               "sys": "asgn",
+               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}},
+               "op": {"sys":"op", "type":"asgn", "v":"="},
+               "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
+            },
+            {
+               "sys": "return",
+               "val": {
+                     "sys": "val",
+                     "type": "bool",
+                     "v": true
+               }
+            }
+         ]
+      },
+      {
+         "sys": "func",
+         "name": "testFunction3",
+         "args": [
+            {
+               "sys": "arg",
+               "name": "i1",
+               "val": {
+                  "sys": "val",
+                  "type": "int",
+                  "v": 0
+               }
+            }
+         ],
+         "vars": [
+            {
+               "sys": "var",
+               "name": "b1",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": false
+               }
+            }
+         ],
+         "ret": {
+            "sys": "val",
+            "type": "bool",
+            "v": false
+         },
+         "lines": [
+            {"sys": "call", "name": "SYS::wr", "args": [{"sys": "const", "val":{"sys": "val", "type": "string", "v": "hello world"}}]},
+            {"sys":"return", "val": {"sys": "val", "type": "bool", "v":"true"}}
+         ]
+      }
+   ],
+   "ret": {
+      "sys": "val",
+      "type": "bool",
+      "v": false
+   }
+}

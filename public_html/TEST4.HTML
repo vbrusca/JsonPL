@@ -309,6 +309,10 @@
             /////////////////////////TEST SECTION
             var jpl = new jsonPlState();
             jpl.program = JSON.parse(JSON.stringify(code));
+            
+            if(!jpl.validateSysObjClass(jpl.program)) {
+               jpl.wr("runProgram: Error: could not validate the class object.");
+            }
 
             var res = null;
             var tmp = null;
