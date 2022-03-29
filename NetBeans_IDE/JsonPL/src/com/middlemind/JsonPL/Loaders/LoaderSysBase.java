@@ -39,9 +39,7 @@ public class LoaderSysBase implements Loader {
          JsonObjSysBase jsonObj = (JsonObjSysBase) Class.forName(targetClass).getConstructor().newInstance();
          jsonObj = gson.fromJson(json, jsonObj.getClass());
          jsonObj.obj_name = targetClass;
-         jsonObj.loader = getClass().getName();
-         //jsonObj.Link();
-         
+         jsonObj.loader = getClass().getName();         
          return jsonObj;
       } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
          throw new ExceptionLoader("Could not find target class, " + targetClass + ", in loader " + getClass().getName());

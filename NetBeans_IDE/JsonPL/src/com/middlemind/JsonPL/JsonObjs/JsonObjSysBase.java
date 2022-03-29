@@ -11,37 +11,10 @@ import java.util.List;
 public class JsonObjSysBase extends JsonObjBase {
 
    /**
-    * 
-    */
-   /*
-   public enum SysType {
-      ARG,
-      ASGN,
-      BEX,
-      CALL,
-      CLASS,
-      CONST,
-      EXP,
-      FUNC,
-      OP,
-      REF,
-      RETURN,
-      VAL,
-      VAR,
-      UNKNOWN
-   }
-   */
-   
-   /**
     *
     */
    public String sys;
    
-   /**
-    * 
-    */
-   //public SysType sys_type = SysType.UNKNOWN;
-
    /**
     *
     */
@@ -120,7 +93,7 @@ public class JsonObjSysBase extends JsonObjBase {
    /**
     *
     */
-   public Object v;   
+   public String v;   
    
    /**
     *
@@ -237,9 +210,7 @@ public class JsonObjSysBase extends JsonObjBase {
       if(this.sys != null) {
          ret.sys = new String(this.sys.getBytes());
       }      
-      
-      //ret.sys_type = this.sys_type;
-      
+            
       if(this.thn != null) {
          ret.thn = new ArrayList<>();
          for(int i = 0; i < this.thn.size(); i++) {
@@ -249,15 +220,18 @@ public class JsonObjSysBase extends JsonObjBase {
       
       if(this.type != null) {
          ret.type = new String(this.type.getBytes());
+         ret.v = new String(this.v.getBytes());
+         /*
          if(ret.type.equals("int")) {
-            ret.v = (int)this.v;
+            ret.v = Integer.parseInt(this.v) ;
          } else if(ret.type.equals("float")) {
-            ret.v = (float)this.v;         
+            ret.v = Float.parseFloat(this.v + "");
          } else if(ret.type.equals("string")) {         
-            ret.v = new String(((String)this.v).getBytes());         
+            ret.v = new String((this.v + "").getBytes());         
          } else if(ret.type.equals("bool")) {         
-            ret.v = (boolean)this.v;
+            ret.v = Boolean.parseBoolean(this.v + "");
          }
+         */
       }
       
       if(this.val != null) {

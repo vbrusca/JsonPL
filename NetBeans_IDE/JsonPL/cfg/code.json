@@ -9,7 +9,7 @@
          "val": {
             "sys": "val",
             "type": "int",
-            "v": 5
+            "v": "5"
          }
       },
       {
@@ -18,7 +18,7 @@
          "val": {
             "sys": "val",
             "type": "bool",
-            "v": false
+            "v": "false"
          }         
       }
    ],
@@ -33,7 +33,7 @@
                "val": {
                   "sys": "val",
                   "type": "int",
-                  "v": 0
+                  "v": "0"
                }
             }
          ],
@@ -44,14 +44,14 @@
                "val": {
                   "sys": "val",
                   "type": "bool",
-                  "v": false
+                  "v": "false"
                }
             }
          ],
          "ret": {
             "sys": "val",
             "type": "bool",
-            "v": false
+            "v": "false"
          },
          "lines": [
             {"sys": "call", "name": "testFunction3", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}]}
@@ -67,7 +67,7 @@
                "val": {
                   "sys": "val",
                   "type": "int",
-                  "v": 0
+                  "v": "0"
                }
             }
          ],
@@ -78,7 +78,7 @@
                "val": {
                   "sys": "val",
                   "type": "bool",
-                  "v": false
+                  "v": "false"
                }
             },
             {
@@ -87,14 +87,14 @@
                "val": {
                   "sys": "val",
                   "type": "int",
-                  "v": 5
+                  "v": "5"
                }
             }            
          ],
          "ret": {
             "sys": "val",
             "type": "bool",
-            "v": false
+            "v": "false"
          },
          "lines": [
             {
@@ -108,7 +108,7 @@
                "val": {
                      "sys": "val",
                      "type": "bool",
-                     "v": true
+                     "v": "true"
                }
             }
          ]
@@ -123,7 +123,7 @@
                "val": {
                   "sys": "val",
                   "type": "int",
-                  "v": 0
+                  "v": "0"
                }
             }
          ],
@@ -134,14 +134,14 @@
                "val": {
                   "sys": "val",
                   "type": "bool",
-                  "v": false
+                  "v": "false"
                }
             }
          ],
          "ret": {
             "sys": "val",
             "type": "bool",
-            "v": false
+            "v": "false"
          },
          "lines": [
             {"sys": "call", "name": "SYS::wr", "args": [{"sys": "const", "val":{"sys": "val", "type": "string", "v": "hello world"}}]},
@@ -152,6 +152,6 @@
    "ret": {
       "sys": "val",
       "type": "bool",
-      "v": false
+      "v": "false"
    }
 }

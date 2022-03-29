@@ -9,7 +9,7 @@
          "val": {
             "sys": "val",
             "type": "bool",
-            "v": false
+            "v": "false"
          }
       },
       {
@@ -18,7 +18,7 @@
          "val": {
             "sys": "val",
             "type": "bool",
-            "v": false
+            "v": "false"
          }         
       },
       {
@@ -27,7 +27,7 @@
          "val": {
             "sys": "val",
             "type": "bool",
-            "v": false
+            "v": "false"
          }         
       }      
    ],
@@ -40,7 +40,7 @@
          "ret": {
             "sys": "val",
             "type": "bool",
-            "v": false
+            "v": "false"
          },
          "lines": [
             {
@@ -53,7 +53,7 @@
                "sys": "if",
                "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}},
                "op": {"sys":"op", "type":"bex", "v":"=="},
-               "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": true}},
+               "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": "true"}},
                "thn": [
                   {
                      "sys": "asgn",
@@ -65,7 +65,7 @@
                      "sys": "if",
                      "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp2"}},
                      "op": {"sys":"op", "type":"bex", "v":"=="},
-                     "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": true}},
+                     "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": "true"}},
                      "thn": [
                         {
                            "sys": "asgn",
@@ -87,6 +87,6 @@
    "ret": {
       "sys": "val",
       "type": "bool",
-      "v": false
+      "v": "false"
    }
 }

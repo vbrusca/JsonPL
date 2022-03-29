@@ -14,7 +14,7 @@
                   "val": {
                      "sys": "val",
                      "type": "int",
-                     "v": 5
+                     "v": "5"
                   }
                },
                {
@@ -23,7 +23,7 @@
                   "val": {
                      "sys": "val",
                      "type": "bool",
-                     "v": false
+                     "v": "false"
                   }         
                }
             ],
@@ -72,7 +72,7 @@
                         "val": {
                            "sys": "val",
                            "type": "int",
-                           "v": 0
+                           "v": "0"
                         }
                      }
                   ],
@@ -83,7 +83,7 @@
                         "val": {
                            "sys": "val",
                            "type": "bool",
-                           "v": false
+                           "v": "false"
                         }
                      },
                      {
@@ -92,14 +92,14 @@
                         "val": {
                            "sys": "val",
                            "type": "int",
-                           "v": 5
+                           "v": "5"
                         }
                      }            
                   ],
                   "ret": {
                      "sys": "val",
                      "type": "bool",
-                     "v": false
+                     "v": "false"
                   },
                   "lines": [
                      {
@@ -113,7 +113,7 @@
                         "val": {
                               "sys": "val",
                               "type": "bool",
-                              "v": true
+                              "v": "true"
                         }
                      }
                   ]
@@ -128,7 +128,7 @@
                         "val": {
                            "sys": "val",
                            "type": "int",
-                           "v": 0
+                           "v": "0"
                         }
                      }
                   ],
@@ -139,14 +139,14 @@
                         "val": {
                            "sys": "val",
                            "type": "bool",
-                           "v": false
+                           "v": "false"
                         }
                      }
                   ],
                   "ret": {
                      "sys": "val",
                      "type": "bool",
-                     "v": false
+                     "v": "false"
                   },
                   "lines": [
                      {"sys": "call", "name": "SYS::wr", "args": [{"sys": "const", "val":{"sys": "val", "type": "string", "v": "hello world"}}]},
@@ -157,7 +157,7 @@
             "ret": {
                "sys": "val",
                "type": "bool",
-               "v": false
+               "v": "false"
             }
          };
 
@@ -172,7 +172,7 @@
                   "val": {
                      "sys": "val",
                      "type": "bool",
-                     "v": false
+                     "v": "false"
                   }
                },
                {
@@ -181,7 +181,7 @@
                   "val": {
                      "sys": "val",
                      "type": "bool",
-                     "v": false
+                     "v": "false"
                   }         
                },
                {
@@ -190,7 +190,7 @@
                   "val": {
                      "sys": "val",
                      "type": "bool",
-                     "v": false
+                     "v": "false"
                   }         
                }      
             ],
@@ -203,7 +203,7 @@
                   "ret": {
                      "sys": "val",
                      "type": "bool",
-                     "v": false
+                     "v": "false"
                   },
                   "lines": [
                      {
@@ -216,7 +216,7 @@
                         "sys": "if",
                         "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}},
                         "op": {"sys":"op", "type":"bex", "v":"=="},
-                        "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": true}},
+                        "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": "true"}},
                         "thn": [
                            {
                               "sys": "asgn",
@@ -228,7 +228,7 @@
                               "sys": "if",
                               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp2"}},
                               "op": {"sys":"op", "type":"bex", "v":"=="},
-                              "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": true}},
+                              "right": {"sys":"const", "val": {"sys": "val", "type": "bool", "v": "true"}},
                               "thn": [
                                  {
                                     "sys": "asgn",
@@ -250,7 +250,7 @@
             "ret": {
                "sys": "val",
                "type": "bool",
-               "v": false
+               "v": "false"
             }
          };
 
@@ -312,6 +312,7 @@
             
             if(!jpl.validateSysObjClass(jpl.program)) {
                jpl.wr("runProgram: Error: could not validate the class object.");
+               return;
             }
 
             var res = null;
@@ -319,6 +320,10 @@
 
             /////////////////////////TESTS: REFERENCE
             tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}};
+            if(!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }            
             jpl.wr("====================== TEST 1.00: Class Variable Reference ======================");
             jpl.wrObj(tmp);
             jpl.wr("REF 1:");
@@ -326,6 +331,11 @@
             jpl.wrObj(res);
 
             tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}};
+            if(!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }                        
+            jpl.validateSysObjRef(tmp);
             jpl.wr("====================== TEST 1.10: Function Argument Reference ======================");
             jpl.wrObj(tmp);
             jpl.wr("REF 2:");
@@ -333,6 +343,11 @@
             jpl.wrObj(res);
 
             tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.vars.b1"}};
+            if(!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }                        
+            jpl.validateSysObjRef(tmp);
             jpl.wr("====================== TEST 1.20: Function Variable Reference ======================");
             jpl.wrObj(tmp);
             jpl.wr("REF 3:");
@@ -356,6 +371,10 @@
                "op": {"sys":"op", "type":"asgn", "v":"="},
                "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}
             };
+            if(!jpl.validateSysObjAsgn(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }
             jpl.wr("====================== TEST 2.00: Assignment (Class variable to function argument) ======================");
             jpl.wrObj(tmp);
             res = jpl.processAsgn(tmp, code.funcs[0]);
@@ -376,6 +395,10 @@
                "op": {"sys":"op", "type":"asgn", "v":"="},
                "right": {"sys":"const", "val":{"sys": "val", "type": "int", "v": "32"}}
             };
+            if(!jpl.validateSysObjAsgn(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }            
             jpl.wr("====================== TEST 2.10: Assignment (Constant value to function argument) ======================");
             jpl.wrObj(tmp);
             res = jpl.processAsgn(tmp, code.funcs[0]);
@@ -390,7 +413,7 @@
                "sys": "asgn",
                "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
                "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}}
+               "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}}
             };
             jpl.wr("====================== TEST 2.20: Assignment (Expression value to function argument) ======================");
             jpl.wrObj(tmp);
@@ -455,7 +478,7 @@
             */   
             tmp = {
                "sys": "bex", 
-               "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, 
+               "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}, 
                "op": {"sys":"op", "type":"bex", "v":"=="}, 
                "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
             };
@@ -471,9 +494,9 @@
             
             tmp = {
                "sys": "bex", 
-               "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, 
+               "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}, 
                "op": {"sys":"op", "type":"bex", "v":">="}, 
-               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
+               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}
             };
             jpl.wr("====================== TEST 3.05: Boolean Expression (Constant value to Constant value) ======================");
             jpl.wrObj(tmp);
@@ -485,7 +508,7 @@
             ///////////////////////////TESTS: NUMERIC EXPRESSIONS
             tmp = {
                "sys": "exp", 
-               "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, 
+               "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}, 
                "op": {"sys":"op", "type":"exp", "v":"+"}, 
                "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
             };
@@ -524,9 +547,9 @@
 
             tmp = {
                "sys": "if",
-               "left": {"sys": "const", "val": {"sys": "val","type": "bool","v": true}},
+               "left": {"sys": "const", "val": {"sys": "val","type": "bool","v": "true"}},
                "op": {"sys":"op", "type":"bex", "v":"=="},
-               "right": {"sys": "const", "val": {"sys": "val","type": "bool","v": true}},
+               "right": {"sys": "const", "val": {"sys": "val","type": "bool","v": "true"}},
                "thn": [
                   {
                      "sys": "asgn",
@@ -565,9 +588,9 @@
 
             tmp = {
                "sys": "for",
-               "start": {"sys": "const", "val": {"sys": "val","type": "int","v": 0}},
-               "stop": {"sys": "const", "val": {"sys": "val","type": "int","v": 10}},
-               "inc": {"sys": "const", "val": {"sys": "val","type": "int","v": 1}},
+               "start": {"sys": "const", "val": {"sys": "val","type": "int","v": "0"}},
+               "stop": {"sys": "const", "val": {"sys": "val","type": "int","v": "10"}},
+               "inc": {"sys": "const", "val": {"sys": "val","type": "int","v": "1"}},
                "lines": [
                   {
                      "sys": "asgn",
@@ -602,9 +625,9 @@
             jpl.wrObj(res);
             tmp = {
                "sys": "for",
-               "start": {"sys": "const", "val": {"sys": "val","type": "int","v": 0}},
-               "stop": {"sys": "const", "val": {"sys": "val","type": "int","v": 10}},
-               "inc": {"sys": "const", "val": {"sys": "val","type": "int","v": 1}},
+               "start": {"sys": "const", "val": {"sys": "val","type": "int","v": "0"}},
+               "stop": {"sys": "const", "val": {"sys": "val","type": "int","v": "10"}},
+               "inc": {"sys": "const", "val": {"sys": "val","type": "int","v": "1"}},
                "lines": [
                   {
                      "sys": "asgn",

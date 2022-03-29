@@ -44,7 +44,7 @@ jsonPlState.prototype.sysWr = function(args) {
    var ret = {};
    ret.sys = "val";
    ret.type = "bool";
-   ret.v = true;
+   ret.v = "true";
    
    var ret2 = {};
    ret2.sys = "const";
@@ -81,7 +81,7 @@ jsonPlState.prototype.getConstBool = function() {
    var ret = {};
    ret.sys = "val";
    ret.type = "bool";
-   ret.v = false;
+   ret.v = "false";
    
    var ret2 = {};
    ret2.sys = "const";
@@ -100,7 +100,7 @@ jsonPlState.prototype.getConstBool = function() {
 jsonPlState.prototype.sysJob1 = function(args) {
    this.wr("sysJob1");
    var ret = this.getConstBool();
-   ret.val.v = true;
+   ret.val.v = "true";
    return ret;
 };
 
@@ -113,7 +113,7 @@ jsonPlState.prototype.sysJob1 = function(args) {
 jsonPlState.prototype.sysJob2 = function(args) {
    this.wr("sysJob2");
    var ret = this.getConstBool();
-   ret.val.v = true;
+   ret.val.v = "true";
    return ret;
 };
 
@@ -126,7 +126,7 @@ jsonPlState.prototype.sysJob2 = function(args) {
 jsonPlState.prototype.sysJob3 = function(args) {
    this.wr("sysJob3");
    var ret = this.getConstBool();
-   ret.val.v = true;
+   ret.val.v = "true";
    return ret;
 };
 
@@ -1678,157 +1678,157 @@ jsonPlState.prototype.processIf = function(objIf, func) {
       if(op.v === "==") {
          if(left.val.type === "int") {
             if(parseInt(left.val.v) === parseInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "float") {
             if(parseFloat(left.val.v) === parseFloat(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "bool") {
             if(this.toBoolInt(left.val.v) === this.toBoolInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "string") {
             if(String(left.val.v) === String(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }               
          }
       } else if(op.v === "!=") {
          if(left.val.type === "int") {
             if(parseInt(left.val.v) !== parseInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "float") {
             if(parseFloat(left.val.v) !== parseFloat(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "bool") {
             if(this.toBoolInt(left.val.v) !== this.toBoolInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "string") {
             if(String(left.val.v) !== String(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }               
          }
       } else if(op.v === "<") {
          if(left.val.type === "int") {
             if(parseInt(left.val.v) < parseInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "float") {
             if(parseFloat(left.val.v) < parseFloat(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "bool") {
             if(this.toBoolInt(left.val.v) < this.toBoolInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "string") {
             if(String(left.val.v).length < String(right.val.v).length) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }               
          }
       } else if(op.v === ">") {
         if(left.val.type === "int") {
             if(parseInt(left.val.v) > parseInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "float") {
             if(parseFloat(left.val.v) > parseFloat(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "bool") {
             if(this.toBoolInt(left.val.v) > this.toBoolInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "string") {
             if(String(left.val.v).length > String(right.val.v).length) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }               
          }
       } else if(op.v === "<=") {
         if(left.val.type === "int") {
             if(parseInt(left.val.v) <= parseInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "float") {
             if(parseFloat(left.val.v) <= parseFloat(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "bool") {
             if(this.toBoolInt(left.val.v) <= this.toBoolInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "string") {
             if(String(left.val.v).length <= String(right.val.v).length) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }               
          }
       } else if(op.v === ">=") {
         if(left.val.type === "int") {
             if(parseInt(left.val.v) >= parseInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "float") {
             if(parseFloat(left.val.v) >= parseFloat(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "bool") {
             if(this.toBoolInt(left.val.v) >= this.toBoolInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "string") {
             if(String(left.val.v).length >= String(right.val.v).length) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }               
          }
       } else {
@@ -1836,7 +1836,7 @@ jsonPlState.prototype.processIf = function(objIf, func) {
          return null;               
       }
       
-      if(ret.v === true) {
+      if(this.toBool(ret.v) === true) {
          //run thn lines
          ret3 = this.processIfForLines(thn, func);
       } else {
@@ -1909,7 +1909,7 @@ jsonPlState.prototype.processIfForLines = function(objLines, func) {
       var ret = {};
       ret.sys = "val";
       ret.type = "bool";
-      ret.v = true;
+      ret.v = "true";
       
       var ret2 = {};
       ret2.sys = "const";
@@ -2033,7 +2033,7 @@ jsonPlState.prototype.processFor = function(objFor, func) {
    var ret = {};
    ret.sys = "val";
    ret.type = "int";
-   ret.v = 0;
+   ret.v = 0 + "";
    
    var ret2 = {};
    ret2.sys = "const";
@@ -2042,7 +2042,10 @@ jsonPlState.prototype.processFor = function(objFor, func) {
 
    var ret3 = null;
    var i = 0;
-   for(i = start.val.v; i < stop.val.v; i++) {
+   var incAmt = parseInt(inc.val.v);
+   var lenAmt = parseInt(stop.val.v);
+   var startAmt = parseInt(start.val.v);
+   for (i = startAmt; i < lenAmt; i += incAmt) {
       ret3 = this.processIfForLines(objFor.lines, func);
       if(ret3 === null) {
          this.wr("processFor: Error: process loop iteration " + i + " returned a null value.");
@@ -2050,7 +2053,7 @@ jsonPlState.prototype.processFor = function(objFor, func) {
       } else if(this.isSysObjReturn(ret3)) {
          return ret3;
       } else {
-         ret.val.v = i;
+         ret.val.v = i + "";
          this.lastForReturn = ret;
       }
    }
@@ -2118,7 +2121,7 @@ jsonPlState.prototype.processAsgn = function(objAsgn, func) {
       var ret = {};
       ret.sys = "val";
       ret.type = "bool";
-      ret.v = true;
+      ret.v = "true";
       
       var ret2 = {};
       ret2.sys = "const";
@@ -2221,157 +2224,157 @@ jsonPlState.prototype.processBex = function(objBex, func) {
       if(op.v === "==") {
          if(left.val.type === "int") {
             if(parseInt(left.val.v) === parseInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "float") {
             if(parseFloat(left.val.v) === parseFloat(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "bool") {
             if(this.toBoolInt(left.val.v) === this.toBoolInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "string") {
             if(String(left.val.v) === String(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }               
          }
       } else if(op.v === "!=") {
          if(left.val.type === "int") {
             if(parseInt(left.val.v) !== parseInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "float") {
             if(parseFloat(left.val.v) !== parseFloat(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "bool") {
             if(this.toBoolInt(left.val.v) !== this.toBoolInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "string") {
             if(String(left.val.v) !== String(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }               
          }
       } else if(op.v === "<") {
          if(left.val.type === "int") {
             if(parseInt(left.val.v) < parseInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "float") {
             if(parseFloat(left.val.v) < parseFloat(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "bool") {
             if(this.toBoolInt(left.val.v) < this.toBoolInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "string") {
             if(String(left.val.v).length < String(right.val.v).length) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }               
          }
       } else if(op.v === ">") {
         if(left.val.type === "int") {
             if(parseInt(left.val.v) > parseInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "float") {
             if(parseFloat(left.val.v) > parseFloat(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "bool") {
             if(this.toBoolInt(left.val.v) > this.toBoolInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "string") {
             if(String(left.val.v).length > String(right.val.v).length) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }               
          }
       } else if(op.v === "<=") {
         if(left.val.type === "int") {
             if(parseInt(left.val.v) <= parseInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "float") {
             if(parseFloat(left.val.v) <= parseFloat(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "bool") {
             if(this.toBoolInt(left.val.v) <= this.toBoolInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "string") {
             if(String(left.val.v).length <= String(right.val.v).length) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }               
          }
       } else if(op.v === ">=") {
         if(left.val.type === "int") {
             if(parseInt(left.val.v) >= parseInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "float") {
             if(parseFloat(left.val.v) >= parseFloat(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "bool") {
             if(this.toBoolInt(left.val.v) >= this.toBoolInt(right.val.v)) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }
          } else if(left.val.type === "string") {
             if(String(left.val.v).length >= String(right.val.v).length) {
-               ret.v = true;
+               ret.v = "true";
             } else {
-               ret.v = false;
+               ret.v = "false";
             }               
          }         
       } else {
@@ -2484,7 +2487,7 @@ jsonPlState.prototype.processCall = function(objCall, func) {
                var ret = {};
                ret.sys = "val";
                ret.type = "bool";
-               ret.v = err;
+               ret.v = err + "";
 
                var ret2 = {};
                ret2.sys = "const";
@@ -2568,12 +2571,12 @@ jsonPlState.prototype.processExp = function(objExp, func) {
       left = this.processCall(left, func);
       
    } else {
-      this.wr("processBex: Error: argument left must be a ref obj");
+      this.wr("processExp: Error: argument left must be a ref obj");
       return null;
    }
    
    if(left === null) {
-      this.wr("processBex: Error: error processing left");
+      this.wr("processExp: Error: error processing left");
       return null;
    }
 
@@ -2593,12 +2596,12 @@ jsonPlState.prototype.processExp = function(objExp, func) {
       right = this.processCall(right, func);
       
    } else {
-      this.wr("processBex: Error: argument right is an unknown obj: " + this.getSysObjType(right));
+      this.wr("processExp: Error: argument right is an unknown obj: " + this.getSysObjType(right));
       return null;
    }
    
    if(right === null) {
-      this.wr("processBex: Error: error processing right");
+      this.wr("processExp: Error: error processing right");
       return null;
    }   
    
@@ -2668,11 +2671,11 @@ jsonPlState.prototype.processExp = function(objExp, func) {
       }
       
       if(left.val.type === "int") {
-         ret.v = parseInt(ret.v);
+         ret.v = parseInt(ret.v) + "";
       } else if(left.val.type === "float") {
-         ret.v = parseFloat(ret.v);         
+         ret.v = parseFloat(ret.v) + "";         
       } else if(left.val.type === "bool") {
-         ret.v = this.toBool(ret.v);
+         ret.v = this.toBool(ret.v) + "";
       }
       
       ret = ret2;
