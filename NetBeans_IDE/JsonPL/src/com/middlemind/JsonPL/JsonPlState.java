@@ -311,6 +311,16 @@ public class JsonPlState {
       }
    }
 
+   //TODO
+   public void wrObj(List<JsonObjSysBase> jsonObjs) {
+      if (this.LOGGING == true) {
+         for(int i = 0; i < jsonObjs.size(); i++) {
+            Utils.PrintObject(jsonObjs.get(i), "wrObj");
+            this.wr("");
+         }
+      }
+   }   
+   
    /////////////////////////GENERIC OBJECT ID METHODS
    /*
    * Name: isObject
@@ -1877,7 +1887,7 @@ public class JsonPlState {
             this.wr("processBex: Error: unknown operator: " + op.v);
             return null;
          }
-
+         
          if (this.toBool(ret.v) == true) {
             //run thn lines
             ret3 = this.processIfForLines(thn, func);
@@ -2509,15 +2519,30 @@ public class JsonPlState {
             }
 
             if (sysFunc) {
-               boolean err = true;
+               boolean err = false;
                JsonObjSysBase lret = null;
                try {
-                  if (this.systemFunctionHandler != null) {
-                     lret = this.systemFunctionHandler.call(funcDef.fname, args, this);
-                     err = false;
+                  String lname = funcDef.fname;   
+                  if(lname.equals("sysJob1")) {
+                     lret = sysJob1();
+                     
+                  } else if(lname.equals("sysJob2")) {
+                     lret = sysJob2();
+
+                  } else if(lname.equals("sysJob3")) {
+                     lret = sysJob3();
+
+                  } else if(lname.equals("sysGetLastAsgnValue")) {
+                     lret = lastAsgnValue;
+
                   } else {
-                     lret = null;
-                     err = true;
+                     if (this.systemFunctionHandler != null) {
+                        lret = this.systemFunctionHandler.call(funcDef.fname, args, this);
+                        err = false;
+                     } else {
+                        lret = null;
+                        err = true;
+                     }
                   }
                } catch (Exception e) {
                   lret = null;

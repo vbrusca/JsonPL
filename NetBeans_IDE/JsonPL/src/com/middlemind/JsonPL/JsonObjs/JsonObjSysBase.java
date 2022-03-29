@@ -220,18 +220,10 @@ public class JsonObjSysBase extends JsonObjBase {
       
       if(this.type != null) {
          ret.type = new String(this.type.getBytes());
-         ret.v = new String(this.v.getBytes());
-         /*
-         if(ret.type.equals("int")) {
-            ret.v = Integer.parseInt(this.v) ;
-         } else if(ret.type.equals("float")) {
-            ret.v = Float.parseFloat(this.v + "");
-         } else if(ret.type.equals("string")) {         
-            ret.v = new String((this.v + "").getBytes());         
-         } else if(ret.type.equals("bool")) {         
-            ret.v = Boolean.parseBoolean(this.v + "");
-         }
-         */
+      }
+      
+      if(this.v != null) {
+         ret.v = new String(this.v.getBytes());         
       }
       
       if(this.val != null) {
@@ -244,6 +236,17 @@ public class JsonObjSysBase extends JsonObjBase {
             ret.vars.add(this.vars.get(i).Clone());
          }
       }
+      
+      if(this.ret_def != null) {
+         ret.ret_def = this.ret_def.Clone();
+      }
+      
+      if(this.args_def != null) {
+         ret.args_def = new ArrayList<>();
+         for(int i = 0; i < this.args_def.size(); i++) {
+            ret.args_def.add(this.args_def.get(i).Clone());
+         }
+      }      
       
       ret.active = this.active;
       return ret;

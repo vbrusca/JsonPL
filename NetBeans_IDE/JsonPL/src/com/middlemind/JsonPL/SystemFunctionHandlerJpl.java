@@ -14,6 +14,7 @@ public class SystemFunctionHandlerJpl {
    }
    
    public JsonObjSysBase call(String name, List<JsonObjSysBase> args, JsonPlState jsonPl) {
+      Logger.wr("Handling system method: " + name);
       JsonObjSysBase ret = null;
       if(name != null) {
          if(name.equals("sysJob1")) {
@@ -25,6 +26,9 @@ public class SystemFunctionHandlerJpl {
          } else if(name.equals("sysJob3")) {
             ret = jsonPl.sysJob3();
             
+         } else if(name.equals("sysGetLastAsgnValue")) {
+            ret = jsonPl.lastAsgnValue;
+           
          }
       }
       return ret;

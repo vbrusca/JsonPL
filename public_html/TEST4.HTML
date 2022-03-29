@@ -427,7 +427,7 @@
             tmp = {"sys": "call", "name": "SYS::getLastExpReturn", "args": []};
             res = jpl.processCall(tmp, code.funcs[0]);
             jpl.wr("LAST EXP RETURN:");
-            jpl.wrObj(res);            
+            jpl.wrObj(res);
 
             tmp = {
                "sys": "asgn",
@@ -633,7 +633,7 @@
                      "sys": "asgn",
                      "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
                      "op": {"sys":"op", "type":"asgn", "v":"="},
-                     "right": {"sys": "exp", "left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.i1"}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"const", "val":{"sys": "val", "type": "int", "v": 1}}}
+                     "right": {"sys": "exp", "left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.i1"}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"const", "val":{"sys": "val", "type": "int", "v": "1"}}}
                   }
                ]
             };

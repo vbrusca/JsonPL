@@ -233,9 +233,363 @@ public class JsonPL {
          jpl.wr("LAST ASGN VALUE:");
          jpl.wrObj(res);
             
+         tmpJson = String.join("\n",
+            "{",
+            "\"sys\": \"asgn\",",
+            "\"left\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}},",
+            "\"op\": {\"sys\":\"op\", \"type\":\"asgn\", \"v\":\"=\"},",
+            "\"right\": {\"sys\": \"exp\", \"left\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\", \"type\": \"int\", \"v\": \"25\"}}, \"op\": {\"sys\":\"op\", \"type\":\"exp\", \"v\":\"+\"}, \"right\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}}}",
+            "}"
+         );
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("====================== TEST 2.20: Assignment (Expression value to function argument) ======================");
+         jpl.wrObj(tmp);
+         res = jpl.processAsgn(tmp, code.funcs.get(0));
+         jpl.wr("ASGN RESULT:");
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"call\", \"name\": \"SYS::getLastAsgnValue\", \"args\": []}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         res = jpl.processCall(tmp, code.funcs.get(0));
+         jpl.wr("LAST ASGN VALUE:");
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"call\", \"name\": \"SYS::getLastExpReturn\", \"args\": []}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");         
+         res = jpl.processCall(tmp, code.funcs.get(0));
+         jpl.wr("LAST EXP RETURN:");
+         jpl.wrObj(res);
+         
+         tmpJson = String.join("\n",
+            "{",
+            "\"sys\": \"asgn\",",
+            "\"left\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.vars.b1\"}},",
+            "\"op\": {\"sys\":\"op\", \"type\":\"asgn\", \"v\":\"=\"},",
+            "\"right\": {\"sys\": \"bex\", \"left\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}}, \"op\": {\"sys\":\"op\", \"type\":\"bex\", \"v\":\"==\"}, \"right\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}}}",
+            "}"
+         );
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("====================== TEST 2.30: Assignment (Boolean Expression value to function variable) ======================");
+         jpl.wrObj(tmp);
+         res = jpl.processAsgn(tmp, code.funcs.get(0));
+         jpl.wr("ASGN RESULT:");
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"call\", \"name\": \"SYS::getLastAsgnValue\", \"args\": []}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         res = jpl.processCall(tmp, code.funcs.get(0));
+         jpl.wr("LAST ASGN VALUE:");
+         jpl.wrObj(res);         
+
+         tmpJson = String.join("\n",
+            "{",
+            "\"sys\": \"asgn\",",
+            "\"left\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.vars.b1\"}},",
+            "\"op\": {\"sys\":\"op\", \"type\":\"asgn\", \"v\":\"=\"},",
+            "\"right\": {\"sys\": \"call\", \"name\": \"testFunction3\", \"args\": [{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp1\"}}]}",
+            "}"
+         );
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("====================== TEST 2.40: Assignment (Function Call value to function variable) ======================");
+         jpl.wrObj(tmp);
+         res = jpl.processAsgn(tmp, code.funcs.get(0));
+         jpl.wr("ASGN RESULT:");
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"call\", \"name\": \"SYS::getLastAsgnValue\", \"args\": []}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         res = jpl.processCall(tmp, code.funcs.get(0));
+         jpl.wr("LAST ASGN VALUE:");
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp1\"}}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("REF #.vars.tmp1 VAL:");
+         res = jpl.processRef(tmp, code.funcs.get(0));
+         jpl.wrObj(res);      
+         
+         ///////////////////////////TESTS: BOOLEAN EXPRESSIONS
+         /* 
+         <!-  
+            {
+               "sys": "bex",
+               "left": {ref | const | exp | bex | call},
+               "op": {op & type of bex}, 
+               "right": {ref | const | exp | bex | call}
+            }
+         -!>
+         */   
+         tmpJson = String.join("\n",
+            "{",
+            "\"sys\": \"bex\",", 
+            "\"left\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\", \"type\": \"int\", \"v\": \"25\"}},", 
+            "\"op\": {\"sys\":\"op\", \"type\":\"bex\", \"v\":\"==\"},", 
+            "\"right\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}}",
+            "}"
+         );
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("====================== TEST 3.00: Boolean Expression (Function argument to Constant value) ======================");
+         jpl.wrObj(tmp);
+         res = jpl.processBex(tmp, code.funcs.get(0));
+         jpl.wr("BEX RESULT: (EXPECTS: FALSE)");
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("REF $.args.i1 VAL:");
+         res = jpl.processRef(tmp, code.funcs.get(0));
+         jpl.wrObj(res);            
+
+         tmpJson = String.join("\n",
+            "{",
+            "\"sys\": \"bex\",", 
+            "\"left\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\", \"type\": \"int\", \"v\": \"25\"}},", 
+            "\"op\": {\"sys\":\"op\", \"type\":\"bex\", \"v\":\">=\"},", 
+            "\"right\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\", \"type\": \"int\", \"v\": \"25\"}}",
+            "}"
+         );
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("====================== TEST 3.05: Boolean Expression (Constant value to Constant value) ======================");
+         jpl.wrObj(tmp);
+         res = jpl.processBex(tmp, code.funcs.get(0));
+         jpl.wr("BEX RESULT: (EXPECTS: TRUE)");
+         jpl.wrObj(res);  
+
+         ///////////////////////////TESTS: NUMERIC EXPRESSIONS
+         tmpJson = String.join("\n",
+            "{",
+            "\"sys\": \"exp\",", 
+            "\"left\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\", \"type\": \"int\", \"v\": \"25\"}},", 
+            "\"op\": {\"sys\":\"op\", \"type\":\"exp\", \"v\":\"+\"},", 
+            "\"right\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}}",
+            "}"
+         );
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("====================== TEST 4.00: Expression ======================");
+         jpl.wrObj(tmp);
+         res = jpl.processExp(tmp, code.funcs.get(0));
+         jpl.wr("EXP RESULT:");
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("REF $.args.i1 VAL:");
+         res = jpl.processRef(tmp, code.funcs.get(0));
+         jpl.wrObj(res);
+
+         ///////////////////////////TESTS: FUNCTION CALLS
+         tmpJson = "{\"sys\": \"call\", \"name\": \"testFunction2\", \"args\": [{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp1\"}}]}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("====================== TEST 5.00: Function Call ======================");
+         jpl.wrObj(tmp);
+         res = jpl.processCall(tmp, code.funcs.get(0));
+         jpl.wr("CALL RESULT:");
+         jpl.wrObj(res);
+         jpl.wr("CALL FUNCS[1] ARGS:");
+         jpl.wrObj(code.funcs.get(1).args);
+
+         tmpJson = String.join("\n", 
+            "{",
+            "\"sys\": \"if\",",
+            "\"left\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\",\"type\": \"bool\",\"v\": \"true\"}},",
+            "\"op\": {\"sys\":\"op\", \"type\":\"bex\", \"v\":\"==\"},",
+            "\"right\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\",\"type\": \"bool\",\"v\": \"true\"}},",
+            "\"thn\": [",
+               "{",
+                  "\"sys\": \"asgn\",",
+                  "\"left\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}},",
+                  "\"op\": {\"sys\":\"op\", \"type\":\"asgn\", \"v\":\"=\"},",
+                  "\"right\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp1\"}}",
+               "}",
+            "],",
+            "\"els\": [",
+               "{",
+                  "\"sys\": \"asgn\",",
+                  "\"left\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}},",
+                  "\"op\": {\"sys\":\"op\", \"type\":\"asgn\", \"v\":\"=\"},",
+                  "\"right\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp1\"}}",
+               "}",
+            "]",
+            "}"
+         );
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("====================== TEST 6.00: If Statement ======================");
+         jpl.wrObj(tmp);
+         res = jpl.processIf(tmp, code.funcs.get(0));
+         jpl.wr("IF RESULT:");
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("REF $.args.i1 VAL:");
+         res = jpl.processRef(tmp, code.funcs.get(0));
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp1\"}}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("REF #.vars.tmp1 VAL:");
+         res = jpl.processRef(tmp, code.funcs.get(0));
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"call\", \"name\": \"SYS::getLastAsgnValue\", \"args\": []}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         res = jpl.processCall(tmp, code.funcs.get(0));
+         jpl.wr("LAST ASGN VALUE:");
+         jpl.wrObj(res);            
+
+         tmpJson = String.join("\n",
+            "{",
+            "\"sys\": \"for\",",
+            "\"start\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\",\"type\": \"int\",\"v\": \"0\"}},",
+            "\"stop\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\",\"type\": \"int\",\"v\": \"10\"}},",
+            "\"inc\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\",\"type\": \"int\",\"v\": \"1\"}},",
+            "\"lines\": [",
+               "{",
+                  "\"sys\": \"asgn\",",
+                  "\"left\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}},",
+                  "\"op\": {\"sys\":\"op\", \"type\":\"asgn\", \"v\":\"=\"},",
+                  "\"right\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp1\"}}",
+               "}",
+            "]",
+            "}"
+         );
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("====================== TEST 7.00: For Loop ======================");
+         jpl.wrObj(tmp);
+         res = jpl.processFor(tmp, code.funcs.get(0));
+         jpl.wr("FOR RESULT:");
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("REF $.args.i1 VAL:");
+         res = jpl.processRef(tmp, code.funcs.get(0));
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp1\"}}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("REF #.vars.tmp1 VAL:");
+         res = jpl.processRef(tmp, code.funcs.get(0));
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"call\", \"name\": \"SYS::getLastAsgnValue\", \"args\": []}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         res = jpl.processCall(tmp, code.funcs.get(0));
+         jpl.wr("LAST ASGN VALUE:");
+         jpl.wrObj(res);
+
+         jpl.wr("====================== TEST 7.10: For Loop ======================");
+         tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("REF $.args.i1 VAL:");
+         res = jpl.processRef(tmp, code.funcs.get(0));
+         jpl.wrObj(res);
+         tmpJson = String.join("\n",
+            "{",
+            "\"sys\": \"for\",",
+            "\"start\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\",\"type\": \"int\",\"v\": \"0\"}},",
+            "\"stop\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\",\"type\": \"int\",\"v\": \"10\"}},",
+            "\"inc\": {\"sys\": \"const\", \"val\": {\"sys\": \"val\",\"type\": \"int\",\"v\": \"1\"}},",
+            "\"lines\": [",
+               "{",
+                  "\"sys\": \"asgn\",",
+                  "\"left\": {\"sys\":\"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}},",
+                  "\"op\": {\"sys\":\"op\", \"type\":\"asgn\", \"v\":\"=\"},",
+                  "\"right\": {\"sys\": \"exp\", \"left\": {\"sys\": \"ref\", \"val\": {\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}}, \"op\": {\"sys\":\"op\", \"type\":\"exp\", \"v\":\"+\"}, \"right\": {\"sys\":\"const\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"1\"}}}",
+               "}",
+            "]",
+            "}"
+         );
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         
+         jpl.wrObj(tmp);
+         res = jpl.processFor(tmp, code.funcs.get(0));
+         jpl.wr("FOR RESULT:");
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"$.args.i1\"}}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.wr("REF $.args.i1 VAL:");
+         res = jpl.processRef(tmp, code.funcs.get(0));
+         jpl.wrObj(res);
+         tmpJson = "{\"sys\": \"call\", \"name\": \"SYS::getLastAsgnValue\", \"args\": []}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         res = jpl.processCall(tmp, code.funcs.get(0));
+         jpl.wr("LAST ASGN VALUE:");
+         jpl.wrObj(res);
+         
+         jpl.wr("====================== TEST 8.00: Call Statement ======================");
+         JsonObjSysBase callObj = code.call;
+         String callFuncName = callObj.name;
+         JsonObjSysBase callFunc = jpl.findFunc(callFuncName);
+         res = jpl.processCall(callObj, callFunc);
+         jpl.wr("RUN FUNCTION 1: " + callFuncName);
+         jpl.wrObj(res);
+
+         res = jpl.processCall(callObj, callFunc);
+         jpl.wr("RUN FUNCTION 2: " + callFuncName);
+         jpl.wrObj(res);
+         
+         jpl = new JsonPlState();
+         if(jpl.system.containsKey("functions")) {
+            jpl.system.remove("functions");
+         }
+         jpl.system.put("functions", JsonPL.sfuncs.funcs);         
+         
+         tmp = ldr.ParseJson(JsonPL.codeStr, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.program = tmp;
+         tmp = jpl.program;
+         jpl.wr("====================== TEST 9.00: Full Program 1 ======================");
+         jpl.wrObj(tmp);
+         jpl.runProgram();
+         
+         
+         jpl.wr("====================== TEST 10.00: Full Program 2 ======================");
+         String[] jplData = new String[] {"33", "true"};
+         tmp = ldr.ParseJson(JsonPL.codeStr, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         JsonObjSysBase jplCode = tmp;
+
+         jpl.wr("TEST METHOD");         
+         tmpJson = String.join("\n",
+            "public static String test(String[] dataFromAjax, JsonObjSysBase jplCodeFromAjax) {",
+            "   Logger.wrl(\"test method\");",
+            "   JsonPlState jpl = new JsonPlState();",
+            "",
+            "   if(jpl.system.containsKey(\"functions\")) {",
+            "      jpl.system.remove(\"functions\");",
+            "   }",
+            "   jpl.system.put(\"functions\", JsonPL.sfuncs.funcs);",
+            "   jpl.program = jplCodeFromAjax;",
+            "   jpl.program.vars.get(0).val.v = dataFromAjax[0];",
+            "   jpl.program.vars.get(1).val.v = dataFromAjax[1];",
+            "   JsonObjSysBase tmp = jpl.runProgram();",
+            "   return tmp.val.v;",
+            "}"
+         );
+         jpl.wr(tmpJson);
+         
+         jpl.wr("TEST METHOD DATA");
+         jpl.wr("{\"33\", \"true\"}");
+         String jplRes = test(jplData, jplCode);
+         jpl.wr("Example Code Result: " + jplRes);
+         
+         jpl = new JsonPlState();
+         if(jpl.system.containsKey("functions")) {
+            jpl.system.remove("functions");
+         }
+         jpl.system.put("functions", JsonPL.sfuncs.funcs);         
+         tmp = ldr.ParseJson(JsonPL.code2Str, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         jpl.program = tmp;
+         tmp = jpl.program;
+         jpl.wr("====================== TEST 11.00: Full Program 3 ======================");
+         jpl.wrObj(tmp);
+         jpl.runProgram();         
+
       } catch (Exception e) {
          Logger.wrl("Error!");
          e.printStackTrace();
       }         
    }
+   
+   public static String test(String[] dataFromAjax, JsonObjSysBase jplCodeFromAjax) {
+      Logger.wrl("test method");
+      JsonPlState jpl = new JsonPlState();
+            
+      if(jpl.system.containsKey("functions")) {
+         jpl.system.remove("functions");
+      }
+      jpl.system.put("functions", JsonPL.sfuncs.funcs);
+         
+      jpl.program = jplCodeFromAjax;
+      jpl.program.vars.get(0).val.v = dataFromAjax[0];
+      jpl.program.vars.get(1).val.v = dataFromAjax[1];   
+      var tmp = jpl.runProgram();
+      return tmp.val.v;
+   }   
 }

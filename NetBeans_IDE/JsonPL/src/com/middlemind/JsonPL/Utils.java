@@ -40,6 +40,8 @@ public class Utils {
         builder.setPrettyPrinting();
         Gson gson = builder.create();            
         String jsonString = gson.toJson(obj);
+        //clean = chars
+        jsonString = jsonString.replaceAll("\\\\u003d", "=");
         Logger.wr(jsonString);        
     }
     
