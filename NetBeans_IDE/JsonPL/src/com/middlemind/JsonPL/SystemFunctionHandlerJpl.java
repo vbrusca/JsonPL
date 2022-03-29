@@ -9,10 +9,20 @@ import java.util.List;
  */
 public class SystemFunctionHandlerJpl {
 
+   /**
+    * 
+    */
    public SystemFunctionHandlerJpl() {
       
    }
    
+   /**
+    * 
+    * @param name
+    * @param args
+    * @param jsonPl
+    * @return 
+    */
    public JsonObjSysBase call(String name, List<JsonObjSysBase> args, JsonPlState jsonPl) {
       Logger.wr("Handling system method: " + name);
       JsonObjSysBase ret = null;

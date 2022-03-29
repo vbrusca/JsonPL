@@ -52,9 +52,4 @@ public interface JsonObj {
     * JSON object.
     */
    public void Print(String prefix);
-
-   /**
-    * TODO
-    */
-   //public void Link();
 }

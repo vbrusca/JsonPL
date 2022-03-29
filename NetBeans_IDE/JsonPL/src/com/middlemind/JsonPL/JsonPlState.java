@@ -1626,6 +1626,21 @@ public class JsonPlState {
          return 0;
       }
    }
+   
+   //TODO
+   public int toInt(String v) {
+      return Integer.parseInt(v);
+   }
+   
+   //TODO
+   public float toFloat(String v) {
+      return Float.parseFloat(v);
+   }   
+      
+   //TODO
+   public String toStr(String v) {
+      return (v + "");
+   }
 
    //TODO
    public boolean toBool(String v) {

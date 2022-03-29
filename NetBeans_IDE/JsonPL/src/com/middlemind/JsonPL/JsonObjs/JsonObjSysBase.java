@@ -258,11 +258,12 @@ public class JsonObjSysBase extends JsonObjBase {
     */
    public JsonObjSysBase(String sysStr) {
       sys = sysStr;
-      //Link();
    }
    
+   /**
+    * 
+    */
    public JsonObjSysBase() {
-
    }   
    
    /**
@@ -274,43 +275,4 @@ public class JsonObjSysBase extends JsonObjBase {
       super.Print(prefix);
       Logger.wrl(prefix + "Sys: " + sys);
    }
-   
-   /**
-    * 
-    */
-   /*
-   @Override
-   public final void Link() {
-      Logger.wrl("Link: " + sys);
-      if(sys != null) {
-         if(sys.equals("arg")) {
-            sys_type = SysType.ARG;
-         } else if(sys.equals("asgn")) {
-            sys_type = SysType.ASGN;
-         } else if(sys.equals("bex")) {
-            sys_type = SysType.BEX;
-         } else if(sys.equals("call")) {
-            sys_type = SysType.CALL;
-         } else if(sys.equals("class")) {
-            sys_type = SysType.CLASS; 
-         } else if(sys.equals("const")) {
-            sys_type = SysType.CONST; 
-         } else if(sys.equals("exp")) {
-            sys_type = SysType.EXP;
-         } else if(sys.equals("func")) {
-            sys_type = SysType.FUNC;
-         } else if(sys.equals("op")) {
-            sys_type = SysType.OP;
-         } else if(sys.equals("ref")) {
-            sys_type = SysType.REF;
-         } else if(sys.equals("return")) {
-            sys_type = SysType.RETURN;
-         } else if(sys.equals("val")) {
-            sys_type = SysType.VAL;
-         } else if(sys.equals("var")) {
-            sys_type = SysType.VAR;
-         }
-      }
-   }
-   */
 }

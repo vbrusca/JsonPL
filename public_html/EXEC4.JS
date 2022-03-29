@@ -1573,6 +1573,22 @@ jsonPlState.prototype.toBoolInt = function(v) {
 };
 
 //TODO
+jsonPlState.prototype.toInt = function(v) {
+   return parseInt(v);
+};
+
+//TODO
+jsonPlState.prototype.toFloat = function(v) {
+   return parseFloat(v);
+};
+
+//TODO
+jsonPlState.prototype.toStr = function(v) {
+   return String(v + "");
+};
+
+
+//TODO
 jsonPlState.prototype.toBool = function(v) {
    var vb = v + "";
    vb = vb.toLowerCase();

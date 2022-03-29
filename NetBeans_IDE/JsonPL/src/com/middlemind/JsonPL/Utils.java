@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 /**
- *
+ * A centralized utility class that provides access to a number of helpful static methods.
  * @author Victor G. Brusca, Middlemind Games 03/27/2022 05:32 PM EDT
  */
 public class Utils {

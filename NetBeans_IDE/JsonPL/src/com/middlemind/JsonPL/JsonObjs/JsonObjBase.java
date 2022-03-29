@@ -23,8 +23,7 @@ public class JsonObjBase implements JsonObj {
    /**
     * A method that returns this class' JSON object loader.
     *
-    * @return A string representing the full class obj_name of this JSON object's
- loader.
+    * @return A string representing the full class obj_name of this JSON object's loader.
     */
    @Override
    public String GetLoader() {
@@ -34,8 +33,7 @@ public class JsonObjBase implements JsonObj {
    /**
     * A method that sets the class' JSON object loader.
     *
-    * @param s A string representing the full class obj_name of this JSON
- object's loader.
+    * @param s A string representing the full class obj_name of this JSON object's loader.
     */
    @Override
    public void SetLoader(String s) {
@@ -83,14 +81,4 @@ public class JsonObjBase implements JsonObj {
       Logger.wrl(prefix + "ObjName: " + obj_name);
       Logger.wrl(prefix + "Loader: " + loader);
    }
-
-   /**
-    * TODO
-    */
-   /*
-   @Override
-   public void Link() {
-      //do nothing by default
-   }
-   */
 }
