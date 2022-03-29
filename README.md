@@ -19,13 +19,17 @@ A description of the project's current contents.
 JS AND HTML JsonPL Interpreter v0.5.1 Implementation: public_html
 EXEC4.JS:   The JsonPL main class and interpreter, functional.
 TEST4.HTML: An html file that tests JsonPL objects, functional.
-IDE4.JS:    JsonPL IDE JS, very early stages, not functional.
-IDE4.HTML:  JsonPL JS, very early stages, not functional.
+
+IDE4.JS:    JsonPL IDE JS, very early stages, NOT functional.
+IDE4.HTML:  JsonPL JS, very early stages, NOT functional.
 </pre>
 
 <pre>
 JAVA JsonPL Interpreter v0.5.1 Implementation: NetBeans_IDE
-JsonPL:   A Java CLI implmentation of the 0.5.1 JsonPL interpreter.
+JsonPL:   A Java CLI implmentation of the 0.5.1 JsonPL interpreter, functional.
+
+C# JsonPL Interpreter v0.5.1 Implementation: VisualStudio_IDE
+JsonPL:   A C# CLI implmentation of the 0.5.1 JsonPL interpreter, NOT functional.
 </pre>
 
 ## JsonPL General Use Case
