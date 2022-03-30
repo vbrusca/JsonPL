@@ -27,10 +27,14 @@ IDE4.HTML:  JsonPL JS, very early stages, NOT functional.
 <pre>
 JAVA JsonPL Interpreter v0.5.1 Implementation: NetBeans_IDE
 JsonPL:   A Java CLI implmentation of the 0.5.1 JsonPL interpreter, functional.
+**Please note that the project has/expects the working directory set to .\cfg\, the same directory as the JSON data files. Adjust your paths and working directory as needed to run the example.
 
 C# JsonPL Interpreter v0.5.1 Implementation: VisualStudio_IDE
-JsonPL:   A C# CLI implmentation of the 0.5.1 JsonPL interpreter, NOT functional.
+JsonPL:   A C# CLI implmentation of the 0.5.1 JsonPL interpreter, functional.
+**Please note that the project expects to be run from the '\bin\Debug\netcoreapp3.1' directory. Change paths in JsonPL.cs according to your expected use to run the example.
 </pre>
+
+Up next: Python, C, Pascal versions of the base 0.5.1 interpreter and some rigorous testing.
 
 ## JsonPL General Use Case
 In the following code snippet we're looking at a hypothetical example where the data and the JsonPL code are being brought down from AJAX calls. Notice that in this case the executable code is data driven along with the data.
