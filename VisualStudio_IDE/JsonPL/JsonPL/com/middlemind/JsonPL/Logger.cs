@@ -21,7 +21,7 @@ namespace com.middlemind.JsonPL {
       *
       * @param s The specified text to write.
       */
-      public static void wrl(String s) {
+      public static void wrl(string s) {
          if (LOGGING_ON) {
             System.Console.Out.WriteLine(s);
             System.Diagnostics.Debug.WriteLine(s);
@@ -33,7 +33,7 @@ namespace com.middlemind.JsonPL {
       *
       * @param s The specified text to write.
       */
-      public static void wr(String s) {
+      public static void wr(string s) {
          if (LOGGING_ON) {
             System.Console.Out.Write(s);
             System.Diagnostics.Debug.Write(s);
@@ -46,7 +46,7 @@ namespace com.middlemind.JsonPL {
       *
       * @param s The specified text to write.
       */
-      public static void wrlErr(String s) {
+      public static void wrlErr(string s) {
          if (LOGGING_ON) {
             System.Console.Error.WriteLine(s);
             System.Diagnostics.Debug.WriteLine("Error: " + s);

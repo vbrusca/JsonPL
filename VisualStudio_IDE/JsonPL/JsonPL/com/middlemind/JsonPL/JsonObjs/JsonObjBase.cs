@@ -14,19 +14,19 @@ namespace com.middlemind.JsonPL.JsonObjs {
       /**
       * A string representing the obj_name of this JSON object.
       */
-      public String obj_name;
+      public string obj_name;
 
       /**
       * A string representing the full class obj_name of this JSON object's loader.
       */
-      public String loader;
+      public string loader;
 
       /**
       * A method that returns this class' JSON object loader.
       *
       * @return A string representing the full class obj_name of this JSON object's loader.
       */
-      public String GetLoader() {
+      public string GetLoader() {
          return loader;
       }
 
@@ -35,7 +35,7 @@ namespace com.middlemind.JsonPL.JsonObjs {
       *
       * @param s A string representing the full class obj_name of this JSON object's loader.
       */
-      public void SetLoader(String s) {
+      public void SetLoader(string s) {
          loader = s;
       }
 
@@ -44,7 +44,7 @@ namespace com.middlemind.JsonPL.JsonObjs {
       *
       * @return A string representing the obj_name of this JSON object.
       */
-      public String GetName() {
+      public string GetName() {
          return obj_name;
       }
 
@@ -53,7 +53,7 @@ namespace com.middlemind.JsonPL.JsonObjs {
       *
       * @param s A string representing the obj_name of this JSON object.
       */
-      public void SetName(String s) {
+      public void SetName(string s) {
          obj_name = s;
       }
 
@@ -72,7 +72,7 @@ namespace com.middlemind.JsonPL.JsonObjs {
       * @param prefix A string that is used as a prefix to the string
       * representation of this JSON object.
       */
-      public virtual void Print(String prefix) {
+      public virtual void Print(string prefix) {
          Logger.wrl(prefix + "ObjName: " + obj_name);
          Logger.wrl(prefix + "Loader: " + loader);
       }

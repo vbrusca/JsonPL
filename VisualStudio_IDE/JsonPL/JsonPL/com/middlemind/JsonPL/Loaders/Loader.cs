@@ -20,6 +20,6 @@ namespace com.middlemind.JsonPL.Loaders {
       * @throws ExceptionLoader An exception is thrown if there is an issue during
       * the JSON data load.
       */
-      public JsonObjSysBase ParseJson(String json, String targetClass);
+      public JsonObjSysBase ParseJson(string json, string targetClass);
    }
 }

@@ -1,10 +1,10 @@
 ﻿using com.middlemind.JsonPL.FileIO;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Text.Json;
 
 namespace com.middlemind.JsonPL {
    /**
@@ -12,15 +12,7 @@ namespace com.middlemind.JsonPL {
    * @author Victor G. Brusca, Middlemind Games 03/27/2022 05:32 PM EDT
    */
    public class Utils {
-      /*
-         WeatherForecast? weatherForecast = 
-         JsonSerializer.Deserialize<WeatherForecast>(jsonString);
-      */
-
-      /*
-         string jsonString = JsonSerializer.Serialize(weatherForecast);
-      */
-
+ 
       /**
       * A static method used to write the specified object, in JSON format, to the specified file.
       * @param obj           The object to be converted and written in JSON format.
@@ -29,15 +21,9 @@ namespace com.middlemind.JsonPL {
       * @param rootOutputDir The root directory of the destination output file.
       * @throws IOException  Throws an IOException during file IO.
       */
-      public static void WriteObject(Object obj, String name, String fileName, String rootOutputDir) {
+      public static void WriteObject(Object obj, string name, string fileName, string rootOutputDir) {
          //Logger.wrl("Utils: WriteObject: Name: " + name);
-         /*
-         GsonBuilder builder = new GsonBuilder();
-         builder.setPrettyPrinting();
-         Gson gson = builder.create();
-         String jsonString = gson.toJson(obj);
-         */
-         String jsonString = JsonSerializer.Serialize(obj);
+         string jsonString = JsonConvert.SerializeObject(obj);
          FileUnloader.WriteStr(Path.GetFullPath(rootOutputDir, fileName).ToString(), jsonString);
       }
 
@@ -46,18 +32,14 @@ namespace com.middlemind.JsonPL {
       * @param obj       The object to be converted and written in JSON format.
       * @param name      The name of the object that's being written in JSON format.
       */
-      public static void PrintObject(Object obj, String name) {
+      public static void PrintObject(Object obj, string name) {
          //Logger.wrl("Utils: PrintObject: Name: '" + name + "'");
-         /*
-         GsonBuilder builder = new GsonBuilder();
-         builder.setPrettyPrinting();
-         Gson gson = builder.create();
-         String jsonString = gson.toJson(obj);
-         */
-         String jsonString = JsonSerializer.Serialize(obj);
+         string jsonString = JsonConvert.SerializeObject(obj, Formatting.Indented, new JsonSerializerSettings {
+            NullValueHandling = NullValueHandling.Ignore
+         });
          //clean = chars
          jsonString = jsonString.Replace("\\u003d", "=");
-         Logger.wr(jsonString);
+         Logger.wrl(jsonString);
       }
 
       /**
@@ -66,7 +48,7 @@ namespace com.middlemind.JsonPL {
       * @param s The string to check.
       * @return A Boolean value indicating if the provided string is empty or not.
       */
-      public static bool IsStringEmpty(String s) {
+      public static bool IsStringEmpty(string s) {
          if (s == null || s.Equals("")) {
             return true;
          } else {

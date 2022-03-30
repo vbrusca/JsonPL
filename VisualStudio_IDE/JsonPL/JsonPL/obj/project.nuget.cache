@@ -1,12 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "OlF/1dic5AAwiYLarD+i1DnEGJA8LhsnGZEx6fSo5iHjbjwug1chb+qkUwnjvUtkjptfvcfAQGC+1Nwtxu27hg==",
+  "dgSpecHash": "xmFsr8yxyJ5h3qompuVCGC8ywYKNULXMXLmlvPyu036fs4TnGBQ/2WvCHUy4DgK38P5t2Ejht6ygNA/4a/FcNw==",
   "success": true,
   "projectFilePath": "C:\\Users\\variable\\Documents\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\JsonPL.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\variable\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
-    "C:\\Users\\variable\\.nuget\\packages\\system.text.encodings.web\\6.0.0\\system.text.encodings.web.6.0.0.nupkg.sha512",
-    "C:\\Users\\variable\\.nuget\\packages\\system.text.json\\6.0.2\\system.text.json.6.0.2.nupkg.sha512"
+    "C:\\Users\\variable\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
   ],
   "logs": []
 }

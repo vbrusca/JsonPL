@@ -1,9 +1,9 @@
 ﻿using com.middlemind.JsonPL.Exceptions;
 using com.middlemind.JsonPL.JsonObjs;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json;
 
 namespace com.middlemind.JsonPL.Loaders {
    /**
@@ -17,7 +17,7 @@ namespace com.middlemind.JsonPL.Loaders {
       * A string representing the name of this class. This is used to define the
       * class in JSON output files.
       */
-      public String obj_name = "LoaderSysBase";
+      public string obj_name = "LoaderSysBase";
 
       /**
       * A method used to parse and load JSON data files.
@@ -31,12 +31,21 @@ namespace com.middlemind.JsonPL.Loaders {
       */
       public JsonObjSysBase ParseJson(string json, string targetClass) {
          Type type = null;
+
          try {
             type = Type.GetType(targetClass);
             JsonObjSysBase jsonObj = (JsonObjSysBase)Activator.CreateInstance(type);
-            jsonObj = JsonSerializer.Deserialize<JsonObjSysBase>(json);
+
+
+            //jsonObj = JsonSerializer.Deserialize<JsonObjSysBase>(json, opts);
+            jsonObj = JsonConvert.DeserializeObject<JsonObjSysBase>(json);
+            //Logger.wrl("Json: " + json);
+
             jsonObj.obj_name = targetClass;
             jsonObj.loader = type.FullName;
+
+            //Logger.wrl("Deserialized: " + jsonObj.sys);
+
             return jsonObj;
          } catch (Exception e) {
             throw new ExceptionLoader("Could not find target class, " + targetClass + ", in loader " + type.FullName);

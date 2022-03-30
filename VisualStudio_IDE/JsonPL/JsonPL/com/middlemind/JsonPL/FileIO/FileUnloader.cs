@@ -18,7 +18,7 @@ namespace com.middlemind.JsonPL.FileIO {
        * @param str The string to write to the file.
        * @throws IOException An IO exception is thrown if there is a file error.
        */
-      public static void WriteStr(String file, String str) {
+      public static void WriteStr(string file, string str) {
          FileInfo fInf = new FileInfo(file);
          DirectoryInfo directory = new DirectoryInfo(fInf.Directory.FullName);
          if (!directory.Exists) {
@@ -40,7 +40,7 @@ namespace com.middlemind.JsonPL.FileIO {
        * @param strs The list of strings to write to the file.
        * @throws IOException An IO exception is thrown if there is a file error.
        */
-      public static void WriteList(String file, List<String> strs) {
+      public static void WriteList(string file, List<string> strs) {
          FileInfo fInf = new FileInfo(file);
          DirectoryInfo directory = new DirectoryInfo(fInf.Directory.FullName);
          if (!directory.Exists) {
@@ -49,7 +49,7 @@ namespace com.middlemind.JsonPL.FileIO {
 
          FileStream fs = new FileStream(file, FileMode.Create);
          StreamWriter sw = new StreamWriter(fs);
-         foreach(String s in strs) {
+         foreach(string s in strs) {
             sw.Write(s + System.Environment.NewLine);
          }
 
@@ -65,7 +65,7 @@ namespace com.middlemind.JsonPL.FileIO {
        * @param buff The byte array to write to the file.
        * @throws IOException An IO exception is thrown if there is a file error.
        */
-      public static void WriteBuffer(String file, byte[] buff) {
+      public static void WriteBuffer(string file, byte[] buff) {
          FileInfo fInf = new FileInfo(file);
          DirectoryInfo directory = new DirectoryInfo(fInf.Directory.FullName);
          if (!directory.Exists) {

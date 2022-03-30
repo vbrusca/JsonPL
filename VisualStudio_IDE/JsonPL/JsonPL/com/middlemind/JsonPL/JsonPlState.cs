@@ -22,7 +22,7 @@ namespace com.middlemind.JsonPL {
       /**
        * 
        */
-      public String version = "0.5.1";
+      public string version = "0.5.1";
 
       /**
        * 
@@ -87,12 +87,12 @@ namespace com.middlemind.JsonPL {
       /**
        * 
        */
-      public String WR_PREFIX = "";
+      public string WR_PREFIX = "";
 
       /**
        * 
        */
-      public Dictionary<String, List<JsonObjSysBase>> system;
+      public Dictionary<string, List<JsonObjSysBase>> system;
 
       /**
        * 
@@ -104,7 +104,7 @@ namespace com.middlemind.JsonPL {
        */
       public JsonPlState() {
          List<JsonObjSysBase> sfuncs = new List<JsonObjSysBase>();
-         system = new Dictionary<String, List<JsonObjSysBase>>();
+         system = new Dictionary<string, List<JsonObjSysBase>>();
          system.Add("functions", sfuncs);
       }
 
@@ -115,7 +115,7 @@ namespace com.middlemind.JsonPL {
       * Returns: {(const obj, sys=const)}
       */
       public JsonObjSysBase sysWr(List<JsonObjSysBase> args) {
-         String s = args[0].val.v + "";
+         string s = args[0].val.v + "";
          this.wr(s);
 
          JsonObjSysBase ret = new JsonObjSysBase("val");
@@ -211,7 +211,7 @@ namespace com.middlemind.JsonPL {
       public JsonObjSysBase runProgram() {
          if (this.validateSysObjClass(this.program)) {
             JsonObjSysBase callObj = this.program.call;
-            String callFuncName = callObj.name;
+            string callFuncName = callObj.name;
             this.wr("runProgram: RUN PROGRAM: " + callFuncName);
             JsonObjSysBase callFunc = this.findFunc(callFuncName);
 
@@ -235,8 +235,8 @@ namespace com.middlemind.JsonPL {
       * Arg2: obj(func obj, sys=func)
       * Returns: {null | (arg obj, sys=arg)}
       */
-      public JsonObjSysBase findArg(String name, JsonObjSysBase obj) {
-         String str;
+      public JsonObjSysBase findArg(string name, JsonObjSysBase obj) {
+         string str;
          JsonObjSysBase subj;
          for (int i = 0; i < obj.args.Count; i++) {
             subj = obj.args[i];
@@ -255,8 +255,8 @@ namespace com.middlemind.JsonPL {
       * Arg2: obj{(func obj, sys=func) | (class obj, sys=class)}
       * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
        */
-      public JsonObjSysBase findVar(String name, JsonObjSysBase obj) {
-         String str;
+      public JsonObjSysBase findVar(string name, JsonObjSysBase obj) {
+         string str;
          JsonObjSysBase subj;
          for (int i = 0; i < obj.vars.Count; i++) {
             subj = obj.vars[i];
@@ -274,9 +274,9 @@ namespace com.middlemind.JsonPL {
       * Arg1: name(string to find)
       * Returns: {null | (func obj, sys=func)}
        */
-      public JsonObjSysBase findFunc(String name) {
+      public JsonObjSysBase findFunc(string name) {
          JsonObjSysBase prog = this.program;
-         String str;
+         string str;
          JsonObjSysBase subj;
          for (int i = 0; i < prog.funcs.Count; i++) {
             subj = prog.funcs[i];
@@ -294,9 +294,9 @@ namespace com.middlemind.JsonPL {
       * Arg1: name(string to find)
       * Returns: {null | (func obj, sys=func)}
        */
-      public JsonObjSysBase findSysFunc(String name) {
+      public JsonObjSysBase findSysFunc(string name) {
          JsonPlState prog = this;
-         String str;
+         string str;
          JsonObjSysBase subj;
          List<JsonObjSysBase> sFuncs = prog.system["functions"];
 
@@ -317,7 +317,7 @@ namespace com.middlemind.JsonPL {
       *       Sets the WR_PREFIX to each string written. 
       * Arg1: s(string to write)
       */
-      public void wr(String s) {
+      public void wr(string s) {
          if (this.LOGGING == true) {
             Logger.wrl(this.WR_PREFIX + s);
          }
@@ -328,7 +328,7 @@ namespace com.middlemind.JsonPL {
       * Desc: A method to access the version of this JsonPL interpreter.
       * Returns: {(string version number)}
       */
-      public String getVersion() {
+      public string getVersion() {
          this.wr(this.version);
          return this.version;
       }
@@ -399,7 +399,7 @@ namespace com.middlemind.JsonPL {
       */
       //TODO
       public bool isArray(Object arg) {
-         if (arg is List<Object> || arg is Array) {
+         if (arg is IList || arg is Array) {
             return true;
          } else {
             return false;
@@ -413,7 +413,7 @@ namespace com.middlemind.JsonPL {
       * Returns: (true | false)
        */
       public bool isString(Object arg) {
-         if (arg is String) {
+         if (arg is string) {
             return true;
          } else {
             return false;
@@ -429,7 +429,7 @@ namespace com.middlemind.JsonPL {
       */
       public bool isSysObjIf(JsonObjSysBase obj) {
          if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
+            string objSys = getSysObjType(obj);
             if (!Utils.IsStringEmpty(objSys) && objSys.Equals("if")) {
                return true;
             }
@@ -445,7 +445,7 @@ namespace com.middlemind.JsonPL {
       */
       public bool isSysObjRef(JsonObjSysBase obj) {
          if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
+            string objSys = getSysObjType(obj);
             if (!Utils.IsStringEmpty(objSys) && objSys.Equals("ref")) {
                return true;
             }
@@ -461,7 +461,7 @@ namespace com.middlemind.JsonPL {
       */
       public bool isSysObjBex(JsonObjSysBase obj) {
          if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
+            string objSys = getSysObjType(obj);
             if (!Utils.IsStringEmpty(objSys) && objSys.Equals("bex")) {
                return true;
             }
@@ -477,7 +477,7 @@ namespace com.middlemind.JsonPL {
       */
       public bool isSysObjExp(JsonObjSysBase obj) {
          if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
+            string objSys = getSysObjType(obj);
             if (!Utils.IsStringEmpty(objSys) && objSys.Equals("exp")) {
                return true;
             }
@@ -493,7 +493,7 @@ namespace com.middlemind.JsonPL {
       */
       public bool isSysObjVal(JsonObjSysBase obj) {
          if (this.isSysObj(obj) == true) {
-            String objSys = this.getSysObjType(obj);
+            string objSys = this.getSysObjType(obj);
             //this.wr("ObjSys: " + objSys + ", " + Utils.IsStringEmpty(objSys) + ", " + objSys.Equals("val"));
             if (!Utils.IsStringEmpty(objSys) && objSys.Equals("val")) {
                return true;
@@ -511,7 +511,7 @@ namespace com.middlemind.JsonPL {
       */
       public bool isSysObjAsgn(JsonObjSysBase obj) {
          if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
+            string objSys = getSysObjType(obj);
             if (!Utils.IsStringEmpty(objSys) && objSys.Equals("asgn")) {
                return true;
             }
@@ -527,7 +527,7 @@ namespace com.middlemind.JsonPL {
        */
       public bool isSysObjConst(JsonObjSysBase obj) {
          if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
+            string objSys = getSysObjType(obj);
             if (!Utils.IsStringEmpty(objSys) && objSys.Equals("const")) {
                return true;
             }
@@ -543,7 +543,7 @@ namespace com.middlemind.JsonPL {
        */
       public bool isSysObjVar(JsonObjSysBase obj) {
          if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
+            string objSys = getSysObjType(obj);
             if (!Utils.IsStringEmpty(objSys) && objSys.Equals("var")) {
                return true;
             }
@@ -559,7 +559,7 @@ namespace com.middlemind.JsonPL {
        */
       public bool isSysObjCall(JsonObjSysBase obj) {
          if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
+            string objSys = getSysObjType(obj);
             if (!Utils.IsStringEmpty(objSys) && objSys.Equals("call")) {
                return true;
             }
@@ -575,7 +575,7 @@ namespace com.middlemind.JsonPL {
        */
       public bool isSysObjFunc(JsonObjSysBase obj) {
          if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
+            string objSys = getSysObjType(obj);
             if (!Utils.IsStringEmpty(objSys) && objSys.Equals("func")) {
                return true;
             }
@@ -591,7 +591,7 @@ namespace com.middlemind.JsonPL {
        */
       public bool isSysObjFor(JsonObjSysBase obj) {
          if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
+            string objSys = getSysObjType(obj);
             if (!Utils.IsStringEmpty(objSys) && objSys.Equals("for")) {
                return true;
             }
@@ -607,7 +607,7 @@ namespace com.middlemind.JsonPL {
        */
       public bool isSysObjReturn(JsonObjSysBase obj) {
          if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
+            string objSys = getSysObjType(obj);
             if (!Utils.IsStringEmpty(objSys) && objSys.Equals("return")) {
                return true;
             }
@@ -635,7 +635,7 @@ namespace com.middlemind.JsonPL {
       * Arg1: obj(sys obj to check)
       * Returns: (true | false)
        */
-      public String getSysObjType(JsonObjSysBase obj) {
+      public string getSysObjType(JsonObjSysBase obj) {
          if (this.isSysObj(obj)) {
             return obj.sys;
          } else {
@@ -661,8 +661,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjIf(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("if")) && this.validateProperties(obj, new String[] { "sys", "left", "op", "right", "thn", "els" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("if")) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right", "thn", "els" })) {
             JsonObjSysBase tobj = null;
             if (obj.left != null) {
                tobj = obj.left;
@@ -796,8 +796,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjFor(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("for")) && this.validateProperties(obj, new String[] { "sys", "start", "stop", "inc", "lines" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("for")) && this.validateProperties(obj, new string[] { "sys", "start", "stop", "inc", "lines" })) {
             JsonObjSysBase tobj = null;
             if (obj.start != null) {
                tobj = obj.start;
@@ -936,8 +936,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjClass(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("class")) && this.validateProperties(obj, new String[] { "sys", "name", "vars", "funcs", "ret", "call" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("class")) && this.validateProperties(obj, new string[] { "sys", "name", "vars", "funcs", "ret", "call" })) {
             if (!this.validateSysObjVal(obj.ret)) {
                this.wr("validateSysObjClass: Error: could not validate obj as val");
                return false;
@@ -1027,8 +1027,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjFunc(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("func")) && this.validateProperties(obj, new String[] { "sys", "name", "args", "vars", "ret", "lines" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("func")) && this.validateProperties(obj, new string[] { "sys", "name", "args", "vars", "ret", "lines" })) {
             if (!this.validateSysObjVal(obj.ret)) {
                this.wr("validateSysObjFunc: Error: could not validate obj as val");
                return false;
@@ -1075,8 +1075,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjAsgn(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("asgn")) && this.validateProperties(obj, new String[] { "sys", "left", "op", "right" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("asgn")) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right" })) {
             JsonObjSysBase tobj = null;
             if (obj.left != null) {
                tobj = obj.left;
@@ -1172,8 +1172,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjBex(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("bex")) && this.validateProperties(obj, new String[] { "sys", "left", "op", "right" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("bex")) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right" })) {
             JsonObjSysBase tobj = null;
             if (obj.left != null) {
                tobj = obj.left;
@@ -1270,8 +1270,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjExp(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("exp")) && this.validateProperties(obj, new String[] { "sys", "left", "op", "right" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("exp")) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right" })) {
             JsonObjSysBase tobj = null;
             if (obj.left != null) {
                tobj = obj.left;
@@ -1367,8 +1367,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjCall(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("call")) && this.validateProperties(obj, new String[] { "sys", "name", "args" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("call")) && this.validateProperties(obj, new string[] { "sys", "name", "args" })) {
             if (obj.args != null) {
                for (int i = 0; i < obj.args.Count; i++) {
                   JsonObjSysBase tobj = obj.args[i];
@@ -1407,8 +1407,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjOp(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("op")) && this.validateProperties(obj, new String[] { "sys", "type", "v" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("op")) && this.validateProperties(obj, new string[] { "sys", "type", "v" })) {
             if (!(obj.type.Equals("asgn") || obj.type.Equals("bex") || obj.type.Equals("exp"))) {
                return false;
             }
@@ -1430,8 +1430,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjConst(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("const")) && this.validateProperties(obj, new String[] { "sys", "val" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("const")) && this.validateProperties(obj, new string[] { "sys", "val" })) {
             if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
                return false;
             }
@@ -1454,8 +1454,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjVar(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("var")) && this.validateProperties(obj, new String[] { "sys", "name", "val" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("var")) && this.validateProperties(obj, new string[] { "sys", "name", "val" })) {
             if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
                return false;
             }
@@ -1478,8 +1478,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjArg(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("arg")) && this.validateProperties(obj, new String[] { "sys", "name", "val" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("arg")) && this.validateProperties(obj, new string[] { "sys", "name", "val" })) {
             if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
                return false;
             }
@@ -1502,9 +1502,9 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjVal(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
+         string sysType = this.getSysObjType(obj);
          //this.wr("validateSysObjVal: type: 000: " + obj.type + ", " + obj.v);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("val")) && this.validateProperties(obj, new String[] { "sys", "type", "v" })) {
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("val")) && this.validateProperties(obj, new string[] { "sys", "type", "v" })) {
             //this.wr("validateSysObjVal: type");
             if (!(obj.type.Equals("int") || obj.type.Equals("float") || obj.type.Equals("string") || obj.type.Equals("bool"))) {
                //this.wr("validateSysObjVal: type: AAA");
@@ -1531,9 +1531,9 @@ namespace com.middlemind.JsonPL {
         -!>(with value like #.vars.tmp1 or $.vars.tmp1)
        */
       public bool validateSysObjRef(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
+         string sysType = this.getSysObjType(obj);
          //this.wr("validateSysObjRef: Found sys: " + sysType);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("ref")) && this.validateProperties(obj, new String[] { "sys", "val" })) {
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("ref")) && this.validateProperties(obj, new string[] { "sys", "val" })) {
             if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
                //this.wr("validateSysObjRef: Error: could not validate val object: ");// + this.validateSysObjVal(obj) + ", " + this.isSysObjVal(obj.val));
                return false;
@@ -1556,8 +1556,8 @@ namespace com.middlemind.JsonPL {
         -!>
        */
       public bool validateSysObjReturn(JsonObjSysBase obj) {
-         String sysType = this.getSysObjType(obj);
-         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("return")) && this.validateProperties(obj, new String[] { "sys", "val" })) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("return")) && this.validateProperties(obj, new string[] { "sys", "val" })) {
             if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
                return false;
             }
@@ -1573,11 +1573,11 @@ namespace com.middlemind.JsonPL {
       * Arg2: req(array of attribute name to check for)
       * Returns: {false | true}
        */
-      public bool validateProperties(JsonObjSysBase obj, String[] req) {
-         PropertyInfo fld = null;
+      public bool validateProperties(JsonObjSysBase obj, string[] req) {
+         FieldInfo fld = null;
          for (int i = 0; i < req.Length; i++) {
             try {
-               fld = obj.GetType().GetProperty(req[i]);
+               fld = obj.GetType().GetField(req[i]);
                if (fld == null) {
                   this.wr("Field '" + req[i] + "' is null");
                   return false;
@@ -1600,8 +1600,8 @@ namespace com.middlemind.JsonPL {
       * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
        */
       public JsonObjSysBase processRef(JsonObjSysBase objRef, JsonObjSysBase func) {
-         String path = null;
-         String[] vls = null;
+         string path = null;
+         string[] vls = null;
          JsonObjSysBase fnd = null;
          JsonObjSysBase prog = this.program;
 
@@ -1666,8 +1666,8 @@ namespace com.middlemind.JsonPL {
       }
 
       //TODO
-      public int toBoolInt(String v) {
-         String vb = v + "";
+      public int toBoolInt(string v) {
+         string vb = v + "";
          vb = vb.ToLower();
          if (vb.Equals("true")) {
             return 1;
@@ -1681,23 +1681,23 @@ namespace com.middlemind.JsonPL {
       }
 
       //TODO
-      public int toInt(String v) {
+      public int toInt(string v) {
          return int.Parse(v);
       }
 
       //TODO
-      public float toFloat(String v) {
+      public float toFloat(string v) {
          return float.Parse(v);
       }
 
       //TODO
-      public String toStr(String v) {
+      public string toStr(string v) {
          return (v + "");
       }
 
       //TODO
-      public bool toBool(String v) {
-         String vb = v + "";
+      public bool toBool(string v) {
+         string vb = v + "";
          vb = vb.ToLower();
          if (vb.Equals("true")) {
             return true;
@@ -1736,6 +1736,9 @@ namespace com.middlemind.JsonPL {
          right = objIf.right;
          thn = objIf.thn;
          els = objIf.els;
+
+         //Logger.wrl("===============================ThnLineCount: " + thn.Count);
+         //Logger.wrl("===============================ElsLineCount: " + els.Count);
 
          if (this.isSysObjConst(left)) {
             //do nothing
@@ -1815,7 +1818,7 @@ namespace com.middlemind.JsonPL {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("string")) {
-                  if (((String)left.val.v).Equals((String)right.val.v)) {
+                  if (((string)left.val.v).Equals((string)right.val.v)) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -1841,7 +1844,7 @@ namespace com.middlemind.JsonPL {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("string")) {
-                  if (!((String)left.val.v).Equals((String)right.val.v)) {
+                  if (!((string)left.val.v).Equals((string)right.val.v)) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -1867,7 +1870,7 @@ namespace com.middlemind.JsonPL {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("string")) {
-                  if (((String)left.val.v).Length < ((String)right.val.v).Length) {
+                  if (((string)left.val.v).Length < ((string)right.val.v).Length) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -1893,7 +1896,7 @@ namespace com.middlemind.JsonPL {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("string")) {
-                  if (((String)left.val.v).Length > ((String)right.val.v).Length) {
+                  if (((string)left.val.v).Length > ((string)right.val.v).Length) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -1919,7 +1922,7 @@ namespace com.middlemind.JsonPL {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("string")) {
-                  if (((String)left.val.v).Length <= ((String)right.val.v).Length) {
+                  if (((string)left.val.v).Length <= ((string)right.val.v).Length) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -1945,7 +1948,7 @@ namespace com.middlemind.JsonPL {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("string")) {
-                  if (((String)left.val.v).Length >= ((String)right.val.v).Length) {
+                  if (((string)left.val.v).Length >= ((string)right.val.v).Length) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -1956,11 +1959,15 @@ namespace com.middlemind.JsonPL {
                return null;
             }
 
+            //Logger.wrl("===============================Ret.v: " + ret.v + " ToBool: " + this.toBool(ret.v));
+
             if (this.toBool(ret.v) == true) {
                //run thn lines
+               //Logger.wrl("===============================Running then lines");
                ret3 = this.processIfForLines(thn, func);
             } else {
                //run els lines
+               //Logger.wrl("===============================Running els lines");
                ret3 = this.processIfForLines(els, func);
             }
 
@@ -2355,7 +2362,7 @@ namespace com.middlemind.JsonPL {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("string")) {
-                  if (((String)left.val.v).Equals((String)right.val.v)) {
+                  if (((string)left.val.v).Equals((string)right.val.v)) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -2381,7 +2388,7 @@ namespace com.middlemind.JsonPL {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("string")) {
-                  if (!((String)left.val.v).Equals((String)right.val.v)) {
+                  if (!((string)left.val.v).Equals((string)right.val.v)) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -2407,7 +2414,7 @@ namespace com.middlemind.JsonPL {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("string")) {
-                  if (((String)left.val.v).Length < ((String)right.val.v).Length) {
+                  if (((string)left.val.v).Length < ((string)right.val.v).Length) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -2433,7 +2440,7 @@ namespace com.middlemind.JsonPL {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("string")) {
-                  if (((String)left.val.v).Length > ((String)right.val.v).Length) {
+                  if (((string)left.val.v).Length > ((string)right.val.v).Length) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -2459,7 +2466,7 @@ namespace com.middlemind.JsonPL {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("string")) {
-                  if (((String)left.val.v).Length <= ((String)right.val.v).Length) {
+                  if (((string)left.val.v).Length <= ((string)right.val.v).Length) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -2485,7 +2492,7 @@ namespace com.middlemind.JsonPL {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("string")) {
-                  if (((String)left.val.v).Length >= ((String)right.val.v).Length) {
+                  if (((string)left.val.v).Length >= ((string)right.val.v).Length) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -2531,7 +2538,7 @@ namespace com.middlemind.JsonPL {
       * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
        */
       public JsonObjSysBase processCall(JsonObjSysBase objCall, JsonObjSysBase func) {
-         String name = null;
+         string name = null;
          List<JsonObjSysBase> args = null;
          JsonObjSysBase funcDef = null;
          List<JsonObjSysBase> funcArgs = null;
@@ -2590,7 +2597,7 @@ namespace com.middlemind.JsonPL {
                   bool err = false;
                   JsonObjSysBase lret = null;
                   try {
-                     String lname = funcDef.fname;
+                     string lname = funcDef.fname;
                      if (lname.Equals("sysJob1")) {
                         lret = sysJob1();
 

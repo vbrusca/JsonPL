@@ -24,7 +24,7 @@ namespace com.middlemind.JsonPL {
       * @param jsonPl
       * @return 
       */
-      public JsonObjSysBase call(String name, List<JsonObjSysBase> args, JsonPlState jsonPl) {
+      public JsonObjSysBase call(string name, List<JsonObjSysBase> args, JsonPlState jsonPl) {
          Logger.wr("Handling system method: " + name);
          JsonObjSysBase ret = null;
          if (name != null) {

@@ -1,4 +1,3 @@
-C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\obj\Debug\netcoreapp3.1\JsonPL.csproj.AssemblyReference.cache
 C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\obj\Debug\netcoreapp3.1\JsonPL.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\obj\Debug\netcoreapp3.1\JsonPL.AssemblyInfoInputs.cache
 C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\obj\Debug\netcoreapp3.1\JsonPL.AssemblyInfo.cs
@@ -9,10 +8,8 @@ C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\bin\Deb
 C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\bin\Debug\netcoreapp3.1\JsonPL.runtimeconfig.dev.json
 C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\bin\Debug\netcoreapp3.1\JsonPL.dll
 C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\bin\Debug\netcoreapp3.1\JsonPL.pdb
-C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\bin\Debug\netcoreapp3.1\System.Runtime.CompilerServices.Unsafe.dll
-C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\bin\Debug\netcoreapp3.1\System.Text.Encodings.Web.dll
-C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\bin\Debug\netcoreapp3.1\System.Text.Json.dll
 C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\obj\Debug\netcoreapp3.1\JsonPL.csproj.CopyComplete
 C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\obj\Debug\netcoreapp3.1\JsonPL.dll
 C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\obj\Debug\netcoreapp3.1\JsonPL.pdb
 C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\obj\Debug\netcoreapp3.1\JsonPL.genruntimeconfig.cache
+C:\Users\variable\Documents\GitHub\JsonPL\VisualStudio_IDE\JsonPL\JsonPL\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll

@@ -12,17 +12,17 @@ namespace com.middlemind.JsonPL.JsonObjs {
       /**
       *
       */
-      public String sys;
+      public string sys;
 
       /**
       *
       */
-      public String name;
+      public string name;
 
       /**
       * 
       */
-      public String fname;
+      public string fname;
 
       /**
       *
@@ -87,12 +87,12 @@ namespace com.middlemind.JsonPL.JsonObjs {
       /**
       *
       */
-      public String type;
+      public string type;
 
       /**
       *
       */
-      public String v;
+      public string v;
 
       /**
       *
@@ -149,7 +149,7 @@ namespace com.middlemind.JsonPL.JsonObjs {
          }
 
          if (this.fname != null) {
-            ret.fname = new String(this.fname.ToCharArray());
+            ret.fname = new string(this.fname.ToCharArray());
          }
 
          if (this.funcs != null) {
@@ -175,15 +175,15 @@ namespace com.middlemind.JsonPL.JsonObjs {
          }
 
          if (this.loader != null) {
-            ret.loader = new String(this.loader.ToCharArray());
+            ret.loader = new string(this.loader.ToCharArray());
          }
 
          if (this.name != null) {
-            ret.name = new String(this.name.ToCharArray());
+            ret.name = new string(this.name.ToCharArray());
          }
 
          if (this.obj_name != null) {
-            ret.obj_name = new String(this.obj_name.ToCharArray());
+            ret.obj_name = new string(this.obj_name.ToCharArray());
          }
 
          if (this.op != null) {
@@ -207,7 +207,7 @@ namespace com.middlemind.JsonPL.JsonObjs {
          }
 
          if (this.sys != null) {
-            ret.sys = new String(this.sys.ToCharArray());
+            ret.sys = new string(this.sys.ToCharArray());
          }
 
          if (this.thn != null) {
@@ -218,11 +218,11 @@ namespace com.middlemind.JsonPL.JsonObjs {
          }
 
          if (this.type != null) {
-            ret.type = new String(this.type.ToCharArray());
+            ret.type = new string(this.type.ToCharArray());
          }
 
          if (this.v != null) {
-            ret.v = new String(this.v.ToCharArray());
+            ret.v = new string(this.v.ToCharArray());
          }
 
          if (this.val != null) {
@@ -255,7 +255,7 @@ namespace com.middlemind.JsonPL.JsonObjs {
       * 
       * @param sysStr 
       */
-      public JsonObjSysBase(String sysStr) {
+      public JsonObjSysBase(string sysStr) {
          sys = sysStr;
       }
 
@@ -269,7 +269,7 @@ namespace com.middlemind.JsonPL.JsonObjs {
       *
       * @param prefix
       */
-      public override void Print(String prefix) {
+      public override void Print(string prefix) {
          base.Print(prefix);
          Logger.wrl(prefix + "Sys: " + sys);
       }

@@ -17,7 +17,7 @@ namespace com.middlemind.JsonPL {
       *
       * @return The full class name of the class used to load this JSON object.
       */
-      public String GetLoader();
+      public string GetLoader();
 
       /**
       * A method that sets the full class name of the loading class for this JSON
@@ -25,21 +25,21 @@ namespace com.middlemind.JsonPL {
       *
       * @param s The full class name of the class used to load this JSON object.
       */
-      public void SetLoader(String s);
+      public void SetLoader(string s);
 
       /**
       * A method that returns the name of this JSON object.
       *
       * @return A string representing the name of this JSON object.
       */
-      public String GetName();
+      public string GetName();
 
       /**
       * A method that sets the name of this JSON object.
       *
       * @param s A string representing the name of this JSON object.
       */
-      public void SetName(String s);
+      public void SetName(string s);
 
       /**
       * A method used to print a representation of this JSON object to standard
@@ -54,6 +54,6 @@ namespace com.middlemind.JsonPL {
       * @param prefix A prefix to print before the string representation of this
       * JSON object.
       */
-      public void Print(String prefix);
+      public void Print(string prefix);
    }
 }

@@ -20,8 +20,8 @@ namespace com.middlemind.JsonPL.FileIO {
       * @return A list of strings representing the contents of the file.
       * @throws IOException An IO exception is thrown if there is a file error.
       */
-      public static List<String> Load(String file) {
-         return new List<String>(System.IO.File.ReadAllLines(Path.GetFullPath(file)));
+      public static List<string> Load(string file) {
+         return new List<string>(System.IO.File.ReadAllLines(Path.GetFullPath(file)));
       }
 
       /**
@@ -31,7 +31,7 @@ namespace com.middlemind.JsonPL.FileIO {
       * @return A string representing the contents of the file.
       * @throws IOException An IO exception is thrown if there is a file error.
       */
-      public static String LoadStr(String file) {
+      public static string LoadStr(string file) {
          return System.IO.File.ReadAllText(Path.GetFullPath(file));
       }
 
@@ -43,7 +43,7 @@ namespace com.middlemind.JsonPL.FileIO {
        * @return A byte array representing the contents of the file.
        * @throws IOException An IO exception is thrown if there is a file error.
        */
-      public static byte[] LoadBin(String file) {
+      public static byte[] LoadBin(string file) {
          return System.IO.File.ReadAllBytes(Path.GetFullPath(file));
       }
    }

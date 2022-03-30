@@ -40,9 +40,9 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "dependencies": {
-            "System.Text.Json": {
+            "Newtonsoft.Json": {
               "target": "Package",
-              "version": "[6.0.2, )"
+              "version": "[13.0.1, )"
             }
           },
           "imports": [

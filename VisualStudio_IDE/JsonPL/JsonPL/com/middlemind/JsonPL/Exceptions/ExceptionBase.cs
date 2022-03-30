@@ -15,7 +15,7 @@ namespace com.middlemind.JsonPL.Exceptions {
       * 
       * @param errorMEssage The error message associated with the specified exception.
       */
-      public ExceptionBase(String errorMEssage) : base(errorMEssage) {
+      public ExceptionBase(string errorMEssage) : base(errorMEssage) {
       }
    }
 }
