@@ -20,28 +20,84 @@ import java.util.List;
  */
 @SuppressWarnings("UnusedAssignment")
 public class JsonPlState {
-
+   /**
+    * 
+    */
    public String version = "0.5.1";
+
+   /**
+    * 
+    */
    public int lineNumCurrent = 0;
+
+   /**
+    * 
+    */
    public int lineNumPrev = 0;
+
+   /**
+    * 
+    */
    public int linNumNext = 0;
 
+   /**
+    * 
+    */   
    public JsonObjSysBase lastForReturn = null;
+
+   /**
+    * 
+    */   
    public JsonObjSysBase lastIfReturn = null;
 
+   /**
+    * 
+    */   
    public JsonObjSysBase lastBexReturn = null;
+
+   /**
+    * 
+    */   
    public JsonObjSysBase lastExpReturn = null;
 
+   /**
+    * 
+    */   
    public JsonObjSysBase lastAsgnReturn = null;
+
+   /**
+    * 
+    */
    public JsonObjSysBase lastAsgnValue = null;
 
+   /**
+    * 
+    */   
    public JsonObjSysBase lastProgramReturn = null;
+
+   /**
+    * 
+    */
    public JsonObjSysBase program = null;
+
+   /**
+    * 
+    */   
    public boolean LOGGING = true;
+
+   /**
+    * 
+    */   
    public String WR_PREFIX = "";
 
+   /**
+    * 
+    */   
    public Hashtable<String, List<JsonObjSysBase>> system;
 
+   /**
+    * 
+    */   
    public SystemFunctionHandlerJpl systemFunctionHandler = null;
 
    /**

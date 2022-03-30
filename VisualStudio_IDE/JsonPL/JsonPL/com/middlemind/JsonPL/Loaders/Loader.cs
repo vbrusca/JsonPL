@@ -1,4 +1,5 @@
-﻿using System;
+﻿using com.middlemind.JsonPL.JsonObjs;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,6 +20,6 @@ namespace com.middlemind.JsonPL.Loaders {
       * @throws ExceptionLoader An exception is thrown if there is an issue during
       * the JSON data load.
       */
-      public JsonObj ParseJson(String json, String targetClass);
+      public JsonObjSysBase ParseJson(String json, String targetClass);
    }
 }

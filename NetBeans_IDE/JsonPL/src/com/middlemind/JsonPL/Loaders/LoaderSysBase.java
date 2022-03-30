@@ -3,6 +3,7 @@ package com.middlemind.JsonPL.Loaders;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.middlemind.JsonPL.Exceptions.ExceptionLoader;
+import com.middlemind.JsonPL.JsonObjs.JsonObj;
 import com.middlemind.JsonPL.JsonObjs.JsonObjSysBase;
 import java.lang.reflect.InvocationTargetException;
 

@@ -1,0 +1,52 @@
+{
+   "funcs": [
+      {
+         "sys": "func", 
+         "name": "SYS::getLastExpReturn",
+         "fname": "sysGetLastExpReturn",
+         "args": [
+         ]
+      },   
+      {
+         "sys": "func", 
+         "name": "SYS::getLastAsgnValue",
+         "fname": "sysGetLastAsgnValue",
+         "args": [
+         ]
+      },   
+      {
+         "sys": "func", 
+         "name": "SYS::wr",
+         "fname": "sysWr",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "s",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }
+         ]
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::job1",
+         "fname": "sysJob1",
+         "args": []
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::job2",
+         "fname": "sysJob2",
+         "args": []
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::job3",
+         "fname": "sysJob3",
+         "args": []
+      }            
+   ]
+}

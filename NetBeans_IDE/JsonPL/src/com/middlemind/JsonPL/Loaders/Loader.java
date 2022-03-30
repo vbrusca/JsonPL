@@ -1,7 +1,7 @@
 package com.middlemind.JsonPL.Loaders;
 
 import com.middlemind.JsonPL.Exceptions.ExceptionLoader;
-import com.middlemind.JsonPL.JsonObjs.JsonObj;
+import com.middlemind.JsonPL.JsonObjs.JsonObjSysBase;
 
 /**
  * An interface used to define the basic loader class implementation.
@@ -20,5 +20,5 @@ public interface Loader {
     * @throws ExceptionLoader An exception is thrown if there is an issue during
     * the JSON data load.
     */
-   public JsonObj ParseJson(String json, String targetClass) throws ExceptionLoader;
+   public JsonObjSysBase ParseJson(String json, String targetClass) throws ExceptionLoader;
 }

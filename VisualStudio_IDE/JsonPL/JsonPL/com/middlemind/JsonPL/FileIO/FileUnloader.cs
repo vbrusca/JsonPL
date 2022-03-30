@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace com.middlemind.JsonPL.FileIO {
    /**
@@ -18,16 +19,17 @@ namespace com.middlemind.JsonPL.FileIO {
        * @throws IOException An IO exception is thrown if there is a file error.
        */
       public static void WriteStr(String file, String str) {
-         File directory = new File(file);
-         directory = new File(directory.getParent());
-         if (!directory.exists()) {
-            directory.mkdirs();
+         FileInfo fInf = new FileInfo(file);
+         DirectoryInfo directory = new DirectoryInfo(fInf.Directory.FullName);
+         if (!directory.Exists) {
+            Directory.CreateDirectory(directory.FullName);
          }
 
-         BufferedWriter bf = Files.newBufferedWriter(Paths.get(file), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
-         bf.write(str);
-         bf.flush();
-         bf.close();
+         FileStream fs = new FileStream(file, FileMode.Create);
+         StreamWriter sw = new StreamWriter(fs);
+         sw.Write(str);
+         sw.Flush();
+         sw.Close();
       }
 
       /**
@@ -39,18 +41,20 @@ namespace com.middlemind.JsonPL.FileIO {
        * @throws IOException An IO exception is thrown if there is a file error.
        */
       public static void WriteList(String file, List<String> strs) {
-         File directory = new File(file);
-         directory = new File(directory.getParent());
-         if (!directory.exists()) {
-            directory.mkdirs();
+         FileInfo fInf = new FileInfo(file);
+         DirectoryInfo directory = new DirectoryInfo(fInf.Directory.FullName);
+         if (!directory.Exists) {
+            Directory.CreateDirectory(directory.FullName);
          }
 
-         BufferedWriter bf = Files.newBufferedWriter(Paths.get(file), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
-         for (String s : strs) {
-            bf.write(s + System.lineSeparator());
+         FileStream fs = new FileStream(file, FileMode.Create);
+         StreamWriter sw = new StreamWriter(fs);
+         foreach(String s in strs) {
+            sw.Write(s + System.Environment.NewLine);
          }
-         bf.flush();
-         bf.close();
+
+         sw.Flush();
+         sw.Close();
       }
 
       /**
@@ -62,13 +66,13 @@ namespace com.middlemind.JsonPL.FileIO {
        * @throws IOException An IO exception is thrown if there is a file error.
        */
       public static void WriteBuffer(String file, byte[] buff) {
-         File directory = new File(file);
-         directory = new File(directory.getParent());
-         if (!directory.exists()) {
-            directory.mkdirs();
+         FileInfo fInf = new FileInfo(file);
+         DirectoryInfo directory = new DirectoryInfo(fInf.Directory.FullName);
+         if (!directory.Exists) {
+            Directory.CreateDirectory(directory.FullName);
          }
 
-         Files.write(Paths.get(file), buff);
+         File.WriteAllBytes(file, buff);
       }
    }
 }
