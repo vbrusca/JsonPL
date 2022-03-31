@@ -3,8 +3,9 @@
 JsonPL the language that nobody yet needs but is good for the following:
 
 1. Learning about programming languages: Because JSON is a structured object notation we don't have to worry about lexers, tokeners, etc., we can work directly with the loaded object structure simplifying the logic one has to learn to understand what the code is doing.
-2. Cross platform code examples: There are interpreters written in 3 languages currently, with a fourth on the way. This gives you a great source of cross-platform coding examples and how to overcomes inerent differences in programming languages to maintain a ubiquitous code base.
+2. Cross platform code examples: There are interpreters written in 3 languages currently, with a fourth on the way. This gives you a great source of cross-platform coding examples and how to overcome inerent differences in programming languages to maintain a ubiquitous code base.
 3. Fun to play around with. Try connecting it to AJAX calls and using it as a JOB control language. Add your own functionality.
+4. Run on any interpreter: Because the code is the JSON object notation the same code can be run on any properly working interpreter.
 
 Up next: 
 1. Python, C, Pascal versions of the base 0.5.1 interpreter and some rigorous testing. 
