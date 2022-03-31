@@ -1,4 +1,17 @@
-# JsonPL Version 0.5.1 - The Json Programming Language
+# JsonPL Version 0.5.1 - The Json Programming Language? Job Control Language? Scripting Language?
+
+JsonPL the language that nobody yet needs but is good for the following:
+
+1. Learning about programming languages: Because JSON is a structured object notation we don't have to worry about lexers, tokeners, etc., we can work directly with the loaded object structure simplifying the logic one has to learn to understand what the code is doing.
+2. Cross platform code examples: There are interpreters written in 3 languages currently, with a fourth on the way. This gives you a great source of cross-platform coding examples and how to overcomes inerent differences in programming languages to maintain a ubiquitous code base.
+3. Fun to play around with. Try connecting it to AJAX calls and using it as a JOB control language. Add your own functionality.
+
+Up next: 
+1. Python, C, Pascal versions of the base 0.5.1 interpreter and some rigorous testing. 
+2. A preprocessor for added flexibility.
+3. An array data type, $.vars.some_array.numeric_array_index i.e. $.vars.some_array.1
+4. Adding an "imports" attribute to the class object, type of array, that stores loaded classes, @imports.class_name.vars.var_name, @imports.class_name.funcs.func_name
+5. Step through execution and proper line number tracking.
 
 ## Main Sections:
 
@@ -33,8 +46,6 @@ C# JsonPL Interpreter v0.5.1 Implementation: VisualStudio_IDE
 JsonPL:   A C# CLI implmentation of the 0.5.1 JsonPL interpreter, functional.
 **Please note that the project expects to be run from the '\bin\Debug\netcoreapp3.1' directory. Change paths in JsonPL.cs according to your expected use to run the example.
 </pre>
-
-Up next: Python, C, Pascal versions of the base 0.5.1 interpreter and some rigorous testing.
 
 ## JsonPL General Use Case
 In the following code snippet we're looking at a hypothetical example where the data and the JsonPL code are being brought down from AJAX calls. Notice that in this case the executable code is data driven along with the data.
