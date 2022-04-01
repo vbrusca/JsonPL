@@ -3,12 +3,12 @@
 JsonPL the language that nobody yet needs but is good for the following:
 
 1. Learning about programming languages: Because JSON is a structured object notation we don't have to worry about lexers, tokeners, etc., we can work directly with the loaded object structure simplifying the logic one has to learn to understand what the code is doing.
-2. Cross platform code examples: There are interpreters written in 3 languages currently, with a fourth on the way. This gives you a great source of cross-platform coding examples and how to overcome inerent differences in programming languages to maintain a ubiquitous code base.
-3. Fun to play around with. Try connecting it to AJAX calls and using it as a JOB control language. Add your own functionality.
-4. Run on any interpreter: Because the code is the JSON object notation the same code can be run on any properly working interpreter.
+2. Cross platform code examples: There are interpreters written in 3 languages currently, with a fourth on the way. This gives you a great source of cross-platform coding examples and how to overcome inherent differences in programming languages to maintain a ubiquitous code base.
+3. Fun to play around with. Try connecting it to AJAX calls and using it as a job control language. Add your own functionality.
+4. Run on any interpreter: Because the code is in JSON object notation the same code can be run on any properly working interpreter so long as the same system level functions are defined in the interpreter or added system method callback event handler. The function signatures also must be the same, these are stored in the class object's system attribute under the key functions.
 
 Up next: 
-1. Python, C, Pascal versions of the base 0.5.1 interpreter and some rigorous testing. 
+1. Python, C, Pascal versions of the base 0.5.1 interpreter and some rigorous testing. (Working on a C version that doesn't use libraries for JSON parsing so it'll take me a little while to get it up an running.)
 2. A preprocessor for added flexibility.
 3. An array data type, $.vars.some_array.numeric_array_index i.e. $.vars.some_array.1
 4. Adding an "imports" attribute to the class object, type of array, that stores loaded classes, @imports.class_name.vars.var_name, @imports.class_name.funcs.func_name
@@ -104,6 +104,7 @@ In this section we'll take a look at all of the different JSON objects supported
 
 [Exp Object](#exp-object-argument-object)
 
+[For Object](#for-object-line-object)
 
 ## JsonPL Examples
 A list of example snippets showing code and output associated with different JsonPL objects.
@@ -538,6 +539,39 @@ Object Definition:
 </pre>
 
 The exp object is defined by a sys attribute with a value of "exp". The left attribute can be a ref, const, exp, bex, or call object. The op attribute expects an op object of type exp. The right attribute can be a ref, const, exp, bex, or call object.
+
+### For Object (Line Object)
+The for object is used to describe a simple loop with associated lines of code.
+
+<pre>
+{
+   "sys": "for",
+   "start": {"sys": "const", "val": {"sys": "val","type": "int","v": "0"}},
+   "stop": {"sys": "const", "val": {"sys": "val","type": "int","v": "10"}},
+   "inc": {"sys": "const", "val": {"sys": "val","type": "int","v": "1"}},
+   "lines": [
+      {
+         "sys": "asgn",
+         "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}},
+         "op": {"sys":"op", "type":"asgn", "v":"="},
+         "right": {"sys": "exp", "left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.i1"}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"const", "val":{"sys": "val", "type": "int", "v": "1"}}}
+      }
+   ]
+}
+</pre>
+
+<pre>
+Object Definition:
+{
+ "sys": "for",
+ "start": {ref | const | exp | bex | call & type of int},
+ "stop": {ref | const | exp | bex | call & type of int},
+ "inc": {ref | const | exp | bex | call & type of int},
+ "lines": [asgn | if | for | call | return]
+}
+</pre>
+
+The for object is defined by a sys attribute with a value of "for". The object contains definitions for the starting integer value, the stopping value, the increment value, and the lines to run for each loop iteration.
 
 ## Code Examples
 This section contains a number of code examples. Some of the examples focus on only one or two object while some are full programs. Pay close attention to the objects defined and their context.
