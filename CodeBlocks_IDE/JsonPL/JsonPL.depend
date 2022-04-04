@@ -1,0 +1,17 @@
+# depslib dependency file v1.0
+1649087348 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\test.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	"vgbstr.h"
+
+1649087041 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.h
+
+1649086912 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	"vgbstr.h"
+
+1649073832 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbutil.c
+
