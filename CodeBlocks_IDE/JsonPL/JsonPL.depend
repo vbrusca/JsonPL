@@ -1,17 +1,30 @@
 # depslib dependency file v1.0
-1649087348 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\test.c
+1649096277 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\test.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	"vgbstr.h"
 
-1649087041 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.h
+1649096503 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.h
 
-1649086912 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.c
+1649098797 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	"vgbstr.h"
+	"vgbutil.h"
 
-1649073832 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbutil.c
+1649098324 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbutil.c
+	"vgbutil.h"
+
+1649098851 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbutil.h
+
+1649116547 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	"vgblist.h"
+	"vgbutil.h"
+
+1649116392 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.h
 

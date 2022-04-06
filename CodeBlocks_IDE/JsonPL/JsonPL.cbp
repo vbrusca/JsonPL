@@ -34,6 +34,10 @@
 		<Unit filename="test.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="vgblist.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vgblist.h" />
 		<Unit filename="vgbstr.c">
 			<Option compilerVar="CC" />
 		</Unit>
