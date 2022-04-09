@@ -11,6 +11,9 @@
     #define SANITY_CHECK_SZ 8
 #endif // SANITY_CHECK_SZ
 
+/*
+* A structure used to hold information about a string of characters.
+*/
 struct vgb_str
 {
     int id;

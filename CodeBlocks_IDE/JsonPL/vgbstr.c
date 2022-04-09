@@ -73,6 +73,7 @@ int get_vgb_c(const struct vgb_str *str, const int idx, char *c)
 
     if(idx < str->str_len && idx >= 0)
     {
+        //char lc = *(str->str + idx);
         char lc = *((*str).str + idx);
         printf("get_vgb_c: get char %c at idx %d\n", lc, idx);
         *c = lc;

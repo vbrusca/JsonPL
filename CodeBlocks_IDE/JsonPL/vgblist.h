@@ -7,6 +7,9 @@
     #define VGB_ENTRY_ID 143
 #endif //VGB_ENTRY_ID
 
+/*
+*
+*/
 struct vgb_list
 {
     int id;
@@ -17,6 +20,9 @@ struct vgb_list
     int length;
 };
 
+/*
+*
+*/
 struct vgb_entry
 {
     int id;
@@ -26,13 +32,43 @@ struct vgb_entry
     struct vgb_entry *next;
 };
 
+/*
+*
+*/
+void print_vgb_list(struct vgb_list *lst);
+
+/*
+*
+*/
+void print_vgb_entry(struct vgb_entry *itm);
+
+/*
+*
+*/
+struct vgb_list *create_vgb_list(const int idx);
+
+/*
+*
+*/
 struct vgb_entry *create_vgb_entry(const int idx, const void *val);
 
+/*
+*
+*/
 struct vgb_entry *get_def_vgb_entry();
 
+/*
+*
+*/
 int get_vgb_entry(const struct vgb_list *lst, const int idx, struct vgb_entry *found);
 
+/*
+*
+*/
 int set_vgb_entry(struct vgb_list *lst, const int idx, struct vgb_entry *new_entry);
 
+/*
+*
+*/
 int vgb_list_add(struct vgb_list *lst, struct vgb_entry *new_entry);
 
