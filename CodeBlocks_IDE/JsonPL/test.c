@@ -25,16 +25,22 @@
     #define vgblist_h
 #endif // vgblist_h
 
-/*
+#ifndef vgb_logger_h
+    #include "vgb_logger.h"
+    #define vgb_logger_h
+#endif // vgb_logger_h
+
+/**
 *
 */
 void test_list();
 
-/*
+/**
 *
 */
 int main() {
     struct vgb_str *def1 = get_def_vgb_str();
+    wrl("---------------> testing wrl %c", 'C');
     printf(">>=========================================<<\n");
     print_vgb_str(def1);
 
@@ -167,7 +173,7 @@ int main() {
     return(0);
 };
 
-/*
+/**
 *
 */
 void test_list()
@@ -177,7 +183,6 @@ void test_list()
     lst.hint = -1;
     lst.head = NULL;
     lst.tail = NULL;
-    lst.curr_index = -1;
     lst.length = 0;
     printf("\n");
     printf("0=========================================\n");
@@ -205,11 +210,30 @@ void test_list()
     printf("\n");
     printf("4=========================================\n");
     struct vgb_entry *itm4 = create_vgb_entry(2, "hello004");
-    vgb_list_add(&lst, itm4);
+    struct vgb_entry *itm4b = create_vgb_entry(2, "hello004b");
+    //vgb_list_add(&lst, itm4);
+    set_vgb_entry(&lst, 0, itm4);
+    printf("\n\n");
+    set_vgb_entry(&lst, 1, itm4b);
+    //set_vgb_entry_after(&lst, 1, itm4);
     print_vgb_list_entries(&lst);
 
     printf("\n");
     printf("5=========================================\n");
     print_vgb_list(&lst);
     print_vgb_list_entries(&lst);
+
+    printf("\n");
+    printf("6=========================================\n");
+    struct vgb_entry *itm5;
+    printf("Address of itm4: %p\n", itm4);
+    int res = get_vgb_entry(&lst, 2, &itm5);
+    printf("Address of itm5: %p Result: %d\n", itm5, res);
+    print_vgb_entry(itm5);
+
+    printf("List Address: %p\n", &lst);
+    struct vgb_list *lp;
+    lp = &lst;
+    del_vgb_list(&lp);
+    printf("List Address: %p\n", &lst);
 };

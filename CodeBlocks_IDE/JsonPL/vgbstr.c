@@ -20,14 +20,19 @@
     #define vgbstr_h
 #endif // vgbstr_h
 
-#ifndef vgbutil_h
-    #include "vgbutil.h"
-    #define vgbutil_h
-#endif // vgbutil_h
+#ifndef vgb_logger_h
+    #include "vgb_logger.h"
+    #define vgb_logger_h
+#endif // vgb_logger_h
 
-/*
-*
-*/
+/**
+ * Name: set_vgb_c
+ * Desc: Sets the specified character of a vgb_str.
+ * Arg1: vgb_str *str(target string)
+ * Arg2: const int idx(the index to set the character for)
+ * Arg3: const char *c(the new character to use to update the target string)
+ * Returns: {0 | 1}
+ */
 int set_vgb_c(struct vgb_str *str, const int idx, const char *c)
 {
     if(vgb_is_null(str))
@@ -54,9 +59,14 @@ int set_vgb_c(struct vgb_str *str, const int idx, const char *c)
     };
 };
 
-/*
-*
-*/
+/**
+ * Name: get_vgb_c
+ * Desc: Gets the specified character of a vgb_str.
+ * Arg1: vgb_str *str(target string)
+ * Arg2: const int idx(the index to get the character for)
+ * Arg3: const char *c(the character found at the specified index)
+ * Returns: {0 | 1}
+ */
 int get_vgb_c(const struct vgb_str *str, const int idx, char *c)
 {
     if(vgb_is_null(str))
@@ -73,9 +83,8 @@ int get_vgb_c(const struct vgb_str *str, const int idx, char *c)
 
     if(idx < str->str_len && idx >= 0)
     {
-        //char lc = *(str->str + idx);
         char lc = *((*str).str + idx);
-        printf("get_vgb_c: get char %c at idx %d\n", lc, idx);
+        //printf("get_vgb_c: get char %c at idx %d\n", lc, idx);
         *c = lc;
         return(1);
     }
@@ -85,9 +94,12 @@ int get_vgb_c(const struct vgb_str *str, const int idx, char *c)
     };
 };
 
-/*
-*
-*/
+/**
+ * Name: vgb_is_err
+ * Desc: Determines if the given vgb_str is in an error state.
+ * Arg1: vgb_str *str(target string)
+ * Returns: {0 | 1}
+ */
 int vgb_is_err(const struct vgb_str *str)
 {
     if(str == NULL)
@@ -133,9 +145,12 @@ int vgb_is_err(const struct vgb_str *str)
     }
 }
 
-/*
-*
-*/
+/**
+ * Name: vgb_is_err
+ * Desc: Determines if the given vgb_str is null.
+ * Arg1: vgb_str *str(target string)
+ * Returns: {0 | 1}
+ */
 int vgb_is_null(const struct vgb_str *str)
 {
     if(str == NULL)
@@ -152,9 +167,11 @@ int vgb_is_null(const struct vgb_str *str)
     return(0);
 }
 
-/*
-*
-*/
+/**
+ * Name: get_def_vgb_str
+ * Desc: Creates a new vgb_str default instance.
+ * Returns: vgb_str *
+ */
 struct vgb_str *get_def_vgb_str()
 {
     struct vgb_str *def = malloc(sizeof(struct vgb_str));
@@ -166,9 +183,11 @@ struct vgb_str *get_def_vgb_str()
     return def;
 }
 
-/*
-*
-*/
+/**
+ * Name: get_spc_vgb_str
+ * Desc: Creates a new vgb_str instance with one character of space.
+ * Returns: vgb_str *
+ */
 struct vgb_str *get_spc_vgb_str()
 {
     struct vgb_str *def = get_def_vgb_str();
@@ -183,13 +202,18 @@ struct vgb_str *get_spc_vgb_str()
     return def;
 }
 
-/*
-*
-*/
+/**
+ * Name: concat_2_vgb_str
+ * Desc: Concatenate 2 vgb_str instances to a third instance.
+ * Arg1: vgb_str *str(destination string)
+ * Arg2: vgb_str *str(source string 1)
+ * Arg3: vgb_str *str(source string 3)
+ * Returns: {0 | 1}
+ */
 int concat_2_vgb_str(struct vgb_str *dest, const struct vgb_str *src1, const struct vgb_str *src2)
 {
     int res = -1;
-    res = concat_vgb_str(src1, src2);
+    res = concat_vgb_str((struct vgb_str *)src1, (struct vgb_str *)src2);
     if(!res)
     {
         printf("concat_2_vgb_str: Error: could not concatenate src1 and src2\n");
@@ -205,9 +229,13 @@ int concat_2_vgb_str(struct vgb_str *dest, const struct vgb_str *src1, const str
     return(1);
 }
 
-/*
-*
-*/
+/**
+ * Name: concat_vgb_str
+ * Desc: Concatenate 2 vgb_str instances together.
+ * Arg1: vgb_str *str(destination string)
+ * Arg2: vgb_str *str(source string)
+ * Returns: {0 | 1}
+ */
 int concat_vgb_str(struct vgb_str *dest, const struct vgb_str *src)
 {
     if(dest == NULL)
@@ -253,9 +281,15 @@ int concat_vgb_str(struct vgb_str *dest, const struct vgb_str *src)
     return init_vgb_str(dest, nstr, tlen, sizeof(nstr[0]));
 };
 
-/*
-*
-*/
+/**
+ * Name: init_vgb_str
+ * Desc: Initialize the given vgb_str with the specified char array.
+ * Arg1: vgb_str *vstr(target string)
+ * Arg2: char *str(source string)
+ * Arg2: int len(string length)
+ * Arg3: int sz(char data type size in bytes)
+ * Returns: {0 | 1}
+ */
 int init_vgb_str(struct vgb_str *vstr, const char *str, const int len, const int sz)
 {
     if(vstr == NULL)
@@ -372,9 +406,11 @@ int init_vgb_str(struct vgb_str *vstr, const char *str, const int len, const int
     return(1);
 };
 
-/*
-*
-*/
+/**
+ * Name: print_vgb_str
+ * Desc: Prints the given vgb_str to standard output.
+ * Arg1: vgb_str *vstr(target string)
+ */
 void print_vgb_str(struct vgb_str *vstr)
 {
     printf("vgb_str: id: %d, str: %s, str_itm_len: %d, str_len: %d, str_szof_len: %d\n", vstr->id, vstr->str, vstr->str_itm_len, vstr->str_len, vstr->str_szof_len);

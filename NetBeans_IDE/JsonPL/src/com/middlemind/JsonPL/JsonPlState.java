@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-/*
+/**
 * JSON Programming Language
 * EXEC JAVA PORT
 * Victor G. Brusca 
@@ -109,7 +109,7 @@ public class JsonPlState {
       system.put("functions", sfuncs);
    }
 
-   /*
+   /**
    * Name: sysWr
    * Desc: A system level write function.
    * Arg1: args(arg obj, sys=arg & array of)
@@ -130,7 +130,7 @@ public class JsonPlState {
       return ret;
    }
 
-   /*
+   /**
    * Name: sysGetLastAsgnValue
    * Desc: A system level method to access the last asgn value object.
    * Returns: {(const obj, sys=const)}
@@ -139,7 +139,7 @@ public class JsonPlState {
       return this.lastAsgnValue;
    }
 
-   /*
+   /**
    * Name: sysGetLastAsgnValue
    * Desc: A system level method to access the last exp return object.
    * Returns: {(const obj, sys=const)}
@@ -148,7 +148,7 @@ public class JsonPlState {
       return this.lastExpReturn;
    }
 
-   /*
+   /**
    * Name: getConstBool
    * Desc: A method to quickly access a constant bool value object.
    * Returns: {(const obj, sys=const)}
@@ -165,7 +165,7 @@ public class JsonPlState {
       return ret;
    }
 
-   /*
+   /**
    * Name: sysJob1
    * Desc: A system level job method used to demonstrate JCL.
    * Arg1: args(arg obj, sys=arg & array of)
@@ -178,7 +178,7 @@ public class JsonPlState {
       return ret;
    }
 
-   /*
+   /**
    * Name: sysJob2
    * Desc: A system level job method used to demonstrate JCL.
    * Arg1: args(arg obj, sys=arg & array of)
@@ -191,7 +191,7 @@ public class JsonPlState {
       return ret;
    }
 
-   /*
+   /**
    * Name: sysJob3
    * Desc: A system level job method used to demonstrate JCL.
    * Arg1: args(arg obj, sys=arg & array of)
@@ -204,7 +204,7 @@ public class JsonPlState {
       return ret;
    }
 
-   /*
+   /**
    * Name: runProgram
    * Desc: Executes the current program and returns the result.
    * Returns: {(some sys obj)}
@@ -229,7 +229,7 @@ public class JsonPlState {
    }
 
    /////////////////////////SEARCH METHODS
-   /*
+   /**
    * Name: findArg
    * Desc: Search the provided object for an argument with the given name.
    * Arg1: name(string to find)
@@ -249,7 +249,7 @@ public class JsonPlState {
       return null;
    }
 
-   /*
+   /**
    * Name: findVar
    * Desc: Search the provided object for a variable with the given name.
    * Arg1: name(string to find)
@@ -269,7 +269,7 @@ public class JsonPlState {
       return null;
    }
 
-   /*
+   /**
    * Name: findFunc
    * Desc: Search the current program for a func with the given name.
    * Arg1: name(string to find)
@@ -289,7 +289,7 @@ public class JsonPlState {
       return null;
    }
 
-   /*
+   /**
    * Name: findSysFunc
    * Desc: Search the current program's sytem functions for a func with the given name.
    * Arg1: name(string to find)
@@ -312,7 +312,7 @@ public class JsonPlState {
    }
 
    /////////////////////////UTILITY METHODS
-   /*
+   /**
    * Name: wr
    * Desc: Writes a string to standard output if LOGGING is on.
    *       Sets the WR_PREFIX to each string written. 
@@ -324,7 +324,7 @@ public class JsonPlState {
       }
    }
 
-   /*
+   /**
    * Name: getVersion
    * Desc: A method to access the version of this JsonPL interpreter.
    * Returns: {(string version number)}
@@ -334,7 +334,7 @@ public class JsonPlState {
       return this.version;
    }
 
-   /*
+   /**
    * Name: cloneJsonObj
    * Desc: A method to clone the given JSON object argument.
    * Arg1: jsonObj(the JSON object to clone)
@@ -353,7 +353,7 @@ public class JsonPlState {
       return ret;
    }
 
-   /*
+   /**
    * Name: wrObj
    * Desc: Writes a JSON object to standard output if LOGGING is on.
    *       Sets the WR_PREFIX to each object written.
@@ -378,7 +378,7 @@ public class JsonPlState {
    }   
    
    /////////////////////////GENERIC OBJECT ID METHODS
-   /*
+   /**
    * Name: isObject
    * Desc: Checks if the given argument is a JSON object. 
    * Arg1: arg(JSON object)
@@ -392,7 +392,7 @@ public class JsonPlState {
       }
    }
 
-   /*
+   /**
    * Name: isArray
    * Desc: Checks if the given argument is an array. 
    * Arg1: arg(javascript array)
@@ -406,7 +406,7 @@ public class JsonPlState {
       }
    }
 
-   /*
+   /**
    * Name: isString
    * Desc: Checks if the given argument is a string. 
    * Arg1: arg(some string)
@@ -421,7 +421,7 @@ public class JsonPlState {
    }
 
    /////////////////////////SYS OBJECT ID METHODS
-   /*
+   /**
    * Name: isSysObjIf
    * Desc: Checks if the given object is an if sys object. 
    * Arg1: obj(sys obj to check)
@@ -437,7 +437,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: isSysObjRef
    * Desc: Checks if the given object is a ref sys object. 
    * Arg1: obj(sys obj to check)
@@ -453,7 +453,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: isSysObjBex
    * Desc: Checks if the given object is a bex sys object. 
    * Arg1: obj(sys obj to check)
@@ -469,7 +469,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: isSysObjExp
    * Desc: Checks if the given object is an exp sys object. 
    * Arg1: obj(sys obj to check)
@@ -485,7 +485,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: isSysObjVal
    * Desc: Checks if the given object is a val sys object. 
    * Arg1: obj(sys obj to check)
@@ -503,7 +503,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: isSysObjAsgn
    * Desc: Checks if the given object is an asgn sys object. 
    * Arg1: obj(sys obj to check)
@@ -519,7 +519,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: isSysObjConst
    * Desc: Checks if the given object is a const sys object. 
    * Arg1: obj(sys obj to check)
@@ -535,7 +535,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: isSysObjVar
    * Desc: Checks if the given object is a var sys object. 
    * Arg1: obj(sys obj to check)
@@ -551,7 +551,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: isSysObjCall
    * Desc: Checks if the given object is a call sys object. 
    * Arg1: obj(sys obj to check)
@@ -567,7 +567,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: isSysObjFunc
    * Desc: Checks if the given object is a func sys object. 
    * Arg1: obj(sys obj to check)
@@ -583,7 +583,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: isSysObjFor
    * Desc: Checks if the given object is a for sys object. 
    * Arg1: obj(sys obj to check)
@@ -599,7 +599,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: isSysObjReturn
    * Desc: Checks if the given object is a return sys object. 
    * Arg1: obj(sys obj to check)
@@ -615,7 +615,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: isSysObj
    * Desc: Checks if the given object is a sys object. 
    * Arg1: obj(sys obj to check)
@@ -629,7 +629,7 @@ public class JsonPlState {
       }
    }
 
-   /*
+   /**
    * Name: getSysObjType
    * Desc: Gets the value of the sys attribute of the given sys object.. 
    * Arg1: obj(sys obj to check)
@@ -644,7 +644,7 @@ public class JsonPlState {
    }
 
    /////////////////////////VALIDATION METHODS
-   /*
+   /**
    * Name: validateSysObjIf
    * Desc: Validates if the given object is a valid if sys object.
    * Arg1: obj(sys obj to check)
@@ -780,7 +780,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjFor
    * Desc: Validates if the given object is a valid for sys object.
    * Arg1: obj(sys obj to check)
@@ -919,7 +919,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjClass
    * Desc: Validates if the given object is a valid class sys object.
    * Arg1: obj(sys obj to check)
@@ -967,7 +967,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjFuncLine
    * Desc: Validates if the given object is a valid function line sys object.
    * Arg1: obj(sys obj to check)
@@ -1010,7 +1010,7 @@ public class JsonPlState {
       return true;
    }
 
-   /*
+   /**
    * Name: validateSysObjFunc
    * Desc: Validates if the given object is a valid func sys object.
    * Arg1: obj(sys obj to check)
@@ -1060,7 +1060,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjAsgn
    * Desc: Validates if the given object is a valid asgn sys object.
    * Arg1: obj(sys obj to check)
@@ -1157,7 +1157,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjBex
    * Desc: Validates if the given object is a valid bex sys object.
    * Arg1: obj(sys obj to check)
@@ -1255,7 +1255,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjExp
    * Desc: Validates if the given object is a valid exp sys object.
    * Arg1: obj(sys obj to check)
@@ -1353,7 +1353,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjCall
    * Desc: Validates if the given object is a valid call sys object.
    * Arg1: obj(sys obj to check)
@@ -1393,7 +1393,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjCall
    * Desc: Validates if the given object is a valid call sys object.
    * Arg1: obj(sys obj to check)
@@ -1417,7 +1417,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjConst
    * Desc: Validates if the given object is a valid const sys object.
    * Arg1: obj(sys obj to check)
@@ -1440,7 +1440,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjVar
    * Desc: Validates if the given object is a valid var sys object.
    * Arg1: obj(sys obj to check)
@@ -1464,7 +1464,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjArg
    * Desc: Validates if the given object is a valid arg sys object.
    * Arg1: obj(sys obj to check)
@@ -1488,7 +1488,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjVal
    * Desc: Validates if the given object is a valid val sys object.
    * Arg1: obj(sys obj to check)
@@ -1518,7 +1518,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjRef
    * Desc: Validates if the given object is a valid ref sys object.
    * Arg1: obj(sys obj to check)
@@ -1543,7 +1543,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateSysObjReturn
    * Desc: Validates if the given object is a valid return sys object.
    * Arg1: obj(sys obj to check)
@@ -1566,7 +1566,7 @@ public class JsonPlState {
       return false;
    }
 
-   /*
+   /**
    * Name: validateProperties
    * Desc: Validates if the given object has each of the array elements soecified in req.
    * Arg1: obj(sys obj to check)
@@ -1595,7 +1595,7 @@ public class JsonPlState {
    }
 
    /////////////////////////PROCESS METHODS
-   /*
+   /**
    * Name: processRef
    * Desc: Processes a class var or func var or arg reference string.
    * Arg1: objRef(string ref encoding)
@@ -1713,7 +1713,7 @@ public class JsonPlState {
       }
    }
 
-   /*
+   /**
    * Name: processIf
    * Desc: Processes an if statement. Returns the value of the Boolean if statement expression.
    * Arg1: objIf(if obj, sys=if)
@@ -1982,7 +1982,7 @@ public class JsonPlState {
       }
    }
 
-   /*
+   /**
    * Name: processIfForLines
    * Desc: Processes an array of if statement or for loop lines.
    *       Returns the last value returned by the last line or returns the return value if encountered.
@@ -2041,7 +2041,7 @@ public class JsonPlState {
       }
    }
 
-   /*
+   /**
    * Name: processFor
    * Desc: Processes a for loop. Returns the last loop iteration value.
    * Arg1: objFor(for obj, sys=for)
@@ -2181,7 +2181,7 @@ public class JsonPlState {
       return ret;
    }
 
-   /*
+   /**
    * Name: processAsgn
    * Desc: Processes an assigment. Returns true value.
    * Arg1: objAsgn(asgn obj, sys=asgn)
@@ -2256,7 +2256,7 @@ public class JsonPlState {
       }
    }
 
-   /*
+   /**
    * Name: processBex
    * Desc: Processes a boolean expression. Returns Boolean result of the expression.
    * Arg1: objBex(bex obj, sys=bex)
@@ -2509,7 +2509,7 @@ public class JsonPlState {
       }
    }
 
-   /*
+   /**
    * Name: processFunc
    * Desc: Processes a function's lines. Returns last statement or return value.
    * Arg1: objFunc(bex obj, sys=func)
@@ -2526,7 +2526,7 @@ public class JsonPlState {
       return ret3;
    }
 
-   /*
+   /**
    * Name: processCall
    * Desc: Processes a function call. Returns last statement or return value from executing the function's lines.
    * Arg1: objCall(call obj, sys=call)
@@ -2664,7 +2664,7 @@ public class JsonPlState {
       }
    }
 
-   /*
+   /**
    * Name: processExp
    * Desc: Processes an expression. Returns the value of the expression.
    * Arg1: objExp(exp obj, sys=exp)

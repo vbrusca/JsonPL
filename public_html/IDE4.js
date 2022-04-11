@@ -1,4 +1,4 @@
-/*
+/**
  * JSON Programming Language
  * IDE JS
  * Victor G. Brusca 
