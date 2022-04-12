@@ -30,6 +30,26 @@
     #define vgb_logger_h
 #endif // vgb_logger_h
 
+//TODO ensure MMGR gets freed
+/*
+functions that use these functions
+
+create_vgb_list
+create_vgb_entry
+get_def_vgb_entry
+get_def_vgb_str
+
+should use
+
+vgb_malloc
+vgb_free
+safe_ptr
+
+for structure pointers and run vgb_free on all
+pointers after they are done being used
+
+*/
+
 /**
 *
 */
@@ -39,6 +59,8 @@ void test_list();
 *
 */
 int main() {
+    vgb_mmgr_init();
+
     struct vgb_str *def1 = get_def_vgb_str();
     wrl("---------------> testing wrl %c", 'C');
     printf(">>=========================================<<\n");
@@ -191,7 +213,18 @@ void test_list()
 
     printf("\n");
     printf("1=========================================\n");
-    struct vgb_entry *itm1 = create_vgb_entry(0, "hello001");
+    struct vgb_entry *itm1;
+    void *tmp_ptr;
+
+    tmp_ptr = create_vgb_entry(0, "hello001");
+    safe_ptr((void *)&itm1, (void *)&tmp_ptr);
+    printf("Itm1 address: %p\n", itm1);
+    printf("tmp_ptr address: %p\n", tmp_ptr);
+
+    itm1 = tmp_ptr;
+    printf("Itm1 address: %p\n", itm1);
+    printf("tmp_ptr address: %p\n", tmp_ptr);
+
     vgb_list_add(&lst, itm1);
     print_vgb_list_entries(&lst);
 
@@ -236,4 +269,6 @@ void test_list()
     lp = &lst;
     del_vgb_list(&lp);
     printf("List Address: %p\n", &lst);
+
+    vgb_mmgr_cleanup();
 };

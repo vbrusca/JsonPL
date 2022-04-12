@@ -5,6 +5,7 @@
 		<Option title="JsonPL" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<Option virtualFolders="com.middlemind.JsonPL/;com.middlemind.JsonPL.FileIO/;com.middlemind.JsonPL.JsonObjs/;com.middlemind.JsonPL.Loaders/" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/JsonPL" prefix_auto="1" extension_auto="1" />
@@ -33,19 +34,36 @@
 		</Compiler>
 		<Unit filename="test.c">
 			<Option compilerVar="CC" />
+			<Option virtualFolder="com.middlemind.JsonPL/" />
+		</Unit>
+		<Unit filename="vgb_logger.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="com.middlemind.JsonPL/" />
+		</Unit>
+		<Unit filename="vgb_logger.h">
+			<Option virtualFolder="com.middlemind.JsonPL/" />
+		</Unit>
+		<Unit filename="vgb_system_function_handler_jpl.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="com.middlemind.JsonPL/" />
+		</Unit>
+		<Unit filename="vgb_system_function_handler_jpl.h">
+			<Option virtualFolder="com.middlemind.JsonPL/" />
 		</Unit>
 		<Unit filename="vgblist.c">
 			<Option compilerVar="CC" />
+			<Option virtualFolder="com.middlemind.JsonPL/" />
 		</Unit>
-		<Unit filename="vgblist.h" />
+		<Unit filename="vgblist.h">
+			<Option virtualFolder="com.middlemind.JsonPL/" />
+		</Unit>
 		<Unit filename="vgbstr.c">
 			<Option compilerVar="CC" />
+			<Option virtualFolder="com.middlemind.JsonPL/" />
 		</Unit>
-		<Unit filename="vgbstr.h" />
-		<Unit filename="vgbutil.c">
-			<Option compilerVar="CC" />
+		<Unit filename="vgbstr.h">
+			<Option virtualFolder="com.middlemind.JsonPL/" />
 		</Unit>
-		<Unit filename="vgbutil.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

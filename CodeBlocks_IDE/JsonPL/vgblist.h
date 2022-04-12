@@ -7,6 +7,10 @@
     #define VGB_ENTRY_ID 143
 #endif //VGB_ENTRY_ID
 
+//TODO Function to delete an item after idx
+//TODO Function to delete an item at idx
+//TODO Function to find item with value = given addr
+
 /**
 * A structure used to hold a linked list of vgb_entry instances.
 */
@@ -65,7 +69,7 @@ void print_vgb_entry(struct vgb_entry *itm);
  * Desc: Creates a new vgb_list.
  * Returns: vgb_list *lst(a newly allocated vgb_list)
  */
-struct vgb_list *create_vgb_list();
+struct vgb_list *create_vgb_list(void);
 
 /**
  * Name: del_vgb_list
@@ -73,6 +77,20 @@ struct vgb_list *create_vgb_list();
  * Returns: {0 | 1}
  */
 int del_vgb_list(struct vgb_list **lst2);
+
+/**
+ *
+ */
+int del_vgb_entry(const struct vgb_list *lst, const int idx);
+
+/**
+ * Name: create_vgb_entry
+ * Desc: Allocates a new vgb_entry instance and returns it.
+ * Arg1: int idx(that index to use for the new instance)
+ * Arg2: const void *val(the default value to use for the vgb_entry.
+ * Returns: {0 | 1}
+ */
+struct vgb_entry *create_vgb_entry_adv(const int idx, const void *val, int use_vgb_mm);
 
 /**
  * Name: create_vgb_entry
@@ -90,7 +108,12 @@ struct vgb_entry *create_vgb_entry(const int idx, const void *val);
  * Arg2: const void *val(the default value to use for the vgb_entry.
  * Returns: {0 | 1}
  */
-struct vgb_entry *get_def_vgb_entry();
+struct vgb_entry *get_def_vgb_entry(void);
+
+/**
+ *
+ */
+int find_vgb_entry(const struct vgb_list *lst, void *value, struct vgb_entry **found);
 
 /**
  * Name: get_vgb_entry

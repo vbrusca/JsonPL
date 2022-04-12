@@ -172,9 +172,9 @@ int vgb_is_null(const struct vgb_str *str)
  * Desc: Creates a new vgb_str default instance.
  * Returns: vgb_str *
  */
-struct vgb_str *get_def_vgb_str()
+struct vgb_str *get_def_vgb_str(void)
 {
-    struct vgb_str *def = malloc(sizeof(struct vgb_str));
+    struct vgb_str *def = vgb_malloc(sizeof(struct vgb_str));
     def->id = VGB_STR_ID;
     def->str = NULL;
     def->str_itm_len = -1;
@@ -188,7 +188,7 @@ struct vgb_str *get_def_vgb_str()
  * Desc: Creates a new vgb_str instance with one character of space.
  * Returns: vgb_str *
  */
-struct vgb_str *get_spc_vgb_str()
+struct vgb_str *get_spc_vgb_str(void)
 {
     struct vgb_str *def = get_def_vgb_str();
     char spc[] = " ";
@@ -345,7 +345,7 @@ int init_vgb_str(struct vgb_str *vstr, const char *str, const int len, const int
     if(vstr->str != NULL && vstr->str_len > 0)
     {
         //printf("===================FREE MEMORY");
-        free((*vstr).str);
+        vgb_free((*vstr).str);
     }
     /*
     else
@@ -354,7 +354,7 @@ int init_vgb_str(struct vgb_str *vstr, const char *str, const int len, const int
     }
     */
 
-    vstr->str = (char *)malloc(v0);
+    vstr->str = (char *)vgb_malloc(v0);
     if(vstr->str != NULL)
     {
         int v1 = (sizeof(*(*vstr).str) * len);

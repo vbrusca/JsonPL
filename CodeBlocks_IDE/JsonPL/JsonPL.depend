@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1649712663 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\test.c
+1649787163 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\test.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -7,9 +7,9 @@
 	"vgblist.h"
 	"vgb_logger.h"
 
-1649707152 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.h
+1649771520 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.h
 
-1649707694 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.c
+1649787371 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -24,22 +24,25 @@
 
 1649706624 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbutil.h
 
-1649712692 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.c
+1649787682 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	"vgblist.h"
 	"vgb_logger.h"
 
-1649711241 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.h
+1649778288 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.h
 
-1649709022 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.h
+1649787067 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.h
+	"vgblist.h"
 
-1649708960 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.c
+1649787747 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.c
 	<stdlib.h>
 	<stdio.h>
 	<stdarg.h>
 	"vgb_logger.h"
+	"vgbstr.h"
+	"vgblist.h"
 
 1649708082 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_system_function_handler_jpl.c
 

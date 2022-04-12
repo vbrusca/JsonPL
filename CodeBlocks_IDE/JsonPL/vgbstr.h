@@ -65,14 +65,14 @@ int vgb_is_null(const struct vgb_str* str);
  * Desc: Creates a new vgb_str default instance.
  * Returns: vgb_str *
  */
-struct vgb_str *get_def_vgb_str();
+struct vgb_str *get_def_vgb_str(void);
 
 /**
  * Name: get_spc_vgb_str
  * Desc: Creates a new vgb_str instance with one character of space.
  * Returns: vgb_str *
  */
-struct vgb_str *get_spc_vgb_str();
+struct vgb_str *get_spc_vgb_str(void);
 
 /**
  * Name: concat_2_vgb_str

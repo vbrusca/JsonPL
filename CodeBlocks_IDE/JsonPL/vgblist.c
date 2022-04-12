@@ -36,11 +36,16 @@ void print_vgb_list_entries(const struct vgb_list *lst)
     if(len > 0)
     {
         struct vgb_entry *itm = lst->head;
+
+        //struct vgb_entry *itm;
+        //safe_ptr((void *)&itm, (void *)&(lst->head));
+
         for(int i = 0; i < len && itm != NULL; i++)
         {
             print_vgb_entry(itm);
             itm = itm->next;
         };
+        //vgb_free(itm);
     }
     else
     {
@@ -87,9 +92,9 @@ void print_vgb_entry(struct vgb_entry *itm)
  * Desc: Creates a new vgb_list..
  * Returns: vgb_list *lst(a newly allocated vgb_list)
  */
-struct vgb_list *create_vgb_list()
+struct vgb_list *create_vgb_list(void)
 {
-    struct vgb_list *list = malloc(sizeof(struct vgb_list));
+    struct vgb_list *list = vgb_malloc(sizeof(struct vgb_list));
     list->id = VGB_LIST_ID;
     list->hint = -1;
     list->head = NULL;
@@ -115,21 +120,112 @@ int del_vgb_list(struct vgb_list **lst2)
         return(0);
     };
 
-    struct vgb_list *lst = *lst2;
+    struct vgb_list *lst;
+    lst = *lst2;
     struct vgb_entry *tmp = lst->head;
     struct vgb_entry *tmp2;
+
     int cnt = 0;
     int len = lst->length;
+
     while(cnt < len && tmp != NULL)
     {
         tmp2 = tmp;
         tmp = tmp->next;
-        free(tmp2);
+        vgb_free(tmp2);
         cnt++;
     };
-    free(lst);
+    vgb_free(lst);
     return(1);
 }
+
+/**
+ *
+ */
+int del_vgb_entry(const struct vgb_list *lst, const int idx)
+{
+    if(lst == NULL)
+    {
+        return(0);
+    };
+
+    if(idx >= lst->length)
+    {
+        return(0);
+    };
+
+    if(lst->length == 0)
+    {
+        return(0);
+    };
+
+    if(idx < 0)
+    {
+        return(0);
+    };
+
+    struct vgb_entry *tmp = lst->head;
+    struct vgb_entry *tmp2;
+    int cnt = 0;
+    int len = idx;
+    while(cnt <= len && tmp != NULL)
+    {
+        tmp2 = tmp;
+        tmp = tmp->next;
+        cnt++;
+    };
+    cnt--;
+
+    //print_vgb_entry(tmp2);
+    //print_vgb_entry(tmp);
+    //printf("get_vgb_entry: cnt: %d, idx: %d\n", cnt, idx);
+
+    if(cnt == idx)
+    {
+        tmp2->next = tmp->next;
+        sync_vgb_list_indexes((struct vgb_list *)lst);
+        printf("Address of tmp2: %p\n", tmp2);
+        vgb_free(tmp);
+        return(1);
+    }
+    else
+    {
+        printf("get_vgb_entry: Error: cnt, %d, is not equal to idx, %idx\n", cnt, idx);
+        return(0);
+    };
+};
+
+//TODO Fix code comments
+
+/**
+ * Name: create_vgb_entry_adv
+ * Desc: Allocates a new vgb_entry instance and returns it.
+ * Arg1: int idx(that index to use for the new instance)
+ * Arg2: const void *val(the default value to use for the vgb_entry.
+ * Arg3:
+ * Returns: {0 | 1}
+ */
+struct vgb_entry *create_vgb_entry_adv(const int idx, const void *val, int use_vgb_mm)
+{
+    //printf("create_vgb_entry: AAA\n");
+    struct vgb_entry *entry;
+    if(use_vgb_mm)
+    {
+        entry = vgb_malloc(sizeof(struct vgb_entry));
+    }
+    else
+    {
+        entry = malloc(sizeof(struct vgb_entry));
+    };
+
+    entry->id = VGB_ENTRY_ID;
+    entry->hint = -1;
+    entry->value = (void *)val;
+    entry->next = NULL;
+    entry->index = idx;
+    //printf("create_vgb_entry: BBB\n");
+    return entry;
+};
 
 /**
  * Name: create_vgb_entry
@@ -141,7 +237,8 @@ int del_vgb_list(struct vgb_list **lst2)
 struct vgb_entry *create_vgb_entry(const int idx, const void *val)
 {
     //printf("create_vgb_entry: AAA\n");
-    struct vgb_entry *entry = malloc(sizeof(struct vgb_entry));
+    struct vgb_entry *entry;
+    entry = vgb_malloc(sizeof(struct vgb_entry));
     entry->id = VGB_ENTRY_ID;
     entry->hint = -1;
     entry->value = (void *)val;
@@ -158,15 +255,62 @@ struct vgb_entry *create_vgb_entry(const int idx, const void *val)
  * Arg2: const void *val(the default value to use for the vgb_entry.
  * Returns: {0 | 1}
  */
-struct vgb_entry *get_def_vgb_entry()
+struct vgb_entry *get_def_vgb_entry(void)
 {
-    struct vgb_entry *def = malloc(sizeof(struct vgb_entry));
+    struct vgb_entry *def = vgb_malloc(sizeof(struct vgb_entry));
     def->id = VGB_ENTRY_ID;
     def->hint = -1;
     def->value = NULL;
     def->next = NULL;
     def->index = -1;
     return def;
+};
+
+/**
+ *
+ */
+int find_vgb_entry(const struct vgb_list *lst, void *value, struct vgb_entry **found)
+{
+    if(found == NULL)
+    {
+        return(0);
+    };
+
+    if(lst == NULL)
+    {
+        return(0);
+    };
+
+    if(value == NULL)
+    {
+        return(0);
+    };
+
+    if(lst->length == 0)
+    {
+        return(0);
+    };
+
+    struct vgb_entry *tmp = lst->head;
+    int cnt = 0;
+    int len = lst->length;
+    while(cnt < len && tmp != NULL && tmp->value != value)
+    {
+        tmp = tmp->next;
+        cnt++;
+    };
+
+
+    if(tmp != NULL)
+    {
+        *found = tmp;
+        return(1);
+    }
+    else
+    {
+        *found = NULL;
+        return(0);
+    };
 };
 
 /**
@@ -216,19 +360,20 @@ int get_vgb_entry(const struct vgb_list *lst, const int idx, struct vgb_entry **
     };
     cnt--;
 
-    print_vgb_entry(tmp2);
-    print_vgb_entry(tmp);
-    printf("get_vgb_entry: cnt: %d, idx: %d\n", cnt, idx);
+    //print_vgb_entry(tmp2);
+    //print_vgb_entry(tmp);
+    //printf("get_vgb_entry: cnt: %d, idx: %d\n", cnt, idx);
 
     if(cnt == idx)
     {
         *found = tmp2;
-        printf("Address of tmp2: %p\n", tmp2);
-        printf("Address of found: %p\n", found);
+        //printf("Address of tmp2: %p\n", tmp2);
+        //printf("Address of found: %p\n", found);
         return(1);
     }
     else
     {
+        found = NULL;
         printf("get_vgb_entry: Error: cnt, %d, is not equal to idx, %idx\n", cnt, idx);
         return(0);
     };
