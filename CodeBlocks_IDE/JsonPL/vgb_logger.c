@@ -40,7 +40,7 @@ int vgb_mmgr_init(void)
 {
     MMGR = create_vgb_list();
     MMGR_INIT = TRUE;
-    return(1);
+    return 1;
 }
 
 /**
@@ -63,9 +63,9 @@ void safe_ptr(void **ptr_left, void **ptr_right)
     if(mm != NULL)
     {
         mm->ref_cnt += 1;
-    };
+    }
     *ptr_left = *ptr_right;
-};
+}
 
 /**
  *
@@ -74,18 +74,18 @@ int del_vgb_mem(const struct vgb_list *lst, void *addr)
 {
     if(addr == NULL)
     {
-        return(0);
-    };
+        return 0;
+    }
 
     if(lst == NULL)
     {
-        return(0);
-    };
+        return 0;
+    }
 
     if(lst->length == 0)
     {
-        return(0);
-    };
+        return 0;
+    }
 
     struct vgb_entry *tmp = lst->head;
     struct vgb_entry *tmp2;
@@ -100,7 +100,7 @@ int del_vgb_mem(const struct vgb_list *lst, void *addr)
         tmp = tmp->next;
         mm = tmp->value;
         cnt++;
-    };
+    }
     cnt--;
 
     //print_vgb_entry(tmp2);
@@ -114,14 +114,14 @@ int del_vgb_mem(const struct vgb_list *lst, void *addr)
         //printf("Address of tmp2: %p\n", tmp2);
         free(tmp);
         printf("get_vgb_mem: Info: cnt, %d, deleted address, %p\n", cnt, tmp);
-        return(1);
+        return 1;
     }
     else
     {
         printf("get_vgb_mem: Error: cnt, %d, could not find address, %p\n", cnt, addr);
-        return(0);
-    };
-};
+        return 0;
+    }
+}
 
 /**
  *
@@ -130,18 +130,18 @@ int find_vgb_mem(const struct vgb_list *lst, void *addr, struct vgb_mem **found)
 {
     if(lst == NULL)
     {
-        return(0);
-    };
+        return 0;
+    }
 
     if(addr == NULL)
     {
-        return(0);
-    };
+        return 0;
+    }
 
     if(lst->length == 0)
     {
-        return(0);
-    };
+        return 0;
+    }
 
     struct vgb_entry *tmp = lst->head;
     int cnt = 0;
@@ -155,23 +155,23 @@ int find_vgb_mem(const struct vgb_list *lst, void *addr, struct vgb_mem **found)
         if(tmp != NULL)
         {
             mm = (struct vgb_mem *)tmp->value;
-        };
+        }
         cnt++;
-    };
+    }
 
     if(mm != NULL && mm->addr == addr)
     {
         *found = mm;
         //printf("found!!\n");
-        return(1);
+        return 1;
     }
     else
     {
         *found = NULL;
         //printf("not found!!\n");
-        return(0);
-    };
-};
+        return 0;
+    }
+}
 
 /**
  *
@@ -190,12 +190,12 @@ void vgb_free(void *ptr)
             mm->ref_cnt = 0;
             del_vgb_mem(MMGR, mm->addr);
             free(mm->addr);
-        };
-    };
+        }
+    }
     //printf("vgb_free: CCC\n");
     ptr = NULL;
     //printf("vgb_free: DDD\n");
-};
+}
 
 /**
  *
@@ -204,13 +204,13 @@ void vgb_free(void *ptr)
 {
     if(lst2 == NULL)
     {
-        return(0);
-    };
+        return 0;
+    }
 
     if(*lst2 == NULL)
     {
-        return(0);
-    };
+        return 0;
+    }
 
     struct vgb_list *lst;
     lst = *lst2;
@@ -226,9 +226,9 @@ void vgb_free(void *ptr)
         tmp = tmp->next;
         free(tmp2);
         cnt++;
-    };
+    }
     free(lst);
-    return(1);
+    return 1;
 }
 
 /**
@@ -257,10 +257,10 @@ void *vgb_malloc(size_t size)
         else
         {
             wrl("vgb_malloc: Info: Adding mem entry for addr: %p of size: %d", addr, size);
-        };
-    };
-    return(addr);
-};
+        }
+    }
+    return addr;
+}
 
 
 /**
@@ -278,8 +278,8 @@ void wrl(char *s, ...)
         vprintf(s, args);
         printf("%c", NEWLINE_CHAR);
         va_end (args);
-    };
-};
+    }
+}
 
 /**
 * A static logging method that writes the provided text to standard output.
@@ -294,8 +294,8 @@ void wr(char *s, ...)
         va_start (args, s);
         vprintf(s, args);
         va_end (args);
-    };
-};
+    }
+}
 
 /**
 * A static logging method that writes the provided text, followed by a new
@@ -309,11 +309,9 @@ void wrlErr(char *s, ...)
     {
         va_list args;
         va_start (args, s);
-        printf(">> ERROR MESSAGE START ============================================================>>\n");
-        vprintf(s, args);
-        printf("%c", NEWLINE_CHAR);
+        vfprintf(stderr, s, args);
+        fprintf(stderr, "%c", NEWLINE_CHAR);
         va_end (args);
-        printf("<< ERROR MESSAGE END ==============================================================<<\n");
-    };
-};
+    }
+}
 

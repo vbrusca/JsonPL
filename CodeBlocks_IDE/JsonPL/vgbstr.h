@@ -1,4 +1,3 @@
-
 #ifndef VGB_STR_ID
     #define VGB_STR_ID 123
 #endif //VGB_STR_ID

@@ -50,6 +50,10 @@
 		<Unit filename="vgb_system_function_handler_jpl.h">
 			<Option virtualFolder="com.middlemind.JsonPL/" />
 		</Unit>
+		<Unit filename="vgbhash.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vgbhash.h" />
 		<Unit filename="vgblist.c">
 			<Option compilerVar="CC" />
 			<Option virtualFolder="com.middlemind.JsonPL/" />

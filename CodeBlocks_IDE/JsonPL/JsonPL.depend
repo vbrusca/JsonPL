@@ -1,15 +1,16 @@
 # depslib dependency file v1.0
-1649787163 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\test.c
+1650041772 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\test.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	"vgbstr.h"
 	"vgblist.h"
 	"vgb_logger.h"
+	"vgbhash.h"
 
-1649771520 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.h
+1650027827 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.h
 
-1649787371 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.c
+1650027815 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -24,19 +25,19 @@
 
 1649706624 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbutil.h
 
-1649787682 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.c
+1650027147 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	"vgblist.h"
 	"vgb_logger.h"
 
-1649778288 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.h
+1650027745 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.h
 
-1649787067 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.h
+1649889047 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.h
 	"vgblist.h"
 
-1649787747 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.c
+1649889031 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.c
 	<stdlib.h>
 	<stdio.h>
 	<stdarg.h>
@@ -45,4 +46,16 @@
 	"vgblist.h"
 
 1649708082 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_system_function_handler_jpl.c
+
+1650041409 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbhash.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<math.h>
+	"vgbhash.h"
+	"vgb_logger.h"
+
+1650039711 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbhash.h
+	"vgblist.h"
+	"vgbstr.h"
 

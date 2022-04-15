@@ -1,4 +1,3 @@
-
 #ifndef VGB_LIST_ID
     #define VGB_LIST_ID 133
 #endif //VGB_LIST_ID
@@ -6,10 +5,6 @@
 #ifndef VGB_ENTRY_ID
     #define VGB_ENTRY_ID 143
 #endif //VGB_ENTRY_ID
-
-//TODO Function to delete an item after idx
-//TODO Function to delete an item at idx
-//TODO Function to find item with value = given addr
 
 /**
 * A structure used to hold a linked list of vgb_entry instances.

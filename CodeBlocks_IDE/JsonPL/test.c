@@ -30,25 +30,31 @@
     #define vgb_logger_h
 #endif // vgb_logger_h
 
-//TODO ensure MMGR gets freed
+#ifndef vgbhash_h
+    #include "vgbhash.h"
+    #define vgbhash_h
+#endif // vgbhash_h
+
 /*
 functions that use these functions
-
-create_vgb_list
-create_vgb_entry
-get_def_vgb_entry
-get_def_vgb_str
+    create_vgb_list
+    create_vgb_entry
+    get_def_vgb_entry
+    get_def_vgb_str
 
 should use
-
-vgb_malloc
-vgb_free
-safe_ptr
+    vgb_malloc
+    vgb_free
+    safe_ptr
 
 for structure pointers and run vgb_free on all
 pointers after they are done being used
-
 */
+
+/**
+*
+*/
+void test_str();
 
 /**
 *
@@ -58,142 +64,123 @@ void test_list();
 /**
 *
 */
-int main() {
+void test_hash();
+
+/**
+*
+*/
+int main()
+{
     vgb_mmgr_init();
 
-    struct vgb_str *def1 = get_def_vgb_str();
-    wrl("---------------> testing wrl %c", 'C');
-    printf(">>=========================================<<\n");
-    print_vgb_str(def1);
+    //test_str();
+    //test_list();
+    test_hash();
 
-    if(vgb_is_null(def1))
+    vgb_mmgr_cleanup();
+    return 0;
+}
+
+/**
+*
+*/
+void test_hash()
+{
+    int i1 = 10235;
+    int h1 = hash_func_int(i1);
+    printf("hash_func_int in %d result %d\n", i1, h1);
+
+    i1 = 745;
+    h1 = hash_func_int(i1);
+    printf("hash_func_int in %d result %d\n", i1, h1);
+
+    i1 = 45;
+    h1 = hash_func_int(i1);
+    printf("hash_func_int in %d result %d\n", i1, h1);
+
+    i1 = 2;
+    h1 = hash_func_int(i1);
+    printf("hash_func_int in %d result %d\n", i1, h1);
+
+    i1 = 203456;
+    h1 = hash_func_int(i1);
+    printf("hash_func_int in %d result %d\n", i1, h1);
+
+    i1 = -2435756;
+    h1 = hash_func_int(i1);
+    printf("hash_func_int in %d result %d\n", i1, h1);
+
+    char *s1 = "testing";
+    int h2 = hash_func_str((const char*)s1, 7);
+    printf("hash_func_int in %s result %d\n", s1, h2);
+
+    s1 = "tmp1";
+    h2 = hash_func_str((const char*)s1, 7);
+    printf("hash_func_int in %s result %d\n", s1, h2);
+
+    s1 = "testing this longer string to see what value it gets";
+    h2 = hash_func_str((const char*)s1, 7);
+    printf("hash_func_int in %s result %d\n", s1, h2);
+
+    s1 = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
+    h2 = hash_func_str((const char*)s1, 7);
+    printf("hash_func_int in %s result %d 1\n", s1, h2);
+
+    h2 = hash_func_str((const char*)s1, 7);
+    printf("hash_func_int in %s result %d 2\n", s1, h2);
+
+    s1 = "tmp1";
+    h2 = hash_func_int(*s1);
+    printf("hash_func_int in %s result %d\n", s1, h2);
+
+    struct vgb_hash hsh;
+    init_vgb_hash_entry(&hsh, 0);
+    printf("1 Found id: %d\n", (*(hsh.data + 0))->id);
+    printf("2 Found id: %d\n", hsh.data[0]->id);
+    printf("3 Found id: %d\n", (*hsh.data[0]).id);
+
+    struct vgb_list *itm = hsh.data[0];
+    printf("4 Found id: %d\n", (*itm).id);
+
+    int itmp[] = {102, 32, 14, 11, 1, 2, 7, 1, 9, 12, 45, 67};
+    int len = sizeof(itmp)/sizeof(itmp[0]);
+    for(int i = 0; i < len; i++)
     {
-        printf("vgb_str is NULL\n");
+        printf("1 idx: %d v: %d\n", i, itmp[i]);
     }
-    else
-    {
-        printf("vgb_str is NOT NULL\n");
-    };
 
-    if(vgb_is_err(def1))
+    printf("\n\n");
+    //prescan(&itmp, len);
+    quicks((int *)&itmp, len, 0, len - 1);
+    for(int i = 0; i < len; i++)
     {
-        printf("vgb_str is ERR\n");
+        printf("2 idx: %d v: %d\n", i, itmp[i]);
     }
-    else
-    {
-        printf("vgb_str is NOT ERR\n");
-    };
 
-    def1->str_itm_len = 2;
-    if(vgb_is_err(def1))
+    int itmp2[] = {102, 32, 14, 11, 1, 2, 7, 1, 9, 12, 45, 67, 33, 67, 345, 2, 34};
+    len = sizeof(itmp2)/sizeof(itmp2[0]);
+    for(int i = 0; i < len; i++)
     {
-        printf("vgb_str is ERR\n");
+        printf("1 idx: %d v: %d\n", i, itmp2[i]);
     }
-    else
+
+    printf("\n\n");
+    presort((int *)&itmp2, len);
+    for(int i = 0; i < len; i++)
     {
-        printf("vgb_str is NOT ERR\n");
-    };
+        printf("2 idx: %d v: %d\n", i, itmp2[i]);
+    }
 
-    struct vgb_str *spc1 = get_spc_vgb_str();
-    printf(">>=========================================<<\n");
-    print_vgb_str(spc1);
-
-    struct vgb_str vgb_str_def;
-    vgb_str_def.id = VGB_STR_ID;
-    vgb_str_def.str = NULL;
-    vgb_str_def.str_itm_len = -1;
-    vgb_str_def.str_len = -1;
-    vgb_str_def.str_szof_len = -1;
-
-    struct vgb_str vgb_str_spc;
-    vgb_str_spc.id = VGB_STR_ID;
-    vgb_str_spc.str = NULL;
-    vgb_str_spc.str_itm_len = -1;
-    vgb_str_spc.str_len = -1;
-    vgb_str_spc.str_szof_len = -1;
-
-    struct vgb_str s1 = vgb_str_def;
-    struct vgb_str s2 = vgb_str_def;
-    struct vgb_str s3 = vgb_str_spc;
-    char istr1[] = "testing123";
-    char istr2[] = "testing123567890";
-    char istr3[] = " ";
-
-    int res;
-    res = init_vgb_str(&s3, istr3, sizeof(istr3), sizeof(char));
-    if(res != 1)
+    quicks((int *)&itmp2, len, 0, len - 1);
+    for(int i = 0; i < len; i++)
     {
-        printf("main: Error: Could not initialize 0 vgb_str");
-        return(0);
-    };
+        printf("3 idx: %d v: %d\n", i, itmp2[i]);
+    }
 
-    res = init_vgb_str(&s1, istr1, sizeof(istr1), sizeof(char));
-    if(res != 1)
-    {
-        printf("main: Error: Could not initialize 1 vgb_str");
-        return(0);
-    };
-
-    res = init_vgb_str(&s1, istr1, sizeof(istr1), sizeof(char));
-    if(res != 1)
-    {
-        printf("main: Error: Could not initialize 2 vgb_str");
-        return(0);
-    };
-
-    res = init_vgb_str(&s2, istr2, sizeof(istr2), sizeof(char));
-    if(res != 1)
-    {
-        printf("main: Error: Could not initialize 3 vgb_str");
-        return(0);
-    };
-
-    res = concat_2_vgb_str(&s1, &s3, &s2);
-    if(res != 1)
-    {
-        printf("main: Error: Could not concat vgb_str");
-        return(0);
-    };
-
-    struct vgb_str *ps;
-    ps = &s1;
-
-    char lc = 'd';
-    int cidx = 0;
-    get_vgb_c(&s1, cidx, &lc);
-    printf("main: Found char %c at position %d\n", lc, cidx);
-
-    cidx = 1;
-    get_vgb_c(&s1, cidx, &lc);
-    printf("main: Found char %c at position %d\n", lc, cidx);
-
-    cidx = 0;
-    set_vgb_c(&s1, cidx, &lc);
-    printf("main: Found char %c at position %d\n", lc, cidx);
-
-    printf("main: Struct Address: %p, Struct Pointer: %p %d %d\n", &s1, ps, (int)sizeof(istr1), (int)sizeof(*s1.str));
-    printf("\n");
-    printf("=========================================\n");
-    print_vgb_str(&s3);
-
-    printf("\n");
-    printf("=========================================\n");
-    print_vgb_str(&s2);
-
-    printf("\n");
-    printf("=========================================\n");
-    print_vgb_str(&s1);
-
-    printf("\n");
-    printf("=========================================\n");
-    print_vgb_str(ps);
-
-    printf("\n");
-    printf("\n");
-
-    test_list();
-    return(0);
-};
+    int target = 345;
+    int fidx = binsearch(itmp2, 0, (len - 1), target);
+    printf("Found target %d at idx %d %ld\n", target, fidx, sizeof(&itmp2));
+}
 
 /**
 *
@@ -269,6 +256,136 @@ void test_list()
     lp = &lst;
     del_vgb_list(&lp);
     printf("List Address: %p\n", &lst);
+}
 
-    vgb_mmgr_cleanup();
-};
+
+void test_str(void)
+{
+    struct vgb_str *def1 = get_def_vgb_str();
+    wrl("---------------> testing wrl %c", 'C');
+    printf(">>=========================================<<\n");
+    print_vgb_str(def1);
+
+    if(vgb_is_null(def1))
+    {
+        printf("vgb_str is NULL\n");
+    }
+    else
+    {
+        printf("vgb_str is NOT NULL\n");
+    }
+
+    if(vgb_is_err(def1))
+    {
+        printf("vgb_str is ERR\n");
+    }
+    else
+    {
+        printf("vgb_str is NOT ERR\n");
+    }
+
+    def1->str_itm_len = 2;
+    if(vgb_is_err(def1))
+    {
+        printf("vgb_str is ERR\n");
+    }
+    else
+    {
+        printf("vgb_str is NOT ERR\n");
+    }
+
+    struct vgb_str *spc1 = get_spc_vgb_str();
+    printf(">>=========================================<<\n");
+    print_vgb_str(spc1);
+
+    struct vgb_str vgb_str_def;
+    vgb_str_def.id = VGB_STR_ID;
+    vgb_str_def.str = NULL;
+    vgb_str_def.str_itm_len = -1;
+    vgb_str_def.str_len = -1;
+    vgb_str_def.str_szof_len = -1;
+
+    struct vgb_str vgb_str_spc;
+    vgb_str_spc.id = VGB_STR_ID;
+    vgb_str_spc.str = NULL;
+    vgb_str_spc.str_itm_len = -1;
+    vgb_str_spc.str_len = -1;
+    vgb_str_spc.str_szof_len = -1;
+
+    struct vgb_str s1 = vgb_str_def;
+    struct vgb_str s2 = vgb_str_def;
+    struct vgb_str s3 = vgb_str_spc;
+    char istr1[] = "testing123";
+    char istr2[] = "testing123567890";
+    char istr3[] = " ";
+
+    int res;
+    res = init_vgb_str(&s3, istr3, sizeof(istr3), sizeof(char));
+    if(res != 1)
+    {
+        printf("test_str: Error: Could not initialize 0 vgb_str");
+        return;
+    }
+
+    res = init_vgb_str(&s1, istr1, sizeof(istr1), sizeof(char));
+    if(res != 1)
+    {
+        printf("test_str: Error: Could not initialize 1 vgb_str");
+        return;
+    }
+
+    res = init_vgb_str(&s1, istr1, sizeof(istr1), sizeof(char));
+    if(res != 1)
+    {
+        printf("test_str: Error: Could not initialize 2 vgb_str");
+        return;
+    }
+
+    res = init_vgb_str(&s2, istr2, sizeof(istr2), sizeof(char));
+    if(res != 1)
+    {
+        printf("test_str: Error: Could not initialize 3 vgb_str");
+    }
+
+    res = concat_2_vgb_str(&s1, &s3, &s2);
+    if(res != 1)
+    {
+        printf("test_str: Error: Could not concat vgb_str");
+    }
+
+    struct vgb_str *ps;
+    ps = &s1;
+
+    char lc = 'd';
+    int cidx = 0;
+    get_vgb_c(&s1, cidx, &lc);
+    printf("test_str: Found char %c at position %d\n", lc, cidx);
+
+    cidx = 1;
+    get_vgb_c(&s1, cidx, &lc);
+    printf("test_str: Found char %c at position %d\n", lc, cidx);
+
+    cidx = 0;
+    set_vgb_c(&s1, cidx, &lc);
+    printf("test_str: Found char %c at position %d\n", lc, cidx);
+
+    printf("test_str: Struct Address: %p, Struct Pointer: %p %d %d\n", &s1, ps, (int)sizeof(istr1), (int)sizeof(*s1.str));
+    printf("\n");
+    printf("=========================================\n");
+    print_vgb_str(&s3);
+
+    printf("\n");
+    printf("=========================================\n");
+    print_vgb_str(&s2);
+
+    printf("\n");
+    printf("=========================================\n");
+    print_vgb_str(&s1);
+
+    printf("\n");
+    printf("=========================================\n");
+    print_vgb_str(ps);
+
+    printf("\n");
+    printf("\n");
+}
