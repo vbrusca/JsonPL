@@ -562,3 +562,36 @@ int vgb_list_add(struct vgb_list *lst, struct vgb_entry *new_entry)
     }
     return 1;
 }
+
+/**
+ *
+ */
+void iteration_reset(struct vgb_list *lst)
+{
+    if(lst == NULL)
+    {
+        return;
+    }
+
+    lst->current_idx = 0;
+    lst->current_entry = lst->head;
+}
+
+/**
+ *
+ */
+struct vgb_entry *iteration_next(struct vgb_list *lst)
+{
+    if(lst == NULL)
+    {
+        return NULL;
+    }
+
+    struct vgb_entry *itm = lst->current_entry;
+    if(lst->current_entry != NULL)
+    {
+        lst->current_entry = lst->current_entry->next;
+        lst->current_idx = lst->current_entry->index;
+    }
+    return itm;
+}

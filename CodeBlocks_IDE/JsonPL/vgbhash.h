@@ -55,18 +55,3 @@ int init_vgb_hash(struct vgb_str *vstr);
  *
  */
 int init_vgb_hash_entry(struct vgb_hash *hsh, const int idx);
-
-/**
- *
- */
-int presort(int *arr, const int len);
-
-/**
- *
- */
-int quicks(int *arr, const int alen, const int sidx, const int eidx);
-
-/**
- *
- */
-int binsearch(int *sorted, const int sidx, const int eidx, const int target);

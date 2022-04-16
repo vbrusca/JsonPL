@@ -35,6 +35,11 @@
     #define vgbhash_h
 #endif // vgbhash_h
 
+#ifndef vgbbin_h
+    #include "vgbbin.h"
+    #define vgbbin_h
+#endif // vgbbin_h
+
 /*
 functions that use these functions
     create_vgb_list
@@ -177,9 +182,9 @@ void test_hash()
         printf("3 idx: %d v: %d\n", i, itmp2[i]);
     }
 
-    int target = 345;
+    int target = 32;
     int fidx = binsearch(itmp2, 0, (len - 1), target);
-    printf("Found target %d at idx %d %ld\n", target, fidx, sizeof(&itmp2));
+    printf("Found target %d at idx %d %p\n", target, fidx, sizeof(&itmp2));
 }
 
 /**

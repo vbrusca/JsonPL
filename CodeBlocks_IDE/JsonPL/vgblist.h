@@ -16,6 +16,8 @@ struct vgb_list
     struct vgb_entry *head;
     struct vgb_entry *tail;
     int length;
+    int current_idx;
+    struct vgb_entry *current_entry;
 };
 
 /**
@@ -148,3 +150,13 @@ int set_vgb_entry_after(struct vgb_list *lst, const int idx, struct vgb_entry *n
  * Returns: {0 | 1}
  */
 int vgb_list_add(struct vgb_list *lst, struct vgb_entry *new_entry);
+
+/**
+ *
+ */
+void iteration_reset(struct vgb_list *lst);
+
+/**
+ *
+ */
+struct vgb_entry *iteration_next(struct vgb_list *lst);

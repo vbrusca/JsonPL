@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1650041772 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\test.c
+1650133237 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\test.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -7,6 +7,7 @@
 	"vgblist.h"
 	"vgb_logger.h"
 	"vgbhash.h"
+	"vgbbin.h"
 
 1650027827 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.h
 
@@ -25,14 +26,14 @@
 
 1649706624 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbutil.h
 
-1650027147 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.c
+1650136237 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	"vgblist.h"
 	"vgb_logger.h"
 
-1650027745 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.h
+1650136154 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.h
 
 1649889047 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.h
 	"vgblist.h"
@@ -47,7 +48,7 @@
 
 1649708082 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_system_function_handler_jpl.c
 
-1650041409 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbhash.c
+1650133367 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbhash.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -55,7 +56,35 @@
 	"vgbhash.h"
 	"vgb_logger.h"
 
-1650039711 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbhash.h
+1650133142 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbhash.h
 	"vgblist.h"
 	"vgbstr.h"
+
+1650132771 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_utils.c
+
+1650133421 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbbin.c
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	"vgbbin.h"
+
+1650133140 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbbin.h
+
+1650136206 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_file_loader.c
+	<stdlib.h>
+	<stdio.h>
+	"vgb_file_loader.h"
+
+1650134487 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_file_loader.h
+	"vgbstr.h"
+	"vgblist.h"
+
+1650136802 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_file_unloader.c
+	<stdlib.h>
+	<stdio.h>
+	"vgb_file_unloader.h"
+
+1650136685 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_file_unloader.h
+	"vgbstr.h"
+	"vgblist.h"
 

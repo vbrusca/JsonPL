@@ -5,7 +5,7 @@
 		<Option title="JsonPL" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="com.middlemind.JsonPL/;com.middlemind.JsonPL.FileIO/;com.middlemind.JsonPL.JsonObjs/;com.middlemind.JsonPL.Loaders/" />
+		<Option virtualFolders="com.middlemind.JsonPL/;com.middlemind.JsonPL.FileIO/;com.middlemind.JsonPL.JsonObjs/;com.middlemind.JsonPL.Loaders/;com.middlemind.JsonPL/Sources/;com.middlemind.JsonPL/Headers/" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/JsonPL" prefix_auto="1" extension_auto="1" />
@@ -36,37 +36,61 @@
 			<Option compilerVar="CC" />
 			<Option virtualFolder="com.middlemind.JsonPL/" />
 		</Unit>
+		<Unit filename="vgb_file_unloader.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="com.middlemind.JsonPL/Sources/" />
+		</Unit>
+		<Unit filename="vgb_file_unloader.h">
+			<Option virtualFolder="com.middlemind.JsonPL/Headers/" />
+		</Unit>
 		<Unit filename="vgb_logger.c">
 			<Option compilerVar="CC" />
-			<Option virtualFolder="com.middlemind.JsonPL/" />
+			<Option virtualFolder="com.middlemind.JsonPL/Sources/" />
 		</Unit>
 		<Unit filename="vgb_logger.h">
-			<Option virtualFolder="com.middlemind.JsonPL/" />
+			<Option virtualFolder="com.middlemind.JsonPL/Headers/" />
 		</Unit>
 		<Unit filename="vgb_system_function_handler_jpl.c">
 			<Option compilerVar="CC" />
-			<Option virtualFolder="com.middlemind.JsonPL/" />
+			<Option virtualFolder="com.middlemind.JsonPL/Sources/" />
 		</Unit>
 		<Unit filename="vgb_system_function_handler_jpl.h">
-			<Option virtualFolder="com.middlemind.JsonPL/" />
+			<Option virtualFolder="com.middlemind.JsonPL/Headers/" />
+		</Unit>
+		<Unit filename="vgb_utils.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="com.middlemind.JsonPL/Sources/" />
+		</Unit>
+		<Unit filename="vgb_utils.h">
+			<Option virtualFolder="com.middlemind.JsonPL/Headers/" />
+		</Unit>
+		<Unit filename="vgbbin.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="com.middlemind.JsonPL/Sources/" />
+		</Unit>
+		<Unit filename="vgbbin.h">
+			<Option virtualFolder="com.middlemind.JsonPL/Headers/" />
 		</Unit>
 		<Unit filename="vgbhash.c">
 			<Option compilerVar="CC" />
+			<Option virtualFolder="com.middlemind.JsonPL/Sources/" />
 		</Unit>
-		<Unit filename="vgbhash.h" />
+		<Unit filename="vgbhash.h">
+			<Option virtualFolder="com.middlemind.JsonPL/Headers/" />
+		</Unit>
 		<Unit filename="vgblist.c">
 			<Option compilerVar="CC" />
-			<Option virtualFolder="com.middlemind.JsonPL/" />
+			<Option virtualFolder="com.middlemind.JsonPL/Sources/" />
 		</Unit>
 		<Unit filename="vgblist.h">
-			<Option virtualFolder="com.middlemind.JsonPL/" />
+			<Option virtualFolder="com.middlemind.JsonPL/Headers/" />
 		</Unit>
 		<Unit filename="vgbstr.c">
 			<Option compilerVar="CC" />
-			<Option virtualFolder="com.middlemind.JsonPL/" />
+			<Option virtualFolder="com.middlemind.JsonPL/Sources/" />
 		</Unit>
 		<Unit filename="vgbstr.h">
-			<Option virtualFolder="com.middlemind.JsonPL/" />
+			<Option virtualFolder="com.middlemind.JsonPL/Headers/" />
 		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
