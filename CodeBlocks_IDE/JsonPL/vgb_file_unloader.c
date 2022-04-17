@@ -27,20 +27,17 @@ int WriteStr(char *file, char *str)
 {
     if(file == NULL)
     {
-        //TODO return exception code
         return 0;
     }
 
     if(str == NULL)
     {
-        //TODO return exception code
         return 0;
     }
 
     FILE *f = fopen(file, "w");
     if(f == NULL)
     {
-        //TODO return exception code
         return 0;
     }
 
@@ -61,13 +58,11 @@ int WriteList(char *file, struct vgb_list *strs)
 {
     if(file == NULL)
     {
-        //TODO return exception code
         return 0;
     }
 
     if(strs == NULL)
     {
-        //TODO return exception code
         return 0;
     }
 
@@ -84,7 +79,6 @@ int WriteList(char *file, struct vgb_list *strs)
     FILE *f = fopen(file, "w");
     if(f == NULL)
     {
-        //TODO return exception code
         return 0;
     }
 
@@ -110,20 +104,17 @@ int WriteBuffer(char *file, char *buff)
 {
     if(file == NULL)
     {
-        //TODO return exception code
         return 0;
     }
 
     if(buff == NULL)
     {
-        //TODO return exception code
         return 0;
     }
 
     FILE *f = fopen(file, "wb");
     if(f == NULL)
     {
-        //TODO return exception code
         return 0;
     }
 

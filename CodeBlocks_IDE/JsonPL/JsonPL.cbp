@@ -5,7 +5,7 @@
 		<Option title="JsonPL" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="com.middlemind.JsonPL/;com.middlemind.JsonPL.FileIO/;com.middlemind.JsonPL.JsonObjs/;com.middlemind.JsonPL.Loaders/;com.middlemind.JsonPL/Sources/;com.middlemind.JsonPL/Headers/" />
+		<Option virtualFolders="com.middlemind.JsonPL/;com.middlemind.JsonPL.FileIO/;com.middlemind.JsonPL.JsonObjs/;com.middlemind.JsonPL.Loaders/;com.middlemind.JsonPL/Sources/;com.middlemind.JsonPL/Headers/;com.middlemind.JsonPL.Exceptions/" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/JsonPL" prefix_auto="1" extension_auto="1" />
@@ -32,16 +32,29 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="test.c">
+		<Unit filename="jsonpl.c">
 			<Option compilerVar="CC" />
 			<Option virtualFolder="com.middlemind.JsonPL/" />
 		</Unit>
+		<Unit filename="vgb_exception_base.h">
+			<Option virtualFolder="com.middlemind.JsonPL.Exceptions/" />
+		</Unit>
+		<Unit filename="vgb_exception_loader.h">
+			<Option virtualFolder="com.middlemind.JsonPL.Exceptions/" />
+		</Unit>
+		<Unit filename="vgb_file_loader.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="com.middlemind.JsonPL.FileIO/" />
+		</Unit>
+		<Unit filename="vgb_file_loader.h">
+			<Option virtualFolder="com.middlemind.JsonPL.FileIO/" />
+		</Unit>
 		<Unit filename="vgb_file_unloader.c">
 			<Option compilerVar="CC" />
-			<Option virtualFolder="com.middlemind.JsonPL/Sources/" />
+			<Option virtualFolder="com.middlemind.JsonPL.FileIO/" />
 		</Unit>
 		<Unit filename="vgb_file_unloader.h">
-			<Option virtualFolder="com.middlemind.JsonPL/Headers/" />
+			<Option virtualFolder="com.middlemind.JsonPL.FileIO/" />
 		</Unit>
 		<Unit filename="vgb_logger.c">
 			<Option compilerVar="CC" />
