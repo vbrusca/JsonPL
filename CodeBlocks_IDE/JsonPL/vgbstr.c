@@ -155,6 +155,24 @@ int vgb_str_is_err(const struct vgb_str *str)
 }
 
 /**
+ * TODO
+ */
+int vgb_str_has_null(const struct vgb_str *str)
+{
+    if(vgb_str_is_err())
+    {
+        return FALSE;
+    }
+
+    if(str->str[str->str_len] == '\0')
+    {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+/**
  * Name: vgb_str_is_null
  * Desc: Determines if the given vgb_str is null.
  * Arg1: vgb_str *str(target string)

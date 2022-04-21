@@ -52,6 +52,11 @@ int get_vgb_str_c(const struct vgb_str *str, const int idx, char *c);
 int vgb_str_is_err(const struct vgb_str *str);
 
 /**
+ * TODO
+ */
+int vgb_str_has_null(const struct vgb_str *str);
+
+/**
  * Name: vgb_str_is_null
  * Desc: Determines if the given vgb_str is null.
  * Arg1: vgb_str *str(target string)
