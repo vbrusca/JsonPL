@@ -20,37 +20,47 @@
     #define vgbstr_h
 #endif // vgbstr_h
 
+#ifndef vgbmem_h
+    #include "vgbmem.h"
+    #define vgbmem_h
+#endif // vgbmem_h
+
 #ifndef vgb_logger_h
     #include "vgb_logger.h"
     #define vgb_logger_h
 #endif // vgb_logger_h
 
+#ifndef null_char_var
+    #define null_char_var
+    struct vgb_str NULL_CHAR = {VGB_STR_ID, 1, "", 0, 1, 1};
+#endif // null_char_var
+
 /**
- * Name: set_vgb_c
+ * Name: set_vgb_str_c
  * Desc: Sets the specified character of a vgb_str.
  * Arg1: vgb_str *str(target string)
  * Arg2: const int idx(the index to set the character for)
  * Arg3: const char *c(the new character to use to update the target string)
  * Returns: {0 | 1}
  */
-int set_vgb_c(struct vgb_str *str, const int idx, const char *c)
+int set_vgb_str_c(struct vgb_str *str, const int idx, const char *c)
 {
-    if(vgb_is_null(str))
+    if(vgb_str_is_null(str))
     {
-        printf("set_vgb_c: Error: vgb_str argument is NULL\n");
+        printf("set_vgb_str_c: Error: vgb_str argument is NULL\n");
         return 0;
     }
 
-    if(vgb_is_err(str))
+    if(vgb_str_is_err(str))
     {
-        printf("set_vgb_c: Error: vgb_str argument is ERR\n");
+        printf("set_vgb_str_c: Error: vgb_str argument is ERR\n");
         return 0;
     }
 
     if(idx < str->str_len && idx >= 0)
     {
         *((*str).str + idx) = *c;
-        printf("set_vgb_c: set char at idx %d to %c\n", idx, *c);
+        printf("set_vgb_str_c: set char at idx %d to %c\n", idx, *c);
         return 1;
     }
     else
@@ -60,24 +70,24 @@ int set_vgb_c(struct vgb_str *str, const int idx, const char *c)
 }
 
 /**
- * Name: get_vgb_c
+ * Name: get_vgb_str_c
  * Desc: Gets the specified character of a vgb_str.
  * Arg1: vgb_str *str(target string)
  * Arg2: const int idx(the index to get the character for)
  * Arg3: const char *c(the character found at the specified index)
  * Returns: {0 | 1}
  */
-int get_vgb_c(const struct vgb_str *str, const int idx, char *c)
+int get_vgb_str_c(const struct vgb_str *str, const int idx, char *c)
 {
-    if(vgb_is_null(str))
+    if(vgb_str_is_null(str))
     {
-        printf("get_vgb_c: Error: vgb_str argument is NULL\n");
+        printf("get_vgb_str_c: Error: vgb_str argument is NULL\n");
         return 0;
     }
 
-    if(vgb_is_err(str))
+    if(vgb_str_is_err(str))
     {
-        printf("get_vgb_c: Error: vgb_str argument is ERR\n");
+        printf("get_vgb_str_c: Error: vgb_str argument is ERR\n");
         return 0;
     }
 
@@ -94,12 +104,12 @@ int get_vgb_c(const struct vgb_str *str, const int idx, char *c)
 }
 
 /**
- * Name: vgb_is_err
+ * Name: vgb_str_is_err
  * Desc: Determines if the given vgb_str is in an error state.
  * Arg1: vgb_str *str(target string)
  * Returns: {0 | 1}
  */
-int vgb_is_err(const struct vgb_str *str)
+int vgb_str_is_err(const struct vgb_str *str)
 {
     if(str == NULL)
     {
@@ -145,12 +155,12 @@ int vgb_is_err(const struct vgb_str *str)
 }
 
 /**
- * Name: vgb_is_err
+ * Name: vgb_str_is_null
  * Desc: Determines if the given vgb_str is null.
  * Arg1: vgb_str *str(target string)
  * Returns: {0 | 1}
  */
-int vgb_is_null(const struct vgb_str *str)
+int vgb_str_is_null(const struct vgb_str *str)
 {
     if(str == NULL)
     {
@@ -261,18 +271,6 @@ int concat_vgb_str(struct vgb_str *dest, const struct vgb_str *src)
         return 0;
     }
 
-    if(dest->str[dest->str_len] != '\0')
-    {
-        printf("concat_vgb_str: Error: argument dest->str is missing null char\n");
-        return 0;
-    }
-
-    if(src->str[src->str_len] != '\0')
-    {
-        printf("concat_vgb_str: Error: argument src->str is missing null char\n");
-        return 0;
-    }
-
     int tlen = (dest->str_len + src->str_szof_len);
     char nstr[tlen];
     strcpy(nstr, dest->str);
@@ -327,12 +325,6 @@ int init_vgb_str(struct vgb_str *vstr, const char *str, const int len, const int
         return 0;
     }
 
-    if(str[len - 1] != '\0')
-    {
-        printf("init_vgb_str: Error: argument str is missing null char\n");
-        return 0;
-    }
-
     printf("Found %d %d\n", len, sz);
     int v0 = (sz * len);
     if(v0 >= SANITY_CHECK_LEN)
@@ -375,8 +367,8 @@ int init_vgb_str(struct vgb_str *vstr, const char *str, const int len, const int
 
     if(*((*vstr).str + vstr->str_len) != '\0')
     {
-        printf("init_vgb_str: Error: Could not find string termination character");
-        return 0;
+        concat_vgb_str(vstr, &NULL_CHAR);
+        printf("init_vgb_str: Warning: Could not find string termination character, adding it now");
     }
     return 1;
 }

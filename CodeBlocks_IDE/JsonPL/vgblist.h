@@ -7,8 +7,8 @@
 #endif //VGB_ENTRY_ID
 
 /**
-* A structure used to hold a linked list of vgb_entry instances.
-*/
+ * A structure used to hold a linked list of vgb_entry instances.
+ */
 struct vgb_list
 {
     int id;
@@ -21,8 +21,8 @@ struct vgb_list
 };
 
 /**
-* A structure used to hold the basic data of a linked list entry.
-*/
+ * A structure used to hold the basic data of a linked list entry.
+ */
 struct vgb_entry
 {
     int id;
@@ -42,7 +42,7 @@ int sync_vgb_list_indexes(struct vgb_list *lst);
 
 /**
  * Name: print_vgb_list_entries
- * Desc: Prints the given vgb_list's entries standard output.
+ * Desc: Prints the given vgb_list's entries to standard output.
  * Arg1: vgb_list *lst(target list)
  */
 void print_vgb_list_entries(const struct vgb_list *lst);
@@ -76,15 +76,25 @@ struct vgb_list *create_vgb_list(void);
 int del_vgb_list(struct vgb_list **lst2);
 
 /**
- *
+ * Name: del_vgb_entry
+ * Desc: Attempts to free a vgb_entry at the specified list index.
+ * Arg1: const struct vgb_list *lst(the vgb_list to delete the entry from)
+ * Arg2: const int idx(the index of the vgb_entry, in the given list, to delete)
+ * Returns: {0 | 1}
  */
 int del_vgb_entry(const struct vgb_list *lst, const int idx);
 
 /**
- * Name: create_vgb_entry
+ * TODO
+ */
+int del_vgb_entry_after(const struct vgb_list *lst, const int idx);
+
+/**
+ * Name: create_vgb_entry_adv
  * Desc: Allocates a new vgb_entry instance and returns it.
- * Arg1: int idx(that index to use for the new instance)
- * Arg2: const void *val(the default value to use for the vgb_entry.
+ * Arg1: int idx(the index to use for the new instance)
+ * Arg2: const void *val(the default value to use for the vgb_entry)
+ * Arg3: int use_vgb_mm(an int indicating to use 1 = vgb_malloc or other = malloc)
  * Returns: {0 | 1}
  */
 struct vgb_entry *create_vgb_entry_adv(const int idx, const void *val, int use_vgb_mm);
@@ -93,7 +103,7 @@ struct vgb_entry *create_vgb_entry_adv(const int idx, const void *val, int use_v
  * Name: create_vgb_entry
  * Desc: Allocates a new vgb_entry instance and returns it.
  * Arg1: int idx(that index to use for the new instance)
- * Arg2: const void *val(the default value to use for the vgb_entry.
+ * Arg2: const void *val(the default value to use for the vgb_entry.)
  * Returns: {0 | 1}
  */
 struct vgb_entry *create_vgb_entry(const int idx, const void *val);
@@ -102,13 +112,18 @@ struct vgb_entry *create_vgb_entry(const int idx, const void *val);
  * Name: get_def_vgb_entry
  * Desc: Allocates a new vgb_entry instance and returns it.
  * Arg1: int idx(that index to use for the new instance)
- * Arg2: const void *val(the default value to use for the vgb_entry.
+ * Arg2: const void *val(the default value to use for the vgb_entry.)
  * Returns: {0 | 1}
  */
 struct vgb_entry *get_def_vgb_entry(void);
 
 /**
- *
+ * Name: find_vgb_entry
+ * Desc: Searches through a vgb_list for an entry with the given value then points the found argument to the found vgb_entry.
+ * Arg1: const struct vgb_list *lst(the vgb_list to search for the given value)
+ * Arg2: void *value(the value to search for)
+ * Arg3: struct vgb_entry **found(a pointer to use to point to the found vgb_entry if any)
+ * Returns: {0 | 1}
  */
 int find_vgb_entry(const struct vgb_list *lst, void *value, struct vgb_entry **found);
 
@@ -123,18 +138,23 @@ int find_vgb_entry(const struct vgb_list *lst, void *value, struct vgb_entry **f
 int get_vgb_entry(const struct vgb_list *lst, const int idx, struct vgb_entry **found);
 
 /**
+ * TODO
+ */
+int get_vgb_entry_after(const struct vgb_list *lst, const int idx, struct vgb_entry **found);
+
+/**
  * Name: set_vgb_entry
  * Desc: Sets the vgb_entry in the specified vgb_list at the given index.
  * Arg1: struct vgb_list *lst(the vgb_list to search)
  * Arg2: const int idx(the index of the vgb_entry to set)
- * Arg3: struct vgb_entry *new_entry(the new vgb_entry to place immediately after the specified index or at zero if the list is empty)
+ * Arg3: struct vgb_entry *new_entry(the new vgb_entry to place at the specified index or at zero if the list is empty)
  * Returns: {0 | 1}
  */
 int set_vgb_entry(struct vgb_list *lst, const int idx, struct vgb_entry *new_entry);
 
 /**
  * Name: set_vgb_entry_after
- * Desc: Sets the vgb_entry in the specified vgb_list at the given index.
+ * Desc: Sets the vgb_entry in the specified vgb_list after the given index.
  * Arg1: struct vgb_list *lst(the vgb_list to search)
  * Arg2: const int idx(the index of the vgb_entry to set)
  * Arg3: struct vgb_entry *new_entry(the new vgb_entry to place immediately after the specified index or at zero if the list is empty)
@@ -152,11 +172,15 @@ int set_vgb_entry_after(struct vgb_list *lst, const int idx, struct vgb_entry *n
 int vgb_list_add(struct vgb_list *lst, struct vgb_entry *new_entry);
 
 /**
- *
+ * Name: iteration_reset
+ * Desc: Resets the internal iteration fields of the given vgb_list struct.
+ * Arg1: struct vgb_list *lst(the vgb_list to reset the iteration fields for)
  */
 void iteration_reset(struct vgb_list *lst);
 
 /**
- *
+ * Name: iteration_next
+ * Desc: Moves the internal list iteration ahead one position.
+ * Arg1: struct vgb_list *lst(the vgb_list to advance the iteration fields for)
  */
 struct vgb_entry *iteration_next(struct vgb_list *lst);

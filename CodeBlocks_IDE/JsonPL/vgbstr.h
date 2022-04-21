@@ -11,53 +11,53 @@
 #endif // SANITY_CHECK_SZ
 
 /**
-* A structure used to hold information about a string of characters.
-*/
+ * A structure used to hold information about a string of characters.
+ */
 struct vgb_str
 {
-    int id;
-    int hint;
-    char *str;
-    int str_len ;
-    int str_szof_len;
-    int str_itm_len;
+    int id;                 //The unique id of the vgb_str class
+    int hint;               //A hint field with no predetermined use
+    char *str;              //The char *str that this struct wraps
+    int str_len ;           //The length of the string, not including \0
+    int str_szof_len;       //The length of the string including \0
+    int str_itm_len;        //The size of one item of the string, should be 1
 };
 
 /**
- * Name: set_vgb_c
+ * Name: set_vgb_str_c
  * Desc: Sets the specified character of a vgb_str.
  * Arg1: vgb_str *str(target string)
  * Arg2: const int idx(the index to set the character for)
  * Arg3: const char *c(the new character to use to update the target string)
  * Returns: {0 | 1}
  */
-int set_vgb_c(struct vgb_str *str, const int idx, const char *c);
+int set_vgb_str_c(struct vgb_str *str, const int idx, const char *c);
 
 /**
- * Name: get_vgb_c
+ * Name: get_vgb_str_c
  * Desc: Gets the specified character of a vgb_str.
  * Arg1: vgb_str *str(target string)
  * Arg2: const int idx(the index to get the character for)
  * Arg3: const char *c(the character found at the specified index)
  * Returns: {0 | 1}
  */
-int get_vgb_c(const struct vgb_str *str, const int idx, char *c);
+int get_vgb_str_c(const struct vgb_str *str, const int idx, char *c);
 
 /**
- * Name: vgb_is_err
+ * Name: vgb_str_is_err
  * Desc: Determines if the given vgb_str is in an error state.
  * Arg1: vgb_str *str(target string)
  * Returns: {0 | 1}
  */
-int vgb_is_err(const struct vgb_str *str);
+int vgb_str_is_err(const struct vgb_str *str);
 
 /**
- * Name: vgb_is_err
+ * Name: vgb_str_is_null
  * Desc: Determines if the given vgb_str is null.
  * Arg1: vgb_str *str(target string)
  * Returns: {0 | 1}
  */
-int vgb_is_null(const struct vgb_str* str);
+int vgb_str_is_null(const struct vgb_str* str);
 
 /**
  * Name: get_def_vgb_str

@@ -9,13 +9,14 @@
 	"vgbhash.h"
 	"vgbbin.h"
 
-1650027827 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.h
+1650401866 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.h
 
-1650027815 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.c
+1650389535 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbstr.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	"vgbstr.h"
+	"vgbmem.h"
 	"vgb_logger.h"
 
 1649706493 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbutil.c
@@ -26,19 +27,20 @@
 
 1649706624 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbutil.h
 
-1650136237 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.c
+1650489621 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
+	"vgbmem.h"
 	"vgblist.h"
 	"vgb_logger.h"
 
-1650136154 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.h
+1650403170 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgblist.h
 
-1649889047 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.h
-	"vgblist.h"
+1650379521 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.h
+	"constants.h"
 
-1649889031 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.c
+1650377821 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_logger.c
 	<stdlib.h>
 	<stdio.h>
 	<stdarg.h>
@@ -48,7 +50,7 @@
 
 1649708082 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_system_function_handler_jpl.c
 
-1650133367 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbhash.c
+1650403304 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbhash.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -56,35 +58,67 @@
 	"vgbhash.h"
 	"vgb_logger.h"
 
-1650133142 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbhash.h
+1650403222 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbhash.h
 	"vgblist.h"
 	"vgbstr.h"
 
-1650132771 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_utils.c
+1650569900 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_utils.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
 
-1650133421 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbbin.c
+1650387762 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbbin.c
 	<stdlib.h>
 	<string.h>
 	<math.h>
 	"vgbbin.h"
 
-1650133140 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbbin.h
+1650387712 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbbin.h
 
-1650136206 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_file_loader.c
+1650377932 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_file_loader.c
 	<stdlib.h>
 	<stdio.h>
+	"constants.h"
 	"vgb_file_loader.h"
 
-1650134487 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_file_loader.h
+1650375429 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_file_loader.h
 	"vgbstr.h"
 	"vgblist.h"
 
-1650137371 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_file_unloader.c
+1650286438 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_file_unloader.c
 	<stdlib.h>
 	<stdio.h>
 	"vgb_file_unloader.h"
 
-1650136685 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_file_unloader.h
+1650286437 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_file_unloader.h
 	"vgbstr.h"
 	"vgblist.h"
+
+1650571162 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\jsonpl.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	"vgbmem.h"
+	"vgbstr.h"
+	"vgblist.h"
+	"vgb_logger.h"
+	"vgbhash.h"
+	"vgbbin.h"
+	"vgb_utils.h"
+
+1650379632 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\constants.h
+
+1650398349 source:c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbmem.c
+	<stdlib.h>
+	<stdio.h>
+	"vgbmem.h"
+	"vgb_logger.h"
+	"vgbstr.h"
+	"vgblist.h"
+
+1650398364 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgbmem.h
+	"constants.h"
+	"vgblist.h"
+
+1650569140 c:\users\variable\documents\github\jsonpl\codeblocks_ide\jsonpl\vgb_utils.h
 

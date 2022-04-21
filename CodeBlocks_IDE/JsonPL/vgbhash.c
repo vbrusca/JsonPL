@@ -31,7 +31,7 @@
 #endif // vgb_logger_h
 
 /**
- *
+ * TODO
  */
 int hash_func_int(const int v)
 {
@@ -40,12 +40,12 @@ int hash_func_int(const int v)
     {
         tmp *= -1;
     }
-    tmp = (tmp + HASH_ADJUST) % DEFAULT_HASH_SIZE;
+    tmp = (tmp + HASH_ADJUST) % DEFAULT_HASH_BLOCK_SIZE;
     return tmp;
 }
 
 /**
- *
+ * TODO
  */
 int hash_func_str(const char *str, const int len)
 {
@@ -65,7 +65,7 @@ int hash_func_str(const char *str, const int len)
 }
 
 /**
- *
+ * TODO
  */
 int hash_func_vstr(const struct vgb_str *vstr)
 {
@@ -86,7 +86,7 @@ int hash_func_vstr(const struct vgb_str *vstr)
 }
 
 /**
- *
+ * TODO
  */
 int init_vgb_hash(struct vgb_str *vstr)
 {
@@ -94,8 +94,9 @@ int init_vgb_hash(struct vgb_str *vstr)
 }
 
 /**
- *
+ * TODO
  */
+/*
 int init_vgb_hash_entry(struct vgb_hash *hsh, const int idx)
 {
     if(hsh == NULL)
@@ -107,13 +108,15 @@ int init_vgb_hash_entry(struct vgb_hash *hsh, const int idx)
     {
         return 0;
     }
-
+*/
+    /*
     if(idx >= hsh->length)
     {
         return 0;
     }
 
     struct vgb_list *lst = create_vgb_list();
+    */
 
     /*
     printf("0 addr: %p %p, id: %d\n", &lst, lst, lst->id);
@@ -135,6 +138,6 @@ int init_vgb_hash_entry(struct vgb_hash *hsh, const int idx)
     printf("3 addr: %p %p, id: %d\n", &(hsh->data)[idx], (hsh->data)[idx], ((hsh->data)[idx])->id);
     */
 
-    (hsh->data)[idx] = lst;
-    return 1;
-}
+    //(hsh->data)[idx] = lst;
+//    return 1;
+//}

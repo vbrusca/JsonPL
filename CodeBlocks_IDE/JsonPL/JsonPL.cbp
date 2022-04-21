@@ -32,6 +32,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="constants.h">
+			<Option virtualFolder="com.middlemind.JsonPL/Headers/" />
+		</Unit>
 		<Unit filename="jsonpl.c">
 			<Option compilerVar="CC" />
 			<Option virtualFolder="com.middlemind.JsonPL/" />
@@ -96,6 +99,13 @@
 			<Option virtualFolder="com.middlemind.JsonPL/Sources/" />
 		</Unit>
 		<Unit filename="vgblist.h">
+			<Option virtualFolder="com.middlemind.JsonPL/Headers/" />
+		</Unit>
+		<Unit filename="vgbmem.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="com.middlemind.JsonPL/Sources/" />
+		</Unit>
+		<Unit filename="vgbmem.h">
 			<Option virtualFolder="com.middlemind.JsonPL/Headers/" />
 		</Unit>
 		<Unit filename="vgbstr.c">

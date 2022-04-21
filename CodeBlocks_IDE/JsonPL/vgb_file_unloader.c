@@ -23,7 +23,7 @@
 * @param str The string to write to the file.
 * @throws IOException An IO exception is thrown if there is a file error.
 */
-int WriteStr(char *file, char *str)
+int WriteStr(const char *file, const char *str)
 {
     if(file == NULL)
     {
@@ -54,7 +54,7 @@ int WriteStr(char *file, char *str)
 * @param strs The list of strings to write to the file.
 * @throws IOException An IO exception is thrown if there is a file error.
 */
-int WriteList(char *file, struct vgb_list *strs)
+int WriteList(const char *file, struct vgb_list *strs)
 {
     if(file == NULL)
     {
@@ -100,7 +100,7 @@ int WriteList(char *file, struct vgb_list *strs)
 * @param buff The byte array to write to the file.
 * @throws IOException An IO exception is thrown if there is a file error.
 */
-int WriteBuffer(char *file, char *buff)
+int WriteBuffer(const char *file, const char *buff)
 {
     if(file == NULL)
     {

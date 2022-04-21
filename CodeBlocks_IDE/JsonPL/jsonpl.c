@@ -15,6 +15,11 @@
 #endif // string_h
 
 //VGB INCLUDES
+#ifndef vgbmem_h
+    #include "vgbmem.h"
+    #define vgbmem_h
+#endif // vgbmem_h
+
 #ifndef vgbstr_h
     #include "vgbstr.h"
     #define vgbstr_h
@@ -40,6 +45,11 @@
     #define vgbbin_h
 #endif // vgbbin_h
 
+#ifndef vgb_utils_h
+    #include "vgb_utils.h"
+    #define vgb_utils_h
+#endif // vgb_utils_h
+
 /*
 functions that use these functions
     create_vgb_list
@@ -59,17 +69,22 @@ pointers after they are done being used
 /**
 *
 */
-void test_str();
+void test_str2(void);
 
 /**
 *
 */
-void test_list();
+void test_str(void);
 
 /**
 *
 */
-void test_hash();
+void test_list(void);
+
+/**
+*
+*/
+void test_hash(void);
 
 /**
 *
@@ -80,17 +95,211 @@ int main()
 
     //test_str();
     //test_list();
-    test_hash();
+    //test_hash();
+    test_str2();
 
     vgb_mmgr_cleanup();
     return 0;
 }
 
+void test_str2(void)
+{
+    ////////////////////////////////////////////////////////////////////////////
+    int res = FALSE;
+    struct vgb_str *vstr = get_def_vgb_str();
+    res = init_vgb_str(vstr, "Hello World", 11, 1);
+    if(res == FALSE)
+    {
+        printf("test_str2: Error: init_vgb_str failed.");
+        return;
+    }
+
+    print_ptr_info_str(vstr->str);
+    print_vgb_str(vstr);
+    print_ptr_info(vstr);
+
+    int str_len = (int)strlen(vstr->str);
+    int str_flen = (str_len + 1);
+    int str_ilen = (int)sizeof(vstr->str[0]);
+    printf("String Length: %d String Full Length: %d String Item Length: %d\n", str_len, str_flen, str_ilen);
+
+    if(str_len != vstr->str_len)
+    {
+        wrlErr("Test 1: FAIL: String length does NOT match, %d vs %d", str_len, vstr->str_len);
+    }
+    else
+    {
+        wrl("Test 1: PASS: String length does match, %d vs %d", str_len, vstr->str_len);
+    }
+
+    if(str_flen != vstr->str_szof_len)
+    {
+        wrlErr("Test 2: FAIL: String length does NOT match, %d vs %d", str_flen, vstr->str_szof_len);
+    }
+    else
+    {
+        wrl("Test 2: PASS: String length does match, %d vs %d", str_flen, vstr->str_szof_len);
+    }
+
+    if(str_ilen != vstr->str_itm_len)
+    {
+        wrlErr("Test 3: FAIL: String length does NOT match, %d vs %d", str_ilen, vstr->str_itm_len);
+    }
+    else
+    {
+        wrl("Test 3: PASS: String length does match, %d vs %d", str_ilen, vstr->str_itm_len);
+    }
+
+    char c = 'A';
+    res = get_vgb_str_c(vstr, 0, &c);
+    if(res == FALSE)
+    {
+        printf("test_str2: Error: get_vgb_str_c failed.");
+        return;
+    }
+
+    if(c != 'H')
+    {
+        wrlErr("Test 4: FAIL: Character at index %d does NOT match, %d vs %d", 0, c, 'H');
+    }
+    else
+    {
+        wrl("Test 4: PASS: Character at index %d does match, %c vs %c", 0, c, 'H');
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    struct vgb_str *vstr2 = get_def_vgb_str();
+    res = init_vgb_str(vstr2, "I MISS YOU", 10, 1);
+    if(res == FALSE)
+    {
+        printf("test_str2: Error: init_vgb_str failed.");
+        return;
+    }
+
+    print_ptr_info_str(vstr2->str);
+    print_vgb_str(vstr2);
+    print_ptr_info(vstr2);
+
+    str_len = (int)strlen(vstr2->str);
+    str_flen = (str_len + 1);
+    str_ilen = (int)sizeof(vstr2->str[0]);
+    printf("String Length: %d String Full Length: %d String Item Length: %d\n", str_len, str_flen, str_ilen);
+
+    if(str_len != vstr2->str_len)
+    {
+        wrlErr("Test 5: FAIL: String length does NOT match, %d vs %d", str_len, vstr2->str_len);
+    }
+    else
+    {
+        wrl("Test 5: PASS: String length does match, %d vs %d", str_len, vstr2->str_len);
+    }
+
+    if(str_flen != vstr2->str_szof_len)
+    {
+        wrlErr("Test 6: FAIL: String length does NOT match, %d vs %d", str_flen, vstr2->str_szof_len);
+    }
+    else
+    {
+        wrl("Test 6: PASS: String length does match, %d vs %d", str_flen, vstr2->str_szof_len);
+    }
+
+    if(str_ilen != vstr2->str_itm_len)
+    {
+        wrlErr("Test 7: FAIL: String length does NOT match, %d vs %d", str_ilen, vstr2->str_itm_len);
+    }
+    else
+    {
+        wrl("Test 7: PASS: String length does match, %d vs %d", str_ilen, vstr2->str_itm_len);
+    }
+
+    c = 'A';
+    res = get_vgb_str_c(vstr2, 0, &c);
+    if(res == FALSE)
+    {
+        printf("test_str2: Error: get_vgb_str_c failed.");
+        return;
+    }
+
+    if(c != 'I')
+    {
+        wrlErr("Test 8: FAIL: Character at index %d does NOT match, %d vs %d", 0, c, 'I');
+    }
+    else
+    {
+        wrl("Test 8: PASS: Character at index %d does match, %c vs %c", 0, c, 'I');
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    struct vgb_str *vstr3 = concat_vgb_str(vstr, vstr2);
+    res = init_vgb_str(vstr2, "I MISS YOU", 10, 1);
+    if(res == FALSE)
+    {
+        printf("test_str2: Error: init_vgb_str failed.");
+        return;
+    }
+
+    print_ptr_info_str(vstr2->str);
+    print_vgb_str(vstr2);
+    print_ptr_info(vstr2);
+
+    str_len = (int)strlen(vstr2->str);
+    str_flen = (str_len + 1);
+    str_ilen = (int)sizeof(vstr2->str[0]);
+    printf("String Length: %d String Full Length: %d String Item Length: %d\n", str_len, str_flen, str_ilen);
+
+    if(str_len != vstr2->str_len)
+    {
+        wrlErr("Test 5: FAIL: String length does NOT match, %d vs %d", str_len, vstr2->str_len);
+    }
+    else
+    {
+        wrl("Test 5: PASS: String length does match, %d vs %d", str_len, vstr2->str_len);
+    }
+
+    if(str_flen != vstr2->str_szof_len)
+    {
+        wrlErr("Test 6: FAIL: String length does NOT match, %d vs %d", str_flen, vstr2->str_szof_len);
+    }
+    else
+    {
+        wrl("Test 6: PASS: String length does match, %d vs %d", str_flen, vstr2->str_szof_len);
+    }
+
+    if(str_ilen != vstr2->str_itm_len)
+    {
+        wrlErr("Test 7: FAIL: String length does NOT match, %d vs %d", str_ilen, vstr2->str_itm_len);
+    }
+    else
+    {
+        wrl("Test 7: PASS: String length does match, %d vs %d", str_ilen, vstr2->str_itm_len);
+    }
+
+    c = 'A';
+    res = get_vgb_str_c(vstr2, 0, &c);
+    if(res == FALSE)
+    {
+        printf("test_str2: Error: get_vgb_str_c failed.");
+        return;
+    }
+
+    if(c != 'I')
+    {
+        wrlErr("Test 8: FAIL: Character at index %d does NOT match, %d vs %d", 0, c, 'I');
+    }
+    else
+    {
+        wrl("Test 8: PASS: Character at index %d does match, %c vs %c", 0, c, 'I');
+    }
+
+    vstr3 = concat_2_vgb_str(vstr, get_spc_vgb_str(), vstr2);
+}
+
 /**
 *
 */
-void test_hash()
+void test_hash(void)
 {
+    /*
     int i1 = 10235;
     int h1 = hash_func_int(i1);
     printf("hash_func_int in %d result %d\n", i1, h1);
@@ -185,12 +394,13 @@ void test_hash()
     int target = 32;
     int fidx = binsearch(itmp2, 0, (len - 1), target);
     printf("Found target %d at idx %d %p\n", target, fidx, sizeof(&itmp2));
+    */
 }
 
 /**
 *
 */
-void test_list()
+void test_list(void)
 {
     struct vgb_list lst;
     lst.id = VGB_LIST_ID;
@@ -271,7 +481,7 @@ void test_str(void)
     printf(">>=========================================<<\n");
     print_vgb_str(def1);
 
-    if(vgb_is_null(def1))
+    if(vgb_str_is_null(def1))
     {
         printf("vgb_str is NULL\n");
     }
@@ -280,7 +490,7 @@ void test_str(void)
         printf("vgb_str is NOT NULL\n");
     }
 
-    if(vgb_is_err(def1))
+    if(vgb_str_is_err(def1))
     {
         printf("vgb_str is ERR\n");
     }
@@ -290,7 +500,7 @@ void test_str(void)
     }
 
     def1->str_itm_len = 2;
-    if(vgb_is_err(def1))
+    if(vgb_str_is_err(def1))
     {
         printf("vgb_str is ERR\n");
     }
@@ -363,15 +573,15 @@ void test_str(void)
 
     char lc = 'd';
     int cidx = 0;
-    get_vgb_c(&s1, cidx, &lc);
+    get_vgb_str_c(&s1, cidx, &lc);
     printf("test_str: Found char %c at position %d\n", lc, cidx);
 
     cidx = 1;
-    get_vgb_c(&s1, cidx, &lc);
+    get_vgb_str_c(&s1, cidx, &lc);
     printf("test_str: Found char %c at position %d\n", lc, cidx);
 
     cidx = 0;
-    set_vgb_c(&s1, cidx, &lc);
+    set_vgb_str_c(&s1, cidx, &lc);
     printf("test_str: Found char %c at position %d\n", lc, cidx);
 
     printf("test_str: Struct Address: %p, Struct Pointer: %p %d %d\n", &s1, ps, (int)sizeof(istr1), (int)sizeof(*s1.str));
