@@ -32,7 +32,7 @@
 
 #ifndef null_char_var
     #define null_char_var
-    struct vgb_str NULL_CHAR = {VGB_STR_ID, 1, "", 0, 1, 1};
+    struct vgb_str VGB_STR_NULL_CHAR = {VGB_STR_ID, 1, "", 0, 1, 1};
 #endif // null_char_var
 
 /**
@@ -43,7 +43,7 @@
  * Arg3: const char *c(the new character to use to update the target string)
  * Returns: {0 | 1}
  */
-int set_vgb_str_c(struct vgb_str *str, const int idx, const char *c)
+int vgb_str_set_c(struct vgb_str *str, const int idx, const char *c)
 {
     if(vgb_str_is_null(str))
     {
@@ -77,7 +77,7 @@ int set_vgb_str_c(struct vgb_str *str, const int idx, const char *c)
  * Arg3: const char *c(the character found at the specified index)
  * Returns: {0 | 1}
  */
-int get_vgb_str_c(const struct vgb_str *str, const int idx, char *c)
+int vgb_str_get_c(const struct vgb_str *str, const int idx, char *c)
 {
     if(vgb_str_is_null(str))
     {
@@ -106,7 +106,7 @@ int get_vgb_str_c(const struct vgb_str *str, const int idx, char *c)
 /**
  * Name: vgb_str_is_err
  * Desc: Determines if the given vgb_str is in an error state.
- * Arg1: vgb_str *str(target string)
+ * Arg1: vgb_str *str(target string to check)
  * Returns: {0 | 1}
  */
 int vgb_str_is_err(const struct vgb_str *str)
@@ -155,11 +155,14 @@ int vgb_str_is_err(const struct vgb_str *str)
 }
 
 /**
- * TODO
+ * Name: vgb_str_has_null
+ * Desc: Determines if the given vgb_str has a null char at the of it's string.
+ * Arg1: vgb_str *str(target string to check)
+ * Returns: {0 | 1}
  */
 int vgb_str_has_null(const struct vgb_str *str)
 {
-    if(vgb_str_is_err())
+    if(vgb_str_is_err(str))
     {
         return FALSE;
     }
@@ -199,7 +202,7 @@ int vgb_str_is_null(const struct vgb_str *str)
  * Desc: Creates a new vgb_str default instance.
  * Returns: vgb_str *
  */
-struct vgb_str *get_def_vgb_str(void)
+struct vgb_str *vgb_str_get_def(void)
 {
     struct vgb_str *def = vgb_malloc(sizeof(struct vgb_str));
     def->id = VGB_STR_ID;
@@ -215,12 +218,12 @@ struct vgb_str *get_def_vgb_str(void)
  * Desc: Creates a new vgb_str instance with one character of space.
  * Returns: vgb_str *
  */
-struct vgb_str *get_spc_vgb_str(void)
+struct vgb_str *vgb_str_get_spc(void)
 {
-    struct vgb_str *def = get_def_vgb_str();
+    struct vgb_str *def = vgb_str_get_def();
     char spc[] = " ";
     int res;
-    res = init_vgb_str(def, (char *)spc, sizeof(spc), sizeof(char));
+    res = vgb_str_init(def, (char *)spc, sizeof(spc), sizeof(char));
     if(res != 1)
     {
         printf("get_spc_vgb_str: Error: Could not initialize vgb_str");
@@ -237,17 +240,17 @@ struct vgb_str *get_spc_vgb_str(void)
  * Arg3: vgb_str *str(source string 3)
  * Returns: {0 | 1}
  */
-int concat_2_vgb_str(struct vgb_str *dest, const struct vgb_str *src1, const struct vgb_str *src2)
+int vgb_str_concat_2(struct vgb_str *dest, const struct vgb_str *src1, const struct vgb_str *src2)
 {
     int res = -1;
-    res = concat_vgb_str((struct vgb_str *)src1, (struct vgb_str *)src2);
+    res = vgb_str_concat((struct vgb_str *)src1, (struct vgb_str *)src2);
     if(!res)
     {
         printf("concat_2_vgb_str: Error: could not concatenate src1 and src2\n");
         return 0;
     }
 
-    res = concat_vgb_str(dest, src1);
+    res = vgb_str_concat(dest, src1);
     if(!res)
     {
         printf("concat_2_vgb_str: Error: could not concatenate dest and src1\n");
@@ -263,7 +266,7 @@ int concat_2_vgb_str(struct vgb_str *dest, const struct vgb_str *src1, const str
  * Arg2: vgb_str *str(source string)
  * Returns: {0 | 1}
  */
-int concat_vgb_str(struct vgb_str *dest, const struct vgb_str *src)
+int vgb_str_concat(struct vgb_str *dest, const struct vgb_str *src)
 {
     if(dest == NULL)
     {
@@ -293,7 +296,7 @@ int concat_vgb_str(struct vgb_str *dest, const struct vgb_str *src)
     char nstr[tlen];
     strcpy(nstr, dest->str);
     strcat(nstr, src->str);
-    return init_vgb_str(dest, nstr, tlen, sizeof(nstr[0]));
+    return vgb_str_init(dest, nstr, tlen, sizeof(nstr[0]));
 }
 
 /**
@@ -305,7 +308,7 @@ int concat_vgb_str(struct vgb_str *dest, const struct vgb_str *src)
  * Arg3: int sz(char data type size in bytes)
  * Returns: {0 | 1}
  */
-int init_vgb_str(struct vgb_str *vstr, const char *str, const int len, const int sz)
+int vgb_str_init(struct vgb_str *vstr, const char *str, const int len, const int sz)
 {
     if(vstr == NULL)
     {
@@ -385,7 +388,7 @@ int init_vgb_str(struct vgb_str *vstr, const char *str, const int len, const int
 
     if(*((*vstr).str + vstr->str_len) != '\0')
     {
-        concat_vgb_str(vstr, &NULL_CHAR);
+        vgb_str_concat(vstr, &VGB_STR_NULL_CHAR);
         printf("init_vgb_str: Warning: Could not find string termination character, adding it now");
     }
     return 1;
@@ -396,7 +399,7 @@ int init_vgb_str(struct vgb_str *vstr, const char *str, const int len, const int
  * Desc: Prints the given vgb_str to standard output.
  * Arg1: vgb_str *vstr(target string)
  */
-void print_vgb_str(struct vgb_str *vstr)
+void vgb_str_print(struct vgb_str *str)
 {
-    printf("vgb_str: id: %d, str: %s, str_itm_len: %d, str_len: %d, str_szof_len: %d\n", vstr->id, vstr->str, vstr->str_itm_len, vstr->str_len, vstr->str_szof_len);
+    printf("vgb_str: id: %d, str: %s, str_itm_len: %d, str_len: %d, str_szof_len: %d\n", str->id, str->str, str->str_itm_len, str->str_len, str->str_szof_len);
 }

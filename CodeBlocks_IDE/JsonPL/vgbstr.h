@@ -31,7 +31,7 @@ struct vgb_str
  * Arg3: const char *c(the new character to use to update the target string)
  * Returns: {0 | 1}
  */
-int set_vgb_str_c(struct vgb_str *str, const int idx, const char *c);
+int vgb_str_set_c(struct vgb_str *str, const int idx, const char *c);
 
 /**
  * Name: get_vgb_str_c
@@ -41,18 +41,21 @@ int set_vgb_str_c(struct vgb_str *str, const int idx, const char *c);
  * Arg3: const char *c(the character found at the specified index)
  * Returns: {0 | 1}
  */
-int get_vgb_str_c(const struct vgb_str *str, const int idx, char *c);
+int vgb_str_get_c(const struct vgb_str *str, const int idx, char *c);
 
 /**
  * Name: vgb_str_is_err
  * Desc: Determines if the given vgb_str is in an error state.
- * Arg1: vgb_str *str(target string)
+ * Arg1: vgb_str *str(target string to check)
  * Returns: {0 | 1}
  */
 int vgb_str_is_err(const struct vgb_str *str);
 
 /**
- * TODO
+ * Name: vgb_str_has_null
+ * Desc: Determines if the given vgb_str has a null char at the of it's string.
+ * Arg1: vgb_str *str(target string to check)
+ * Returns: {0 | 1}
  */
 int vgb_str_has_null(const struct vgb_str *str);
 
@@ -69,14 +72,14 @@ int vgb_str_is_null(const struct vgb_str* str);
  * Desc: Creates a new vgb_str default instance.
  * Returns: vgb_str *
  */
-struct vgb_str *get_def_vgb_str(void);
+struct vgb_str *vgb_str_get_def(void);
 
 /**
  * Name: get_spc_vgb_str
  * Desc: Creates a new vgb_str instance with one character of space.
  * Returns: vgb_str *
  */
-struct vgb_str *get_spc_vgb_str(void);
+struct vgb_str *vgb_str_get_spc(void);
 
 /**
  * Name: concat_2_vgb_str
@@ -86,7 +89,7 @@ struct vgb_str *get_spc_vgb_str(void);
  * Arg3: vgb_str *str(source string 3)
  * Returns: {0 | 1}
  */
-int concat_2_vgb_str(struct vgb_str *dest, const struct vgb_str *src1, const struct vgb_str *src2);
+int vgb_str_concat_2(struct vgb_str *dest, const struct vgb_str *src1, const struct vgb_str *src2);
 
 /**
  * Name: concat_vgb_str
@@ -95,7 +98,7 @@ int concat_2_vgb_str(struct vgb_str *dest, const struct vgb_str *src1, const str
  * Arg2: vgb_str *str(source string)
  * Returns: {0 | 1}
  */
-int concat_vgb_str(struct vgb_str *dest, const struct vgb_str *src);
+int vgb_str_concat(struct vgb_str *dest, const struct vgb_str *src);
 
 /**
  * Name: init_vgb_str
@@ -106,11 +109,11 @@ int concat_vgb_str(struct vgb_str *dest, const struct vgb_str *src);
  * Arg3: int sz(char data type size in bytes)
  * Returns: {0 | 1}
  */
-int init_vgb_str(struct vgb_str *vstr, const char *str, const int len, const int sz);
+int vgb_str_init(struct vgb_str *vstr, const char *str, const int len, const int sz);
 
 /**
  * Name: print_vgb_str
  * Desc: Prints the given vgb_str to standard output.
  * Arg1: vgb_str *vstr(target string)
  */
-void print_vgb_str(struct vgb_str *vstr);
+void vgb_str_print(struct vgb_str *str);

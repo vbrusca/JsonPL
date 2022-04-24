@@ -67,28 +67,28 @@ pointers after they are done being used
 */
 
 /**
-*
-*/
+ * TODO
+ */
 void test_str2(void);
 
 /**
-*
-*/
+ * TODO
+ */
 void test_str(void);
 
 /**
-*
-*/
+ * TODO
+ */
 void test_list(void);
 
 /**
-*
-*/
+ * TODO
+ */
 void test_hash(void);
 
 /**
-*
-*/
+ * TODO
+ */
 int main()
 {
     vgb_mmgr_init();
@@ -102,12 +102,15 @@ int main()
     return 0;
 }
 
+/**
+ * TODO
+ */
 void test_str2(void)
 {
-    ////////////////////////////////////////////////////////////////////////////
+    printf("\n\ntest_str2: 1: ////////////////////////////////////////////////////////////////////////////\n");
     int res = FALSE;
-    struct vgb_str *vstr = get_def_vgb_str();
-    res = init_vgb_str(vstr, "Hello World", 11, 1);
+    struct vgb_str *vstr = vgb_str_get_def();
+    res = vgb_str_init(vstr, "Hello World", 11, 1);
     if(res == FALSE)
     {
         printf("test_str2: Error: init_vgb_str failed.");
@@ -115,7 +118,7 @@ void test_str2(void)
     }
 
     print_ptr_info_str(vstr->str);
-    print_vgb_str(vstr);
+    vgb_str_print(vstr);
     print_ptr_info(vstr);
 
     int str_len = (int)strlen(vstr->str);
@@ -125,33 +128,33 @@ void test_str2(void)
 
     if(str_len != vstr->str_len)
     {
-        wrlErr("Test 1: FAIL: String length does NOT match, %d vs %d", str_len, vstr->str_len);
+        wrl("Test 01: **FAIL**: String length does NOT match, %d vs %d", str_len, vstr->str_len);
     }
     else
     {
-        wrl("Test 1: PASS: String length does match, %d vs %d", str_len, vstr->str_len);
+        wrl("Test 01: PASS: String length does match, %d vs %d", str_len, vstr->str_len);
     }
 
     if(str_flen != vstr->str_szof_len)
     {
-        wrlErr("Test 2: FAIL: String length does NOT match, %d vs %d", str_flen, vstr->str_szof_len);
+        wrl("Test 02: **FAIL**: String length does NOT match, %d vs %d", str_flen, vstr->str_szof_len);
     }
     else
     {
-        wrl("Test 2: PASS: String length does match, %d vs %d", str_flen, vstr->str_szof_len);
+        wrl("Test 02: PASS: String length does match, %d vs %d", str_flen, vstr->str_szof_len);
     }
 
     if(str_ilen != vstr->str_itm_len)
     {
-        wrlErr("Test 3: FAIL: String length does NOT match, %d vs %d", str_ilen, vstr->str_itm_len);
+        wrl("Test 03: **FAIL**: String length does NOT match, %d vs %d", str_ilen, vstr->str_itm_len);
     }
     else
     {
-        wrl("Test 3: PASS: String length does match, %d vs %d", str_ilen, vstr->str_itm_len);
+        wrl("Test 03: PASS: String length does match, %d vs %d", str_ilen, vstr->str_itm_len);
     }
 
     char c = 'A';
-    res = get_vgb_str_c(vstr, 0, &c);
+    res = vgb_str_get_c(vstr, 0, &c);
     if(res == FALSE)
     {
         printf("test_str2: Error: get_vgb_str_c failed.");
@@ -160,16 +163,16 @@ void test_str2(void)
 
     if(c != 'H')
     {
-        wrlErr("Test 4: FAIL: Character at index %d does NOT match, %d vs %d", 0, c, 'H');
+        wrl("Test 04: **FAIL**: Character at index %d does NOT match, %d vs %d", 0, c, 'H');
     }
     else
     {
-        wrl("Test 4: PASS: Character at index %d does match, %c vs %c", 0, c, 'H');
+        wrl("Test 04: PASS: Character at index %d does match, %c vs %c", 0, c, 'H');
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-    struct vgb_str *vstr2 = get_def_vgb_str();
-    res = init_vgb_str(vstr2, "I MISS YOU", 10, 1);
+    printf("\n\ntest_str2: 1: ////////////////////////////////////////////////////////////////////////////\n");
+    struct vgb_str *vstr2 = vgb_str_get_def();
+    res = vgb_str_init(vstr2, "I MISS YOU", 10, 1);
     if(res == FALSE)
     {
         printf("test_str2: Error: init_vgb_str failed.");
@@ -177,7 +180,7 @@ void test_str2(void)
     }
 
     print_ptr_info_str(vstr2->str);
-    print_vgb_str(vstr2);
+    vgb_str_print(vstr2);
     print_ptr_info(vstr2);
 
     str_len = (int)strlen(vstr2->str);
@@ -187,33 +190,33 @@ void test_str2(void)
 
     if(str_len != vstr2->str_len)
     {
-        wrlErr("Test 5: FAIL: String length does NOT match, %d vs %d", str_len, vstr2->str_len);
+        wrl("Test 05: **FAIL**: String length does NOT match, %d vs %d", str_len, vstr2->str_len);
     }
     else
     {
-        wrl("Test 5: PASS: String length does match, %d vs %d", str_len, vstr2->str_len);
+        wrl("Test 05: PASS: String length does match, %d vs %d", str_len, vstr2->str_len);
     }
 
     if(str_flen != vstr2->str_szof_len)
     {
-        wrlErr("Test 6: FAIL: String length does NOT match, %d vs %d", str_flen, vstr2->str_szof_len);
+        wrl("Test 06: **FAIL**: String length does NOT match, %d vs %d", str_flen, vstr2->str_szof_len);
     }
     else
     {
-        wrl("Test 6: PASS: String length does match, %d vs %d", str_flen, vstr2->str_szof_len);
+        wrl("Test 06: PASS: String length does match, %d vs %d", str_flen, vstr2->str_szof_len);
     }
 
     if(str_ilen != vstr2->str_itm_len)
     {
-        wrlErr("Test 7: FAIL: String length does NOT match, %d vs %d", str_ilen, vstr2->str_itm_len);
+        wrl("Test 07: **FAIL**: String length does NOT match, %d vs %d", str_ilen, vstr2->str_itm_len);
     }
     else
     {
-        wrl("Test 7: PASS: String length does match, %d vs %d", str_ilen, vstr2->str_itm_len);
+        wrl("Test 07: PASS: String length does match, %d vs %d", str_ilen, vstr2->str_itm_len);
     }
 
     c = 'A';
-    res = get_vgb_str_c(vstr2, 0, &c);
+    res = vgb_str_get_c(vstr2, 0, &c);
     if(res == FALSE)
     {
         printf("test_str2: Error: get_vgb_str_c failed.");
@@ -222,60 +225,67 @@ void test_str2(void)
 
     if(c != 'I')
     {
-        wrlErr("Test 8: FAIL: Character at index %d does NOT match, %d vs %d", 0, c, 'I');
+        wrl("Test 08: **FAIL**: Character at index %d does NOT match, %d vs %d", 0, c, 'I');
     }
     else
     {
-        wrl("Test 8: PASS: Character at index %d does match, %c vs %c", 0, c, 'I');
+        wrl("Test 08: PASS: Character at index %d does match, %c vs %c", 0, c, 'I');
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-    struct vgb_str *vstr3 = concat_vgb_str(vstr, vstr2);
-    res = init_vgb_str(vstr2, "I MISS YOU", 10, 1);
+    printf("\n\ntest_str2: 1: ////////////////////////////////////////////////////////////////////////////\n");
+    struct vgb_str *vstr3 = vgb_str_get_def();
+    res = vgb_str_init(vstr3, "I MISS YOU", 10, 1);
     if(res == FALSE)
     {
         printf("test_str2: Error: init_vgb_str failed.");
         return;
     }
 
-    print_ptr_info_str(vstr2->str);
-    print_vgb_str(vstr2);
-    print_ptr_info(vstr2);
+    res = vgb_str_concat(vstr3, vstr2);
+    if(res == FALSE)
+    {
+        printf("test_str2: Error: concat_vgb_str failed.");
+        return;
+    }
 
-    str_len = (int)strlen(vstr2->str);
+    print_ptr_info_str(vstr3->str);
+    vgb_str_print(vstr3);
+    print_ptr_info(vstr3);
+
+    str_len = (int)strlen(vstr3->str);
     str_flen = (str_len + 1);
-    str_ilen = (int)sizeof(vstr2->str[0]);
+    str_ilen = (int)sizeof(vstr3->str[0]);
     printf("String Length: %d String Full Length: %d String Item Length: %d\n", str_len, str_flen, str_ilen);
 
-    if(str_len != vstr2->str_len)
+    if(str_len != vstr3->str_len)
     {
-        wrlErr("Test 5: FAIL: String length does NOT match, %d vs %d", str_len, vstr2->str_len);
+        wrl("Test 09: **FAIL**: String length does NOT match, %d vs %d", str_len, vstr3->str_len);
     }
     else
     {
-        wrl("Test 5: PASS: String length does match, %d vs %d", str_len, vstr2->str_len);
+        wrl("Test 09: PASS: String length does match, %d vs %d", str_len, vstr3->str_len);
     }
 
-    if(str_flen != vstr2->str_szof_len)
+    if(str_flen != vstr3->str_szof_len)
     {
-        wrlErr("Test 6: FAIL: String length does NOT match, %d vs %d", str_flen, vstr2->str_szof_len);
+        wrl("Test 10: **FAIL**: String length does NOT match, %d vs %d", str_flen, vstr3->str_szof_len);
     }
     else
     {
-        wrl("Test 6: PASS: String length does match, %d vs %d", str_flen, vstr2->str_szof_len);
+        wrl("Test 10: PASS: String length does match, %d vs %d", str_flen, vstr3->str_szof_len);
     }
 
-    if(str_ilen != vstr2->str_itm_len)
+    if(str_ilen != vstr3->str_itm_len)
     {
-        wrlErr("Test 7: FAIL: String length does NOT match, %d vs %d", str_ilen, vstr2->str_itm_len);
+        wrl("Test 11: **FAIL**: String length does NOT match, %d vs %d", str_ilen, vstr3->str_itm_len);
     }
     else
     {
-        wrl("Test 7: PASS: String length does match, %d vs %d", str_ilen, vstr2->str_itm_len);
+        wrl("Test 11: PASS: String length does match, %d vs %d", str_ilen, vstr3->str_itm_len);
     }
 
     c = 'A';
-    res = get_vgb_str_c(vstr2, 0, &c);
+    res = vgb_str_get_c(vstr3, 0, &c);
     if(res == FALSE)
     {
         printf("test_str2: Error: get_vgb_str_c failed.");
@@ -284,19 +294,117 @@ void test_str2(void)
 
     if(c != 'I')
     {
-        wrlErr("Test 8: FAIL: Character at index %d does NOT match, %d vs %d", 0, c, 'I');
+        wrl("Test 12: **FAIL**: Character at index %d does NOT match, %d vs %d", 0, c, 'I');
     }
     else
     {
-        wrl("Test 8: PASS: Character at index %d does match, %c vs %c", 0, c, 'I');
+        wrl("Test 12: PASS: Character at index %d does match, %c vs %c", 0, c, 'I');
     }
 
-    vstr3 = concat_2_vgb_str(vstr, get_spc_vgb_str(), vstr2);
+    printf("\n\ntest_str2: 1: ////////////////////////////////////////////////////////////////////////////\n");
+    struct vgb_str *vstr4 = vgb_str_get_def();
+    res = vgb_str_init(vstr4, "HI!", 10, 1);
+    if(res == FALSE)
+    {
+        printf("test_str2: Error: init_vgb_str failed.");
+        return;
+    }
+
+    res = vgb_str_concat_2(vstr4, vgb_str_get_spc(), vstr2);
+    if(res == FALSE)
+    {
+        printf("test_str2: Error: concat_vgb_str failed.");
+        return;
+    }
+
+    print_ptr_info_str(vstr4->str);
+    vgb_str_print(vstr4);
+    print_ptr_info(vstr4);
+
+    str_len = (int)strlen(vstr4->str);
+    str_flen = (str_len + 1);
+    str_ilen = (int)sizeof(vstr4->str[0]);
+    printf("String Length: %d String Full Length: %d String Item Length: %d\n", str_len, str_flen, str_ilen);
+
+    if(str_len != vstr4->str_len)
+    {
+        wrl("Test 13: **FAIL**: String length does NOT match, %d vs %d", str_len, vstr4->str_len);
+    }
+    else
+    {
+        wrl("Test 13: PASS: String length does match, %d vs %d", str_len, vstr4->str_len);
+    }
+
+    if(str_flen != vstr4->str_szof_len)
+    {
+        wrl("Test 14: **FAIL**: String length does NOT match, %d vs %d", str_flen, vstr4->str_szof_len);
+    }
+    else
+    {
+        wrl("Test 14: PASS: String length does match, %d vs %d", str_flen, vstr4->str_szof_len);
+    }
+
+    if(str_ilen != vstr4->str_itm_len)
+    {
+        wrl("Test 15: **FAIL**: String length does NOT match, %d vs %d", str_ilen, vstr4->str_itm_len);
+    }
+    else
+    {
+        wrl("Test 15: PASS: String length does match, %d vs %d", str_ilen, vstr4->str_itm_len);
+    }
+
+    c = 'A';
+    res = vgb_str_get_c(vstr4, 1, &c);
+    if(res == FALSE)
+    {
+        printf("test_str2: Error: get_vgb_str_c failed.");
+        return;
+    }
+
+    if(c != 'I')
+    {
+        wrl("Test 16: **FAIL**: Character at index %d does NOT match, %d vs %d", 1, c, 'I');
+    }
+    else
+    {
+        wrl("Test 16: PASS: Character at index %d does match, %c vs %c", 1, c, 'I');
+    }
+
+    res = vgb_str_has_null(vstr4);
+    if(res == FALSE)
+    {
+        wrl("Test 17: **FAIL**: Error, could NOT find expected null char.");
+    }
+    else
+    {
+        wrl("Test 17: PASS: Could find expected null char.");
+    }
+
+    char tmpc = 'A';
+    res = vgb_str_set_c(vstr4, vstr4->str_len, &tmpc);
+    if(res == FALSE)
+    {
+        wrl("Test 18: PASS: Error, could NOT set last character, %d -> %c.", vstr4->str_len, 'A');
+    }
+    else
+    {
+        wrl("Test 18: **FAIL**: Could set the last character, %d -> %c.", vstr4->str_len, 'A');
+    }
+
+    res = vgb_str_has_null(vstr4);
+    if(res == TRUE)
+    {
+        wrl("Test 19: PASS: Could find expected null char.");
+    }
+    else
+    {
+        wrl("Test 19: **FAIL**: Error, could NOT find expected null char.");
+    }
 }
 
 /**
-*
-*/
+ * TODO
+ */
 void test_hash(void)
 {
     /*
@@ -398,8 +506,8 @@ void test_hash(void)
 }
 
 /**
-*
-*/
+ * TODO
+ */
 void test_list(void)
 {
     struct vgb_list lst;
@@ -473,13 +581,15 @@ void test_list(void)
     printf("List Address: %p\n", &lst);
 }
 
-
+/**
+ * TODO
+ */
 void test_str(void)
 {
-    struct vgb_str *def1 = get_def_vgb_str();
+    struct vgb_str *def1 = vgb_str_get_def();
     wrl("---------------> testing wrl %c", 'C');
     printf(">>=========================================<<\n");
-    print_vgb_str(def1);
+    vgb_str_print(def1);
 
     if(vgb_str_is_null(def1))
     {
@@ -509,9 +619,9 @@ void test_str(void)
         printf("vgb_str is NOT ERR\n");
     }
 
-    struct vgb_str *spc1 = get_spc_vgb_str();
+    struct vgb_str *spc1 = vgb_str_get_spc();
     printf(">>=========================================<<\n");
-    print_vgb_str(spc1);
+    vgb_str_print(spc1);
 
     struct vgb_str vgb_str_def;
     vgb_str_def.id = VGB_STR_ID;
@@ -535,34 +645,34 @@ void test_str(void)
     char istr3[] = " ";
 
     int res;
-    res = init_vgb_str(&s3, istr3, sizeof(istr3), sizeof(char));
+    res = vgb_str_init(&s3, istr3, sizeof(istr3), sizeof(char));
     if(res != 1)
     {
         printf("test_str: Error: Could not initialize 0 vgb_str");
         return;
     }
 
-    res = init_vgb_str(&s1, istr1, sizeof(istr1), sizeof(char));
+    res = vgb_str_init(&s1, istr1, sizeof(istr1), sizeof(char));
     if(res != 1)
     {
         printf("test_str: Error: Could not initialize 1 vgb_str");
         return;
     }
 
-    res = init_vgb_str(&s1, istr1, sizeof(istr1), sizeof(char));
+    res = vgb_str_init(&s1, istr1, sizeof(istr1), sizeof(char));
     if(res != 1)
     {
         printf("test_str: Error: Could not initialize 2 vgb_str");
         return;
     }
 
-    res = init_vgb_str(&s2, istr2, sizeof(istr2), sizeof(char));
+    res = vgb_str_init(&s2, istr2, sizeof(istr2), sizeof(char));
     if(res != 1)
     {
         printf("test_str: Error: Could not initialize 3 vgb_str");
     }
 
-    res = concat_2_vgb_str(&s1, &s3, &s2);
+    res = vgb_str_concat_2(&s1, &s3, &s2);
     if(res != 1)
     {
         printf("test_str: Error: Could not concat vgb_str");
@@ -573,33 +683,33 @@ void test_str(void)
 
     char lc = 'd';
     int cidx = 0;
-    get_vgb_str_c(&s1, cidx, &lc);
+    vgb_str_get_c(&s1, cidx, &lc);
     printf("test_str: Found char %c at position %d\n", lc, cidx);
 
     cidx = 1;
-    get_vgb_str_c(&s1, cidx, &lc);
+    vgb_str_get_c(&s1, cidx, &lc);
     printf("test_str: Found char %c at position %d\n", lc, cidx);
 
     cidx = 0;
-    set_vgb_str_c(&s1, cidx, &lc);
+    vgb_str_set_c(&s1, cidx, &lc);
     printf("test_str: Found char %c at position %d\n", lc, cidx);
 
     printf("test_str: Struct Address: %p, Struct Pointer: %p %d %d\n", &s1, ps, (int)sizeof(istr1), (int)sizeof(*s1.str));
     printf("\n");
     printf("=========================================\n");
-    print_vgb_str(&s3);
+    vgb_str_print(&s3);
 
     printf("\n");
     printf("=========================================\n");
-    print_vgb_str(&s2);
+    vgb_str_print(&s2);
 
     printf("\n");
     printf("=========================================\n");
-    print_vgb_str(&s1);
+    vgb_str_print(&s1);
 
     printf("\n");
     printf("=========================================\n");
-    print_vgb_str(ps);
+    vgb_str_print(ps);
 
     printf("\n");
     printf("\n");
