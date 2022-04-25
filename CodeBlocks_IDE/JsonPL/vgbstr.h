@@ -24,6 +24,41 @@ struct vgb_str
 };
 
 /**
+ * TODO
+ */
+int vgb_str_indexof(const struct vgb_str *str, const char* target);
+
+/**
+ * TODO
+ */
+void vgb_str_cleanup(struct vgb_str **str);
+
+/**
+ * TODO
+ */
+char *vgb_str_contains(const struct vgb_str *str, const char* target);
+
+/**
+ * TODO
+ */
+int vgb_str_lower(struct vgb_str *str);
+
+/**
+ * TODO
+ */
+int vgb_str_upper(struct vgb_str *str);
+
+/**
+ * TODO
+ */
+int vgb_str_split(const struct vgb_str *str, const char *split_on, const int **array_len, struct vgb_str** nstr);
+
+/**
+ * TODO
+ */
+int vgb_str_substr(const struct vgb_str *str, const int idx, const int len, struct vgb_str** nstr);
+
+/**
  * Name: set_vgb_str_c
  * Desc: Sets the specified character of a vgb_str.
  * Arg1: vgb_str *str(target string)

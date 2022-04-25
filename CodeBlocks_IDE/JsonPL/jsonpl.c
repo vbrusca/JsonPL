@@ -400,6 +400,23 @@ void test_str2(void)
     {
         wrl("Test 19: **FAIL**: Error, could NOT find expected null char.");
     }
+
+    vgb_str_print(vstr3);
+    struct vgb_str *sbstr = NULL;
+    res = vgb_str_substr(vstr3, 2, 4, &sbstr);
+    if(res == TRUE)
+    {
+        wrl("Test 20: PASS: Could get substring, %s", sbstr->str);
+    }
+    else
+    {
+        wrl("Test 20: **FAIL**: Error, could NOT get substring %s.", sbstr->str);
+    }
+
+    vgb_str_cleanup(&vstr);
+    vgb_str_cleanup(&vstr2);
+    vgb_str_cleanup(&vstr3);
+    vgb_str_cleanup(&vstr4);
 }
 
 /**

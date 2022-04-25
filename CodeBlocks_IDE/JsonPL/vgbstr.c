@@ -36,7 +36,219 @@
 #endif // null_char_var
 
 /**
- * Name: set_vgb_str_c
+ * TODO
+ */
+int vgb_str_indexof(const struct vgb_str *str, const char* target)
+{
+    if(str == NULL)
+    {
+        printf("vgb_str_contains: Error: str argument is NULL\n");
+        return NULL;
+    }
+
+    if(target == NULL)
+    {
+        printf("vgb_str_contains: Error: target argument is NULL\n");
+        return NULL;
+    }
+
+    int idx = -1;
+    char *ptr = strstr(str->str, target);
+    for(int i = 0; i < str->str_szof_len; i++)
+    {
+        if((str->str + i) == ptr)
+        {
+            idx = i;
+        }
+    }
+    return idx;
+}
+
+
+/**
+ * TODO
+ */
+void vgb_str_cleanup(struct vgb_str **str)
+{
+    if(str != NULL && (*str) != NULL)
+    {
+        vgb_free((*str)->str);
+        vgb_free((*str));
+    }
+}
+
+/**
+ * TODO
+ */
+char *vgb_str_contains(const struct vgb_str *str, const char* target)
+{
+    if(str == NULL)
+    {
+        printf("vgb_str_contains: Error: str argument is NULL\n");
+        return NULL;
+    }
+
+    if(target == NULL)
+    {
+        printf("vgb_str_contains: Error: target argument is NULL\n");
+        return NULL;
+    }
+
+    return strstr(str->str, target);
+}
+
+/**
+ * TODO
+ */
+int vgb_str_lower(struct vgb_str *str)
+{
+    if(str == NULL)
+    {
+        printf("vgb_str_lower: Error: str argument is NULL\n");
+        return 0;
+    }
+
+    str->str = strlwr(str->str);
+    return 1;
+}
+
+/**
+ * TODO
+ */
+int vgb_str_upper(struct vgb_str *str)
+{
+    if(str == NULL)
+    {
+        printf("vgb_str_upper: Error: str argument is NULL\n");
+        return 0;
+    }
+
+    str->str = strupr(str->str);
+    return 1;
+}
+
+/**
+ * TODO
+ */
+int vgb_str_split(const struct vgb_str *str, const char *split_on, const int **array_len, struct vgb_str **nstr)
+{
+    if(str == NULL)
+    {
+        printf("vgb_str_split: Error: str argument is NULL\n");
+        return 0;
+    }
+
+    if(split_on == NULL)
+    {
+        printf("vgb_str_split: Error: split_on argument is NULL\n");
+        return 0;
+    }
+
+    char *token = NULL;
+    int tok_cnt = 0;
+    int res = 1;
+    int nlen = 0;
+
+    strtok(str->str, split_on);
+    tok_cnt += 1;
+
+    //loop through the string to extract all other tokens
+    while(token != NULL)
+    {
+        strtok(str->str, split_on);
+        tok_cnt += 1;
+    }
+
+    struct vgb_str **tokens = vgb_malloc(tok_cnt);
+    token = NULL;
+    tok_cnt = 0;
+
+    token = strtok(str->str, split_on);
+    tokens[tok_cnt] = vgb_str_get_def();
+    nlen = (strlen(token) + 1);
+    res = vgb_str_init(tokens[tok_cnt], token, nlen, 1);
+    if(!res)
+    {
+        printf("vgb_str_split: Error: vgb_str_init failed\n");
+        return 0;
+    }
+    tok_cnt += 1;
+
+    //loop through the string to extract all other tokens
+    while(token != NULL)
+    {
+        token = strtok(str->str, split_on);
+        tokens[tok_cnt] = vgb_str_get_def();
+        nlen = (strlen(token) + 1);
+        res = vgb_str_init(tokens[tok_cnt], token, nlen, 1);
+        if(!res)
+        {
+            printf("vgb_str_split: Error: vgb_str_init failed\n");
+            return 0;
+        }
+        tok_cnt += 1;
+    }
+
+    *array_len = &tok_cnt;
+    *nstr = *tokens;
+    return 1;
+}
+
+/**
+ * TODO
+ */
+int vgb_str_substr(const struct vgb_str *str, const int idx, const int len, struct vgb_str** nstr)
+{
+    if(str == NULL)
+    {
+        printf("vgb_str_substr: Error: str argument is NULL\n");
+        return 0;
+    }
+
+    if(idx < 0)
+    {
+        printf("vgb_str_substr: Error: invalid idx argument\n");
+        return 0;
+    }
+
+    if(len <= 0)
+    {
+        printf("vgb_str_substr: Error: invalid len argument, less than zero\n");
+        return 0;
+    }
+
+    if(len >= str->str_szof_len)
+    {
+        printf("vgb_str_substr: Error: invalid len argument %d vs %d\n", str->str_len, str->str_szof_len);
+        return 0;
+    }
+
+    int res = 1;
+    int nlen = (len + 1);
+    char *tstr = vgb_malloc(nlen);
+    for(int i = 0; i < len; i++)
+    {
+        //tstr[i] = str->str[i];
+        *(tstr + i) = *((*str).str + i);
+    }
+    //tstr[len] = '\0';
+    *(tstr + len) = '\0';
+    //printf("qqq '%s'\n", tstr);
+
+    struct vgb_str *ret = vgb_str_get_def();
+    res = vgb_str_init(ret, tstr, nlen, 1);
+    if(!res)
+    {
+        printf("vgb_str_substr: Error: vgb_str_init failed\n");
+        return 0;
+    }
+
+    *nstr = ret;
+    return 1;
+}
+
+/**
+ * Name: vgb_str_set_c
  * Desc: Sets the specified character of a vgb_str.
  * Arg1: vgb_str *str(target string)
  * Arg2: const int idx(the index to set the character for)
@@ -47,20 +259,20 @@ int vgb_str_set_c(struct vgb_str *str, const int idx, const char *c)
 {
     if(vgb_str_is_null(str))
     {
-        printf("set_vgb_str_c: Error: vgb_str argument is NULL\n");
+        printf("vgb_str_set_c: Error: vgb_str argument is NULL\n");
         return 0;
     }
 
     if(vgb_str_is_err(str))
     {
-        printf("set_vgb_str_c: Error: vgb_str argument is ERR\n");
+        printf("vgb_str_set_c: Error: vgb_str argument is ERR\n");
         return 0;
     }
 
     if(idx < str->str_len && idx >= 0)
     {
         *((*str).str + idx) = *c;
-        printf("set_vgb_str_c: set char at idx %d to %c\n", idx, *c);
+        printf("vgb_str_set_c: set char at idx %d to %c\n", idx, *c);
         return 1;
     }
     else
@@ -70,7 +282,7 @@ int vgb_str_set_c(struct vgb_str *str, const int idx, const char *c)
 }
 
 /**
- * Name: get_vgb_str_c
+ * Name: vgb_str_get_c
  * Desc: Gets the specified character of a vgb_str.
  * Arg1: vgb_str *str(target string)
  * Arg2: const int idx(the index to get the character for)
@@ -81,13 +293,13 @@ int vgb_str_get_c(const struct vgb_str *str, const int idx, char *c)
 {
     if(vgb_str_is_null(str))
     {
-        printf("get_vgb_str_c: Error: vgb_str argument is NULL\n");
+        printf("vgb_str_get_c: Error: vgb_str argument is NULL\n");
         return 0;
     }
 
     if(vgb_str_is_err(str))
     {
-        printf("get_vgb_str_c: Error: vgb_str argument is ERR\n");
+        printf("vgb_str_get_c: Error: vgb_str argument is ERR\n");
         return 0;
     }
 
