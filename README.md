@@ -75,6 +75,20 @@ Some details about the scripting language as it exists in version 0.5.1.
 2. JsonPL supports the following conventions, variable declaration, argument definition, assignment, boolean expressions, numeric expressions, if statements, for loops, and return statements.
 3. JsonPL inherently supports late binding and easy transmission of programs as text.
 
+## JsonPL Dynamic Referencing
+JsonPL now has support for dynamic referencing. A reference string has the following composition.
+source(# | $).type(vars | args).name(some string).index(some array index)
+
+You can also reference other variables or arguments using dynamic referencing. Dynamic referencing has the following composition.
+source(# | $).type(vars | args).[source(# | $).type(vars | args).name(some string)](some string).[source(# | $).type(vars | args).name(some string)](some int)
+
+An example is as follows:
+<pre>
+#.vars.[$.vars.name1]
+</pre>
+This example will pull the class variables with the name that matches the value stored in the string function argument name1.
+Using this feature will add a lot of flexibility to how you interact with the language's variable references and values.
+
 ## JsonPL Objects
 In this section we'll take a look at all of the different JSON objects supported by JsonPL. Links to JsonPL object definitions are as follows.
 
