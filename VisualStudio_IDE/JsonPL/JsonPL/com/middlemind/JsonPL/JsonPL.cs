@@ -597,6 +597,18 @@ namespace com.middlemind.JsonPL {
             res = jpl.processRef(tmp, code.funcs[0]);
             jpl.wrObj(res);
 
+            tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.[$.vars.[$.vars.name2]]\"}}";
+            tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+            if (!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }
+            jpl.wr("====================== TEST 12.01: Dynamic Class Variable Reference 2 ======================");
+            jpl.wrObj(tmp);
+            jpl.wr("REF 1:");
+            res = jpl.processRef(tmp, code.funcs[0]);
+            jpl.wrObj(res);
+
          } catch (Exception e) {
             Logger.wrl("Error!");
             Logger.wrlErr(e.ToString());

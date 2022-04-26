@@ -1670,15 +1670,32 @@ public class JsonPlState {
       boolean inDynRef = false;
       ArrayList<String> nvls = new ArrayList<>();
       String tt = null;
+      int obrk = 0;
       for(var k = 0; k < vls.length; k++) {
-         if(inDynRef && vls[k].indexOf("]") != -1) {    
-            inDynRef = false;
+         //this.wr("___________________________________:" + vls[k]);
+         if(inDynRef && vls[k].indexOf("]") != -1) {   
+            obrk--;
+            for(int i = vls[k].indexOf("]") + 1; i < vls[k].length(); i++) {
+               if(vls[k].charAt(i) == ']') {
+                  obrk--;
+               }
+            }
+            
+            //this.wr("___________________________________:NewBracket: " + obrk); 
             tt += "." + vls[k];
-            nvls.add(tt);         
+            if(obrk == 0) {
+               inDynRef = false;
+               nvls.add(tt);  
+            }
          } else if(!inDynRef && vls[k].indexOf("[") != -1) {
+            obrk = 1;
             inDynRef = true;
             tt = vls[k];
          } else if(inDynRef) {
+            if(vls[k].indexOf("[") != -1) {
+               obrk++;
+               //this.wr("___________________________________:NewBracket: " + obrk);            
+            }
             tt += "." + vls[k];
          } else {
             if(vls[k] != null) {
@@ -1691,6 +1708,7 @@ public class JsonPlState {
       for(var k = 0; k < nvls.size(); k++) {
          if(nvls.get(k) != null) {
             vls[k] = nvls.get(k);
+            //this.wr("___________________________________:::" + vls[k]);
          }
       }
       
@@ -1747,9 +1765,8 @@ public class JsonPlState {
             name = c;
             JsonObjSysBase tmp = null;
             //lookup use of string var here
-            if(c.indexOf("[") == 0) {
-               String nc = c.replace("[", "");
-               nc = nc.replace("]", "");
+            if(c.indexOf("[") == 0) {               
+               String nc = c.substring(1, c.length() - 1);
                
                tmp = new JsonObjSysBase();
                tmp.sys = "ref";
@@ -1792,9 +1809,8 @@ public class JsonPlState {
             idx = this.toInt(c);
             JsonObjSysBase tmp = null;
             //lookup use of string var here
-            if(c.indexOf("[") == 0) {
-               String nc = c.replace("[", "");
-               nc = nc.replace("]", "");
+            if(c.indexOf("[") == 0) {               
+               String nc = c.substring(1, c.length() - 1);
                
                tmp = new JsonObjSysBase();
                tmp.sys = "ref";

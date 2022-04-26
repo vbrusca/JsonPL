@@ -1555,16 +1555,32 @@ jsonPlState.prototype.processRef = function(objRef, func) {
    var inDynRef = false;
    var nvls = [];
    var tt = null;
+   var obrk = 0;
    for(var k = 0; k < vls.length; k++) {
       //this.wr("___________________________________:"+ vls[k].indexOf("["));
       if(inDynRef && vls[k].indexOf("]") !== -1) {    
-         inDynRef = false;
+         obrk--;
+         for(var i = vls[k].indexOf("]") + 1; i < vls[k].length; i++) {
+            if(vls[k].charAt(i) === ']') {
+               obrk--;
+            }
+         }
+         
+         //this.wr("___________________________________:NewBracket: " + obrk);                     
          tt += "." + vls[k];
-         nvls.push(tt);         
+         if(obrk === 0) {
+            inDynRef = false;            
+            nvls.push(tt);
+         }
       } else if(!inDynRef && vls[k].indexOf("[") !== -1) {
+         obrk = 1;
          inDynRef = true;
          tt = vls[k];
       } else if(inDynRef) {
+         if(vls[k].indexOf("[") !== -1) {
+            obrk++;            
+            //this.wr("___________________________________:NewBracket: " + obrk);            
+         }
          tt += "." + vls[k];
       } else {
          if(vls[k] !== null) {
@@ -1577,6 +1593,7 @@ jsonPlState.prototype.processRef = function(objRef, func) {
    for(var k = 0; k < nvls.length; k++) {
       if(nvls[k] !== null) {
          vls[k] = nvls[k];
+         //this.wr("___________________________________:" + vls[k]);
       }
    }
          
@@ -1636,8 +1653,7 @@ jsonPlState.prototype.processRef = function(objRef, func) {
          var tmp = null;
          //lookup use of string var here
          if(c.indexOf('[') === 0) {
-            var nc = c.replace('[', '');
-            nc = nc.replace(']', '');
+            var nc = c.substring(1, c.length - 1);
 
             tmp = {};
             tmp.sys = "ref";
@@ -1680,9 +1696,8 @@ jsonPlState.prototype.processRef = function(objRef, func) {
       } else if(!foundIndex) {
          idx = this.toInt(c);
          //lookup use of string var here
-         if(c.indexOf('[') === 0) {
-            var nc = c.replace('[', '');
-            nc = nc.replace('\\]', '');
+         if(c.indexOf('[') === 0) {            
+            var nc = c.substring(1, c.length - 1);
             
             tmp = {};
             tmp.sys = "ref";

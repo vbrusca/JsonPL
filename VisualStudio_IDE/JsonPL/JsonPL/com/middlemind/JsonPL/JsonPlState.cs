@@ -1672,16 +1672,32 @@ namespace com.middlemind.JsonPL {
 
          bool inDynRef = false;
          List<string> nvls = new List<string>();
-         String tt = null;
+         string tt = null;
+         int obrk = 0;
          for (var k = 0; k < vls.Length; k++) {
             if (inDynRef && vls[k].IndexOf("]") != -1) {
-               inDynRef = false;
+               obrk--;
+               for (int i = vls[k].IndexOf("]") + 1; i < vls[k].Length; i++) {
+                  if (vls[k].ToCharArray()[i] == ']') {
+                     obrk--;
+                  }
+               }
+
+               //this.wr("___________________________________:NewBracket: " + obrk); 
                tt += "." + vls[k];
-               nvls.Add(tt);
+               if (obrk == 0) {
+                  inDynRef = false;
+                  nvls.Add(tt);
+               }
             } else if (!inDynRef && vls[k].IndexOf("[") != -1) {
+               obrk = 1;
                inDynRef = true;
                tt = vls[k];
             } else if (inDynRef) {
+               if (vls[k].IndexOf("[") != -1) {
+                  obrk++;
+                  //this.wr("___________________________________:NewBracket: " + obrk);            
+               }
                tt += "." + vls[k];
             } else {
                if (vls[k] != null) {
@@ -1751,8 +1767,10 @@ namespace com.middlemind.JsonPL {
                JsonObjSysBase tmp = null;
                //lookup use of string var here
                if (c.IndexOf("[") == 0) {
-                  string nc = c.Replace("[", "");
-                  nc = nc.Replace("]", "");
+                  //string nc = c.Replace("[", "");
+                  //nc = nc.Replace("]", "");
+                  
+                  string nc = c.Substring(1, c.Length - 2);
 
                   tmp = new JsonObjSysBase();
                   tmp.sys = "ref";
@@ -1796,8 +1814,10 @@ namespace com.middlemind.JsonPL {
                JsonObjSysBase tmp = null;
                //lookup use of string var here
                if (c.IndexOf("[") == 0) {
-                  string nc = c.Replace("[", "");
-                  nc = nc.Replace("]", "");
+                  //string nc = c.Replace("[", "");
+                  //nc = nc.Replace("]", "");
+
+                  string nc = c.Substring(1, c.Length - 2);
 
                   tmp = new JsonObjSysBase();
                   tmp.sys = "ref";

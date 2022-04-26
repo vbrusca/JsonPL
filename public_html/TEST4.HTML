@@ -60,7 +60,16 @@
                            "type": "string",
                            "v": "tmp1"
                         }
-                     }                     
+                     },
+                     {
+                        "sys": "var",
+                        "name": "name2",
+                        "val": {
+                           "sys": "val",
+                           "type": "string",
+                           "v": "name1"
+                        }
+                     }
                   ],
                   "ret": {
                      "sys": "val",
@@ -733,6 +742,17 @@
             jpl.wr("REF 1:");
             res = jpl.processRef(tmp, code.funcs[0]);
             jpl.wrObj(res);            
+            
+            tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.[$.vars.[$.vars.name2]]"}};
+            if(!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }            
+            jpl.wr("====================== TEST 12.01: Dynamic Class Variable Reference ======================");
+            jpl.wrObj(tmp);
+            jpl.wr("REF 1:");
+            res = jpl.processRef(tmp, code.funcs[0]);
+            jpl.wrObj(res);                        
          }
       </script>
    </head>

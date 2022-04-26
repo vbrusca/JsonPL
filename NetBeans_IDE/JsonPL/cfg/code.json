@@ -55,6 +55,15 @@
                   "type": "string",
                   "v": "tmp1"
                }
+            },
+            {
+               "sys": "var",
+               "name": "name2",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": "name1"
+               }
             }
          ],
          "ret": {
