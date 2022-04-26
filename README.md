@@ -28,6 +28,8 @@ Up next:
 
 [JsonPL Objects](#jsonpl-objects)
 
+[JsonPL Dynamic Referencing](#jsonpl-dynamic-referencing)
+
 [JsonPL Examples](#jsonpl-examples)
 
 ## JsonPL Project Files
@@ -77,17 +79,43 @@ Some details about the scripting language as it exists in version 0.5.1.
 
 ## JsonPL Dynamic Referencing
 JsonPL now has support for dynamic referencing. A reference string has the following composition.
-source(# | $).type(vars | args).name(some string).index(some array index)
+<pre>
+source(# | $).
+type(vars | args).
+name(some string).
+index(some array index)
+</pre>
+
+The non-array index form:
+<pre>
+source(# | $).
+type(vars | args).
+name(some string)
+</pre>
 
 You can also reference other variables or arguments using dynamic referencing. Dynamic referencing has the following composition.
-source(# | $).type(vars | args).[source(# | $).type(vars | args).name(some string)](some string).[source(# | $).type(vars | args).name(some string)](some int)
+<pre>
+source(# | $).
+type(vars | args).
+[source(# | $).type(vars | args).name(some string)](some string).
+[source(# | $).type(vars | args).name(some string)](some int)
+</pre>
+
+The non-aaray index form:
+<pre>
+source(# | $).
+type(vars | args).
+[source(# | $).type(vars | args).name(some string)](some string)
+</pre>
 
 An example is as follows:
 <pre>
 #.vars.[$.vars.name1]
 </pre>
+
 This example will pull the class variables with the name that matches the value stored in the string function argument name1.
 Using this feature will add a lot of flexibility to how you interact with the language's variable references and values.
+** Currently only one level is supported in a dynamic reference string and runaway recursion is not protected against so don't use a dynamic reference with a variable that references itself!!
 
 ## JsonPL Objects
 In this section we'll take a look at all of the different JSON objects supported by JsonPL. Links to JsonPL object definitions are as follows.
