@@ -127,7 +127,7 @@ int del_vgb_mem(const struct vgb_list *lst, void *addr)
         mm = tmp->value;
         cnt++;
     }
-    cnt--;
+    //cnt--;
 
     //print_vgb_entry(tmp2);
     //print_vgb_entry(tmp);
@@ -211,23 +211,23 @@ int find_vgb_mem(const struct vgb_list *lst, void *addr, struct vgb_mem **found)
  */
 void vgb_free(void *ptr)
 {
-    //printf("vgb_free: AAA\n");
     struct vgb_mem *mm;
     find_vgb_mem(MMGR, ptr, &mm);
-    //printf("vgb_free: BBB\n");
     if(mm != NULL)
     {
-        mm->ref_cnt -= 1;
-        if(mm->ref_cnt <= 0)
+        if((*mm).ref_cnt > 0)
         {
-            mm->ref_cnt = 0;
-            del_vgb_mem(MMGR, mm->addr);
-            free(mm->addr);
+            (*mm).ref_cnt -= 1;
+        }
+
+        if((*mm).ref_cnt <= 0)
+        {
+            (*mm).ref_cnt = 0;
+            del_vgb_mem(MMGR, (*mm).addr);
+            free((*mm).addr);
         }
     }
-    //printf("vgb_free: CCC\n");
     ptr = NULL;
-    //printf("vgb_free: DDD\n");
 }
 
 /**
@@ -263,6 +263,7 @@ void vgb_free(void *ptr)
         free(tmp2);
         cnt++;
     }
+    printf("del_vgb_list_mem: Cleared %d unused objects from length %d.\n", cnt, len);
     free(lst);
     return 1;
 }
@@ -279,23 +280,31 @@ void *vgb_malloc(size_t size)
     {
         //printf("vgb_malloc: AAA\n");
         struct vgb_mem *mm = malloc(sizeof(struct vgb_mem));
+        (*mm).addr = addr;
+        (*mm).hint = 1;
+        (*mm).id = VGB_MEM_ID;
+        (*mm).ref_cnt = 1;
+        (*mm).len = size;
+
+        /*
         mm->addr = addr;
         mm->hint = 1;
         mm->id = VGB_MEM_ID;
-        mm->ref_cnt = 0;
+        mm->ref_cnt = 1;
         mm->len = size;
+        */
 
         struct vgb_entry *ne = create_vgb_entry_adv(MMGR->length, mm, FALSE);
         int res = vgb_list_add(MMGR, ne);
-
         if(!res)
         {
             wrlErr("vgb_malloc: Error: Could not add new vgb_mem item to the memory manager.");
         }
         else
         {
-            wrl("vgb_malloc: Info: Adding mem entry for addr: %p of size: %d", addr, size);
+            wrl("vgb_malloc: Info: Adding mem entry for addr: %p of size: %d, entry count: %d", addr, size, MMGR->length);
         }
+        print_vgb_list_entries(MMGR);
     }
     return addr;
 }

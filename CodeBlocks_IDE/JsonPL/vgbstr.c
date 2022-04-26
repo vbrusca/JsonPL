@@ -558,7 +558,7 @@ int vgb_str_init(struct vgb_str *vstr, const char *str, const int len, const int
         return 0;
     }
 
-    printf("Found %d %d\n", len, sz);
+    //printf("Found %d %d\n", len, sz);
     int v0 = (sz * len);
     if(v0 >= SANITY_CHECK_LEN)
     {

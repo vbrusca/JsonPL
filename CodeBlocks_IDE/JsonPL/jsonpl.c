@@ -170,7 +170,7 @@ void test_str2(void)
         wrl("Test 04: PASS: Character at index %d does match, %c vs %c", 0, c, 'H');
     }
 
-    printf("\n\ntest_str2: 1: ////////////////////////////////////////////////////////////////////////////\n");
+    printf("\n\ntest_str2: 2: ////////////////////////////////////////////////////////////////////////////\n");
     struct vgb_str *vstr2 = vgb_str_get_def();
     res = vgb_str_init(vstr2, "I MISS YOU", 10, 1);
     if(res == FALSE)
@@ -232,7 +232,7 @@ void test_str2(void)
         wrl("Test 08: PASS: Character at index %d does match, %c vs %c", 0, c, 'I');
     }
 
-    printf("\n\ntest_str2: 1: ////////////////////////////////////////////////////////////////////////////\n");
+    printf("\n\ntest_str2: 3: ////////////////////////////////////////////////////////////////////////////\n");
     struct vgb_str *vstr3 = vgb_str_get_def();
     res = vgb_str_init(vstr3, "I MISS YOU", 10, 1);
     if(res == FALSE)
@@ -301,7 +301,7 @@ void test_str2(void)
         wrl("Test 12: PASS: Character at index %d does match, %c vs %c", 0, c, 'I');
     }
 
-    printf("\n\ntest_str2: 1: ////////////////////////////////////////////////////////////////////////////\n");
+    printf("\n\ntest_str2: 4: ////////////////////////////////////////////////////////////////////////////\n");
     struct vgb_str *vstr4 = vgb_str_get_def();
     res = vgb_str_init(vstr4, "HI!", 10, 1);
     if(res == FALSE)
@@ -401,6 +401,7 @@ void test_str2(void)
         wrl("Test 19: **FAIL**: Error, could NOT find expected null char.");
     }
 
+    printf("\n\ntest_str2: 5: ////////////////////////////////////////////////////////////////////////////\n");
     vgb_str_print(vstr3);
     struct vgb_str *sbstr = NULL;
     res = vgb_str_substr(vstr3, 2, 4, &sbstr);
