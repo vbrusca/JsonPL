@@ -7,12 +7,16 @@ JsonPL the language that nobody yet needs but is good for the following:
 3. Fun to play around with. Try connecting it to AJAX calls and using it as a job control language. Add your own functionality.
 4. Run on any interpreter: Because the code is in JSON object notation the same code can be run on any properly working interpreter so long as the same system level functions are defined in the interpreter or added system method callback event handler. The function signatures also must be the same, these are stored in the class object's system attribute under the key functions.
 
+Recent Updates:
+1. Added initial support for the array data type by including the isSysObjArray and validateSysObjArray functions to the JS, Java, and C# versions of the interpreter.
+2. Added support for dynamic variable refereces to the JS, Java, and C# versions of the interpreter. Now you can use variables in the reference path. For instance to use a variable value as the name of a variable you would use syntax like this, #.vars.[$.vars.name1].
+3. Added array index support to the process reference function, $.vars.some_array.numeric_array_index i.e. $.vars.some_array.1
+
 Up next: 
-1. Python, C, Pascal versions of the base 0.5.1 interpreter and some rigorous testing. (Working on a C version that doesn't use libraries for JSON parsing so it'll take me a little while to get it up an running.)
+1. Python, C, Pascal versions of the base 0.5.1 interpreter and some rigorous testing. (The C version of the 0.5.1 interpreter is coming along. A lot of the base code to handle strings, lists, memory management, etc. is done and ready for testing.)
 2. A preprocessor for added flexibility.
-3. An array data type, $.vars.some_array.numeric_array_index i.e. $.vars.some_array.1
-4. Adding an "imports" attribute to the class object, type of array, that stores loaded classes, @imports.class_name.vars.var_name, @imports.class_name.funcs.func_name
-5. Step through execution and proper line number tracking.
+3. Adding an "imports" attribute to the class object, type of array, that stores loaded classes, @imports.class_name.vars.var_name, @imports.class_name.funcs.func_name
+4. Step through execution and proper line number tracking.
 
 ## Main Sections:
 
@@ -105,6 +109,8 @@ In this section we'll take a look at all of the different JSON objects supported
 [Exp Object](#exp-object-argument-object)
 
 [For Object](#for-object-line-object)
+
+[If Object](#if-object-line-object)
 
 ## JsonPL Examples
 A list of example snippets showing code and output associated with different JsonPL objects.
@@ -572,6 +578,46 @@ Object Definition:
 </pre>
 
 The for object is defined by a sys attribute with a value of "for". The object contains definitions for the starting integer value, the stopping value, the increment value, and the lines to run for each loop iteration.
+
+### If Object (Line Object)
+The if object is used to describe a simple decision statement with associated lines of code for then and else clauses. Currently doesn't support an "else if" clause.
+
+<pre>
+{
+  "sys": "if",
+  "left": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "true"}},
+  "op": {"sys": "op", "type": "bex", "v": "=="},
+  "right": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "true"}},
+  "thn": [
+    {
+      "sys": "asgn",
+      "left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.i1"}},
+      "op": {"sys": "op", "type": "asgn", "v": "="},
+      "right": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.tmp1"}}}
+  ],
+  "els": [
+    {
+      "sys": "asgn",
+      "left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.i1"}},
+      "op": {"sys": "op", "type": "asgn", "v": "="},
+      "right": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.tmp1"}}}
+  ]
+}
+</pre>
+
+<pre>
+Object Definition:
+{
+"sys": "if",
+"left": {ref | const | exp | bex | call},
+"op": {op & type of bex},
+"right": {ref | const | exp | bex | call},
+"thn": [asgn | if | for | call | return],
+"els": [asgn | if | for | call | return]
+}
+</pre>
+
+The if object is defined by a sys attribute with a value of "if". The object contains definitions for the left value, the right value, and the boolean comparison operator. It also is required to define the thn clause and optionally the els clause.
 
 ## Code Examples
 This section contains a number of code examples. Some of the examples focus on only one or two object while some are full programs. Pay close attention to the objects defined and their context.
