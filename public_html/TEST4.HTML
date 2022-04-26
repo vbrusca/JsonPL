@@ -51,7 +51,16 @@
                            "type": "bool",
                            "v": false
                         }
-                     }
+                     },
+                     {
+                        "sys": "var",
+                        "name": "name1",
+                        "val": {
+                           "sys": "val",
+                           "type": "string",
+                           "v": "tmp1"
+                        }
+                     }                     
                   ],
                   "ret": {
                      "sys": "val",
@@ -317,6 +326,19 @@
 
             var res = null;
             var tmp = null;
+
+            /////////////////////////////////////////////////////////////////////////////
+            tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.[$.vars.name1]"}};
+            if(!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }            
+            jpl.wr("====================== TEST 0.00: Dynamic Class Variable Reference ======================");
+            jpl.wrObj(tmp);
+            jpl.wr("REF 1:");
+            res = jpl.processRef(tmp, code.funcs[0]);
+            jpl.wrObj(res);      
+
 
             /////////////////////////TESTS: REFERENCE
             tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}};
@@ -699,6 +721,18 @@
             jpl.wr("====================== TEST 11.00: Full Program 3 ======================");
             jpl.wrObj(tmp);
             jpl.runProgram();
+            
+            /////////////////////////////////////////////////////////////////////////////
+            tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.[$.vars.name1]"}};
+            if(!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }            
+            jpl.wr("====================== TEST 12.00: Dynamic Class Variable Reference ======================");
+            jpl.wrObj(tmp);
+            jpl.wr("REF 1:");
+            res = jpl.processRef(tmp, code.funcs[0]);
+            jpl.wrObj(res);            
          }
       </script>
    </head>

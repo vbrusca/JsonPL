@@ -93,7 +93,7 @@ public class JsonObjSysBase extends JsonObjBase {
    /**
     *
     */
-   public String v;   
+   public Object v;   
    
    /**
     *
@@ -223,7 +223,12 @@ public class JsonObjSysBase extends JsonObjBase {
       }
       
       if(this.v != null) {
-         ret.v = new String(this.v.getBytes());         
+         if(this.type != null && !this.type.equals("array")) {
+            ret.v = new String((this.v + "").getBytes());
+         } else {
+            ArrayList<Object> tmp = (ArrayList<Object>)this.v;
+            ret.v = new ArrayList<Object>(tmp);
+         }
       }
       
       if(this.val != null) {

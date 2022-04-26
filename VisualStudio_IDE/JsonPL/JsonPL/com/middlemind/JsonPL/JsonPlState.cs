@@ -6,7 +6,7 @@ using System.Text;
 using System.Collections;
 using System.Reflection;
 
-/*
+/**
 * JSON Programming Language
 * EXEC JAVA PORT
 * Victor G. Brusca 
@@ -108,7 +108,7 @@ namespace com.middlemind.JsonPL {
          system.Add("functions", sfuncs);
       }
 
-      /*
+      /**
       * Name: sysWr
       * Desc: A system level write function.
       * Arg1: args(arg obj, sys=arg & array of)
@@ -129,7 +129,7 @@ namespace com.middlemind.JsonPL {
          return ret;
       }
 
-      /*
+      /**
       * Name: sysGetLastAsgnValue
       * Desc: A system level method to access the last asgn value object.
       * Returns: {(const obj, sys=const)}
@@ -138,7 +138,7 @@ namespace com.middlemind.JsonPL {
          return this.lastAsgnValue;
       }
 
-      /*
+      /**
       * Name: sysGetLastAsgnValue
       * Desc: A system level method to access the last exp return object.
       * Returns: {(const obj, sys=const)}
@@ -147,7 +147,7 @@ namespace com.middlemind.JsonPL {
          return this.lastExpReturn;
       }
 
-      /*
+      /**
       * Name: getConstBool
       * Desc: A method to quickly access a constant bool value object.
       * Returns: {(const obj, sys=const)}
@@ -164,7 +164,7 @@ namespace com.middlemind.JsonPL {
          return ret;
       }
 
-      /*
+      /**
       * Name: sysJob1
       * Desc: A system level job method used to demonstrate JCL.
       * Arg1: args(arg obj, sys=arg & array of)
@@ -177,7 +177,7 @@ namespace com.middlemind.JsonPL {
          return ret;
       }
 
-      /*
+      /**
       * Name: sysJob2
       * Desc: A system level job method used to demonstrate JCL.
       * Arg1: args(arg obj, sys=arg & array of)
@@ -190,7 +190,7 @@ namespace com.middlemind.JsonPL {
          return ret;
       }
 
-      /*
+      /**
       * Name: sysJob3
       * Desc: A system level job method used to demonstrate JCL.
       * Arg1: args(arg obj, sys=arg & array of)
@@ -203,7 +203,7 @@ namespace com.middlemind.JsonPL {
          return ret;
       }
 
-      /*
+      /**
       * Name: runProgram
       * Desc: Executes the current program and returns the result.
       * Returns: {(some sys obj)}
@@ -228,7 +228,7 @@ namespace com.middlemind.JsonPL {
       }
 
       /////////////////////////SEARCH METHODS
-      /*
+      /**
       * Name: findArg
       * Desc: Search the provided object for an argument with the given name.
       * Arg1: name(string to find)
@@ -248,7 +248,7 @@ namespace com.middlemind.JsonPL {
          return null;
       }
 
-      /*
+      /**
       * Name: findVar
       * Desc: Search the provided object for a variable with the given name.
       * Arg1: name(string to find)
@@ -268,7 +268,7 @@ namespace com.middlemind.JsonPL {
          return null;
       }
 
-      /*
+      /**
       * Name: findFunc
       * Desc: Search the current program for a func with the given name.
       * Arg1: name(string to find)
@@ -288,7 +288,7 @@ namespace com.middlemind.JsonPL {
          return null;
       }
 
-      /*
+      /**
       * Name: findSysFunc
       * Desc: Search the current program's sytem functions for a func with the given name.
       * Arg1: name(string to find)
@@ -311,7 +311,7 @@ namespace com.middlemind.JsonPL {
       }
 
       /////////////////////////UTILITY METHODS
-      /*
+      /**
       * Name: wr
       * Desc: Writes a string to standard output if LOGGING is on.
       *       Sets the WR_PREFIX to each string written. 
@@ -323,7 +323,7 @@ namespace com.middlemind.JsonPL {
          }
       }
 
-      /*
+      /**
       * Name: getVersion
       * Desc: A method to access the version of this JsonPL interpreter.
       * Returns: {(string version number)}
@@ -333,7 +333,7 @@ namespace com.middlemind.JsonPL {
          return this.version;
       }
 
-      /*
+      /**
       * Name: cloneJsonObj
       * Desc: A method to clone the given JSON object argument.
       * Arg1: jsonObj(the JSON object to clone)
@@ -352,7 +352,7 @@ namespace com.middlemind.JsonPL {
          return ret;
       }
 
-      /*
+      /**
       * Name: wrObj
       * Desc: Writes a JSON object to standard output if LOGGING is on.
       *       Sets the WR_PREFIX to each object written.
@@ -377,7 +377,7 @@ namespace com.middlemind.JsonPL {
       }
 
       /////////////////////////GENERIC OBJECT ID METHODS
-      /*
+      /**
       * Name: isObject
       * Desc: Checks if the given argument is a JSON object. 
       * Arg1: arg(JSON object)
@@ -391,7 +391,7 @@ namespace com.middlemind.JsonPL {
          }
       }
 
-      /*
+      /**
       * Name: isArray
       * Desc: Checks if the given argument is an array. 
       * Arg1: arg(javascript array)
@@ -406,7 +406,7 @@ namespace com.middlemind.JsonPL {
          }
       }
 
-      /*
+      /**
       * Name: isString
       * Desc: Checks if the given argument is a string. 
       * Arg1: arg(some string)
@@ -421,7 +421,7 @@ namespace com.middlemind.JsonPL {
       }
 
       /////////////////////////SYS OBJECT ID METHODS
-      /*
+      /**
       * Name: isSysObjIf
       * Desc: Checks if the given object is an if sys object. 
       * Arg1: obj(sys obj to check)
@@ -437,7 +437,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: isSysObjRef
       * Desc: Checks if the given object is a ref sys object. 
       * Arg1: obj(sys obj to check)
@@ -453,7 +453,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: isSysObjBex
       * Desc: Checks if the given object is a bex sys object. 
       * Arg1: obj(sys obj to check)
@@ -469,7 +469,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: isSysObjExp
       * Desc: Checks if the given object is an exp sys object. 
       * Arg1: obj(sys obj to check)
@@ -485,7 +485,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: isSysObjVal
       * Desc: Checks if the given object is a val sys object. 
       * Arg1: obj(sys obj to check)
@@ -503,7 +503,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: isSysObjAsgn
       * Desc: Checks if the given object is an asgn sys object. 
       * Arg1: obj(sys obj to check)
@@ -519,7 +519,23 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
+      * Name: isSysObjArray
+      * Desc: Checks if the given object is an array sys object. 
+      * Arg1: obj(sys obj to check)
+      * Returns: (true | false)
+       */
+      public bool isSysObjArray(JsonObjSysBase obj) {
+         if (this.isSysObj(obj) == true) {
+            string objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.Equals("array")) {
+               return true;
+            }
+         }
+         return false;
+      }
+
+      /**
       * Name: isSysObjConst
       * Desc: Checks if the given object is a const sys object. 
       * Arg1: obj(sys obj to check)
@@ -535,7 +551,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: isSysObjVar
       * Desc: Checks if the given object is a var sys object. 
       * Arg1: obj(sys obj to check)
@@ -551,7 +567,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: isSysObjCall
       * Desc: Checks if the given object is a call sys object. 
       * Arg1: obj(sys obj to check)
@@ -567,7 +583,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: isSysObjFunc
       * Desc: Checks if the given object is a func sys object. 
       * Arg1: obj(sys obj to check)
@@ -583,7 +599,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: isSysObjFor
       * Desc: Checks if the given object is a for sys object. 
       * Arg1: obj(sys obj to check)
@@ -599,7 +615,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: isSysObjReturn
       * Desc: Checks if the given object is a return sys object. 
       * Arg1: obj(sys obj to check)
@@ -615,7 +631,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: isSysObj
       * Desc: Checks if the given object is a sys object. 
       * Arg1: obj(sys obj to check)
@@ -629,7 +645,7 @@ namespace com.middlemind.JsonPL {
          }
       }
 
-      /*
+      /**
       * Name: getSysObjType
       * Desc: Gets the value of the sys attribute of the given sys object.. 
       * Arg1: obj(sys obj to check)
@@ -644,7 +660,7 @@ namespace com.middlemind.JsonPL {
       }
 
       /////////////////////////VALIDATION METHODS
-      /*
+      /**
       * Name: validateSysObjIf
       * Desc: Validates if the given object is a valid if sys object.
       * Arg1: obj(sys obj to check)
@@ -780,7 +796,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjFor
       * Desc: Validates if the given object is a valid for sys object.
       * Arg1: obj(sys obj to check)
@@ -919,7 +935,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjClass
       * Desc: Validates if the given object is a valid class sys object.
       * Arg1: obj(sys obj to check)
@@ -967,7 +983,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjFuncLine
       * Desc: Validates if the given object is a valid function line sys object.
       * Arg1: obj(sys obj to check)
@@ -1010,7 +1026,7 @@ namespace com.middlemind.JsonPL {
          return true;
       }
 
-      /*
+      /**
       * Name: validateSysObjFunc
       * Desc: Validates if the given object is a valid func sys object.
       * Arg1: obj(sys obj to check)
@@ -1060,7 +1076,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjAsgn
       * Desc: Validates if the given object is a valid asgn sys object.
       * Arg1: obj(sys obj to check)
@@ -1157,7 +1173,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjBex
       * Desc: Validates if the given object is a valid bex sys object.
       * Arg1: obj(sys obj to check)
@@ -1255,7 +1271,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjExp
       * Desc: Validates if the given object is a valid exp sys object.
       * Arg1: obj(sys obj to check)
@@ -1353,7 +1369,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjCall
       * Desc: Validates if the given object is a valid call sys object.
       * Arg1: obj(sys obj to check)
@@ -1393,7 +1409,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjCall
       * Desc: Validates if the given object is a valid call sys object.
       * Arg1: obj(sys obj to check)
@@ -1417,7 +1433,36 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
+      * Name: validateSysObjArray
+      * Desc: Validates if the given object is a valid array sys object.
+      * Arg1: obj(sys obj to check)
+      * Returns: {false | true}
+      * Struct: <!-  
+         {
+            "sys": "array",
+            "name": "a1",
+            "len": #,
+            "val": {
+               "sys": "val",
+               "type": "int",
+               "v": [some_array]
+            }
+         }
+        -!>
+       */
+      public bool validateSysObjArray(JsonObjSysBase obj) {
+         string sysType = this.getSysObjType(obj);
+         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("array")) && this.validateProperties(obj, new string[] { "sys", "name", "len", "val" })) {
+            if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
+               return false;
+            }
+            return true;
+         }
+         return false;
+      }
+
+      /**
       * Name: validateSysObjConst
       * Desc: Validates if the given object is a valid const sys object.
       * Arg1: obj(sys obj to check)
@@ -1440,7 +1485,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjVar
       * Desc: Validates if the given object is a valid var sys object.
       * Arg1: obj(sys obj to check)
@@ -1464,7 +1509,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjArg
       * Desc: Validates if the given object is a valid arg sys object.
       * Arg1: obj(sys obj to check)
@@ -1488,7 +1533,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjVal
       * Desc: Validates if the given object is a valid val sys object.
       * Arg1: obj(sys obj to check)
@@ -1498,6 +1543,11 @@ namespace com.middlemind.JsonPL {
               "sys": "val",
               "type": "int | float | string | bool & type of string",
               "v": "some valid value"
+           },
+           {
+              "sys": "val",
+              "type": "int | float | string | bool & type of string",
+              "va": "some valid array"
            }
         -!>
        */
@@ -1506,7 +1556,7 @@ namespace com.middlemind.JsonPL {
          //this.wr("validateSysObjVal: type: 000: " + obj.type + ", " + obj.v);
          if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("val")) && this.validateProperties(obj, new string[] { "sys", "type", "v" })) {
             //this.wr("validateSysObjVal: type");
-            if (!(obj.type.Equals("int") || obj.type.Equals("float") || obj.type.Equals("string") || obj.type.Equals("bool"))) {
+            if (!(obj.type.Equals("int") || obj.type.Equals("float") || obj.type.Equals("string") || obj.type.Equals("bool") || obj.type.Equals("array"))) {
                //this.wr("validateSysObjVal: type: AAA");
                return false;
             }
@@ -1518,7 +1568,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjRef
       * Desc: Validates if the given object is a valid ref sys object.
       * Arg1: obj(sys obj to check)
@@ -1543,7 +1593,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateSysObjReturn
       * Desc: Validates if the given object is a valid return sys object.
       * Arg1: obj(sys obj to check)
@@ -1566,7 +1616,7 @@ namespace com.middlemind.JsonPL {
          return false;
       }
 
-      /*
+      /**
       * Name: validateProperties
       * Desc: Validates if the given object has each of the array elements soecified in req.
       * Arg1: obj(sys obj to check)
@@ -1592,7 +1642,7 @@ namespace com.middlemind.JsonPL {
       }
 
       /////////////////////////PROCESS METHODS
-      /*
+      /**
       * Name: processRef
       * Desc: Processes a class var or func var or arg reference string.
       * Arg1: objRef(string ref encoding)
@@ -1615,6 +1665,164 @@ namespace com.middlemind.JsonPL {
 
          //this.wr("OBJ REF");
          //this.wrObj(objRef);
+
+         path = (objRef.val.v + "");
+         //this.wr("===============================================Found path: " + path);
+         vls = path.Split(".");
+
+         bool inDynRef = false;
+         List<string> nvls = new List<string>();
+         String tt = null;
+         for (var k = 0; k < vls.Length; k++) {
+            if (inDynRef && vls[k].IndexOf("]") != -1) {
+               inDynRef = false;
+               tt += "." + vls[k];
+               nvls.Add(tt);
+            } else if (!inDynRef && vls[k].IndexOf("[") != -1) {
+               inDynRef = true;
+               tt = vls[k];
+            } else if (inDynRef) {
+               tt += "." + vls[k];
+            } else {
+               if (vls[k] != null) {
+                  nvls.Add(vls[k]);
+               }
+            }
+         }
+
+         vls = new string[nvls.Count];
+         for (var k = 0; k < nvls.Count; k++) {
+            if (nvls[k] != null) {
+               vls[k] = nvls[k];
+            }
+         }
+
+         bool foundSource = false;
+         bool isFunc = false;
+         bool foundType = false;
+         bool isVars = false;
+         bool foundName = false;
+         string name = null;
+         JsonObjSysBase itm = null;
+         bool foundIndex = false;
+         int idx = -1;
+         string type = null;
+
+         //this.wr("===============================================Found entries: " + vls.length);
+         for (int k = 0; k < vls.Length; k++) {
+            String c = vls[k];
+            //this.wr("===============================================Found entry: " + k + ", " + vls[k]);      
+
+            if (!foundSource) {
+               //program/class         
+               if (c != null && c.Equals("#")) {
+                  isFunc = false;
+                  foundSource = true;
+               } else if (c != null && c.Equals("$")) {
+                  isFunc = true;
+                  foundSource = true;
+               } else {
+                  this.wr("processRef: Error: could not find correct the ref, for source, " + c);
+               }
+            } else if (!foundType) {
+               //program/class
+               if (!isFunc) {
+                  if (c != null && c.Equals("vars")) {
+                     isVars = true;
+                     foundType = true;
+                  } else {
+                     this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFunc);
+                  }
+                  //function
+               } else {
+                  if (c != null && c.Equals("vars")) {
+                     isVars = true;
+                     foundType = true;
+                  } else if (c != null && c.Equals("args")) {
+                     isVars = false;
+                     foundType = true;
+                  } else {
+                     this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFunc);
+                  }
+               }
+            } else if (!foundName) {
+               //program/class
+               name = c;
+               JsonObjSysBase tmp = null;
+               //lookup use of string var here
+               if (c.IndexOf("[") == 0) {
+                  string nc = c.Replace("[", "");
+                  nc = nc.Replace("]", "");
+
+                  tmp = new JsonObjSysBase();
+                  tmp.sys = "ref";
+                  tmp.val = new JsonObjSysBase();
+                  tmp.val.sys = "ref";
+                  tmp.val.v = nc;
+
+                  tmp = processRef(tmp, func);
+                  if (tmp.val.type.Equals("string")) {
+                     name = toStr(tmp.val.v + "");
+                  } else {
+                     this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                  }
+               }
+
+               //this.wr("processRef: looking for name: " + name);
+               if (!isFunc) {
+                  //class find name            
+                  if (isVars) {
+                     fnd = this.findVar(name, prog);
+                  } else {
+                     this.wr("processRef: Error: could not find, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                  }
+                  //function
+               } else {
+                  //function find name
+                  if (isVars) {
+                     fnd = this.findVar(name, func);
+                  } else {
+                     fnd = this.findArg(name, func);
+                  }
+               }
+
+               if (fnd != null) {
+                  type = fnd.val.type;
+               } else {
+                  this.wr("processRef: Error: could not find an object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+               }
+            } else if (!foundIndex) {
+               idx = toInt(c);
+               JsonObjSysBase tmp = null;
+               //lookup use of string var here
+               if (c.IndexOf("[") == 0) {
+                  string nc = c.Replace("[", "");
+                  nc = nc.Replace("]", "");
+
+                  tmp = new JsonObjSysBase();
+                  tmp.sys = "ref";
+                  tmp.val = new JsonObjSysBase();
+                  tmp.val.sys = "ref";
+                  tmp.val.v = nc;
+
+                  tmp = processRef(tmp, func);
+                  if (tmp.val.type.Equals("int")) {
+                     idx = toInt(tmp.val.v + "");
+                  } else {
+                     this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                  }
+               }
+
+               if (type.Equals("array")) {
+                  fnd = (JsonObjSysBase)((List<Object>)fnd.val.v)[idx];
+               } else {
+                  this.wr("processRef: Error: index entry is only for vars/args of type array, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+               }
+            }
+         }
+         return fnd;
+
+         /*
          if (objRef.val.v.ToString().IndexOf("#.") == 0) {
             //program/class var
             path = objRef.val.v.ToString().Substring(2);
@@ -1663,6 +1871,7 @@ namespace com.middlemind.JsonPL {
             }
          }
          return null;
+         */
       }
 
       //TODO
@@ -1710,7 +1919,7 @@ namespace com.middlemind.JsonPL {
          }
       }
 
-      /*
+      /**
       * Name: processIf
       * Desc: Processes an if statement. Returns the value of the bool if statement expression.
       * Arg1: objIf(if obj, sys=if)
@@ -1800,19 +2009,19 @@ namespace com.middlemind.JsonPL {
 
             if (op.v.Equals("==")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(left.val.v) == int.Parse(right.val.v)) {
+                  if (int.Parse(left.val.v + "") == int.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(left.val.v) == float.Parse(right.val.v)) {
+                  if (float.Parse(left.val.v + "") == float.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(left.val.v) == this.toBoolInt(right.val.v)) {
+                  if (this.toBoolInt(left.val.v + "") == this.toBoolInt(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -1826,19 +2035,19 @@ namespace com.middlemind.JsonPL {
                }
             } else if (op.v.Equals("!=")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(left.val.v) != int.Parse(right.val.v)) {
+                  if (int.Parse(left.val.v + "") != int.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(left.val.v) != float.Parse(right.val.v)) {
+                  if (float.Parse(left.val.v + "") != float.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(left.val.v) != this.toBoolInt(right.val.v)) {
+                  if (this.toBoolInt(left.val.v + "") != this.toBoolInt(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -1852,19 +2061,19 @@ namespace com.middlemind.JsonPL {
                }
             } else if (op.v.Equals("<")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(left.val.v) < int.Parse(right.val.v)) {
+                  if (int.Parse(left.val.v + "") < int.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(left.val.v) < float.Parse(right.val.v)) {
+                  if (float.Parse(left.val.v + "") < float.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(left.val.v) < this.toBoolInt(right.val.v)) {
+                  if (this.toBoolInt(left.val.v + "") < this.toBoolInt(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -1878,19 +2087,19 @@ namespace com.middlemind.JsonPL {
                }
             } else if (op.v.Equals(">")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(left.val.v) > int.Parse(right.val.v)) {
+                  if (int.Parse(left.val.v + "") > int.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(left.val.v) > float.Parse(right.val.v)) {
+                  if (float.Parse(left.val.v + "") > float.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(left.val.v) > this.toBoolInt(right.val.v)) {
+                  if (this.toBoolInt(left.val.v + "") > this.toBoolInt(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -1904,19 +2113,19 @@ namespace com.middlemind.JsonPL {
                }
             } else if (op.v.Equals("<=")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(left.val.v) <= int.Parse(right.val.v)) {
+                  if (int.Parse(left.val.v + "") <= int.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(left.val.v) <= float.Parse(right.val.v)) {
+                  if (float.Parse(left.val.v + "") <= float.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(left.val.v) <= this.toBoolInt(right.val.v)) {
+                  if (this.toBoolInt(left.val.v + "") <= this.toBoolInt(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -1930,19 +2139,19 @@ namespace com.middlemind.JsonPL {
                }
             } else if (op.v.Equals(">=")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(left.val.v) >= int.Parse(right.val.v)) {
+                  if (int.Parse(left.val.v + "") >= int.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(left.val.v) >= float.Parse(right.val.v)) {
+                  if (float.Parse(left.val.v + "") >= float.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(left.val.v) >= this.toBoolInt(right.val.v)) {
+                  if (this.toBoolInt(left.val.v + "") >= this.toBoolInt(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -1961,7 +2170,7 @@ namespace com.middlemind.JsonPL {
 
             //Logger.wrl("===============================Ret.v: " + ret.v + " ToBool: " + this.toBool(ret.v));
 
-            if (this.toBool(ret.v) == true) {
+            if (this.toBool((ret.v + "")) == true) {
                //run thn lines
                //Logger.wrl("===============================Running then lines");
                ret3 = this.processIfForLines(thn, func);
@@ -1986,7 +2195,7 @@ namespace com.middlemind.JsonPL {
          }
       }
 
-      /*
+      /**
       * Name: processIfForLines
       * Desc: Processes an array of if statement or for loop lines.
       *       Returns the last value returned by the last line or returns the return value if encountered.
@@ -2045,7 +2254,7 @@ namespace com.middlemind.JsonPL {
          }
       }
 
-      /*
+      /**
       * Name: processFor
       * Desc: Processes a for loop. Returns the last loop iteration value.
       * Arg1: objFor(for obj, sys=for)
@@ -2167,9 +2376,9 @@ namespace com.middlemind.JsonPL {
 
          JsonObjSysBase ret3 = null;
          int i = 0;
-         int incAmt = int.Parse(inc.val.v);
-         int lenAmt = int.Parse(stop.val.v);
-         int startAmt = int.Parse(start.val.v);
+         int incAmt = int.Parse(inc.val.v + "");
+         int lenAmt = int.Parse(stop.val.v + "");
+         int startAmt = int.Parse(start.val.v + "");
          for (i = startAmt; i < lenAmt; i += incAmt) {
             ret3 = this.processIfForLines(objFor.lines, func);
             if (ret3 == null) {
@@ -2185,7 +2394,7 @@ namespace com.middlemind.JsonPL {
          return ret;
       }
 
-      /*
+      /**
       * Name: processAsgn
       * Desc: Processes an assigment. Returns true value.
       * Arg1: objAsgn(asgn obj, sys=asgn)
@@ -2260,7 +2469,7 @@ namespace com.middlemind.JsonPL {
          }
       }
 
-      /*
+      /**
       * Name: processBex
       * Desc: Processes a bool expression. Returns bool result of the expression.
       * Arg1: objBex(bex obj, sys=bex)
@@ -2344,19 +2553,19 @@ namespace com.middlemind.JsonPL {
 
             if (op.v.Equals("==")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(left.val.v) == int.Parse(right.val.v)) {
+                  if (int.Parse(left.val.v + "") == int.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(left.val.v) == float.Parse(right.val.v)) {
+                  if (float.Parse(left.val.v + "") == float.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(left.val.v) == this.toBoolInt(right.val.v)) {
+                  if (this.toBoolInt(left.val.v + "") == this.toBoolInt(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -2370,19 +2579,19 @@ namespace com.middlemind.JsonPL {
                }
             } else if (op.v.Equals("!=")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(left.val.v) != int.Parse(right.val.v)) {
+                  if (int.Parse(left.val.v + "") != int.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(left.val.v) != float.Parse(right.val.v)) {
+                  if (float.Parse(left.val.v + "") != float.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(left.val.v) != this.toBoolInt(right.val.v)) {
+                  if (this.toBoolInt(left.val.v + "") != this.toBoolInt(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -2396,19 +2605,19 @@ namespace com.middlemind.JsonPL {
                }
             } else if (op.v.Equals("<")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(left.val.v) < int.Parse(right.val.v)) {
+                  if (int.Parse(left.val.v + "") < int.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(left.val.v) < float.Parse(right.val.v)) {
+                  if (float.Parse(left.val.v + "") < float.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(left.val.v) < this.toBoolInt(right.val.v)) {
+                  if (this.toBoolInt(left.val.v + "") < this.toBoolInt(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -2422,19 +2631,19 @@ namespace com.middlemind.JsonPL {
                }
             } else if (op.v.Equals(">")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(left.val.v) > int.Parse(right.val.v)) {
+                  if (int.Parse(left.val.v + "") > int.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(left.val.v) > float.Parse(right.val.v)) {
+                  if (float.Parse(left.val.v + "") > float.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(left.val.v) > this.toBoolInt(right.val.v)) {
+                  if (this.toBoolInt(left.val.v + "") > this.toBoolInt(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -2448,19 +2657,19 @@ namespace com.middlemind.JsonPL {
                }
             } else if (op.v.Equals("<=")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(left.val.v) <= int.Parse(right.val.v)) {
+                  if (int.Parse(left.val.v + "") <= int.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(left.val.v) <= float.Parse(right.val.v)) {
+                  if (float.Parse(left.val.v + "") <= float.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(left.val.v) <= this.toBoolInt(right.val.v)) {
+                  if (this.toBoolInt(left.val.v + "") <= this.toBoolInt(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -2474,19 +2683,19 @@ namespace com.middlemind.JsonPL {
                }
             } else if (op.v.Equals(">=")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(left.val.v) >= int.Parse(right.val.v)) {
+                  if (int.Parse(left.val.v + "") >= int.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(left.val.v) >= float.Parse(right.val.v)) {
+                  if (float.Parse(left.val.v + "") >= float.Parse(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(left.val.v) >= this.toBoolInt(right.val.v)) {
+                  if (this.toBoolInt(left.val.v + "") >= this.toBoolInt(right.val.v + "")) {
                      ret.v = "true";
                   } else {
                      ret.v = "false";
@@ -2513,7 +2722,7 @@ namespace com.middlemind.JsonPL {
          }
       }
 
-      /*
+      /**
       * Name: processFunc
       * Desc: Processes a function's lines. Returns last statement or return value.
       * Arg1: objFunc(bex obj, sys=func)
@@ -2530,7 +2739,7 @@ namespace com.middlemind.JsonPL {
          return ret3;
       }
 
-      /*
+      /**
       * Name: processCall
       * Desc: Processes a function call. Returns last statement or return value from executing the function's lines.
       * Arg1: objCall(call obj, sys=call)
@@ -2668,7 +2877,7 @@ namespace com.middlemind.JsonPL {
          }
       }
 
-      /*
+      /**
       * Name: processExp
       * Desc: Processes an expression. Returns the value of the expression.
       * Arg1: objExp(exp obj, sys=exp)
@@ -2753,50 +2962,50 @@ namespace com.middlemind.JsonPL {
 
             if (op.v.Equals("+")) {
                if (left.val.type.Equals("int")) {
-                  ret.v = (int.Parse(left.val.v) + int.Parse(right.val.v)) + "";
+                  ret.v = (int.Parse(left.val.v + "") + int.Parse(right.val.v + "")) + "";
                } else if (left.val.type.Equals("float")) {
-                  ret.v = (float.Parse(left.val.v) + float.Parse(right.val.v)) + "";
+                  ret.v = (float.Parse(left.val.v + "") + float.Parse(right.val.v + "")) + "";
                } else if (left.val.type.Equals("bool")) {
-                  ret.v = (this.toBoolInt(left.val.v) + this.toBoolInt(right.val.v)) + "";
+                  ret.v = (this.toBoolInt(left.val.v + "") + this.toBoolInt(right.val.v + "")) + "";
                }
             } else if (op.v.Equals("-")) {
                if (left.val.type.Equals("int")) {
-                  ret.v = (int.Parse(left.val.v) - int.Parse(right.val.v)) + "";
+                  ret.v = (int.Parse(left.val.v + "") - int.Parse(right.val.v + "")) + "";
                } else if (left.val.type.Equals("float")) {
-                  ret.v = (float.Parse(left.val.v) - float.Parse(right.val.v)) + "";
+                  ret.v = (float.Parse(left.val.v + "") - float.Parse(right.val.v + "")) + "";
                } else if (left.val.type.Equals("bool")) {
-                  ret.v = (this.toBoolInt(left.val.v) - this.toBoolInt(right.val.v)) + "";
+                  ret.v = (this.toBoolInt(left.val.v + "") - this.toBoolInt(right.val.v + "")) + "";
                }
             } else if (op.v.Equals("/")) {
                if (left.val.type.Equals("int")) {
-                  if (int.Parse(right.val.v) == 0) {
+                  if (int.Parse(right.val.v + "") == 0) {
                      this.wr("processExp: Error: divide by zero error");
                      return null;
                   } else {
-                     ret.v = (int.Parse(left.val.v) / int.Parse(right.val.v)) + "";
+                     ret.v = (int.Parse(left.val.v + "") / int.Parse(right.val.v + "")) + "";
                   }
                } else if (left.val.type.Equals("float")) {
-                  if (float.Parse(right.val.v) == 0) {
+                  if (float.Parse(right.val.v + "") == 0) {
                      this.wr("processExp: Error: divide by zero error");
                      return null;
                   } else {
-                     ret.v = (float.Parse(left.val.v) / float.Parse(right.val.v)) + "";
+                     ret.v = (float.Parse(left.val.v + "") / float.Parse(right.val.v + "")) + "";
                   }
                } else if (left.val.type.Equals("bool")) {
-                  if (this.toBoolInt(right.val.v) == 0) {
+                  if (this.toBoolInt(right.val.v + "") == 0) {
                      this.wr("processExp: Error: divide by zero error");
                      return null;
                   } else {
-                     ret.v = (this.toBoolInt(left.val.v) / this.toBoolInt(right.val.v)) + "";
+                     ret.v = (this.toBoolInt(left.val.v + "") / this.toBoolInt(right.val.v + "")) + "";
                   }
                }
             } else if (op.v.Equals("*")) {
                if (left.val.type.Equals("int")) {
-                  ret.v = (int.Parse(left.val.v) * int.Parse(right.val.v)) + "";
+                  ret.v = (int.Parse(left.val.v + "") * int.Parse(right.val.v + "")) + "";
                } else if (left.val.type.Equals("float")) {
-                  ret.v = (float.Parse(left.val.v) * float.Parse(right.val.v)) + "";
+                  ret.v = (float.Parse(left.val.v + "") * float.Parse(right.val.v + "")) + "";
                } else if (left.val.type.Equals("bool")) {
-                  ret.v = (this.toBoolInt(left.val.v) * this.toBoolInt(right.val.v)) + "";
+                  ret.v = (this.toBoolInt(left.val.v + "") * this.toBoolInt(right.val.v + "")) + "";
                }
             } else {
                this.wr("processExp: Error: unknown operator: " + op.v);
@@ -2804,11 +3013,11 @@ namespace com.middlemind.JsonPL {
             }
 
             if (left.val.type.Equals("int")) {
-               ret.v = int.Parse(ret.v) + "";
+               ret.v = int.Parse(ret.v + "") + "";
             } else if (left.val.type.Equals("float")) {
-               ret.v = float.Parse(ret.v) + "";
+               ret.v = float.Parse(ret.v + "") + "";
             } else if (left.val.type.Equals("bool")) {
-               ret.v = (this.toBool(ret.v)) + "";
+               ret.v = (this.toBool(ret.v + "")) + "";
             }
 
             ret = ret2;

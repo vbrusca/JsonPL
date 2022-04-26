@@ -46,6 +46,15 @@
                   "type": "bool",
                   "v": "false"
                }
+            },
+            {
+               "sys": "var",
+               "name": "name1",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": "tmp1"
+               }
             }
          ],
          "ret": {

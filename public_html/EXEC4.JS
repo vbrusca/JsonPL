@@ -1036,6 +1036,34 @@ jsonPlState.prototype.validateSysObjOp = function(obj) {
 };
 
 /**
+* Name: validateSysObjArray
+* Desc: Validates if the given object is a valid array sys object.
+* Arg1: obj(sys obj to check)
+* Returns: {false | true}
+* Struct: <!-  
+   {
+      "sys": "array",
+      "name": "a1",
+      "len": #,
+      "val": {
+         "sys": "val",
+         "type": "int",
+         "v": [some_array]
+      }
+   }
+  -!>
+ */
+jsonPlState.prototype.validateSysObjArray = function(obj) {
+   if(this.isSysObj(obj) && this.getSysObjType(obj) === "array" && this.validateProperties(obj, ["sys", "name", "len", "val"])) {
+      if(!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
+         return false;
+      }
+      return true;
+   }
+   return false;
+};
+
+/**
  * Name: validateSysObjConst
  * Desc: Validates if the given object is a valid const sys object.
  * Arg1: obj(sys obj to check)
@@ -1118,7 +1146,7 @@ jsonPlState.prototype.validateSysObjArg = function(obj) {
  */
 jsonPlState.prototype.validateSysObjVal = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "val" && this.validateProperties(obj, ["sys", "type", "v"])) {
-      if(!(obj.type === "int" || obj.type === "float" || obj.type === "string" || obj.type === "bool")) {
+      if(!(obj.type === "int" || obj.type === "float" || obj.type === "string" || obj.type === "bool" || obj.type === "array")) {
          return false;
       }
       return true;
@@ -1371,6 +1399,20 @@ jsonPlState.prototype.isSysObjAsgn = function(obj) {
 };
 
 /**
+ * Name: isSysObjArray
+ * Desc: Checks if the given object is an array sys object. 
+ * Arg1: obj(sys obj to check)
+ * Returns: (true | false)
+ */
+jsonPlState.prototype.isSysObjArray = function(obj) {
+   if (this.isSysObj(obj) === true && obj.sys === "array") {
+      return true;
+   } else {
+      return false;
+   }
+};
+
+/**
  * Name: isSysObjConst
  * Desc: Checks if the given object is a const sys object. 
  * Arg1: obj(sys obj to check)
@@ -1506,7 +1548,167 @@ jsonPlState.prototype.processRef = function(objRef, func) {
    
    //this.wr("OBJ REF");
    //this.wrObj(objRef);
+   path = (objRef.val.v + "");   
+   //this.wr("===============================================Found path: " + path);
+   vls = path.split(".");
    
+   var inDynRef = false;
+   var nvls = [];
+   var tt = null;
+   for(var k = 0; k < vls.length; k++) {
+      //this.wr("___________________________________:"+ vls[k].indexOf("["));
+      if(inDynRef && vls[k].indexOf("]") !== -1) {    
+         inDynRef = false;
+         tt += "." + vls[k];
+         nvls.push(tt);         
+      } else if(!inDynRef && vls[k].indexOf("[") !== -1) {
+         inDynRef = true;
+         tt = vls[k];
+      } else if(inDynRef) {
+         tt += "." + vls[k];
+      } else {
+         if(vls[k] !== null) {
+            nvls.push(vls[k]);
+         }
+      }
+   }
+      
+   vls = [];
+   for(var k = 0; k < nvls.length; k++) {
+      if(nvls[k] !== null) {
+         vls[k] = nvls[k];
+      }
+   }
+         
+   var foundSource = false;
+   var isFunc = false;
+   var foundType = false;   
+   var isVars = false;
+   var foundName = false;   
+   var name = null;
+   var itm = null;
+   var foundIndex = false;
+   var idx = -1;
+   var type = null;
+   
+   //this.wr("===============================================Found entries: " + vls.length);
+   for(var k = 0; k < vls.length; k++) {      
+      var c = vls[k];
+      //this.wr("===============================================Found entry: " + k + ", " + vls[k]);      
+      
+      if(!foundSource) {
+         //program/class         
+         if(c === '#') {
+            isFunc = false;
+            foundSource = true;
+         } else if(c === '$') {
+            isFunc = true;
+            foundSource = true;
+         } else {
+            this.wr("processRef: Error: could not find correct the ref, for source, " + c);
+         }
+      } else if(!foundType) { 
+         //program/class
+         if(!isFunc) {
+            if(c === 'vars') {
+               isVars = true;
+               foundType = true;
+            } else {
+               this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFunc);
+            }
+         //function
+         } else if(isFunc) {
+            if(c === 'vars') {
+               isVars = true;               
+               foundType = true;
+            } else if(c === 'args') {
+               isVars = false;
+               foundType = true;               
+            } else {
+               this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFunc);
+            }
+         } else {
+            //err
+         }         
+      } else if(!foundName) {
+         //program/class
+         name = c;
+         var tmp = null;
+         //lookup use of string var here
+         if(c.indexOf('[') === 0) {
+            var nc = c.replace('[', '');
+            nc = nc.replace(']', '');
+
+            tmp = {};
+            tmp.sys = "ref";
+            tmp.val = {};
+            tmp.val.sys = "val";
+            tmp.val.type = "string";
+            tmp.val.v = nc;
+            
+            tmp = this.processRef(tmp, func);
+            if(tmp !== null && tmp.val.type === 'string') {
+               name = this.toStr(tmp.val.v);
+            } else {
+               this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+            }
+         }
+              
+         //this.wr("processRef: looking for name: " + name);
+         if(!isFunc) {
+            //class find name            
+            if(isVars) {
+               fnd = this.findVar(name, prog);
+            } else {
+               this.wr("processRef: Error: could not find, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+            }
+         //function
+         } else {
+            //function find name
+            if(isVars) {
+               fnd = this.findVar(name, func);
+            } else {
+               fnd = this.findArg(name, func);
+            }            
+         }
+         
+         if(fnd !== null) {
+            type = fnd.val.type;
+         } else {
+            this.wr("processRef: Error: could not find an object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+         }
+      } else if(!foundIndex) {
+         idx = this.toInt(c);
+         //lookup use of string var here
+         if(c.indexOf('[') === 0) {
+            var nc = c.replace('[', '');
+            nc = nc.replace('\\]', '');
+            
+            tmp = {};
+            tmp.sys = "ref";
+            tmp.val = {};
+            tmp.val.sys = "val";
+            tmp.val.type = "string";
+            tmp.val.v = nc;
+            
+            tmp = this.processRef(tmp, func);
+            if(tmp !== null && tmp.val.type === 'string') {
+               idx = this.toStr(tmp.val.v + "");
+            } else {
+               this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+            }
+         }         
+         
+         if(type === 'array') {
+            fnd = fnd.val.v[this.toInt(idx)];
+         } else {
+               this.wr("processRef: Error: index entry is only for vars/args of type array, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+         }
+      }      
+   }
+   return fnd;
+   
+   /*
    if(objRef.val.v.indexOf("#.") === 0) {
       //program/class var
       path = objRef.val.v.substring(2);
@@ -1555,6 +1757,7 @@ jsonPlState.prototype.processRef = function(objRef, func) {
       }
    }
    return null;
+   */
 };
 
 //TODO

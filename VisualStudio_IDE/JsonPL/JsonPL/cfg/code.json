@@ -37,17 +37,26 @@
                }
             }
          ],
-         "vars": [
-            {
-               "sys": "var",
-               "name": "b1",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": "false"
-               }
+        "vars": [
+          {
+            "sys": "var",
+            "name": "b1",
+            "val": {
+              "sys": "val",
+              "type": "bool",
+              "v": "false"
             }
-         ],
+          },
+          {
+            "sys": "var",
+            "name": "name1",
+            "val": {
+              "sys": "val",
+              "type": "string",
+              "v": "tmp1"
+            }
+          }
+        ],
          "ret": {
             "sys": "val",
             "type": "bool",

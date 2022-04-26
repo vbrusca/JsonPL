@@ -134,6 +134,19 @@ namespace com.middlemind.JsonPL {
             JsonObjSysBase tmp = null;
             string tmpJson;
 
+            /////////////////////////////////////////////////////////////////////////////
+            tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.[$.vars.name1]\"}}";
+            tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+            if (!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }
+            jpl.wr("====================== TEST 0.00: Class Variable Reference ======================");
+            jpl.wrObj(tmp);
+            jpl.wr("REF 1:");
+            res = jpl.processRef(tmp, code.funcs[0]);
+            jpl.wrObj(res);
+
             /////////////////////////TESTS: REFERENCE
             tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp1\"}}";
             tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
@@ -571,6 +584,19 @@ namespace com.middlemind.JsonPL {
             jpl.wrObj(tmp);
             jpl.runProgram();
 
+            /////////////////////////////////////////////////////////////////////////////
+            tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.[$.vars.name1]\"}}";
+            tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+            if (!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }
+            jpl.wr("====================== TEST 12.00: Class Variable Reference ======================");
+            jpl.wrObj(tmp);
+            jpl.wr("REF 1:");
+            res = jpl.processRef(tmp, code.funcs[0]);
+            jpl.wrObj(res);
+
          } catch (Exception e) {
             Logger.wrl("Error!");
             Logger.wrlErr(e.ToString());
@@ -590,7 +616,7 @@ namespace com.middlemind.JsonPL {
          jpl.program.vars[0].val.v = dataFromAjax[0];
          jpl.program.vars[1].val.v = dataFromAjax[1];
          var tmp = jpl.runProgram();
-         return tmp.val.v;
+         return (tmp.val.v + "");
       }
    }
 }

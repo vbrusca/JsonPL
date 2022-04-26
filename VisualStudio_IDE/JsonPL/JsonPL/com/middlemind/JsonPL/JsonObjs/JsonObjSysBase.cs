@@ -92,7 +92,7 @@ namespace com.middlemind.JsonPL.JsonObjs {
       /**
       *
       */
-      public string v;
+      public object v;
 
       /**
       *
@@ -222,7 +222,12 @@ namespace com.middlemind.JsonPL.JsonObjs {
          }
 
          if (this.v != null) {
-            ret.v = new string(this.v.ToCharArray());
+            if (this.type != null && !this.type.Equals("array")) {
+               ret.v = new string((this.v + "").ToCharArray());
+            } else {
+               List<Object> tmp = (List<Object>)this.v;
+               ret.v = new List<Object>(tmp);
+            }
          }
 
          if (this.val != null) {

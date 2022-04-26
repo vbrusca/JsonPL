@@ -134,6 +134,19 @@ public class JsonPL {
          JsonObjSysBase tmp = null;
          String tmpJson;
 
+         /////////////////////////////////////////////////////////////////////////////
+         tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.[$.vars.name1]\"}}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         if(!jpl.validateSysObjRef(tmp)) {
+            jpl.wr("!invalid JSON");
+            return;
+         }
+         jpl.wr("====================== TEST 0.00: Dynamic Class Variable Reference ======================");
+         jpl.wrObj(tmp);
+         jpl.wr("REF 1:");
+         res = jpl.processRef(tmp, code.funcs.get(0));
+         jpl.wrObj(res);         
+         
          /////////////////////////TESTS: REFERENCE
          tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp1\"}}";
          tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
@@ -571,6 +584,19 @@ public class JsonPL {
          jpl.wrObj(tmp);
          jpl.runProgram();         
 
+         /////////////////////////////////////////////////////////////////////////////
+         tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.[$.vars.name1]\"}}";
+         tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         if(!jpl.validateSysObjRef(tmp)) {
+            jpl.wr("!invalid JSON");
+            return;
+         }
+         jpl.wr("====================== TEST 12.00: Dynamic Class Variable Reference ======================");
+         jpl.wrObj(tmp);
+         jpl.wr("REF 1:");
+         res = jpl.processRef(tmp, code.funcs.get(0));
+         jpl.wrObj(res);     
+         
       } catch (Exception e) {
          Logger.wrl("Error!");
          e.printStackTrace();
@@ -590,6 +616,6 @@ public class JsonPL {
       jpl.program.vars.get(0).val.v = dataFromAjax[0];
       jpl.program.vars.get(1).val.v = dataFromAjax[1];   
       var tmp = jpl.runProgram();
-      return tmp.val.v;
+      return (tmp.val.v + "");
    }   
 }
