@@ -1766,10 +1766,7 @@ namespace com.middlemind.JsonPL {
                name = c;
                JsonObjSysBase tmp = null;
                //lookup use of string var here
-               if (c.IndexOf("[") == 0) {
-                  //string nc = c.Replace("[", "");
-                  //nc = nc.Replace("]", "");
-                  
+               if (c.IndexOf("[") == 0) {                  
                   string nc = c.Substring(1, c.Length - 2);
 
                   tmp = new JsonObjSysBase();
@@ -1814,9 +1811,6 @@ namespace com.middlemind.JsonPL {
                JsonObjSysBase tmp = null;
                //lookup use of string var here
                if (c.IndexOf("[") == 0) {
-                  //string nc = c.Replace("[", "");
-                  //nc = nc.Replace("]", "");
-
                   string nc = c.Substring(1, c.Length - 2);
 
                   tmp = new JsonObjSysBase();
@@ -1841,57 +1835,6 @@ namespace com.middlemind.JsonPL {
             }
          }
          return fnd;
-
-         /*
-         if (objRef.val.v.ToString().IndexOf("#.") == 0) {
-            //program/class var
-            path = objRef.val.v.ToString().Substring(2);
-            vls = path.Split(".");
-            if (vls[0].Equals("vars")) {
-               fnd = this.findVar(vls[1], prog);
-               if (fnd != null) {
-                  //this.wr("processRef: found reference result: " + this.wrObj(fnd));
-                  return fnd;
-               } else {
-                  this.wr("processRef: Error: could not find var with name '" + vls[1] + "' in program func: " + func.name);
-                  return null;
-               }
-            } else {
-               this.wr("processRef: Error: unsupported path '" + vls + "'");
-               return null;
-            }
-
-         } else if (objRef.val.v.ToString().IndexOf("$.") == 0) {
-            //func var, arg
-            path = objRef.val.v.ToString().Substring(2);
-            vls = path.Split(".");
-            if (vls[0].Equals("vars")) {
-               fnd = this.findVar(vls[1], func);
-               if (fnd != null) {
-                  //this.wr("processRef: found reference result: " + this.wrObj(fnd));            
-                  return fnd;
-               } else {
-                  this.wr("processRef: Error: could not find var with name '" + vls[1] + "' in func: " + func.name);
-                  return null;
-               }
-            } else if (vls[0].Equals("args")) {
-               fnd = this.findArg(vls[1], func);
-               if (fnd != null) {
-                  //this.wr("processRef: found reference result: " + this.wrObj(fnd));            
-                  //this.wrObj(func.args);
-                  return fnd;
-               } else {
-                  this.wr("processRef: Error: could not find arg with name '" + vls[1] + "' in func: " + func.name);
-                  //this.wrObj(func.args);
-                  return null;
-               }
-            } else {
-               this.wr("processRef: Error: unsupported path '" + vls + "'");
-               return null;
-            }
-         }
-         return null;
-         */
       }
 
       //TODO
@@ -3047,6 +2990,45 @@ namespace com.middlemind.JsonPL {
             this.wr("processExp: Error: type mismatch: " + left.val.type + " - " + right.val.type);
             return null;
          }
+      }
+
+
+      /**
+       * Name: processReplDirectives
+       * Desc: A function to process replacement directive in a string using provided key, value pairs.
+       * Arg1: keys(an array of keys)
+       * Arg2: values(an array of key values)
+       * Arg3: src(the JSON text to process) 
+       * Returns: string(new, adjusted, JSON string)
+       */
+      public string processReplDirectives(string[] keys, string[] values, string src) {
+         if (keys == null) {
+            this.wr("ReplDirectives: Error: argument keys cannot be null.");
+            return null;
+         }
+
+         if (values == null) {
+            this.wr("ReplDirectives: Error: argument values cannot be null.");
+            return null;
+         }
+
+         if (values.Length != keys.Length) {
+            this.wr("ReplDirectives: Error: argument keys and values must have the same length.");
+            return null;
+         }
+
+         if (src == null) {
+            this.wr("ReplDirectives: Error: argument src cannot be null.");
+            return null;
+         }
+
+         string nsrc = this.toStr(src);
+         for (int i = 0; i < keys.Length; i++) {
+            string fnd = "&(repl::" + keys[i] + ")";
+            nsrc = nsrc.Replace(fnd, values[i]);
+         }
+
+         return nsrc;
       }
    }
 }

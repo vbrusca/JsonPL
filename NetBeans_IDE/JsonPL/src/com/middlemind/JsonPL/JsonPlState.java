@@ -1647,6 +1647,7 @@ public class JsonPlState {
    * Arg2: func(func obj, sys=func)
    * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
     */
+   @SuppressWarnings("IndexOfReplaceableByContains")
    public JsonObjSysBase processRef(JsonObjSysBase objRef, JsonObjSysBase func) {
       String path = null;
       String[] vls = null;
@@ -3034,4 +3035,42 @@ public class JsonPlState {
          return null;
       }
    }
+   
+   /**
+    * Name: processReplDirectives
+    * Desc: A function to process replacement directive in a string using provided key, value pairs.
+    * Arg1: keys(an array of keys)
+    * Arg2: values(an array of key values)
+    * Arg3: src(the JSON text to process) 
+    * Returns: string(new, adjusted, JSON string)
+    */
+   public String processReplDirectives(String[] keys, String[] values, String src) {
+      if(keys == null) {
+         this.wr("ReplDirectives: Error: argument keys cannot be null.");
+         return null;
+      }
+
+      if(values == null) {
+         this.wr("ReplDirectives: Error: argument values cannot be null.");      
+         return null;
+      }
+
+      if(values.length != keys.length) {
+         this.wr("ReplDirectives: Error: argument keys and values must have the same length.");
+         return null;
+      }
+
+      if(src == null) {
+         this.wr("ReplDirectives: Error: argument src cannot be null.");
+         return null;
+      }
+
+      String nsrc = this.toStr(src);
+      for(int i = 0; i < keys.length; i++) {
+         String fnd = "&(repl::" + keys[i] + ")";
+         nsrc = nsrc.replaceAll(fnd, values[i]);
+      }
+
+      return nsrc;
+   }   
 }

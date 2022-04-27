@@ -2920,3 +2920,41 @@ jsonPlState.prototype.processExp = function(objExp, func) {
       return null;
    }
 };
+
+/**
+ * Name: processReplDirectives
+ * Desc: A function to process replacement directive in a string using provided key, value pairs.
+ * Arg1: keys(an array of keys)
+ * Arg2: values(an array of key values)
+ * Arg3: src(the JSON text to process) 
+ * Returns: string(new, adjusted, JSON string)
+ */
+jsonPlState.prototype.processReplDirectives = function(keys, values, src) {
+   if(keys === null) {
+      this.wr("ReplDirectives: Error: argument keys cannot be null.");
+      return null;
+   }
+   
+   if(values === null) {
+      this.wr("ReplDirectives: Error: argument values cannot be null.");      
+      return null;
+   }
+   
+   if(values.length != keys.length) {
+      this.wr("ReplDirectives: Error: argument keys and values must have the same length.");
+      return null;
+   }
+   
+   if(src === null) {
+      this.wr("ReplDirectives: Error: argument src cannot be null.");
+      return null;
+   }
+
+   var nsrc = this.toStr(src);
+   for(var i = 0; i < keys.length; i++) {
+      var fnd = "&(repl::" + keys[i] + ")";
+      nsrc = nsrc.replaceAll(fnd, values[i]);
+   }
+   
+   return nsrc;
+};
