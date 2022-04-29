@@ -2922,6 +2922,25 @@ jsonPlState.prototype.processExp = function(objExp, func) {
 };
 
 /**
+ * Name: hasReplDirectives
+ * Desc: A function to determine if the given string has any replacement directives defined.
+ * Arg1: src(the JSON text to check) 
+ * Returns: {true | false}
+ */
+jsonPlState.prototype.hasReplDirectives = function(src) {
+	if(src === null) {
+      this.wr("hasReplDirectives: Error: argument src cannot be null.");
+      return false;
+	}
+   
+	if(src.indexOf("&(repl::") === -1) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+/**
  * Name: processReplDirectives
  * Desc: A function to process replacement directive in a string using provided key, value pairs.
  * Arg1: keys(an array of keys)
@@ -2931,22 +2950,22 @@ jsonPlState.prototype.processExp = function(objExp, func) {
  */
 jsonPlState.prototype.processReplDirectives = function(keys, values, src) {
    if(keys === null) {
-      this.wr("ReplDirectives: Error: argument keys cannot be null.");
+      this.wr("processReplDirectives: Error: argument keys cannot be null.");
       return null;
    }
    
    if(values === null) {
-      this.wr("ReplDirectives: Error: argument values cannot be null.");      
+      this.wr("processReplDirectives: Error: argument values cannot be null.");      
       return null;
    }
    
    if(values.length != keys.length) {
-      this.wr("ReplDirectives: Error: argument keys and values must have the same length.");
+      this.wr("processReplDirectives: Error: argument keys and values must have the same length.");
       return null;
    }
    
    if(src === null) {
-      this.wr("ReplDirectives: Error: argument src cannot be null.");
+      this.wr("processReplDirectives: Error: argument src cannot be null.");
       return null;
    }
 

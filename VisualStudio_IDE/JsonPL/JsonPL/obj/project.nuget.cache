@@ -1,10 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "Kor9vWWxP4KcqU8hc4lqmdgxrMHRfeQVVHUOj9IEdXs8el42iU8EMK/w3rYFFrWFWgjIW64Tqai7k7PtMHwatg==",
+  "dgSpecHash": "RQjcMsHamdX4lCl9TyZXLu5JaEBF5t7zRqIdsVEXm+xhrJweYAwob6Wxrye7OJeAjxHOJRlZ0jUGoLe5bbpAYA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\variable\\Documents\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\JsonPL.csproj",
+  "projectFilePath": "C:\\FILES\\OIT_LAPTOP_BACKUP\\DOCUMENTS\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\JsonPL.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\variable\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+    "C:\\Users\\brusc\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\brusc\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.24\\microsoft.netcore.app.host.win-x64.3.1.24.nupkg.sha512",
+    "C:\\Users\\brusc\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.10\\microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
+    "C:\\Users\\brusc\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\3.1.0\\microsoft.windowsdesktop.app.ref.3.1.0.nupkg.sha512",
+    "C:\\Users\\brusc\\.nuget\\packages\\microsoft.netcore.app.ref\\3.1.0\\microsoft.netcore.app.ref.3.1.0.nupkg.sha512"
   ],
   "logs": []
 }

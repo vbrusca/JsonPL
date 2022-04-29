@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\variable\\Documents\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\JsonPL.csproj": {}
+    "C:\\FILES\\OIT_LAPTOP_BACKUP\\DOCUMENTS\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\JsonPL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\variable\\Documents\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\JsonPL.csproj": {
+    "C:\\FILES\\OIT_LAPTOP_BACKUP\\DOCUMENTS\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\JsonPL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\variable\\Documents\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\JsonPL.csproj",
+        "projectUniqueName": "C:\\FILES\\OIT_LAPTOP_BACKUP\\DOCUMENTS\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\JsonPL.csproj",
         "projectName": "JsonPL",
-        "projectPath": "C:\\Users\\variable\\Documents\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\JsonPL.csproj",
-        "packagesPath": "C:\\Users\\variable\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\variable\\Documents\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\obj\\",
+        "projectPath": "C:\\FILES\\OIT_LAPTOP_BACKUP\\DOCUMENTS\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\JsonPL.csproj",
+        "packagesPath": "C:\\Users\\brusc\\.nuget\\packages\\",
+        "outputPath": "C:\\FILES\\OIT_LAPTOP_BACKUP\\DOCUMENTS\\GitHub\\JsonPL\\VisualStudio_IDE\\JsonPL\\JsonPL\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\variable\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\brusc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -55,12 +55,30 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.10, 3.1.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[3.1.24, 3.1.24]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[3.1.0, 3.1.0]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[3.1.0, 3.1.0]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.407\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }
