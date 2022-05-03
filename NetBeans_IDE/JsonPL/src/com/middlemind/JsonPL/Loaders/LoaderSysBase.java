@@ -14,13 +14,13 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class LoaderSysBase implements Loader {
 
-   /**
+    /**
     * A string representing the name of this class. This is used to define the
     * class in JSON output files.
     */
-   public String obj_name = "LoaderSysBase";
+    public String obj_name = "LoaderSysBase";
 
-   /**
+    /**
     * A method used to parse and load JSON data files.
     *
     * @param json The contents of the JSON file to load.
@@ -30,20 +30,25 @@ public class LoaderSysBase implements Loader {
     * @throws ExceptionLoader An exception is thrown if there is an issue during
     * the JSON data load.
     */
-   @Override
-   public JsonObjSysBase ParseJson(String json, String targetClass) throws ExceptionLoader {
-      GsonBuilder builder = new GsonBuilder();
-      builder.setPrettyPrinting();
+    @Override
+    public JsonObjSysBase ParseJson(String json, String targetClass) throws ExceptionLoader {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
 
-      Gson gson = builder.create();
-      try {
-         JsonObjSysBase jsonObj = (JsonObjSysBase) Class.forName(targetClass).getConstructor().newInstance();
-         jsonObj = gson.fromJson(json, jsonObj.getClass());
-         jsonObj.obj_name = targetClass;
-         jsonObj.loader = getClass().getName();         
-         return jsonObj;
-      } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-         throw new ExceptionLoader("Could not find target class, " + targetClass + ", in loader " + getClass().getName());
-      }
-   }
+        Gson gson = builder.create();
+        try {
+            JsonObjSysBase jsonObj = (JsonObjSysBase) Class.forName(targetClass).getConstructor().newInstance();
+            jsonObj = gson.fromJson(json, jsonObj.getClass());
+            
+            //jsonObj.obj_name = targetClass;
+            //jsonObj.loader = getClass().getName();
+         
+            jsonObj.obj_name = null;
+            jsonObj.loader = null;
+                
+            return jsonObj;
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new ExceptionLoader("Could not find target class, " + targetClass + ", in loader " + getClass().getName());
+        }
+    }
 }

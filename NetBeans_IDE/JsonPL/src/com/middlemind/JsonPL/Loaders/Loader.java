@@ -20,5 +20,5 @@ public interface Loader {
     * @throws ExceptionLoader An exception is thrown if there is an issue during
     * the JSON data load.
     */
-   public JsonObjSysBase ParseJson(String json, String targetClass) throws ExceptionLoader;
+    public JsonObjSysBase ParseJson(String json, String targetClass) throws ExceptionLoader;
 }
