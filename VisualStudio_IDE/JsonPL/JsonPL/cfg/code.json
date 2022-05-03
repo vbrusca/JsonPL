@@ -20,6 +20,18 @@
             "type": "bool",
             "v": "false"
          }         
+      },
+      {
+          "sys": "var",
+          "name": "tmp3",
+          "val": {
+              "sys": "val",
+              "type": "int[]",
+              "len": "0",
+              "v": [
+                        
+              ]
+          }         
       }
    ],
    "funcs": [

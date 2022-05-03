@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 using System.Reflection;
+using Newtonsoft.Json.Linq;
 
 /**
 * JSON Programming Language
@@ -313,7 +314,7 @@ namespace com.middlemind.JsonPL
 
         /**
         * Name: findSysFunc
-        * Desc: Search the current program's sytem functions for a func with the given name.
+        * Desc: Search the current program's system functions for a func with the given name.
         * Arg1: name(string to find)
         * Returns: {null | (func obj, sys=func)}
          */
@@ -438,10 +439,9 @@ namespace com.middlemind.JsonPL
         * Arg1: arg(javascript array)
         * Returns: (true | false)
         */
-        //TODO
         public bool isArray(Object arg)
         {
-            if (arg is IList || arg is Array)
+            if (arg is IList || arg is JArray)
             {
                 return true;
             }
@@ -460,6 +460,99 @@ namespace com.middlemind.JsonPL
         public bool isString(Object arg)
         {
             if (arg is string)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /**
+         * Name: isNumber
+         * Desc: Checks if the given argument is a number. 
+         * Arg1: arg(some value)
+         * Returns: (true | false)
+         */
+        public bool isNumber(Object arg)
+        {
+            if (arg == null)
+            {
+                return false;
+            }
+            else if (arg is int || arg is float) {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
+        /**
+         * Name: isInteger
+         * Desc: Checks if the given argument is an integer. 
+         * Arg1: arg(some value)
+         * Returns: (true | false)
+         */
+        public bool isInteger(Object arg)
+        {
+            if (arg == null)
+            {
+                return false;
+            }
+            else if (arg is int) {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
+        /**
+         * Name: isFloat
+         * Desc: Checks if the given argument is a float. 
+         * Arg1: arg(some value)
+         * Returns: (true | false)
+         */
+        public bool isFloat(Object arg)
+        {
+            if (arg == null)
+            {
+                return false;
+            }
+            else if (arg is float) 
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
+        /**
+         * Name: isBool
+         * Desc: Checks if the given argument is a bool. 
+         * Arg1: arg(some value)
+         * Returns: (true | false)
+         */
+        public bool isBool(Object arg)
+        {
+            if (arg == null)
+            {
+                return false;
+            }
+            else if (arg is bool) {
+                return true;
+            } else if (this.isNumber(arg) && (int)arg == 1 || (int)arg == 0)
+            {
+                return true;
+            }
+            else if (this.isNumber(arg) && (float)arg == 1.0 || (float)arg == 0.0)
+            {
+                return true;
+            }
+            else if (this.isString(arg) && (((string)arg).Equals("yes") || ((string)arg).Equals("no") || ((string)arg).Equals("true") || ((string)arg).Equals("false") || ((string)arg).Equals("1") || ((string)arg).Equals("0") || ((string)arg).Equals("1.0") || ((string)arg).Equals("0.0")))
             {
                 return true;
             }
@@ -544,6 +637,24 @@ namespace com.middlemind.JsonPL
                 }
             }
             return false;
+        }
+
+        /**
+         * Name: isSysObjValArray
+         * Desc: Checks if the given object is a val sys object array. 
+         * Arg1: obj(sys obj to check)
+         * Returns: (true | false)
+         */
+        public bool isSysObjValArray(JsonObjSysBase obj)
+        {
+            if (this.isSysObjVal(obj) == true && this.validateProperties(obj, new String[] { "len" }) && this.isInteger(obj.len) && this.isArray(obj.v))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /**
@@ -663,6 +774,44 @@ namespace com.middlemind.JsonPL
         }
 
         /**
+         * Name: isSysObjFuncLine
+         * Desc: Checks if the given object is a functio line sys object. 
+         * Arg1: obj(sys obj to check)
+         * Returns: (true | false)
+         */
+        public bool isSysObjFuncLine(JsonObjSysBase obj)
+        {
+            if (this.isSysObj(obj))
+            {
+                if (this.getSysObjType(obj).Equals("asgn"))
+                {
+                    return true;
+                }
+                else if (this.getSysObjType(obj).Equals("for"))
+                {
+                    return true;
+                }
+                else if (this.getSysObjType(obj).Equals("if"))
+                {
+                    return true;
+                }
+                else if (this.getSysObjType(obj).Equals("return"))
+                {
+                    return true;
+                }
+                else if (this.getSysObjType(obj).Equals("call"))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        /**
         * Name: isSysObjFunc
         * Desc: Checks if the given object is a func sys object. 
         * Arg1: obj(sys obj to check)
@@ -693,6 +842,25 @@ namespace com.middlemind.JsonPL
             {
                 string objSys = getSysObjType(obj);
                 if (!Utils.IsStringEmpty(objSys) && objSys.Equals("for"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /**
+         * Name: isSysObjOp
+         * Desc: Checks if the given object is an op sys object. 
+         * Arg1: obj(sys obj to check)
+         * Returns: (true | false)
+         */
+        public bool isSysObjOp(JsonObjSysBase obj)
+        {
+            if (this.isSysObj(obj) == true)
+            {
+                string objSys = getSysObjType(obj);
+                if (!Utils.IsStringEmpty(objSys) && objSys.Equals("op"))
                 {
                     return true;
                 }
@@ -739,7 +907,7 @@ namespace com.middlemind.JsonPL
 
         /**
         * Name: getSysObjType
-        * Desc: Gets the value of the sys attribute of the given sys object.. 
+        * Desc: Gets the value of the sys attribute of the given sys object.
         * Arg1: obj(sys obj to check)
         * Returns: (true | false)
          */
@@ -775,13 +943,13 @@ namespace com.middlemind.JsonPL
         public bool validateSysObjIf(JsonObjSysBase obj)
         {
             string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("if")) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right", "thn", "els" }))
+            if (this.isSysObjIf(obj) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right", "thn", "els" }))
             {
                 JsonObjSysBase tobj = null;
                 if (obj.left != null)
                 {
                     tobj = obj.left;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
+                    if (this.isSysObjRef(tobj))
                     {
                         if (!this.validateSysObjRef(tobj))
                         {
@@ -789,7 +957,7 @@ namespace com.middlemind.JsonPL
                             return false;
                         }
                     }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
+                    else if (this.isSysObjConst(tobj))
                     {
                         if (!this.validateSysObjConst(tobj))
                         {
@@ -797,7 +965,7 @@ namespace com.middlemind.JsonPL
                             return false;
                         }
                     }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
+                    else if (this.isSysObjExp(tobj))
                     {
                         if (!this.validateSysObjExp(tobj))
                         {
@@ -805,7 +973,7 @@ namespace com.middlemind.JsonPL
                             return false;
                         }
                     }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
+                    else if (this.isSysObjBex(tobj))
                     {
                         if (!this.validateSysObjBex(tobj))
                         {
@@ -813,7 +981,7 @@ namespace com.middlemind.JsonPL
                             return false;
                         }
                     }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
+                    else if (this.isSysObjCall(tobj))
                     {
                         if (!this.validateSysObjCall(tobj))
                         {
@@ -836,7 +1004,7 @@ namespace com.middlemind.JsonPL
                 if (obj.op != null)
                 {
                     tobj = obj.op;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("op"))
+                    if (this.isSysObjOp(tobj))
                     {
                         if (!this.validateSysObjOp(tobj))
                         {
@@ -864,7 +1032,7 @@ namespace com.middlemind.JsonPL
                 if (obj.right != null)
                 {
                     tobj = obj.right;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
+                    if (this.isSysObjRef(tobj))
                     {
                         if (!this.validateSysObjRef(tobj))
                         {
@@ -872,7 +1040,7 @@ namespace com.middlemind.JsonPL
                             return false;
                         }
                     }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
+                    else if (this.isSysObjConst(tobj))
                     {
                         if (!this.validateSysObjConst(tobj))
                         {
@@ -880,7 +1048,7 @@ namespace com.middlemind.JsonPL
                             return false;
                         }
                     }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
+                    else if (this.isSysObjExp(tobj))
                     {
                         if (!this.validateSysObjExp(tobj))
                         {
@@ -888,7 +1056,7 @@ namespace com.middlemind.JsonPL
                             return false;
                         }
                     }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
+                    else if (this.isSysObjBex(tobj))
                     {
                         if (!this.validateSysObjBex(tobj))
                         {
@@ -896,7 +1064,7 @@ namespace com.middlemind.JsonPL
                             return false;
                         }
                     }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
+                    else if (this.isSysObjCall(tobj))
                     {
                         if (!this.validateSysObjCall(tobj))
                         {
@@ -919,8 +1087,8 @@ namespace com.middlemind.JsonPL
                 if (obj.thn != null && this.isArray(obj.thn))
                 {
                     List<JsonObjSysBase> tobjLst = obj.thn;
-                    var len = tobjLst.Count;
-                    for (var i = 0; i < len; i++)
+                    int len = tobjLst.Count;
+                    for (int i = 0; i < len; i++)
                     {
                         if (!this.validateSysObjFuncLine(tobjLst[i]))
                         {
@@ -933,8 +1101,8 @@ namespace com.middlemind.JsonPL
                 if (obj.els != null && this.isArray(obj.els))
                 {
                     List<JsonObjSysBase> tobjLst = obj.els;
-                    var len = tobjLst.Count;
-                    for (var i = 0; i < len; i++)
+                    int len = tobjLst.Count;
+                    for (int i = 0; i < len; i++)
                     {
                         if (!this.validateSysObjFuncLine(tobjLst[i]))
                         {
@@ -1135,7 +1303,7 @@ namespace com.middlemind.JsonPL
                     return false;
                 }
 
-                for (var i = 0; i < obj.lines.Count; i++)
+                for (int i = 0; i < obj.lines.Count; i++)
                 {
                     if (!this.validateSysObjFuncLine(obj.lines[i]))
                     {
@@ -1182,7 +1350,7 @@ namespace com.middlemind.JsonPL
                     return false;
                 }
 
-                for (var i = 0; i < obj.vars.Count; i++)
+                for (int i = 0; i < obj.vars.Count; i++)
                 {
                     if (!this.validateSysObjVar(obj.vars[i]))
                     {
@@ -1191,7 +1359,7 @@ namespace com.middlemind.JsonPL
                     }
                 }
 
-                for (var i = 0; i < obj.funcs.Count; i++)
+                for (int i = 0; i < obj.funcs.Count; i++)
                 {
                     if (!this.validateSysObjFunc(obj.funcs[i]))
                     {
@@ -1216,7 +1384,7 @@ namespace com.middlemind.JsonPL
          */
         public bool validateSysObjFuncLine(JsonObjSysBase obj)
         {
-            if (this.isSysObj(obj))
+            if (this.isSysObjFuncLine(obj))
             {
                 if (this.getSysObjType(obj).Equals("asgn"))
                 {
@@ -1224,6 +1392,10 @@ namespace com.middlemind.JsonPL
                     {
                         this.wr("validateSysObjFuncLine: Error: could not validate obj as asgn");
                         return false;
+                    }
+                    else
+                    {
+                        return true;
                     }
                 }
                 else if (this.getSysObjType(obj).Equals("for"))
@@ -1233,6 +1405,10 @@ namespace com.middlemind.JsonPL
                         this.wr("validateSysObjFuncLine: Error: could not validate obj as for");
                         return false;
                     }
+                    else
+                    {
+                        return true;
+                    }
                 }
                 else if (this.getSysObjType(obj).Equals("if"))
                 {
@@ -1240,6 +1416,10 @@ namespace com.middlemind.JsonPL
                     {
                         this.wr("validateSysObjFuncLine: Error: could not validate obj as if");
                         return false;
+                    }
+                    else
+                    {
+                        return true;
                     }
                 }
                 else if (this.getSysObjType(obj).Equals("return"))
@@ -1249,6 +1429,10 @@ namespace com.middlemind.JsonPL
                         this.wr("validateSysObjFuncLine: Error: could not validate obj as return");
                         return false;
                     }
+                    else
+                    {
+                        return true;
+                    }
                 }
                 else if (this.getSysObjType(obj).Equals("call"))
                 {
@@ -1257,13 +1441,17 @@ namespace com.middlemind.JsonPL
                         this.wr("validateSysObjFuncLine: Error: could not validate obj as call");
                         return false;
                     }
+                    else
+                    {
+                        return true;
+                    }
                 }
                 else
                 {
                     return false;
                 }
             }
-            return true;
+            return false;
         }
 
         /**
@@ -1293,7 +1481,7 @@ namespace com.middlemind.JsonPL
                     return false;
                 }
 
-                for (var i = 0; i < obj.vars.Count; i++)
+                for (int i = 0; i < obj.vars.Count; i++)
                 {
                     if (!this.validateSysObjVar(obj.vars[i]))
                     {
@@ -1302,7 +1490,7 @@ namespace com.middlemind.JsonPL
                     }
                 }
 
-                for (var i = 0; i < obj.args.Count; i++)
+                for (int i = 0; i < obj.args.Count; i++)
                 {
                     if (!this.validateSysObjArg(obj.args[i]))
                     {
@@ -1311,7 +1499,7 @@ namespace com.middlemind.JsonPL
                     }
                 }
 
-                for (var i = 0; i < obj.lines.Count; i++)
+                for (int i = 0; i < obj.lines.Count; i++)
                 {
                     if (!this.validateSysObjFuncLine(obj.lines[i]))
                     {
@@ -1801,6 +1989,7 @@ namespace com.middlemind.JsonPL
                         }
                         else
                         {
+                            this.wr("validateSysObjCall: Error: Unhandled sys obj type: " + tobj.sys);
                             return false;
                         }
                     }
@@ -1850,7 +2039,7 @@ namespace com.middlemind.JsonPL
               "val": {
                  "sys": "val",
                  "type": "int",
-                 "v": [some_array]
+                 "v": [{const | ref}]
               }
            }
           -!>
@@ -1950,40 +2139,215 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: validateSysObjVal
-        * Desc: Validates if the given object is a valid val sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-             {
-                "sys": "val",
-                "type": "int | float | string | bool & type of string",
-                "v": "some valid value"
-             },
-             {
-                "sys": "val",
-                "type": "int | float | string | bool & type of string",
-                "va": "some valid array"
-             }
-          -!>
+         * Name: validateSysObjVal 
+         * Desc: Validates if the given object is a valid val sys object. 
+         * Arg1: obj(sys obj to check) 
+         * Returns: {false | true}
+         * Struct: <!-
+         * {
+         * "sys": "val",
+         * "type": "int | float | string | bool & type of string",
+         * "v": "some valid value"
+         * }
+         * -!>
          */
         public bool validateSysObjVal(JsonObjSysBase obj)
         {
-            string sysType = this.getSysObjType(obj);
-            //this.wr("validateSysObjVal: type: 000: " + obj.type + ", " + obj.v);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("val")) && this.validateProperties(obj, new string[] { "sys", "type", "v" }))
+            String sysType = this.getSysObjType(obj);
+            if (this.isSysObjVal(obj) && this.validateProperties(obj, new String[] { "sys", "type", "v" }))
             {
-                //this.wr("validateSysObjVal: type");
-                if (!(obj.type.Equals("int") || obj.type.Equals("float") || obj.type.Equals("string") || obj.type.Equals("bool") || obj.type.Equals("array")))
+                if (
+                    !(obj.type.Equals("int") || obj.type.Equals("float") || obj.type.Equals("string") || obj.type.Equals("bool"))
+                    && !(obj.type.Equals("int[]") || obj.type.Equals("float[]") || obj.type.Equals("string[]") || obj.type.Equals("bool[]"))
+                )
                 {
-                    //this.wr("validateSysObjVal: type: AAA");
                     return false;
                 }
-                //this.wr("validateSysObjVal: type: BBB");         
+
+                bool isArray = false;
+                int arrayLen = 0;
+                if (obj.type.Equals("int[]") || obj.type.Equals("float[]") || obj.type.Equals("string[]") || obj.type.Equals("bool[]"))
+                {
+                    isArray = true;
+                    if (!this.validateProperties(obj, new String[] { "len" }))
+                    {
+                        this.wr("validateSysObjVal: Error: array is missing length: " + obj.v + ", type: " + obj.type);
+                        return false;
+                    }
+                    else
+                    {
+                        if (!this.isInteger(obj.len) && this.toInt(obj.len) >= 0)
+                        {
+                            this.wr("validateSysObjVal: Error: array length is invalid: " + obj.v + ", type: " + obj.type + ", " + obj.len + ", " + this.isInteger(obj.len));
+                        }
+                        else
+                        {
+                            arrayLen = this.toInt(obj.len);
+                        }
+                    }
+                }
+
+                //ignore references
+                String tmp = this.toStr(obj.v);
+                if (tmp.IndexOf("#.") == -1 && tmp.IndexOf("$.") == -1)
+                {
+                    if (!isArray)
+                    {
+                        //base data types
+                        if (obj.type.Equals("int"))
+                        {
+                            if (!this.isInteger(this.toInt(obj.v)))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not an int value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                obj.v = this.toInt(obj.v);
+                            }
+                        }
+                        else if (obj.type.Equals("float"))
+                        {
+                            if (!this.isFloat(this.toFloat(obj.v)))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not a float value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                obj.v = this.toFloat(obj.v);
+                            }
+                        }
+                        else if (obj.type.Equals("string"))
+                        {
+                            if (!this.isString(this.toStr(obj.v)))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not a string value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                obj.v = this.toStr(obj.v);
+                            }
+                        }
+                        else if (obj.type.Equals("bool"))
+                        {
+                            if (!this.isBool(this.toBool(obj.v)))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not a boolean value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                obj.v = this.toBool(obj.v);
+                            }
+                        }
+                        else
+                        {
+                            this.wr("validateSysObjVal: Error: unknown object type: " + obj.v + ", type: " + obj.type);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        ArrayList tmpA = this.toArray(obj.v);
+                        int arrayLenActual = tmpA.Count;
+                        if (arrayLenActual != arrayLen)
+                        {
+                            this.wr("validateSysObjVal: Error: array length mismatch: " + obj.v + ", type: " + obj.type);
+                            return false;
+                        }
+
+                        //array data types
+                        if (obj.type.Equals("int[]"))
+                        {
+                            if (!this.isArray(obj.v))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < arrayLenActual; i++)
+                                {
+                                    JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
+                                    if (!ltmp.val.type.Equals("int"))
+                                    {
+                                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'int' but found '" + ltmp.val.type + "'");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        else if (obj.type.Equals("float[]"))
+                        {
+                            if (!this.isArray(obj.v))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < arrayLenActual; i++)
+                                {
+                                    JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
+                                    if (!ltmp.val.type.Equals("float"))
+                                    {
+                                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'float' but found '" + ltmp.val.type + "'");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        else if (obj.type.Equals("string[]"))
+                        {
+                            if (!this.isArray(obj.v))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < arrayLenActual; i++)
+                                {
+                                    JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
+                                    if (!ltmp.val.type.Equals("string"))
+                                    {
+                                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'string' but found '" + ltmp.val.type + "'");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        else if (obj.type.Equals("bool[]"))
+                        {
+                            if (!this.isArray(obj.v))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < arrayLenActual; i++)
+                                {
+                                    JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
+                                    if (!ltmp.val.type.Equals("bool"))
+                                    {
+                                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'bool' but found '" + ltmp.val.type + "'");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            this.wr("validateSysObjVal: Error: unknown array object type: " + obj.v + ", type: " + obj.type);
+                            return false;
+                        }
+                    }
+                }
                 return true;
             }
-
-            //this.wr("validateSysObjVal: type: CCC");      
             return false;
         }
 
@@ -2043,7 +2407,7 @@ namespace com.middlemind.JsonPL
 
         /**
         * Name: validateProperties
-        * Desc: Validates if the given object has each of the array elements soecified in req.
+        * Desc: Validates if the given object has each of the array elements specified in req.
         * Arg1: obj(sys obj to check)
         * Arg2: req(array of attribute name to check for)
         * Returns: {false | true}
@@ -2109,7 +2473,7 @@ namespace com.middlemind.JsonPL
             List<string> nvls = new List<string>();
             string tt = null;
             int obrk = 0;
-            for (var k = 0; k < vls.Length; k++)
+            for (int k = 0; k < vls.Length; k++)
             {
                 if (inDynRef && vls[k].IndexOf("]") != -1)
                 {
@@ -2155,7 +2519,7 @@ namespace com.middlemind.JsonPL
             }
 
             vls = new string[nvls.Count];
-            for (var k = 0; k < nvls.Count; k++)
+            for (int k = 0; k < nvls.Count; k++)
             {
                 if (nvls[k] != null)
                 {
@@ -2177,7 +2541,7 @@ namespace com.middlemind.JsonPL
             //this.wr("===============================================Found entries: " + vls.length);
             for (int k = 0; k < vls.Length; k++)
             {
-                String c = vls[k];
+                string c = vls[k];
                 //this.wr("===============================================Found entry: " + k + ", " + vls[k]);      
 
                 if (!foundSource)
@@ -2248,10 +2612,10 @@ namespace com.middlemind.JsonPL
                         tmp.val.sys = "ref";
                         tmp.val.v = nc;
 
-                        tmp = processRef(tmp, func);
+                        tmp = this.processRef(tmp, func);
                         if (tmp.val.type.Equals("string"))
                         {
-                            name = toStr(tmp.val.v + "");
+                            name = this.toStr(tmp.val.v + "");
                         }
                         else
                         {
@@ -2310,10 +2674,10 @@ namespace com.middlemind.JsonPL
                         tmp.val.sys = "ref";
                         tmp.val.v = nc;
 
-                        tmp = processRef(tmp, func);
+                        tmp = this.processRef(tmp, func);
                         if (tmp.val.type.Equals("int"))
                         {
-                            idx = toInt(tmp.val.v + "");
+                            idx = this.toInt(tmp.val.v + "");
                         }
                         else
                         {
@@ -2321,9 +2685,9 @@ namespace com.middlemind.JsonPL
                         }
                     }
 
-                    if (type.Equals("array"))
+                    if (this.isSysObjValArray(fnd.val))
                     {
-                        fnd = (JsonObjSysBase)((List<Object>)fnd.val.v)[idx];
+                        fnd = (JsonObjSysBase)(this.toArray(fnd.val.v)[idx]);
                     }
                     else
                     {
@@ -2335,7 +2699,7 @@ namespace com.middlemind.JsonPL
         }
 
         //TODO
-        public int toBoolInt(string v)
+        public int toBoolInt(object v)
         {
             string vb = v + "";
             vb = vb.ToLower();
@@ -2358,25 +2722,60 @@ namespace com.middlemind.JsonPL
         }
 
         //TODO
-        public int toInt(string v)
+        public int toInt(object v)
         {
-            return int.Parse(v);
+            return int.Parse(v + "");
         }
 
         //TODO
-        public float toFloat(string v)
+        public float toFloat(object v)
         {
-            return float.Parse(v);
+            return float.Parse(v + "");
         }
 
         //TODO
-        public string toStr(string v)
+        public string toStr(object v)
         {
             return (v + "");
         }
 
         //TODO
-        public bool toBool(string v)
+        public ArrayList toArray(Object v)
+        {
+            if (this.isArray(v))
+            {
+                //special case array comes in from JSON ready incorrectly
+                if (v is JArray)
+                {
+                    JArray jar = (JArray)v;
+                    ArrayList al = new ArrayList();
+                    for(int i = 0; i < jar.Count; i++)
+                    {
+                        JsonObjSysBase jtmp = jar[i].ToObject<JsonObjSysBase>();
+                        if (this.isArray(v))
+                        {
+                            al.Add(this.toArray(v));
+                        }
+                        else
+                        {
+                            al.Add(jtmp);
+                        }
+                    }
+                    return al;
+                }
+                else
+                {
+                    return (ArrayList)v;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        //TODO
+        public bool toBool(object v)
         {
             string vb = v + "";
             vb = vb.ToLower();
@@ -2860,7 +3259,7 @@ namespace com.middlemind.JsonPL
                     line = objLines[j];
 
                     //support comments
-                    if (line.active == false)
+                    if (line.active != null && this.toBool(line.active) == false)
                     {
                         continue;
                     }
@@ -2901,11 +3300,11 @@ namespace com.middlemind.JsonPL
             else
             {
                 this.wr("processIfForLines: Warning: provided lines array is null");
-                var ret = new JsonObjSysBase("val");
+                JsonObjSysBase ret = new JsonObjSysBase("val");
                 ret.type = "bool";
                 ret.v = "true";
 
-                var ret2 = new JsonObjSysBase("const");
+                JsonObjSysBase ret2 = new JsonObjSysBase("const");
                 ret2.sys = "const";
                 ret2.val = ret;
                 ret = ret2;
@@ -3105,17 +3504,27 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: processAsgn
-        * Desc: Processes an assigment. Returns true value.
-        * Arg1: objAsgn(asgn obj, sys=asgn)
-        * Arg2: func(func obj, sys=func)
-        * Returns: {null | (const obj, sys=const)}
+         * Name: processAsgn 
+         * Desc: Processes an assigment. Returns true value. 
+         * Arg1: objAsgn(asgn obj, sys=asgn) 
+         * Arg2: func(func obj, sys=func) 
+         * Returns: {null | (const obj, sys=const)}
          */
         public JsonObjSysBase processAsgn(JsonObjSysBase objAsgn, JsonObjSysBase func)
         {
             JsonObjSysBase left = null;
             JsonObjSysBase op = null;
             JsonObjSysBase right = null;
+
+            bool leftIsBasic = false;
+            bool leftIsArray = false;
+            bool leftIsRef = false;
+            JsonObjSysBase leftOrig = null;
+
+            bool rightIsBasic = false;
+            bool rightIsArray = false;
+            bool rightIsRef = false;
+            JsonObjSysBase rightOrig = null;
 
             if (!this.isSysObjAsgn(objAsgn))
             {
@@ -3132,6 +3541,19 @@ namespace com.middlemind.JsonPL
             left = objAsgn.left;
             op = objAsgn.op;
             right = objAsgn.right;
+
+            leftOrig = left;
+            rightOrig = right;
+
+            if (this.isSysObjRef(left))
+            {
+                leftIsRef = true;
+            }
+
+            if (this.isSysObjRef(right))
+            {
+                rightIsRef = true;
+            }
 
             left = this.processRef(left, func);
             if (left == null)
@@ -3176,26 +3598,76 @@ namespace com.middlemind.JsonPL
                 return null;
             }
 
-            if (left.val.type.Equals(right.val.type))
+            if (this.isSysObjValArray(left))
             {
-                left.val.v = right.val.v;
-
-                var ret = new JsonObjSysBase("val");
-                ret.type = "bool";
-                ret.v = "true";
-
-                var ret2 = new JsonObjSysBase("const");
-                ret2.val = ret;
-
-                ret = ret2;
-                this.lastAsgnValue = this.cloneJsonObj(left);
-                this.lastAsgnReturn = ret;
-                return ret;
+                leftIsArray = true;
             }
             else
             {
-                this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type);
-                return null;
+                leftIsBasic = true;
+            }
+
+            if (this.isSysObjValArray(right))
+            {
+                rightIsArray = true;
+            }
+            else
+            {
+                rightIsBasic = true;
+            }
+
+            JsonObjSysBase ret = new JsonObjSysBase("val");
+            ret.type = "bool";
+            ret.v = "true";
+
+            JsonObjSysBase ret2 = new JsonObjSysBase("const");
+            ret2.val = ret;
+            ret = ret2;
+
+            if (left.val.type.Equals(right.val.type))
+            {
+                if (leftIsBasic && rightIsBasic)
+                {
+                    //both are basic, dereference if need be, and copy value
+                    left.val.v = right.val.v;
+                    this.lastAsgnValue = this.cloneJsonObj(left);
+                    this.lastAsgnReturn = ret;
+                    return ret;
+                }
+                else if (leftIsArray && rightIsArray && rightIsRef)
+                {
+                    //both are array refs, copy reference
+                    leftOrig.val.v = rightOrig.val.v;
+                    this.lastAsgnValue = this.cloneJsonObj(left);
+                    this.lastAsgnReturn = ret;
+                    return ret;
+                }
+                else if (leftIsArray && rightIsArray && !rightIsRef)
+                {
+                    //left is array ref, right is array const, copy value
+                    left.val.v = new ArrayList();
+                    ArrayList tmpA = this.toArray(left.val.v);
+                    ArrayList tmpB = this.toArray(right.val.v);
+                    for (int i = 0; i < tmpB.Count; i++)
+                    {
+                        tmpA.Add(tmpB[i]);
+                    }
+                    this.lastAsgnValue = this.cloneJsonObj(left);
+                    this.lastAsgnReturn = ret;
+                    return ret;
+                }
+                else
+                {
+                    this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+                    ret.val.v = "false";
+                    return ret;
+                }
+            }
+            else
+            {
+                this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+                ret.val.v = "false";
+                return ret;
             }
         }
 
@@ -3685,7 +4157,7 @@ namespace com.middlemind.JsonPL
             {
                 if (args.Count == funcArgs.Count)
                 {
-                    for (var i = 0; i < args.Count; i++)
+                    for (int i = 0; i < args.Count; i++)
                     {
                         if (!args[i].val.type.Equals(funcArgs[i].val.type))
                         {
@@ -3916,11 +4388,11 @@ namespace com.middlemind.JsonPL
 
             if (left.val.type.Equals(right.val.type) && (left.val.type.Equals("int") || left.val.type.Equals("float") || left.val.type.Equals("bool")))
             {
-                var ret = new JsonObjSysBase("val");
+                JsonObjSysBase ret = new JsonObjSysBase("val");
                 ret.type = left.val.type;
                 ret.v = null;
 
-                var ret2 = new JsonObjSysBase("const");
+                JsonObjSysBase ret2 = new JsonObjSysBase("const");
                 ret2.val = ret;
 
                 if (op.v.Equals("+"))

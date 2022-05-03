@@ -7,8 +7,10 @@ import java.util.Hashtable;
 import java.util.List;
 
 /**
- * JSON Programming Language EXEC JAVA PORT Victor G. Brusca Created on
- * 02/03/2022 1:57 PM EDT Licensed under GNU General Public License v3.0
+ * JSON Programming Language 
+ * EXEC JAVA PORT 
+ * Victor G. Brusca Created on 02/03/2022 1:57 PM EDT 
+ * Licensed under GNU General Public License v3.0
  */
 /**
  *
@@ -107,8 +109,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: sysWr Desc: A system level write function. Arg1: args(arg obj,
-     * sys=arg & array of) Returns: {(const obj, sys=const)}
+     * Name: sysWr 
+     * Desc: A system level write function. 
+     * Arg1: args(arg obj, sys=arg & array of) 
+     * Returns: {(const obj, sys=const)}
      */
     public JsonObjSysBase sysWr(List<JsonObjSysBase> args) throws Exception {
         String s = args.get(0).val.v + "";
@@ -126,24 +130,27 @@ public class JsonPlState {
     }
 
     /**
-     * Name: sysGetLastAsgnValue Desc: A system level method to access the last
-     * asgn value object. Returns: {(const obj, sys=const)}
+     * Name: sysGetLastAsgnValue 
+     * Desc: A system level method to access the last asgn value object. 
+     * Returns: {(const obj, sys=const)}
      */
     public JsonObjSysBase sysGetLastAsgnValue() {
         return this.lastAsgnValue;
     }
 
     /**
-     * Name: sysGetLastAsgnValue Desc: A system level method to access the last
-     * exp return object. Returns: {(const obj, sys=const)}
+     * Name: sysGetLastAsgnValue 
+     * Desc: A system level method to access the last exp return object. 
+     * Returns: {(const obj, sys=const)}
      */
     public JsonObjSysBase sysGetLastExpReturn() {
         return this.lastExpReturn;
     }
 
     /**
-     * Name: getConstBool Desc: A method to quickly access a constant bool value
-     * object. Returns: {(const obj, sys=const)}
+     * Name: getConstBool 
+     * Desc: A method to quickly access a constant bool value object. 
+     * Returns: {(const obj, sys=const)}
      */
     public JsonObjSysBase getConstBool() {
         JsonObjSysBase ret = new JsonObjSysBase("val");
@@ -158,8 +165,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: sysJob1 Desc: A system level job method used to demonstrate JCL.
-     * Arg1: args(arg obj, sys=arg & array of) Returns: {(const obj, sys=const)}
+     * Name: sysJob1 
+     * Desc: A system level job method used to demonstrate JCL.
+     * Arg1: args(arg obj, sys=arg & array of) 
+     * Returns: {(const obj, sys=const)}
      */
     public JsonObjSysBase sysJob1() {
         this.wr("sysJob1");
@@ -170,7 +179,8 @@ public class JsonPlState {
 
     /**
      * Name: sysJob2 Desc: A system level job method used to demonstrate JCL.
-     * Arg1: args(arg obj, sys=arg & array of) Returns: {(const obj, sys=const)}
+     * Arg1: args(arg obj, sys=arg & array of) 
+     * Returns: {(const obj, sys=const)}
      */
     public JsonObjSysBase sysJob2() {
         this.wr("sysJob2");
@@ -181,7 +191,8 @@ public class JsonPlState {
 
     /**
      * Name: sysJob3 Desc: A system level job method used to demonstrate JCL.
-     * Arg1: args(arg obj, sys=arg & array of) Returns: {(const obj, sys=const)}
+     * Arg1: args(arg obj, sys=arg & array of) 
+     * Returns: {(const obj, sys=const)}
      */
     public JsonObjSysBase sysJob3() {
         this.wr("sysJob3");
@@ -191,8 +202,9 @@ public class JsonPlState {
     }
 
     /**
-     * Name: runProgram Desc: Executes the current program and returns the
-     * result. Returns: {(some sys obj)}
+     * Name: runProgram 
+     * Desc: Executes the current program and returns the result. 
+     * Returns: {(some sys obj)}
      */
     public JsonObjSysBase runProgram() {
         if (this.validateSysObjClass(this.program)) {
@@ -215,8 +227,10 @@ public class JsonPlState {
 
     /////////////////////////SEARCH METHODS
     /**
-     * Name: findArg Desc: Search the provided object for an argument with the
-     * given name. Arg1: name(string to find) Arg2: obj(func obj, sys=func)
+     * Name: findArg 
+     * Desc: Search the provided object for an argument with the given name. 
+     * Arg1: name(string to find) 
+     * Arg2: obj(func obj, sys=func)
      * Returns: {null | (arg obj, sys=arg)}
      */
     public JsonObjSysBase findArg(String name, JsonObjSysBase obj) {
@@ -233,10 +247,11 @@ public class JsonPlState {
     }
 
     /**
-     * Name: findVar Desc: Search the provided object for a variable with the
-     * given name. Arg1: name(string to find) Arg2: obj{(func obj, sys=func) |
-     * (class obj, sys=class)} Returns: {null | (var obj, sys=var) | (arg obj,
-     * sys=arg)}
+     * Name: findVar 
+     * Desc: Search the provided object for a variable with the given name. 
+     * Arg1: name(string to find) 
+     * Arg2: obj{(func obj, sys=func) | (class obj, sys=class)} 
+     * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
      */
     public JsonObjSysBase findVar(String name, JsonObjSysBase obj) {
         String str;
@@ -252,8 +267,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: findFunc Desc: Search the current program for a func with the given
-     * name. Arg1: name(string to find) Returns: {null | (func obj, sys=func)}
+     * Name: findFunc 
+     * Desc: Search the current program for a func with the given name. 
+     * Arg1: name(string to find) 
+     * Returns: {null | (func obj, sys=func)}
      */
     public JsonObjSysBase findFunc(String name) {
         JsonObjSysBase prog = this.program;
@@ -270,9 +287,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: findSysFunc Desc: Search the current program's sytem functions for
-     * a func with the given name. Arg1: name(string to find) Returns: {null |
-     * (func obj, sys=func)}
+     * Name: findSysFunc 
+     * Desc: Search the current program's system functions for a func with the given name. 
+     * Arg1: name(string to find) 
+     * Returns: {null | (func obj, sys=func)}
      */
     public JsonObjSysBase findSysFunc(String name) {
         JsonPlState prog = this;
@@ -292,8 +310,9 @@ public class JsonPlState {
 
     /////////////////////////UTILITY METHODS
     /**
-     * Name: wr Desc: Writes a string to standard output if LOGGING is on. Sets
-     * the WR_PREFIX to each string written. Arg1: s(string to write)
+     * Name: wr 
+     * Desc: Writes a string to standard output if LOGGING is on. Sets the WR_PREFIX to each string written. 
+     * Arg1: s(string to write)
      */
     public void wr(String s) {
         if (this.LOGGING == true) {
@@ -302,8 +321,9 @@ public class JsonPlState {
     }
 
     /**
-     * Name: getVersion Desc: A method to access the version of this JsonPL
-     * interpreter. Returns: {(string version number)}
+     * Name: getVersion 
+     * Desc: A method to access the version of this JsonPL interpreter. 
+     * Returns: {(string version number)}
      */
     public String getVersion() {
         this.wr(this.version);
@@ -311,9 +331,9 @@ public class JsonPlState {
     }
 
     /**
-     * Name: cloneJsonObj Desc: A method to clone the given JSON object
-     * argument. Arg1: jsonObj(the JSON object to clone) Returns: {(cloned JSON
-     * object)}
+     * Name: cloneJsonObj Desc: A method to clone the given JSON object argument. 
+     * Arg1: jsonObj(the JSON object to clone) 
+     * Returns: {(cloned JSON object)}
      */
     public JsonObjSysBase cloneJsonObj(JsonObjSysBase jsonObj) {
         return jsonObj.Clone();
@@ -329,9 +349,9 @@ public class JsonPlState {
     }
 
     /**
-     * Name: wrObj Desc: Writes a JSON object to standard output if LOGGING is
-     * on. Sets the WR_PREFIX to each object written. Prints object using pretty
-     * JSON.stringify call. Arg1: s(string to write)
+     * Name: wrObj 
+     * Desc: Writes a JSON object to standard output if LOGGING is on. Sets the WR_PREFIX to each object written. Prints object using pretty JSON.stringify call. 
+     * Arg1: s(string to write)
      */
     public void wrObj(JsonObjSysBase jsonObj) {
         if (this.LOGGING == true) {
@@ -352,11 +372,15 @@ public class JsonPlState {
 
     /////////////////////////GENERIC OBJECT ID METHODS
     /**
-     * Name: isObject Desc: Checks if the given argument is a JSON object. Arg1:
-     * arg(JSON object) Returns: (true | false)
+     * Name: isObject 
+     * Desc: Checks if the given argument is a JSON object. 
+     * Arg1: arg(JSON object) 
+     * Returns: (true | false)
      */
     public boolean isObject(Object arg) {
-        if (arg instanceof JsonObjSysBase) {
+        if(arg == null) {
+            return false;
+        } else if (arg instanceof JsonObjSysBase) {
             return true;
         } else {
             return false;
@@ -364,10 +388,15 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isArray Desc: Checks if the given argument is an array. Arg1:
-     * arg(javascript array) Returns: (true | false)
+     * Name: isArray 
+     * Desc: Checks if the given argument is an array. 
+     * Arg1: arg(javascript array) 
+     * Returns: (true | false)
      */
     public boolean isArray(Object arg) {
+        if(arg == null) {
+            return false;
+        } else 
         if (arg instanceof List || arg instanceof ArrayList) {
             return true;
         } else {
@@ -376,21 +405,97 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isString Desc: Checks if the given argument is a string. Arg1:
-     * arg(some string) Returns: (true | false)
+     * Name: isString 
+     * Desc: Checks if the given argument is a string. 
+     * Arg1: arg(some string) 
+     * Returns: (true | false)
      */
     public boolean isString(Object arg) {
-        if (arg instanceof String) {
+        if(arg == null) {
+            return false;
+        } else if (arg instanceof String) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Name: isNumber
+     * Desc: Checks if the given argument is a number. 
+     * Arg1: arg(some value)
+     * Returns: (true | false)
+     */
+    public boolean isNumber(Object arg) {
+        if(arg == null) {
+            return false;
+        } else if (arg instanceof Integer || arg instanceof Float) {
             return true;
         } else {
             return false;
         }
     }
 
+    /**
+     * Name: isInteger
+     * Desc: Checks if the given argument is an integer. 
+     * Arg1: arg(some value)
+     * Returns: (true | false)
+     */
+    public boolean isInteger(Object arg) {
+        if(arg == null) {
+            return false;
+        } else if (arg instanceof Integer) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Name: isFloat
+     * Desc: Checks if the given argument is a float. 
+     * Arg1: arg(some value)
+     * Returns: (true | false)
+     */
+    public boolean isFloat(Object arg) {
+        if(arg == null) {
+            return false;
+        } else if (arg instanceof Float) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Name: isBool
+     * Desc: Checks if the given argument is a bool. 
+     * Arg1: arg(some value)
+     * Returns: (true | false)
+     */        
+    public boolean isBool(Object arg) {
+        if(arg == null) {
+            return false;
+        } else if (arg instanceof Boolean) {
+            return true;
+        } else if(this.isNumber(arg) && (int)arg == 1 || (float)arg == 0) {
+            return true;
+        } else if(this.isNumber(arg) && (float)arg == 1.0 || (float)arg == 0.0) {
+            return true;
+        } else if(this.isString(arg) && (((String)arg).equals("yes") || ((String)arg).equals("no") || ((String)arg).equals("true") || ((String)arg).equals("false") || ((String)arg).equals("1") || ((String)arg).equals("0") || ((String)arg).equals("1.0") || ((String)arg).equals("0.0"))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /////////////////////////SYS OBJECT ID METHODS
     /**
-     * Name: isSysObjIf Desc: Checks if the given object is an if sys object.
-     * Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjIf 
+     * Desc: Checks if the given object is an if sys object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjIf(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -403,8 +508,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObjRef Desc: Checks if the given object is a ref sys object.
-     * Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjRef Desc: 
+     * Checks if the given object is a ref sys object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjRef(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -417,8 +524,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObjBex Desc: Checks if the given object is a bex sys object.
-     * Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjBex 
+     * Desc: Checks if the given object is a bex sys object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjBex(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -431,8 +540,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObjExp Desc: Checks if the given object is an exp sys object.
-     * Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjExp 
+     * Desc: Checks if the given object is an exp sys object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjExp(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -445,8 +556,24 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObjVal Desc: Checks if the given object is a val sys object.
-     * Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjValArray
+     * Desc: Checks if the given object is a val sys object array. 
+     * Arg1: obj(sys obj to check)
+     * Returns: (true | false)
+     */
+    public boolean isSysObjValArray(JsonObjSysBase obj) {
+       if (this.isSysObjVal(obj) == true && this.validateProperties(obj, new String[] {"len"}) && this.isInteger(obj.len) && this.isArray(obj.v)) {
+          return true;
+       } else {
+          return false;
+       }
+    }    
+    
+    /**
+     * Name: isSysObjVal 
+     * Desc: Checks if the given object is a val sys object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjVal(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -461,8 +588,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObjAsgn Desc: Checks if the given object is an asgn sys
-     * object. Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjAsgn 
+     * Desc: Checks if the given object is an asgn sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjAsgn(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -475,8 +604,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObjArray Desc: Checks if the given object is an array sys
-     * object. Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjArray 
+     * Desc: Checks if the given object is an array sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjArray(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -489,8 +620,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObjConst Desc: Checks if the given object is a const sys
-     * object. Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjConst 
+     * Desc: Checks if the given object is a const sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjConst(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -503,8 +636,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObjVar Desc: Checks if the given object is a var sys object.
-     * Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjVar 
+     * Desc: Checks if the given object is a var sys object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjVar(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -517,8 +652,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObjCall Desc: Checks if the given object is a call sys object.
-     * Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjCall 
+     * Desc: Checks if the given object is a call sys object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjCall(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -531,8 +668,40 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObjFunc Desc: Checks if the given object is a func sys object.
-     * Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjFuncLine
+     * Desc: Checks if the given object is a functio line sys object. 
+     * Arg1: obj(sys obj to check)
+     * Returns: (true | false)
+     */
+    public boolean isSysObjFuncLine(JsonObjSysBase obj) {
+       if(this.isSysObj(obj)) {
+          if(this.getSysObjType(obj).equals("asgn")) {
+             return true;
+
+          } else if(this.getSysObjType(obj).equals("for")) {
+             return true;
+
+          } else if(this.getSysObjType(obj).equals("if")) {
+             return true;
+
+          } else if(this.getSysObjType(obj).equals("return")) {
+             return true;
+
+          } else if(this.getSysObjType(obj).equals("call")) {
+             return true;
+
+          } else {
+             return false;
+          }      
+       }
+       return false;
+    }    
+    
+    /**
+     * Name: isSysObjFunc 
+     * Desc: Checks if the given object is a func sys object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjFunc(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -545,8 +714,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObjFor Desc: Checks if the given object is a for sys object.
-     * Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjFor 
+     * Desc: Checks if the given object is a for sys object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjFor(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -559,8 +730,26 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObjReturn Desc: Checks if the given object is a return sys
-     * object. Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObjOp
+     * Desc: Checks if the given object is an op sys object. 
+     * Arg1: obj(sys obj to check)
+     * Returns: (true | false)
+     */    
+    public boolean isSysObjOp(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("op")) {
+                return true;
+            }
+        }
+        return false;
+    }    
+    
+    /**
+     * Name: isSysObjReturn 
+     * Desc: Checks if the given object is a return sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObjReturn(JsonObjSysBase obj) {
         if (this.isSysObj(obj) == true) {
@@ -573,8 +762,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: isSysObj Desc: Checks if the given object is a sys object. Arg1:
-     * obj(sys obj to check) Returns: (true | false)
+     * Name: isSysObj 
+     * Desc: Checks if the given object is a sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public boolean isSysObj(JsonObjSysBase obj) {
         if (obj != null && !Utils.IsStringEmpty(obj.sys) && this.isObject(obj) == true) {
@@ -585,8 +776,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: getSysObjType Desc: Gets the value of the sys attribute of the
-     * given sys object.. Arg1: obj(sys obj to check) Returns: (true | false)
+     * Name: getSysObjType 
+     * Desc: Gets the value of the sys attribute of the given sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
      */
     public String getSysObjType(JsonObjSysBase obj) {
         if (this.isSysObj(obj)) {
@@ -598,8 +791,10 @@ public class JsonPlState {
 
     /////////////////////////VALIDATION METHODS
     /**
-     * Name: validateSysObjIf Desc: Validates if the given object is a valid if
-     * sys object. Arg1: obj(sys obj to check) Returns: {false | true} Struct: <!-
+     * Name: validateSysObjIf 
+     * Desc: Validates if the given object is a valid if sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true} Struct: <!-
      * {
      * "sys": "if",
      * "left": {ref | const | exp | bex | call},
@@ -612,31 +807,31 @@ public class JsonPlState {
      */
     public boolean validateSysObjIf(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
-        if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.equals("if")) && this.validateProperties(obj, new String[]{"sys", "left", "op", "right", "thn", "els"})) {
+        if (this.isSysObjIf(obj) && this.validateProperties(obj, new String[]{"sys", "left", "op", "right", "thn", "els"})) {
             JsonObjSysBase tobj = null;
             if (obj.left != null) {
                 tobj = obj.left;
-                if (this.isSysObj(tobj) && this.getSysObjType(tobj).equals("ref")) {
+                if (this.isSysObjRef(tobj)) {
                     if (!this.validateSysObjRef(tobj)) {
                         this.wr("validateSysObjFor: Error: could not validate left obj as ref");
                         return false;
                     }
-                } else if (this.isSysObj(tobj) && this.getSysObjType(tobj).equals("const")) {
+                } else if (this.isSysObjConst(tobj)) {
                     if (!this.validateSysObjConst(tobj)) {
                         this.wr("validateSysObjFor: Error: could not validate left obj as const");
                         return false;
                     }
-                } else if (this.isSysObj(tobj) && this.getSysObjType(tobj).equals("exp")) {
+                } else if (this.isSysObjExp(tobj)) {
                     if (!this.validateSysObjExp(tobj)) {
                         this.wr("validateSysObjFor: Error: could not validate left obj as exp");
                         return false;
                     }
-                } else if (this.isSysObj(tobj) && this.getSysObjType(tobj).equals("bex")) {
+                } else if (this.isSysObjBex(tobj)) {
                     if (!this.validateSysObjBex(tobj)) {
                         this.wr("validateSysObjFor: Error: could not validate left obj as bex");
                         return false;
                     }
-                } else if (this.isSysObj(tobj) && this.getSysObjType(tobj).equals("call")) {
+                } else if (this.isSysObjCall(tobj)) {
                     if (!this.validateSysObjCall(tobj)) {
                         this.wr("validateSysObjFor: Error: could not validate left obj as call");
                         return false;
@@ -652,7 +847,7 @@ public class JsonPlState {
 
             if (obj.op != null) {
                 tobj = obj.op;
-                if (this.isSysObj(tobj) && this.getSysObjType(tobj).equals("op")) {
+                if (this.isSysObjOp(tobj)) {
                     if (!this.validateSysObjOp(tobj)) {
                         return false;
                     } else if (!tobj.type.equals("bex")) {
@@ -669,27 +864,27 @@ public class JsonPlState {
 
             if (obj.right != null) {
                 tobj = obj.right;
-                if (this.isSysObj(tobj) && this.getSysObjType(tobj).equals("ref")) {
+                if (this.isSysObjRef(tobj)) {
                     if (!this.validateSysObjRef(tobj)) {
                         this.wr("validateSysObjIf: Error: could not validate right obj as ref");
                         return false;
                     }
-                } else if (this.isSysObj(tobj) && this.getSysObjType(tobj).equals("const")) {
+                } else if (this.isSysObjConst(tobj)) {
                     if (!this.validateSysObjConst(tobj)) {
                         this.wr("validateSysObjIf: Error: could not validate right obj as const");
                         return false;
                     }
-                } else if (this.isSysObj(tobj) && this.getSysObjType(tobj).equals("exp")) {
+                } else if (this.isSysObjExp(tobj)) {
                     if (!this.validateSysObjExp(tobj)) {
                         this.wr("validateSysObjIf: Error: could not validate right obj as exp");
                         return false;
                     }
-                } else if (this.isSysObj(tobj) && this.getSysObjType(tobj).equals("bex")) {
+                } else if (this.isSysObjBex(tobj)) {
                     if (!this.validateSysObjBex(tobj)) {
                         this.wr("validateSysObjIf: Error: could not validate right obj as bex");
                         return false;
                     }
-                } else if (this.isSysObj(tobj) && this.getSysObjType(tobj).equals("call")) {
+                } else if (this.isSysObjCall(tobj)) {
                     if (!this.validateSysObjCall(tobj)) {
                         this.wr("validateSysObjIf: Error: could not validate right obj as call");
                         return false;
@@ -705,8 +900,8 @@ public class JsonPlState {
 
             if (obj.thn != null && this.isArray(obj.thn)) {
                 List<JsonObjSysBase> tobjLst = obj.thn;
-                var len = tobjLst.size();
-                for (var i = 0; i < len; i++) {
+                int len = tobjLst.size();
+                for (int i = 0; i < len; i++) {
                     if (!this.validateSysObjFuncLine(tobjLst.get(i))) {
                         this.wr("validateSysObjIf: Error: could not validate obj as then, line: " + i);
                         return false;
@@ -716,8 +911,8 @@ public class JsonPlState {
 
             if (obj.els != null && this.isArray(obj.els)) {
                 List<JsonObjSysBase> tobjLst = obj.els;
-                var len = tobjLst.size();
-                for (var i = 0; i < len; i++) {
+                int len = tobjLst.size();
+                for (int i = 0; i < len; i++) {
                     if (!this.validateSysObjFuncLine(tobjLst.get(i))) {
                         this.wr("validateSysObjIf: Error: could not validate obj as else, line: " + i);
                         return false;
@@ -731,8 +926,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjFor Desc: Validates if the given object is a valid
-     * for sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjFor 
+     * Desc: Validates if the given object is a valid for sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "for",
@@ -855,7 +1052,7 @@ public class JsonPlState {
                 return false;
             }
 
-            for (var i = 0; i < obj.lines.size(); i++) {
+            for (int i = 0; i < obj.lines.size(); i++) {
                 if (!this.validateSysObjFuncLine(obj.lines.get(i))) {
                     this.wr("validateSysObjFor: Error: could not validate obj as func, line: " + i);
                     return false;
@@ -868,8 +1065,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjClass Desc: Validates if the given object is a valid
-     * class sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjClass 
+     * Desc: Validates if the given object is a valid class sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "class",
@@ -894,14 +1093,14 @@ public class JsonPlState {
                 return false;
             }
 
-            for (var i = 0; i < obj.vars.size(); i++) {
+            for (int i = 0; i < obj.vars.size(); i++) {
                 if (!this.validateSysObjVar(obj.vars.get(i))) {
                     this.wr("validateSysObjClass: Error: could not validate obj as var");
                     return false;
                 }
             }
 
-            for (var i = 0; i < obj.funcs.size(); i++) {
+            for (int i = 0; i < obj.funcs.size(); i++) {
                 if (!this.validateSysObjFunc(obj.funcs.get(i))) {
                     this.wr("validateSysObjClass: Error: could not validate obj as func: " + obj.funcs.get(i).name);
                     return false;
@@ -914,49 +1113,63 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjFuncLine Desc: Validates if the given object is a
-     * valid function line sys object. Arg1: obj(sys obj to check) Returns:
-     * {false | true} Struct: <!-
+     * Name: validateSysObjFuncLine 
+     * Desc: Validates if the given object is a valid function line sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true} 
+     * Struct: <!-
      * [asgn | for | if | return | call]
      * -!>
      */
     public boolean validateSysObjFuncLine(JsonObjSysBase obj) {
-        if (this.isSysObj(obj)) {
+        if (this.isSysObjFuncLine(obj)) {
             if (this.getSysObjType(obj).equals("asgn")) {
                 if (!this.validateSysObjAsgn(obj)) {
                     this.wr("validateSysObjFuncLine: Error: could not validate obj as asgn");
                     return false;
+                } else {
+                    return true;
                 }
             } else if (this.getSysObjType(obj).equals("for")) {
                 if (!this.validateSysObjFor(obj)) {
                     this.wr("validateSysObjFuncLine: Error: could not validate obj as for");
                     return false;
+                } else {
+                    return true;
                 }
             } else if (this.getSysObjType(obj).equals("if")) {
                 if (!this.validateSysObjIf(obj)) {
                     this.wr("validateSysObjFuncLine: Error: could not validate obj as if");
                     return false;
+                } else {
+                    return true;
                 }
             } else if (this.getSysObjType(obj).equals("return")) {
                 if (!this.validateSysObjReturn(obj)) {
                     this.wr("validateSysObjFuncLine: Error: could not validate obj as return");
                     return false;
+                } else {
+                    return true;
                 }
             } else if (this.getSysObjType(obj).equals("call")) {
                 if (!this.validateSysObjCall(obj)) {
                     this.wr("validateSysObjFuncLine: Error: could not validate obj as call");
                     return false;
+                } else {
+                    return true;
                 }
             } else {
                 return false;
             }
         }
-        return true;
+        return false;
     }
 
     /**
-     * Name: validateSysObjFunc Desc: Validates if the given object is a valid
-     * func sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjFunc 
+     * Desc: Validates if the given object is a valid func sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "func",
@@ -976,21 +1189,21 @@ public class JsonPlState {
                 return false;
             }
 
-            for (var i = 0; i < obj.vars.size(); i++) {
+            for (int i = 0; i < obj.vars.size(); i++) {
                 if (!this.validateSysObjVar(obj.vars.get(i))) {
                     this.wr("validateSysObjFunc: Error: could not validate obj as var");
                     return false;
                 }
             }
 
-            for (var i = 0; i < obj.args.size(); i++) {
+            for (int i = 0; i < obj.args.size(); i++) {
                 if (!this.validateSysObjArg(obj.args.get(i))) {
                     this.wr("validateSysObjFunc: Error: could not validate obj as arg");
                     return false;
                 }
             }
 
-            for (var i = 0; i < obj.lines.size(); i++) {
+            for (int i = 0; i < obj.lines.size(); i++) {
                 if (!this.validateSysObjFuncLine(obj.lines.get(i))) {
                     this.wr("validateSysObjFunc: Error: could not validate obj as func line: " + i);
                     return false;
@@ -1003,8 +1216,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjAsgn Desc: Validates if the given object is a valid
-     * asgn sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjAsgn 
+     * Desc: Validates if the given object is a valid asgn sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "asgn",
@@ -1098,8 +1313,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjBex Desc: Validates if the given object is a valid
-     * bex sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjBex 
+     * Desc: Validates if the given object is a valid bex sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "bex",
@@ -1194,8 +1411,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjExp Desc: Validates if the given object is a valid
-     * exp sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjExp 
+     * Desc: Validates if the given object is a valid exp sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "exp",
@@ -1290,8 +1509,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjCall Desc: Validates if the given object is a valid
-     * call sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjCall 
+     * Desc: Validates if the given object is a valid call sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "call",
@@ -1318,6 +1539,7 @@ public class JsonPlState {
                             return false;
                         }
                     } else {
+                        this.wr("validateSysObjCall: Error: Unhandled sys obj type: " + tobj.sys);
                         return false;
                     }
                 }
@@ -1328,8 +1550,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjCall Desc: Validates if the given object is a valid
-     * call sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjCall 
+     * Desc: Validates if the given object is a valid call sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "op",
@@ -1350,8 +1574,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjArray Desc: Validates if the given object is a valid
-     * array sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjArray 
+     * Desc: Validates if the given object is a valid array sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "array",
@@ -1377,8 +1603,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjConst Desc: Validates if the given object is a valid
-     * const sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjConst 
+     * Desc: Validates if the given object is a valid const sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "const",
@@ -1398,8 +1626,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjVar Desc: Validates if the given object is a valid
-     * var sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjVar 
+     * Desc: Validates if the given object is a valid var sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "var",
@@ -1420,8 +1650,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjArg Desc: Validates if the given object is a valid
-     * arg sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjArg 
+     * Desc: Validates if the given object is a valid arg sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "arg",
@@ -1442,8 +1674,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjVal Desc: Validates if the given object is a valid
-     * val sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjVal 
+     * Desc: Validates if the given object is a valid val sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "val",
@@ -1454,24 +1688,144 @@ public class JsonPlState {
      */
     public boolean validateSysObjVal(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
-        //this.wr("validateSysObjVal: type: 000: " + obj.type + ", " + obj.v);
-        if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.equals("val")) && this.validateProperties(obj, new String[]{"sys", "type", "v"})) {
-            //this.wr("validateSysObjVal: type");
-            if (!(obj.type.equals("int") || obj.type.equals("float") || obj.type.equals("string") || obj.type.equals("bool") || obj.type.equals("array"))) {
-                //this.wr("validateSysObjVal: type: AAA");
+        if (this.isSysObjVal(obj) && this.validateProperties(obj, new String[]{"sys", "type", "v"})) {
+            if (
+                !(obj.type.equals("int") || obj.type.equals("float") || obj.type.equals("string") || obj.type.equals("bool"))
+                && !(obj.type.equals("int[]") || obj.type.equals("float[]") || obj.type.equals("string[]") || obj.type.equals("bool[]"))
+            ) {
                 return false;
             }
-            //this.wr("validateSysObjVal: type: BBB");         
+            
+            boolean isArray = false;
+            int arrayLen = 0;
+            if(obj.type.equals("int[]") || obj.type.equals("float[]") || obj.type.equals("string[]") || obj.type.equals("bool[]")) {
+               isArray = true;
+               if(!this.validateProperties(obj, new String[] {"len"})) {
+                  this.wr("validateSysObjVal: Error: array is missing length: " + obj.v + ", type: " + obj.type);
+                  return false;
+               } else {
+                  if(!this.isInteger(obj.len) && this.toInt(obj.len) >= 0) {
+                     this.wr("validateSysObjVal: Error: array length is invalid: " + obj.v + ", type: " + obj.type + ", " + obj.len + ", " + this.isInteger(obj.len));
+                  } else {
+                     arrayLen = this.toInt(obj.len);
+                  }
+               }
+            }
+            
+            //ignore references
+            String tmp = this.toStr(obj.v);
+            if(tmp.indexOf("#.") == -1 && tmp.indexOf("$.") == -1) {
+                if(!isArray) {
+                    //base data types
+                    if(obj.type.equals("int")) {
+                        if(!this.isInteger(this.toInt(obj.v))) {
+                            this.wr("validateSysObjVal: Error: value is not an int value: " + obj.v + ", type: " + obj.type);
+                            return false;
+                        } else {
+                            obj.v = this.toInt(obj.v);
+                        }
+                    } else if(obj.type.equals("float")) {
+                        if(!this.isFloat(this.toFloat(obj.v))) {
+                            this.wr("validateSysObjVal: Error: value is not a float value: " + obj.v + ", type: " + obj.type);
+                            return false;
+                        } else {
+                            obj.v = this.toFloat(obj.v);
+                        }
+                    } else if(obj.type.equals("string")) {
+                        if(!this.isString(this.toStr(obj.v))) {
+                            this.wr("validateSysObjVal: Error: value is not a string value: " + obj.v + ", type: " + obj.type);
+                            return false;
+                        } else {
+                            obj.v = this.toStr(obj.v);
+                        }
+                    } else if(obj.type.equals("bool")) {
+                        if(!this.isBool(this.toBool(obj.v))) {
+                            this.wr("validateSysObjVal: Error: value is not a boolean value: " + obj.v + ", type: " + obj.type);
+                            return false;
+                        } else {
+                            obj.v = this.toBool(obj.v);
+                        }
+                    } else {
+                        this.wr("validateSysObjVal: Error: unknown object type: " + obj.v + ", type: " + obj.type);
+                        return false;
+                    }
+                } else {
+                    ArrayList tmpA = this.toArray(obj.v);
+                    int arrayLenActual = tmpA.size();
+                    if(arrayLenActual != arrayLen) {
+                        this.wr("validateSysObjVal: Error: array length mismatch: " + obj.v + ", type: " + obj.type);
+                        return false;      
+                    }
+
+                    //array data types
+                    if(obj.type.equals("int[]")) {
+                       if(!this.isArray(obj.v)) {
+                          this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                          return false;
+                       } else {
+                          for(int i = 0; i < arrayLenActual; i++) {
+                             JsonObjSysBase ltmp = (JsonObjSysBase)tmpA.get(i);
+                             if(!ltmp.val.type.equals("int")) {
+                                this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'int' but found '" + ltmp.val.type + "'");
+                                return false;
+                             }
+                          }
+                       }
+                    } else if(obj.type.equals("float[]")) {
+                       if(!this.isArray(obj.v)) {
+                          this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                          return false;
+                       } else {
+                          for(int i = 0; i < arrayLenActual; i++) {
+                             JsonObjSysBase ltmp = (JsonObjSysBase)tmpA.get(i);
+                             if(!ltmp.val.type.equals("float")) {
+                                this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'float' but found '" + ltmp.val.type + "'");
+                                return false;                        
+                             }
+                          }
+                       }
+                    } else if(obj.type.equals("string[]")) {
+                       if(!this.isArray(obj.v)) {
+                          this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                          return false;
+                       } else {
+                          for(int i = 0; i < arrayLenActual; i++) {
+                             JsonObjSysBase ltmp = (JsonObjSysBase)tmpA.get(i);
+                             if(!ltmp.val.type.equals("string")) {
+                                this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'string' but found '" + ltmp.val.type + "'");                        
+                                return false;
+                             }
+                          }
+                       }
+                    } else if(obj.type.equals("bool[]")) {
+                       if(!this.isArray(obj.v)) {
+                          this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                          return false;
+                       } else {
+                          for(int i = 0; i < arrayLenActual; i++) {
+                             JsonObjSysBase ltmp = (JsonObjSysBase)tmpA.get(i);
+                             if(!ltmp.val.type.equals("bool")) {
+                                this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'bool' but found '" + ltmp.val.type + "'");
+                                return false;
+                             }
+                          }
+                       }
+                    } else {
+                       this.wr("validateSysObjVal: Error: unknown array object type: " + obj.v + ", type: " + obj.type);
+                       return false;
+                    }                    
+                }
+            }
             return true;
         }
-
-        //this.wr("validateSysObjVal: type: CCC");      
         return false;
     }
 
     /**
-     * Name: validateSysObjRef Desc: Validates if the given object is a valid
-     * ref sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjRef 
+     * Desc: Validates if the given object is a valid ref sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "ref",
@@ -1493,8 +1847,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateSysObjReturn Desc: Validates if the given object is a valid
-     * return sys object. Arg1: obj(sys obj to check) Returns: {false | true}
+     * Name: validateSysObjReturn 
+     * Desc: Validates if the given object is a valid return sys object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: {false | true}
      * Struct: <!-
      * {
      * "sys": "return",
@@ -1514,9 +1870,11 @@ public class JsonPlState {
     }
 
     /**
-     * Name: validateProperties Desc: Validates if the given object has each of
-     * the array elements soecified in req. Arg1: obj(sys obj to check) Arg2:
-     * req(array of attribute name to check for) Returns: {false | true}
+     * Name: validateProperties 
+     * Desc: Validates if the given object has each of the array elements specified in req. 
+     * Arg1: obj(sys obj to check) 
+     * Arg2: req(array of attribute name to check for) 
+     * Returns: {false | true}
      */
     public boolean validateProperties(JsonObjSysBase obj, String[] req) {
         Class clss = null;
@@ -1541,8 +1899,10 @@ public class JsonPlState {
 
     /////////////////////////PROCESS METHODS
     /**
-     * Name: processRef Desc: Processes a class var or func var or arg reference
-     * string. Arg1: objRef(string ref encoding) Arg2: func(func obj, sys=func)
+     * Name: processRef 
+     * Desc: Processes a class var or func var or arg reference string. 
+     * Arg1: objRef(string ref encoding) 
+     * Arg2: func(func obj, sys=func)
      * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
      */
     @SuppressWarnings("IndexOfReplaceableByContains")
@@ -1570,7 +1930,7 @@ public class JsonPlState {
         ArrayList<String> nvls = new ArrayList<>();
         String tt = null;
         int obrk = 0;
-        for (var k = 0; k < vls.length; k++) {
+        for (int k = 0; k < vls.length; k++) {
             //this.wr("___________________________________:" + vls[k]);
             if (inDynRef && vls[k].indexOf("]") != -1) {
                 obrk--;
@@ -1604,7 +1964,7 @@ public class JsonPlState {
         }
 
         vls = new String[nvls.size()];
-        for (var k = 0; k < nvls.size(); k++) {
+        for (int k = 0; k < nvls.size(); k++) {
             if (nvls.get(k) != null) {
                 vls[k] = nvls.get(k);
                 //this.wr("___________________________________:::" + vls[k]);
@@ -1725,69 +2085,18 @@ public class JsonPlState {
                     }
                 }
 
-                if (type.equals("array")) {
-                    fnd = (JsonObjSysBase) ((ArrayList<Object>) fnd.val.v).get(idx);
+                if (this.isSysObjValArray(fnd.val)) {
+                    fnd = (JsonObjSysBase) (this.toArray(fnd.val.v)).get(idx);
                 } else {
                     this.wr("processRef: Error: index entry is only for vars/args of type array, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
                 }
             }
         }
         return fnd;
-
-        /*
-      if (objRef.val.v.toString().indexOf("#.") == 0) {
-         //program/class var
-         path = objRef.val.v.toString().substring(2);
-         vls = path.split("\\.");
-         if (vls[0].equals("vars")) {
-            fnd = this.findVar(vls[1], prog);
-            if (fnd != null) {
-               //this.wr("processRef: found reference result: " + this.wrObj(fnd));
-               return fnd;
-            } else {
-               this.wr("processRef: Error: could not find var with name '" + vls[1] + "' in program func: " + func.name);
-               return null;
-            }
-         } else {
-            this.wr("processRef: Error: unsupported path '" + vls + "'");
-            return null;
-         }
-
-      } else if (objRef.val.v.toString().indexOf("$.") == 0) {
-         //func var, arg
-         path = objRef.val.v.toString().substring(2);
-         vls = path.split("\\.");
-         if (vls[0].equals("vars")) {
-            fnd = this.findVar(vls[1], func);
-            if (fnd != null) {
-               //this.wr("processRef: found reference result: " + this.wrObj(fnd));            
-               return fnd;
-            } else {
-               this.wr("processRef: Error: could not find var with name '" + vls[1] + "' in func: " + func.name);
-               return null;
-            }
-         } else if (vls[0].equals("args")) {
-            fnd = this.findArg(vls[1], func);
-            if (fnd != null) {
-               //this.wr("processRef: found reference result: " + this.wrObj(fnd));            
-               //this.wrObj(func.args);
-               return fnd;
-            } else {
-               this.wr("processRef: Error: could not find arg with name '" + vls[1] + "' in func: " + func.name);
-               //this.wrObj(func.args);
-               return null;
-            }
-         } else {
-            this.wr("processRef: Error: unsupported path '" + vls + "'");
-            return null;
-         }
-      }
-      return null;
-         */
     }
 
     //TODO
-    public int toBoolInt(String v) {
+    public int toBoolInt(Object v) {
         String vb = v + "";
         vb = vb.toLowerCase();
         if (vb.equals("true")) {
@@ -1802,22 +2111,31 @@ public class JsonPlState {
     }
 
     //TODO
-    public int toInt(String v) {
-        return Integer.parseInt(v);
+    public int toInt(Object v) {
+        return Integer.parseInt(v + "");
     }
 
     //TODO
-    public float toFloat(String v) {
-        return Float.parseFloat(v);
+    public float toFloat(Object v) {
+        return Float.parseFloat(v + "");
     }
 
     //TODO
-    public String toStr(String v) {
+    public String toStr(Object v) {
         return (v + "");
     }
 
     //TODO
-    public boolean toBool(String v) {
+    public ArrayList toArray(Object v) {
+        if(this.isArray(v)) {
+            return (ArrayList)v;
+        } else {
+            return null;
+        }
+    }
+    
+    //TODO
+    public boolean toBool(Object v) {
         String vb = v + "";
         vb = vb.toLowerCase();
         if (vb.equals("true")) {
@@ -1832,9 +2150,11 @@ public class JsonPlState {
     }
 
     /**
-     * Name: processIf Desc: Processes an if statement. Returns the value of the
-     * Boolean if statement expression. Arg1: objIf(if obj, sys=if) Arg2:
-     * func(func obj, sys=func) Returns: {null | (const obj, sys=const)}
+     * Name: processIf 
+     * Desc: Processes an if statement. Returns the value of the Boolean if statement expression. 
+     * Arg1: objIf(if obj, sys=if) 
+     * Arg2: func(func obj, sys=func) 
+     * Returns: {null | (const obj, sys=const)}
      */
     public JsonObjSysBase processIf(JsonObjSysBase objIf, JsonObjSysBase func) {
         JsonObjSysBase left = null;
@@ -2099,11 +2419,11 @@ public class JsonPlState {
     }
 
     /**
-     * Name: processIfForLines Desc: Processes an array of if statement or for
-     * loop lines. Returns the last value returned by the last line or returns
-     * the return value if encountered. Arg1: objLines(array of lines) Arg2:
-     * func(func obj, sys=func) Returns: {null | (const obj, sys=const) |
-     * (return obj, sys=return)}
+     * Name: processIfForLines 
+     * Desc: Processes an array of if statement or for loop lines. Returns the last value returned by the last line or returns the return value if encountered. 
+     * Arg1: objLines(array of lines) 
+     * Arg2: func(func obj, sys=func) 
+     * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
      */
     public JsonObjSysBase processIfForLines(List<JsonObjSysBase> objLines, JsonObjSysBase func) {
         if (objLines != null && this.isArray(objLines) && objLines.size() > 0) {
@@ -2116,7 +2436,7 @@ public class JsonPlState {
                 line = objLines.get(j);
 
                 //support comments
-                if (line.active == false) {
+                if (line.active != null && this.toBool(line.active) == false) {
                     continue;
                 }
 
@@ -2144,11 +2464,11 @@ public class JsonPlState {
             return ret;
         } else {
             this.wr("processIfForLines: Warning: provided lines array is null");
-            var ret = new JsonObjSysBase("val");
+            JsonObjSysBase ret = new JsonObjSysBase("val");
             ret.type = "bool";
             ret.v = "true";
 
-            var ret2 = new JsonObjSysBase("const");
+            JsonObjSysBase ret2 = new JsonObjSysBase("const");
             ret2.sys = "const";
             ret2.val = ret;
             ret = ret2;
@@ -2157,10 +2477,11 @@ public class JsonPlState {
     }
 
     /**
-     * Name: processFor Desc: Processes a for loop. Returns the last loop
-     * iteration value. Arg1: objFor(for obj, sys=for) Arg2: func(func obj,
-     * sys=func) Returns: {null | (const obj, sys=const) | (return obj,
-     * sys=return)}
+     * Name: processFor 
+     * Desc: Processes a for loop. Returns the last loop iteration value. 
+     * Arg1: objFor(for obj, sys=for) 
+     * Arg2: func(func obj, sys=func) 
+     * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
      */
     public JsonObjSysBase processFor(JsonObjSysBase objFor, JsonObjSysBase func) {
         JsonObjSysBase start = null;
@@ -2296,15 +2617,27 @@ public class JsonPlState {
     }
 
     /**
-     * Name: processAsgn Desc: Processes an assigment. Returns true value. Arg1:
-     * objAsgn(asgn obj, sys=asgn) Arg2: func(func obj, sys=func) Returns: {null
-     * | (const obj, sys=const)}
+     * Name: processAsgn 
+     * Desc: Processes an assigment. Returns true value. 
+     * Arg1: objAsgn(asgn obj, sys=asgn) 
+     * Arg2: func(func obj, sys=func) 
+     * Returns: {null | (const obj, sys=const)}
      */
     public JsonObjSysBase processAsgn(JsonObjSysBase objAsgn, JsonObjSysBase func) {
         JsonObjSysBase left = null;
         JsonObjSysBase op = null;
         JsonObjSysBase right = null;
 
+        boolean leftIsBasic = false;
+        boolean leftIsArray = false;
+        boolean leftIsRef = false;
+        JsonObjSysBase leftOrig = null;
+
+        boolean rightIsBasic = false;
+        boolean rightIsArray = false;
+        boolean rightIsRef = false;
+        JsonObjSysBase rightOrig = null;        
+        
         if (!this.isSysObjAsgn(objAsgn)) {
             this.wr("processAsgn: Error: argument objRef is not a asgn obj");
             return null;
@@ -2318,6 +2651,17 @@ public class JsonPlState {
         op = objAsgn.op;
         right = objAsgn.right;
 
+        leftOrig = left;
+        rightOrig = right;        
+        
+        if(this.isSysObjRef(left)) {
+           leftIsRef = true;
+        }
+
+        if(this.isSysObjRef(right)) {
+           rightIsRef = true;
+        }        
+        
         left = this.processRef(left, func);
         if (left == null) {
             this.wr("processAsgn: Error: error processing left");
@@ -2348,30 +2692,68 @@ public class JsonPlState {
             return null;
         }
 
-        if (left.val.type.equals(right.val.type)) {
-            left.val.v = right.val.v;
-
-            var ret = new JsonObjSysBase("val");
-            ret.type = "bool";
-            ret.v = "true";
-
-            var ret2 = new JsonObjSysBase("const");
-            ret2.val = ret;
-
-            ret = ret2;
-            this.lastAsgnValue = this.cloneJsonObj(left);
-            this.lastAsgnReturn = ret;
-            return ret;
+        if(this.isSysObjValArray(left)) {
+           leftIsArray = true;
         } else {
-            this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type);
-            return null;
+           leftIsBasic = true;
+        }
+
+        if(this.isSysObjValArray(right)) {
+           rightIsArray = true;
+        } else {
+           rightIsBasic = true;
+        }        
+        
+        JsonObjSysBase ret = new JsonObjSysBase("val");
+        ret.type = "bool";
+        ret.v = "true";
+
+        JsonObjSysBase ret2 = new JsonObjSysBase("const");
+        ret2.val = ret;
+        ret = ret2;        
+        
+        if (left.val.type.equals(right.val.type)) {
+            if(leftIsBasic && rightIsBasic) {
+                //both are basic, dereference if need be, and copy value
+                left.val.v = right.val.v;         
+                this.lastAsgnValue = this.cloneJsonObj(left);
+                this.lastAsgnReturn = ret;
+                return ret;
+            } else if(leftIsArray && rightIsArray && rightIsRef) {
+                //both are array refs, copy reference
+                leftOrig.val.v = rightOrig.val.v;
+                this.lastAsgnValue = this.cloneJsonObj(left);
+                this.lastAsgnReturn = ret;
+                return ret;
+            } else if(leftIsArray && rightIsArray && !rightIsRef) {
+                //left is array ref, right is array const, copy value
+                left.val.v = new ArrayList();
+                ArrayList tmpA = this.toArray(left.val.v);
+                ArrayList tmpB = this.toArray(right.val.v);
+                for(int i = 0; i < tmpB.size(); i++) {
+                   tmpA.add(tmpB.get(i));
+                }
+                this.lastAsgnValue = this.cloneJsonObj(left);
+                this.lastAsgnReturn = ret;
+                return ret;
+            } else {
+               this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+               ret.val.v = "false";
+               return ret;
+            }
+        } else {
+            this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+            ret.val.v = "false";
+            return ret;
         }
     }
 
     /**
-     * Name: processBex Desc: Processes a boolean expression. Returns Boolean
-     * result of the expression. Arg1: objBex(bex obj, sys=bex) Arg2: func(func
-     * obj, sys=func) Returns: {null | (const obj, sys=const)}
+     * Name: processBex 
+     * Desc: Processes a boolean expression. Returns Boolean result of the expression. 
+     * Arg1: objBex(bex obj, sys=bex) 
+     * Arg2: func(func obj, sys=func) 
+     * Returns: {null | (const obj, sys=const)}
      */
     public JsonObjSysBase processBex(JsonObjSysBase objBex, JsonObjSysBase func) {
         JsonObjSysBase left = null;
@@ -2620,9 +3002,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: processFunc Desc: Processes a function's lines. Returns last
-     * statement or return value. Arg1: objFunc(bex obj, sys=func) Returns:
-     * {null | (const obj, sys=const) | (return obj, sys=return)}
+     * Name: processFunc 
+     * Desc: Processes a function's lines. Returns last statement or return value. 
+     * Arg1: objFunc(bex obj, sys=func) 
+     * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
      */
     public JsonObjSysBase processFunc(JsonObjSysBase objFunc) {
         if (!this.isSysObjFunc(objFunc)) {
@@ -2636,10 +3019,11 @@ public class JsonPlState {
     }
 
     /**
-     * Name: processCall Desc: Processes a function call. Returns last statement
-     * or return value from executing the function's lines. Arg1: objCall(call
-     * obj, sys=call) Arg2: func(func obj, sys=func) Returns: {null | (const
-     * obj, sys=const) | (return obj, sys=return)}
+     * Name: processCall 
+     * Desc: Processes a function call. Returns last statement or return value from executing the function's lines. 
+     * Arg1: objCall(call obj, sys=call) 
+     * Arg2: func(func obj, sys=func) 
+     * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
      */
     public JsonObjSysBase processCall(JsonObjSysBase objCall, JsonObjSysBase func) {
         String name = null;
@@ -2678,7 +3062,7 @@ public class JsonPlState {
 
         if (funcArgs != null) {
             if (args.size() == funcArgs.size()) {
-                for (var i = 0; i < args.size(); i++) {
+                for (int i = 0; i < args.size(); i++) {
                     if (!args.get(i).val.type.equals(funcArgs.get(i).val.type)) {
                         this.wr("processCall: Error: type mismatch at argument index, " + i + ", func arg def: " + funcArgs.get(i).val.type + ", call arg: " + args.get(i).val.type);
                         return null;
@@ -2773,8 +3157,10 @@ public class JsonPlState {
     }
 
     /**
-     * Name: processExp Desc: Processes an expression. Returns the value of the
-     * expression. Arg1: objExp(exp obj, sys=exp) Arg2: func(func obj, sys=func)
+     * Name: processExp 
+     * Desc: Processes an expression. Returns the value of the expression. 
+     * Arg1: objExp(exp obj, sys=exp) 
+     * Arg2: func(func obj, sys=func)
      * Returns: {null | (const obj, sys=const)}
      */
     public JsonObjSysBase processExp(JsonObjSysBase objExp, JsonObjSysBase func) {
@@ -2846,11 +3232,11 @@ public class JsonPlState {
         }
 
         if (left.val.type.equals(right.val.type) && (left.val.type.equals("int") || left.val.type.equals("float") || left.val.type.equals("bool"))) {
-            var ret = new JsonObjSysBase("val");
+            JsonObjSysBase ret = new JsonObjSysBase("val");
             ret.type = left.val.type;
             ret.v = null;
 
-            var ret2 = new JsonObjSysBase("const");
+            JsonObjSysBase ret2 = new JsonObjSysBase("const");
             ret2.val = ret;
 
             if (op.v.equals("+")) {
@@ -2923,8 +3309,9 @@ public class JsonPlState {
     }
 
     /**
-     * Name: hasReplDirectives Desc: A function to determine if the given string
-     * has any replacement directives defined. Arg1: src(the JSON text to check)
+     * Name: hasReplDirectives 
+     * Desc: A function to determine if the given string has any replacement directives defined. 
+     * Arg1: src(the JSON text to check)
      * Returns: {true | false}
      */
     public boolean hasReplDirectives(String src) {
@@ -2941,10 +3328,12 @@ public class JsonPlState {
     }
 
     /**
-     * Name: processReplDirectives Desc: A function to process replacement
-     * directive in a string using provided key, value pairs. Arg1: keys(an
-     * array of keys) Arg2: values(an array of key values) Arg3: src(the JSON
-     * text to process) Returns: string(new, adjusted, JSON string)
+     * Name: processReplDirectives 
+     * Desc: A function to process replacement directive in a string using provided key, value pairs. 
+     * Arg1: keys(an array of keys) 
+     * Arg2: values(an array of key values) 
+     * Arg3: src(the JSON text to process) 
+     * Returns: string(new, adjusted, JSON string)
      */
     public String processReplDirectives(String[] keys, String[] values, String src) {
         if (keys == null) {

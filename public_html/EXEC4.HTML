@@ -25,6 +25,18 @@
                      "type": "bool",
                      "v": "false"
                   }         
+               },
+               {
+                  "sys": "var",
+                  "name": "tmp3",
+                  "val": {
+                     "sys": "val",
+                     "type": "int[]",
+                     "len": "0",
+                     "v": [
+                        
+                     ]
+                  }         
                }
             ],
             "funcs": [
@@ -38,7 +50,7 @@
                         "val": {
                            "sys": "val",
                            "type": "int",
-                           "v": 0
+                           "v": "0"
                         }
                      }
                   ],
@@ -49,7 +61,7 @@
                         "val": {
                            "sys": "val",
                            "type": "bool",
-                           "v": false
+                           "v": "false"
                         }
                      },
                      {
@@ -74,7 +86,7 @@
                   "ret": {
                      "sys": "val",
                      "type": "bool",
-                     "v": false
+                     "v": "false"
                   },
                   "lines": [
                      {"sys": "call", "name": "testFunction3", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}]}
@@ -752,7 +764,40 @@
             jpl.wrObj(tmp);
             jpl.wr("REF 1:");
             res = jpl.processRef(tmp, code.funcs[0]);
-            jpl.wrObj(res);                        
+            jpl.wrObj(res); 
+
+			/////////////////////////////////////////////////////////////////////////////
+            //tmp = '{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.[$.vars.[$.vars.name2]]"}};';
+			tmp = '{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "&(repl::classOrFunc).vars.[$.&(repl::varsOrArgs).[$.vars.&(repl::varOrArgName)]]"}}';
+			jpl.wr("====================== TEST 13.00: Pre-Processing Replacement Directives Prep ======================");
+			jpl.wr("Check for replace directives in string form.");
+			if(jpl.hasReplDirectives(tmp)) {
+				jpl.wr("Found replace directives...");
+				jpl.wr("Before: " + tmp);
+				var keys = [];
+				var vals = [];
+				keys.push('varOrArgName');
+				vals.push('name2');
+				
+				keys.push('varsOrArgs');
+				vals.push('vars');				
+				
+				keys.push('classOrFunc');
+				vals.push('#');				
+				tmp = jpl.processReplDirectives(keys, vals, tmp);
+				jpl.wr("After: " + tmp);				
+			}
+			tmp = JSON.parse(tmp);
+			
+            if(!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }            
+            jpl.wr("====================== TEST 13.00: Pre-Processing Replacement Directives Execution ======================");
+            jpl.wrObj(tmp);
+            jpl.wr("REF 1:");
+            res = jpl.processRef(tmp, code.funcs[0]);
+            jpl.wrObj(res); 			
          }
       </script>
    </head>

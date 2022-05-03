@@ -123,7 +123,12 @@ public class JsonObjSysBase extends JsonObjBase {
    /**
     * 
     */
-   public boolean active = true;
+   public Boolean active;
+   
+   /**
+    * 
+    */
+   public Integer len;
    
    /**
     * 
