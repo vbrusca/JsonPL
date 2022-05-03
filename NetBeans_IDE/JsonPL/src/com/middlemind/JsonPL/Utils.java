@@ -42,6 +42,7 @@ public class Utils {
         String jsonString = gson.toJson(obj);
         //clean = chars
         jsonString = jsonString.replaceAll("\\\\u003d", "=");
+        jsonString = jsonString.replaceAll("\\\\u0026", "&");
         Logger.wr(jsonString);        
     }
     

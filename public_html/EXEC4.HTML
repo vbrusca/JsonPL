@@ -768,7 +768,7 @@
 
 			/////////////////////////////////////////////////////////////////////////////
             //tmp = '{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.[$.vars.[$.vars.name2]]"}};';
-			tmp = '{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "&(repl::classOrFunc).vars.[$.&(repl::varsOrArgs).[$.vars.&(repl::varOrArgName)]]"}}';
+			tmp = '{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "@(repl::classOrFunc).vars.[$.@(repl::varsOrArgs).[$.vars.@(repl::varOrArgName)]]"}}';
 			jpl.wr("====================== TEST 13.00: Pre-Processing Replacement Directives Prep ======================");
 			jpl.wr("Check for replace directives in string form.");
 			if(jpl.hasReplDirectives(tmp)) {

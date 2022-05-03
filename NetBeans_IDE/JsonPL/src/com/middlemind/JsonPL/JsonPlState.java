@@ -3320,7 +3320,7 @@ public class JsonPlState {
             return false;
         }
 
-        if (src.indexOf("&(repl::") == -1) {
+        if (src.indexOf("@(repl::") == -1) {
             return false;
         } else {
             return true;
@@ -3357,9 +3357,14 @@ public class JsonPlState {
         }
 
         String nsrc = this.toStr(src);
+        nsrc = nsrc.replace("\\u0026", "&");
+        nsrc = nsrc.replace("\\u003d", "=");
+        
         for (int i = 0; i < keys.length; i++) {
-            String fnd = "&(repl::" + keys[i] + ")";
-            nsrc = nsrc.replaceAll(fnd, values[i]);
+            String fnd = "@(repl::" + keys[i] + ")";
+            while(nsrc.indexOf(fnd) != -1) {
+                nsrc = nsrc.replace(fnd, values[i]);
+            }
         }
 
         return nsrc;

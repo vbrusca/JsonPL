@@ -3169,7 +3169,7 @@ jsonPlState.prototype.hasReplDirectives = function(src) {
       return false;
 	}
    
-	if(src.indexOf("&(repl::") === -1) {
+	if(src.indexOf("@(repl::") === -1) {
 		return false;
 	} else {
 		return true;
@@ -3207,7 +3207,7 @@ jsonPlState.prototype.processReplDirectives = function(keys, values, src) {
 
    var nsrc = this.toStr(src);
    for(var i = 0; i < keys.length; i++) {
-      var fnd = "&(repl::" + keys[i] + ")";
+      var fnd = "@(repl::" + keys[i] + ")";
       nsrc = nsrc.replaceAll(fnd, values[i]);
    }
    

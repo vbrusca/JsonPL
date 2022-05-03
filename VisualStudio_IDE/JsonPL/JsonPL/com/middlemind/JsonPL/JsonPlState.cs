@@ -4522,7 +4522,7 @@ namespace com.middlemind.JsonPL
                 return false;
             }
 
-            if (src.IndexOf("&(repl::") == -1)
+            if (src.IndexOf("@(repl::") == -1)
             {
                 return false;
             }
@@ -4567,9 +4567,12 @@ namespace com.middlemind.JsonPL
             }
 
             string nsrc = this.toStr(src);
+            nsrc = nsrc.Replace("\\u003d", "=");
+            nsrc = nsrc.Replace("\\u0026", "&");
+
             for (int i = 0; i < keys.Length; i++)
             {
-                string fnd = "&(repl::" + keys[i] + ")";
+                string fnd = "@(repl::" + keys[i] + ")";
                 nsrc = nsrc.Replace(fnd, values[i]);
             }
 

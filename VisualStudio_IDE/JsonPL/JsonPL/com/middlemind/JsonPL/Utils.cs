@@ -39,6 +39,7 @@ namespace com.middlemind.JsonPL {
          });
          //clean = chars
          jsonString = jsonString.Replace("\\u003d", "=");
+         jsonString = jsonString.Replace("\\u0026", "&");
          Logger.wrl(jsonString);
       }
 
