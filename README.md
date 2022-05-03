@@ -11,7 +11,7 @@ Recent Updates:
 1. Added initial support for the array data type by including the isSysObjArray and validateSysObjArray functions to the JS, Java, and C# versions of the interpreter.
 2. Added support for dynamic variable refereces to the JS, Java, and C# versions of the interpreter. Now you can use variables in the reference path. For instance to use a variable value as the name of a variable you would use syntax like this, #.vars.[$.vars.name1].
 3. Added array index support to the process reference function, $.vars.some_array.numeric_array_index i.e. $.vars.some_array.1
-4. Added preprocessor, replacement directive support via the processReplDirectives. You can now specify text, &(repl::some string here), to be replaced by the preprocessor.
+4. Added preprocessor, replacement directive support via the processReplDirectives. You can now specify text, @(repl::some string here), to be replaced by the pre-processor.
 
 Up Next: 
 1. A C version of the base 0.5.1 interpreter. The C version of the 0.5.1 interpreter is coming along. A lot of the base code to handle strings, lists, memory management, etc. is done and ready for testing.
