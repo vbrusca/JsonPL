@@ -132,7 +132,7 @@ jsonPlState.prototype.sysJob3 = function(args) {
 
 /**
  * Name: system
- * Desc: Define system functions.
+ * Desc: Define system function signatures.
  */
 jsonPlState.prototype.system = {   
    "functions":[
@@ -1024,7 +1024,7 @@ jsonPlState.prototype.validateSysObjCall = function(obj) {
 };
 
 /**
- * Name: validateSysObjCall
+ * Name: validateSysObjOp
  * Desc: Validates if the given object is a valid call sys object.
  * Arg1: obj(sys obj to check)
  * Returns: {false | true}
@@ -1771,7 +1771,25 @@ jsonPlState.prototype.processRef = function(objRef, func) {
    
    //this.wr("OBJ REF");
    //this.wrObj(objRef);
-   path = (objRef.val.v + "");   
+   path = (objRef.val.v + "");
+   if(path.charAt(0) === '[') {
+      var nc = path.substring(1, path.length - 1);
+
+      tmp = {};
+      tmp.sys = "ref";
+      tmp.val = {};
+      tmp.val.sys = "val";
+      tmp.val.type = "string";
+      tmp.val.v = nc;
+      
+      tmp = this.processRef(tmp, func);
+      if(tmp !== null && tmp.val.type === 'string') {
+         path = this.toStr(tmp.val.v);
+      } else {
+         this.wr("processRef: Error: could not lookup object, for name, " + name + ", ref path: " + path);
+      }
+   }
+
    //this.wr("===============================================Found path: " + path);
    vls = path.split(".");
    
@@ -1906,11 +1924,12 @@ jsonPlState.prototype.processRef = function(objRef, func) {
                fnd = this.findVar(name, func);
             } else {
                fnd = this.findArg(name, func);
-            }            
+            }
          }
          
          if(fnd !== null) {
             type = fnd.val.type;
+            foundName = true;
          } else {
             this.wr("processRef: Error: could not find an object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
          }
@@ -1938,6 +1957,7 @@ jsonPlState.prototype.processRef = function(objRef, func) {
          
          if(this.isSysObjValArray(fnd.val)) {
             fnd = (this.toArray(fnd.val.v)[this.toInt(idx)]);
+            foundIndex = true;
          } else {
             this.wr("processRef: Error: index entry is only for vars/args of type array, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
          }
@@ -1946,7 +1966,12 @@ jsonPlState.prototype.processRef = function(objRef, func) {
    return fnd;
 };
 
-//TODO
+/**
+ * Name: toBoolInt
+ * Desc: Converts the boolean value v to an integer representation.
+ * Arg1: v(the value to convert)
+ * Returns: (0 | 1)
+ */
 jsonPlState.prototype.toBoolInt = function(v) {
    var vb = v + "";
    vb = vb.toLowerCase();
@@ -1961,22 +1986,42 @@ jsonPlState.prototype.toBoolInt = function(v) {
    }
 };
 
-//TODO
+/**
+ * Name: toInt
+ * Desc: Converts the value v to an integer representation.
+ * Arg1: v(the value to convert)
+ * Returns: (the int value of v)
+ */
 jsonPlState.prototype.toInt = function(v) {
    return parseInt(v);
 };
 
-//TODO
+/**
+ * Name: toFloat
+ * Desc: Converts the value v to a float representation.
+ * Arg1: v(the value to convert)
+ * Returns: (the float value of v)
+ */
 jsonPlState.prototype.toFloat = function(v) {
    return parseFloat(v);
 };
 
-//TODO
+/**
+ * Name: toStr
+ * Desc: Converts the value v to a string representation.
+ * Arg1: v(the value to convert)
+ * Returns: (the string value of v)
+ */
 jsonPlState.prototype.toStr = function(v) {
    return String(v + "");
 };
 
-//TODO
+/**
+ * Name: toArray
+ * Desc: Converts the value v to an array representation.
+ * Arg1: v(the value to convert)
+ * Returns: (the array value of v)
+ */
 jsonPlState.prototype.toArray = function(v) {
    if(this.isArray(v)) {
       return v;
@@ -1985,7 +2030,12 @@ jsonPlState.prototype.toArray = function(v) {
    }
 };
 
-//TODO
+/**
+ * Name: toBool
+ * Desc: Converts the value v to a boolean representation.
+ * Arg1: v(the value to convert)
+ * Returns: (the bool value of v)
+ */
 jsonPlState.prototype.toBool = function(v) {
    var vb = v + "";
    vb = vb.toLowerCase();
@@ -2579,8 +2629,8 @@ jsonPlState.prototype.processAsgn = function(objAsgn, func) {
          this.lastAsgnReturn = ret;
          return ret;
       } else if(leftIsArray && rightIsArray && rightIsRef) {
-         //both are array refs, copy reference
-         leftOrig.val.v = rightOrig.val.v;
+         //both are array refs, dereference if need be, and copy reference
+         left.val.v = right.val.v;
          this.lastAsgnValue = this.cloneJsonObj(left);
          this.lastAsgnReturn = ret;
          return ret;
@@ -2598,11 +2648,15 @@ jsonPlState.prototype.processAsgn = function(objAsgn, func) {
       } else {
          this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
          ret.val.v = "false";
+         this.lastAsgnValue = this.cloneJsonObj(left);
+         this.lastAsgnReturn = ret;         
          return ret;
       }
    } else {
       this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
       ret.val.v = "false";
+      this.lastAsgnValue = this.cloneJsonObj(left);
+      this.lastAsgnReturn = ret;      
       return ret;
    }
 };

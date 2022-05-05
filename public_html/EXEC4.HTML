@@ -37,7 +37,29 @@
                         
                      ]
                   }         
-               }
+               },
+               {
+                  "sys": "var",
+                  "name": "tmp4",
+                  "val": {
+                     "sys": "val",
+                     "type": "int[]",
+                     "len": "2",
+                     "v": [
+                        {"sys":"const", "name":"0", "val":{"sys":"val", "type":"int", "v":"0"}},
+                        {"sys":"const", "name":"1", "val":{"sys":"val", "type":"int", "v":"1"}}                        
+                     ]
+                  }         
+               },
+               {
+                  "sys": "var",
+                  "name": "tmp5",
+                  "val": {
+                     "sys": "val",
+                     "type": "string",
+                     "v": "#.vars.tmp1"
+                  }
+               }               
             ],
             "funcs": [
                {
@@ -291,13 +313,13 @@
                "sys": "asgn",
                "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}},
                "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
+               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}
             },
             {
                "sys": "asgn",
                "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
                "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}
+               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}
             },
             {
                "sys": "asgn",
@@ -309,16 +331,20 @@
                "sys": "asgn",
                "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
                "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "bex", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
+               "right": {"sys": "bex", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
             },
             {
                "sys": "asgn",
                "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
                "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 25}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
+               "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
             }
          */      
          
+         /**
+          * Name: init
+          * Desc: A function to init the test page.
+          */
          function init() {
             var txtArea = document.getElementById('message');
          
@@ -396,6 +422,18 @@
             jpl.wr("REF 3:");
             res = jpl.processRef(tmp, code.funcs[0]);
             jpl.wrObj(res);
+
+            tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "[#.vars.tmp5]"}};
+            if(!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }                        
+            jpl.validateSysObjRef(tmp);
+            jpl.wr("====================== TEST 1.30: Full Dynamic Variable Reference ======================");
+            jpl.wrObj(tmp);
+            jpl.wr("REF 4:");
+            res = jpl.processRef(tmp, code.funcs[0]);
+            jpl.wrObj(res);            
 
             /////////////////////////TESTS: ASSIGNMENT
             /*
@@ -764,30 +802,30 @@
             jpl.wrObj(tmp);
             jpl.wr("REF 1:");
             res = jpl.processRef(tmp, code.funcs[0]);
-            jpl.wrObj(res); 
+            jpl.wrObj(res);
 
-			/////////////////////////////////////////////////////////////////////////////
+			   /////////////////////////////////////////////////////////////////////////////
             //tmp = '{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.[$.vars.[$.vars.name2]]"}};';
-			tmp = '{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "@(repl::classOrFunc).vars.[$.@(repl::varsOrArgs).[$.vars.@(repl::varOrArgName)]]"}}';
-			jpl.wr("====================== TEST 13.00: Pre-Processing Replacement Directives Prep ======================");
-			jpl.wr("Check for replace directives in string form.");
-			if(jpl.hasReplDirectives(tmp)) {
-				jpl.wr("Found replace directives...");
-				jpl.wr("Before: " + tmp);
-				var keys = [];
-				var vals = [];
-				keys.push('varOrArgName');
-				vals.push('name2');
-				
-				keys.push('varsOrArgs');
-				vals.push('vars');				
-				
-				keys.push('classOrFunc');
-				vals.push('#');				
-				tmp = jpl.processReplDirectives(keys, vals, tmp);
-				jpl.wr("After: " + tmp);				
-			}
-			tmp = JSON.parse(tmp);
+			   tmp = '{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "@(repl::classOrFunc).vars.[$.@(repl::varsOrArgs).[$.vars.@(repl::varOrArgName)]]"}}';
+			   jpl.wr("====================== TEST 13.00: Pre-Processing Replacement Directives Prep ======================");
+			   jpl.wr("Check for replace directives in string form.");
+            if(jpl.hasReplDirectives(tmp)) {
+               jpl.wr("Found replace directives...");
+               jpl.wr("Before: " + tmp);
+               var keys = [];
+               var vals = [];
+               keys.push('varOrArgName');
+               vals.push('name2');
+               
+               keys.push('varsOrArgs');
+               vals.push('vars');				
+               
+               keys.push('classOrFunc');
+               vals.push('#');				
+               tmp = jpl.processReplDirectives(keys, vals, tmp);
+               jpl.wr("After: " + tmp);				
+            }
+			   tmp = JSON.parse(tmp);
 			
             if(!jpl.validateSysObjRef(tmp)) {
                jpl.wr("!invalid JSON");
@@ -797,13 +835,45 @@
             jpl.wrObj(tmp);
             jpl.wr("REF 1:");
             res = jpl.processRef(tmp, code.funcs[0]);
-            jpl.wrObj(res); 			
+            jpl.wrObj(res);
+            
+            
+            /////////////////////////TESTS: REFERENCE ARRAY
+            var jpl = new jsonPlState();
+            jpl.program = JSON.parse(JSON.stringify(code));
+            
+            if(!jpl.validateSysObjClass(jpl.program)) {
+               jpl.wr("runProgram: Error: could not validate the class object.");
+               return;
+            }
+
+            tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp4"}};
+            if(!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }            
+            jpl.wr("====================== TEST 13.01: Class Variable Array Reference ======================");
+            jpl.wrObj(tmp);
+            jpl.wr("REF 1:");
+            res = jpl.processRef(tmp, code.funcs[0]);
+            jpl.wrObj(res);
+            
+            tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp4.0"}};
+            if(!jpl.validateSysObjRef(tmp)) {
+               jpl.wr("!invalid JSON");
+               return;
+            }            
+            jpl.wr("====================== TEST 13.02: Class Variable Array Index Reference ======================");
+            jpl.wrObj(tmp);
+            jpl.wr("REF 1:");
+            res = jpl.processRef(tmp, code.funcs[0]);
+            jpl.wrObj(res);            
          }
       </script>
    </head>
    <body style="padding: 4px;" onload="init()">
-<span>Test Results:</span><br/>
-<textarea cols="125" rows="30" id="message">
+<span style="font-size:14px;">Test Results:</span><br/>
+<textarea cols="125" rows="25" id="message" style="font-size:12px;">
 </textarea>
    </body>
 </html>
