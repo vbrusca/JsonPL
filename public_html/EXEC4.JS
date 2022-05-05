@@ -92,6 +92,44 @@ jsonPlState.prototype.getConstBool = function() {
 };
 
 /**
+ * Name: getConst
+ * Desc: A method to quickly access a constant value object.
+ * Returns: {(const obj, sys=const)}
+ */
+jsonPlState.prototype.getConst = function(type, val) {
+   var ret = {};
+   ret.sys = "val";
+   ret.type = type;
+   ret.v = v;
+   
+   var ret2 = {};
+   ret2.sys = "const";
+   ret2.val = ret;   
+   ret = ret2;   
+   
+   return ret; 
+};
+
+/**
+ * Name: getRef
+ * Desc: A method to quickly access a ref object.
+ * Returns: {(ref obj, sys=ref)}
+ */
+ jsonPlState.prototype.getRef = function(type, val) {
+   var ret = {};
+   ret.sys = "val";
+   ret.type = type;
+   ret.v = v;
+   
+   var ret2 = {};
+   ret2.sys = "ref";
+   ret2.val = ret;   
+   ret = ret2;   
+   
+   return ret; 
+};
+
+/**
  * Name: sysJob1
  * Desc: A system level job method used to demonstrate JCL.
  * Arg1: args(arg obj, sys=arg & array of)
@@ -1371,6 +1409,89 @@ jsonPlState.prototype.wrObj = function(s) {
    if (this.LOGGING === true) {
       console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
    }
+};
+
+/**
+ * Name: wrVal
+ * Desc: Writes a JSON val sys obj object to standard output if LOGGING is on.
+ *       Sets the WR_PREFIX to each object written.
+ *       Prints object using pretty JSON.stringify call. 
+ * Arg1: v(val obj to write)
+ */
+jsonPlState.prototype.wrVal = function(v) {
+   if (this.LOGGING === true) {
+      if(this.isSysObjValArray(v)) {
+         console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+      } else {
+         console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+      }
+   }
+};
+
+/**
+ * Name: sysLen
+ * Desc: Returns the length of the given sys object. Non-array objects return a value of 0. 
+ * Arg1: v(val obj to get the len for)
+ */
+jsonPlState.prototype.sysLen = function(v) {
+   var ret = this.getConstVal("int", "0");
+   if(this.isSysObj(v)) {
+      if(this.isSysObjValArray(v)) {
+         ret = this.getConstVal("int", this.toStr(v.len));
+      }
+   }
+   return ret;
+};
+
+/**
+ * Name: sysType
+ * Desc: Returns the type of the given sys object.
+ * Arg1: v(val obj to get the type for)
+ */
+jsonPlState.prototype.sysType = function(v) {
+   var ret = this.getConstVal("string", "");
+   if(this.isSysObj(v)) {
+      ret = this.getConstVal("string", this.toStr(v.type));
+   }
+   return ret;
+};
+
+/**
+ * Name: sysGetRef
+ * Desc: Returns a string object with a reference to the val or arg specified.
+ * Arg1: v(val obj to get the reference for)
+ * Arg2: isVar(bool indicating is the v object is a var or arg)
+ * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
+ */
+ jsonPlState.prototype.sysGetRef = function(name, isVar, funcName) {
+   var ret = this.getRef("string", "");
+   if(name !== null && name !== "") {
+      if(funcName === null || funcName === "") {
+         //lookup class variable
+         var v = this.findVar(name, prog);
+         if(v !== null) {
+            ret = this.getRef(v.type, "#.vars." + v.name);
+         }
+      } else {
+         var func = this.findFunc(funcName);
+         if(func !== null) {
+            if(isVar) {
+               //lookup function variable
+               var v1 = this.findVar(name, func);
+               if(v1 !== null) {
+                  ret = this.getRef(v.type, "$.vars." + v.name);
+               }
+            } else {
+               //lookup function arg
+               var v2 = this.findArg(name, func);
+               if(v2 !== null) {
+                  ret = this.getRef(v.type, "$.args." + v.name);
+               }                              
+            }
+         }
+      }
+   }
+   return ret;
 };
 
 /////////////////////////GENERIC OBJECT ID METHODS
