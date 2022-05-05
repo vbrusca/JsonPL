@@ -1576,14 +1576,10 @@ jsonPlState.prototype.sysType = function(args, func) {
  * Arg2: isVar(bool indicating is the v object is a var or arg)
  * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
  */
- jsonPlState.prototype.sysGetRef = function(args, func) {
+jsonPlState.prototype.sysGetRef = function(args, func) {
    var name = this.toStr(args[0].val.v);
-   name = name.replaceAll("null", "").trim();
-
    var isVar = this.toBool(args[1].val.v);
    var funcName = this.toStr(args[2].val.v);
-   funcName = funcName.replaceAll("null", "");
-
    var ret = this.getRef("string", "");
 
    //this.wr("sysGetRef: AAA");
