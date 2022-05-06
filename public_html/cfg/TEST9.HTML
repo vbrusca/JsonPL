@@ -1,6 +1,6 @@
 <html>
    <head>
-      <title>JsonPL Test 8</title>
+      <title>JsonPL Test 9</title>
       <script type="text/javascript" src="../exec4.js"></script>
       <script type="text/javascript">
          var code = {
@@ -30,7 +30,7 @@
                         ]}
                      },
                      {"sys":"call", "name":"SYS::wr", "args":[
-                        {"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}}
+                        {"sys":"ref", "val":{"sys":"val", "type":"string", "v":"[#.vars.ptr1]"}}
                      ]}                     
                   ]
                }
@@ -43,7 +43,7 @@
           * Desc: A function to init the test page.
           */
          function init() {
-            var desc = "A test to demonstrate setting a class variable, of type string, with a reference string value and printing it out.";
+            var desc = "A test to demonstrate setting a class variable, of type string, with a reference string value, from a function call, and printing it using a dynamic reference.";
             var txtArea = document.getElementById('message');
          
             jsonPlState.prototype.wr = function(s) {

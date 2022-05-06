@@ -1,6 +1,6 @@
 <html>
    <head>
-      <title>JsonPL Test 8</title>
+      <title>JsonPL Test 10</title>
       <script type="text/javascript" src="../exec4.js"></script>
       <script type="text/javascript">
          var code = {
@@ -8,7 +8,7 @@
             "call":{"sys":"call", "name":"main", "args":[]},
             "vars":[
                {"sys":"var", "name":"tmp1", "val":{"sys":"val", "type":"int", "v":"5"}},
-               {"sys":"var", "name":"ptr1", "val":{"sys":"val", "type":"string", "v":""}}               
+               {"sys":"var", "name":"ptr1", "val":{"sys":"val", "type":"string", "v":"#.vars.tmp1"}}               
             ],
             "funcs":[
                {
@@ -19,18 +19,8 @@
                   ],
                   "ret":{"sys":"val", "type":"bool", "v":"false"},
                   "lines":[
-                     {
-                        "sys":"asgn",
-                        "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}},
-                        "op":{"sys":"op", "type":"asgn", "v":"="},
-                        "right":{"sys":"call", "name":"SYS::getRefStr", "args":[
-                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"tmp1"}},
-                           {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
-                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}
-                        ]}
-                     },
                      {"sys":"call", "name":"SYS::wr", "args":[
-                        {"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}}
+                        {"sys":"ref", "val":{"sys":"val", "type":"string", "v":"[#.vars.ptr1]"}}
                      ]}                     
                   ]
                }
@@ -43,7 +33,7 @@
           * Desc: A function to init the test page.
           */
          function init() {
-            var desc = "A test to demonstrate setting a class variable, of type string, with a reference string value and printing it out.";
+            var desc = "A test to print out the value of a class variable using a dynamic, hardcoded reference.";
             var txtArea = document.getElementById('message');
          
             jsonPlState.prototype.wr = function(s) {
