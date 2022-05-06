@@ -39,7 +39,7 @@ function jsonPlState() {
  */
 jsonPlState.prototype.sysWr = function(args, func) {
    var s = args[0].val.v;
-   console.log("sysWr: " + s);
+   this.wr("sysWr: " + s);
 
    var ret = {};
    ret.sys = "val";
@@ -258,6 +258,40 @@ jsonPlState.prototype.system = {
          "sys": "func", 
          "name": "SYS::getRef",
          "fname": "sysGetRef",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "name",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "isVar",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": "false"
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "funcName",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }            
+         ]
+      },   
+      {
+         "sys": "func", 
+         "name": "SYS::getRefStr",
+         "fname": "sysGetRefStr",
          "args": [   
             {
                "sys": "arg",
@@ -1568,6 +1602,21 @@ jsonPlState.prototype.sysType = function(args, func) {
    this.wrVal(ret.val);   
    return ret;
 };
+
+/**
+ * Name: sysGetRefStr
+ * Desc: Returns a string object with a reference to the val or arg specified.
+ * Arg1: v(val obj to get the reference for)
+ * Arg2: isVar(bool indicating is the v object is a var or arg)
+ * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
+ */
+jsonPlState.prototype.sysGetRefStr = function(args, func) {
+   var ret = this.sysGetRef(args, func);
+   ret.sys = "const";
+   ret.val.type = "string";
+   this.wrVal(ret.val);
+   return ret;
+}
 
 /**
  * Name: sysGetRef

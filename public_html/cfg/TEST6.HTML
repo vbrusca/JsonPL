@@ -1,6 +1,6 @@
 <html>
    <head>
-      <title>JsonPL Test 0</title>
+      <title>JsonPL Test 6</title>
       <script type="text/javascript" src="../exec4.js"></script>
       <script type="text/javascript">
          var code = {
@@ -27,10 +27,12 @@
                   ],
                   "vars":[
                   ],
-                  "ret":{"sys":"val", "type":"int", "v":"-1"},
+                  "ret":{"sys":"val", "type":"string", "v":"-1"},
                   "lines":[
-                     {"sys":"call", "name":"SYS::len", "args":[
-                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.tmp1"}}
+                     {"sys":"call", "name":"SYS::getRefStr", "args":[
+                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":"tmp1"}},
+                        {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}
                      ]}
                   ]
                }
@@ -43,7 +45,7 @@
           * Desc: A function to init the test page.
           */
          function init() {
-            var desc = "A test to demonstrate getting a length from a class array variable.";
+            var desc = "A test to demonstrate getting a class array variable reference as a sys object string const.";
             var txtArea = document.getElementById('message');
          
             jsonPlState.prototype.wr = function(s) {

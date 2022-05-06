@@ -1,24 +1,12 @@
 <html>
    <head>
-      <title>JsonPL Test 0</title>
+      <title>JsonPL Test 7</title>
       <script type="text/javascript" src="../exec4.js"></script>
       <script type="text/javascript">
          var code = {
             "sys":"class", "name":"program1",
             "call":{"sys":"call", "name":"main", "args":[]},
             "vars":[
-               {
-                  "sys":"var", "name":"tmp1",
-                  "val":{
-                     "sys":"val",
-                     "type":"int[]",
-                     "len":"2",
-                     "v":[
-                        {"sys":"const", "name":"item0", "val":{"sys":"val", "type":"int", "v":"0"}},
-                        {"sys":"const", "name":"item1", "val":{"sys":"val", "type":"int", "v":"1"}}                        
-                     ]
-                  }         
-               }
             ],
             "funcs":[
                {
@@ -26,11 +14,23 @@
                   "args":[ 
                   ],
                   "vars":[
+                     {
+                        "sys":"var", "name":"tmp1",
+                        "val":{
+                           "sys":"val",
+                           "type":"int[]",
+                           "len":"2",
+                           "v":[
+                              {"sys":"const", "name":"item0", "val":{"sys":"val", "type":"int", "v":"0"}},
+                              {"sys":"const", "name":"item1", "val":{"sys":"val", "type":"int", "v":"1"}}                        
+                           ]
+                        }         
+                     }
                   ],
                   "ret":{"sys":"val", "type":"int", "v":"-1"},
                   "lines":[
                      {"sys":"call", "name":"SYS::len", "args":[
-                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.tmp1"}}
+                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.vars.tmp1"}}
                      ]}
                   ]
                }
@@ -43,7 +43,7 @@
           * Desc: A function to init the test page.
           */
          function init() {
-            var desc = "A test to demonstrate getting a length from a class array variable.";
+            var desc = "A test to demonstrate getting a length from a function array variable.";
             var txtArea = document.getElementById('message');
          
             jsonPlState.prototype.wr = function(s) {

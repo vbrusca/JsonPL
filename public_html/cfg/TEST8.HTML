@@ -1,24 +1,14 @@
 <html>
    <head>
-      <title>JsonPL Test 0</title>
+      <title>JsonPL Test 1</title>
       <script type="text/javascript" src="../exec4.js"></script>
       <script type="text/javascript">
          var code = {
             "sys":"class", "name":"program1",
             "call":{"sys":"call", "name":"main", "args":[]},
             "vars":[
-               {
-                  "sys":"var", "name":"tmp1",
-                  "val":{
-                     "sys":"val",
-                     "type":"int[]",
-                     "len":"2",
-                     "v":[
-                        {"sys":"const", "name":"item0", "val":{"sys":"val", "type":"int", "v":"0"}},
-                        {"sys":"const", "name":"item1", "val":{"sys":"val", "type":"int", "v":"1"}}                        
-                     ]
-                  }         
-               }
+               {"sys":"var", "name":"tmp1", "val":{"sys":"val", "type":"int", "v":"5"}},
+               {"sys":"var", "name":"ptr1", "val":{"sys":"val", "type":"string", "v":""}}               
             ],
             "funcs":[
                {
@@ -27,11 +17,21 @@
                   ],
                   "vars":[
                   ],
-                  "ret":{"sys":"val", "type":"int", "v":"-1"},
+                  "ret":{"sys":"val", "type":"bool", "v":"false"},
                   "lines":[
-                     {"sys":"call", "name":"SYS::len", "args":[
-                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.tmp1"}}
-                     ]}
+                     {
+                        "sys":"asgn",
+                        "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}},
+                        "op":{"sys":"op", "type":"asgn", "v":"="},
+                        "right":{"sys":"call", "name":"SYS::getRefStr", "args":[
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"tmp1"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}
+                        ]}
+                     },
+                     {"sys":"call", "name":"SYS::wr", "args":[
+                        {"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}}
+                     ]}                     
                   ]
                }
             ],
@@ -43,7 +43,7 @@
           * Desc: A function to init the test page.
           */
          function init() {
-            var desc = "A test to demonstrate getting a length from a class array variable.";
+            var desc = "A test to demonstrate setting a class string variable with a reference string and printing it.";
             var txtArea = document.getElementById('message');
          
             jsonPlState.prototype.wr = function(s) {
