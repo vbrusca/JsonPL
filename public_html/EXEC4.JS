@@ -206,6 +206,70 @@ jsonPlState.prototype.system = {
       },
       {
          "sys": "func", 
+         "name": "SYS::wrInt",
+         "fname": "sysWr",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "s",
+               "val": {
+                  "sys": "val",
+                  "type": "int",
+                  "v": ""
+               }
+            }
+         ]
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::wrFloat",
+         "fname": "sysWr",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "s",
+               "val": {
+                  "sys": "val",
+                  "type": "float",
+                  "v": ""
+               }
+            }
+         ]
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::wrStr",
+         "fname": "sysWr",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "s",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }
+         ]
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::wrBool",
+         "fname": "sysWr",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "s",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": ""
+               }
+            }
+         ]
+      },      
+      {
+         "sys": "func", 
          "name": "SYS::job1",
          "fname": "sysJob1",
          "args": []
@@ -1756,7 +1820,7 @@ jsonPlState.prototype.isInteger = function(arg) {
 jsonPlState.prototype.isFloat = function(arg) {
    if(arg === null) {
       return false;
-   } else if(this.isNumber(arg) && Number.isInteger(arg) === false) {
+   } else if(this.isNumber(arg)) {
       return true;
    } else {
       return false;
