@@ -38,8 +38,13 @@ function jsonPlState() {
  * Returns: {(const obj, sys=const)}
  */
 jsonPlState.prototype.sysWr = function(args, func) {
-   var s = args[0].val.v;
-   this.wr("sysWr: " + s);
+   var len = args.length;
+   var i = 0;
+   var s = "";
+   for(; i < len; i++) {
+      s += this.toStr(args[i].val.v);
+   }
+   this.wr(s); 
 
    var ret = {};
    ret.sys = "val";
@@ -193,15 +198,7 @@ jsonPlState.prototype.system = {
          "name": "SYS::wr",
          "fname": "sysWr",
          "args": [   
-            {
-               "sys": "arg",
-               "name": "s",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            }
+
          ]
       },
       {
@@ -2385,7 +2382,9 @@ jsonPlState.prototype.toArray = function(v) {
    if(this.isArray(v)) {
       return v;
    } else {
-      return null;
+      var ret = [];
+      ret.push(v);
+      return ret;
    }
 };
 
@@ -3335,7 +3334,8 @@ jsonPlState.prototype.processCall = function(objCall, func) {
    }
    
    if(funcArgs !== null) {
-      if(args.length === funcArgs.length) {         
+      if((args.length === funcArgs.length) || funcArgs.length === 0) { 
+         funcArgs = this.toArray(args);        
          for(var i = 0; i < args.length; i++) {
             if(args[i].val.type !== funcArgs[i].val.type) {
                this.wr("processCall: Error: type mismatch at argument index, " + i + ", func arg def: " + funcArgs[i].val.type + ", call arg: " + args[i].val.type);

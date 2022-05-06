@@ -21,6 +21,10 @@
                   ],
                   "ret":{"sys":"val", "type":"bool", "v":"false"},
                   "lines":[
+                     {"sys":"call", "name":"SYS::wr", "args":[
+                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Program "}}, 
+                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Output"}}
+                     ]},                     
                      {"sys":"call", "name":"SYS::wrInt", "args":[
                         {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}}
                      ]},
