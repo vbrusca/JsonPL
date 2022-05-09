@@ -11,7 +11,8 @@ import java.util.List;
 /**
  * JSON Programming Language 
  * EXEC JS JAVA PORT 
- * Victor G. Brusca Created on 02/03/2022 1:57 PM EDT 
+ * Victor G. Brusca 
+ * Created on 02/03/2022 1:57 PM EDT 
  * Licensed under GNU General Public License v3.0
  */
 
@@ -196,7 +197,7 @@ public class JsonPlState {
      * Name: getRef
      * Desc: A method to quickly access a ref object.
      * Arg1: type(a valid type string)
-     * Arg2: val(a value object)
+     * Arg2: val(a {val} object)
      * Returns: ref(a {ref} object)
      */    
     public JsonObjSysBase getRef(String type, Object val) {
@@ -265,12 +266,12 @@ public class JsonPlState {
             
             this.wr("runProgram: Call: " + callFuncName);
             JsonObjSysBase callFunc = this.findFunc(callFuncName);
+            
             JsonObjSysBase ret = null;
             ret = this.processCall(callObj, callFunc);
             this.lastProgramReturn = ret;
 
-            this.wr("runProgram: Results: ");
-            this.wrObj(ret);
+            //this.wrObj(ret);
             return ret;
         } else {
             this.wr("runProgram: Error: could not validate the class object.");
@@ -278,6 +279,7 @@ public class JsonPlState {
         }
     }
 
+    
     /////////////////////////SEARCH METHODS
     /**
      * Name: findArg 
@@ -361,644 +363,6 @@ public class JsonPlState {
         return null;
     }
 
-    /////////////////////////UTILITY METHODS
-    /**
-     * Name: wr 
-     * Desc: Writes a string to standard output if LOGGING is on. 
-     *       Sets the WR_PREFIX to each string written. 
-     * Arg1: s(string to write)
-     */
-    public void wr(String s) {
-        if (this.LOGGING == true) {
-            Logger.wrl(this.WR_PREFIX + s);
-        }
-    }
-
-    /**
-     * Name: getVersion 
-     * Desc: A method to access the version of this JsonPL interpreter. 
-     * Returns: ret(string version number)
-     */
-    public String getVersion() {
-        this.wr(this.version);
-        return this.version;
-    }
-
-    /**
-     * Name: cloneJsonObj 
-     * Desc: A method to clone the given JSON object argument. 
-     * Arg1: jsonObj(the JSON object to clone) 
-     * Returns: ret(cloned JSON object)
-     */
-    public JsonObjSysBase cloneJsonObj(JsonObjSysBase jsonObj) {
-        return jsonObj.Clone();
-    }
-
-    /**
-     * Name: cloneJsonObjList
-     * Desc: A method to clone the given JSON object list argument. 
-     * Arg1: jsonObj(the JSON object list to do a shallow clone) 
-     * Returns: ret(cloned JSON object)
-     */
-    public List<JsonObjSysBase> cloneJsonObjList(List<JsonObjSysBase> jsonObjLst) {
-        List<JsonObjSysBase> ret = new ArrayList<>();
-        for (int i = 0; i < jsonObjLst.size(); i++) {
-            ret.add(jsonObjLst.get(i).Clone());
-        }
-        return ret;
-    }
-
-    /**
-     * Name: wrObj 
-     * Desc: Writes a JSON object to write to standard output if LOGGING is on. 
-     *       Sets the WR_PREFIX to each object written. 
-     *       Prints object using pretty JSON.stringify call. 
-     * Arg1: jsonObj(jsonObj to write)
-     */
-    public void wrObj(JsonObjSysBase jsonObj) {
-        if (this.LOGGING == true) {
-            Utils.PrintObject(jsonObj, "wrObj");
-            this.wr("");
-        }
-    }
-
-    /**
-     * Name: wrObjList
-     * Desc: Writes a JSON object list to write to standard output if LOGGING is on. 
-     *       Sets the WR_PREFIX to each object written. 
-     *       Prints object using pretty JSON.stringify call. 
-     * Arg1: jsonObj(jsonObj list to write)
-     */
-    public void wrObj(List<JsonObjSysBase> jsonObjs) {
-        if (this.LOGGING == true) {
-            for (int i = 0; i < jsonObjs.size(); i++) {
-                Utils.PrintObject(jsonObjs.get(i), "wrObj");
-                this.wr("");
-            }
-        }
-    }
-    
-    /**
-     * Name: wrVal
-     * Desc: Writes a JSON val object to standard output if LOGGING is on.
-     *       Sets the WR_PREFIX to each object written.
-     *       Prints object using pretty JSON.stringify call. 
-     * Arg1: v({val} obj to write)
-     */
-    public void wrVal(JsonObjSysBase v) {
-        if (this.LOGGING == true) {
-            if(this.isSysObjValArray(v)) {
-               this.wr(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
-            } else {
-               this.wr(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
-            }
-        }
-    }
-    
-    /**
-     * Name: sysLen
-     * Desc: Returns the length of the given object. 
-     *       Non-array objects return a value of 0. 
-     * Arg1: args(array of {arg} objects)
-     * Arg2: func(the associated {func} object if any)
-     * Returns: ret(a {const} object)
-     */ 
-    public JsonObjSysBase sysLen(List<JsonObjSysBase> args, JsonObjSysBase func) {
-        JsonObjSysBase s = args.get(0);
-        
-        //this.wr("sysType: AAA: ");
-        //this.wrObj(s);
-
-        JsonObjSysBase ret = this.getConst("int", "0");
-        s = this.getRef("string", s.val.v);
-        
-        JsonObjSysBase v = this.processRef(s, func);
-        
-        //this.wr("sysType: CCC: ");
-        //this.wrObj(v);   
-
-        if(v != null) {
-           v = v.val;
-        }
-
-        //this.wr("sysType: DDD: ");
-        //this.wrObj(v);
-        
-        if(v != null && this.isSysObj(v)) {
-           if(this.isSysObjValArray(v)) {
-              ret = this.getConst("int", this.toStr(v.len));
-           }
-        }
-
-        this.wrVal(ret.val);
-        return ret;
-    }
-    
-    /**
-     * Name: sysType
-     * Desc: Returns the type of the given class {sys}} object.
-     * Arg1: args(array of {arg} objects)
-     * Arg2: func(the associated {func} object if any)
-     * Returns: ret(a {ref} object)
-     */  
-    public JsonObjSysBase sysType(List<JsonObjSysBase> args, JsonObjSysBase func) {
-        JsonObjSysBase s = args.get(0);
-        
-        //this.wr("sysType: AAA: ");
-        //this.wrObj(s);
-
-        JsonObjSysBase ret = this.getConst("string", "");
-        s = this.getRef("string", s.val.v);
-        
-        JsonObjSysBase v = this.processRef(s, func);
-        
-        //this.wr("sysType: CCC: ");
-        //this.wrObj(v);   
-
-        if(v != null) {
-           v = v.val;
-        }
-
-        //this.wr("sysType: DDD: ");
-        //this.wrObj(v);
-        
-        if(v != null && this.isSysObj(v)) {
-           if(this.isSysObjValArray(v)) {
-              ret = this.getConst("string", this.toStr(v.type));
-           }
-        }
-
-        //this.wr("sysType: EEE: ");
-        
-        this.wrVal(ret.val);
-        return ret;
-    }
-    
-    /**
-     * Name: sysGetRefStr
-     * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
-     * Arg1: v(a {val} obj to get the reference for)
-     * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
-     * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
-     */
-    public JsonObjSysBase sysGetRefStr(List<JsonObjSysBase> args, JsonObjSysBase func) {
-        JsonObjSysBase ret = this.sysGetRef(args, func);
-        ret.sys = "const";
-        ret.val.type = "string";
-        this.wrVal(ret.val);
-        return ret; 
-    }
-    
-    /**
-     * Name: sysGetRef
-     * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
-     * Arg1: v(a {val} obj to get the reference for)
-     * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
-     * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
-     * Returns: ret(a {ref} object)
-     */
-    public JsonObjSysBase sysGetRef(List<JsonObjSysBase> args, JsonObjSysBase func) {
-        String name = this.toStr(args.get(0).val.v);
-        boolean isVar = this.toBool(args.get(1).val.v);
-        String funcName = this.toStr(args.get(2).val.v);
-        JsonObjSysBase ret = this.getRef("string", "");
-        
-        //this.wr("sysGetRef: AAA");
-        if(name != null && !name.equals("")) {
-           if(funcName == null || funcName.equals("")) {
-              //this.wr("sysGetRef: BBB");
-              //lookup class variable
-              JsonObjSysBase v = this.findVar(name, this.program);
-              if(v != null) {
-                 ret = this.getRef(v.val.type, "#.vars." + v.name);
-              }
-              //this.wr("sysGetRef: CCC");
-           } else {
-              //this.wr("sysGetRef: DDD");
-              JsonObjSysBase lfunc = this.findFunc(funcName);
-              if(lfunc != null) {
-                 if(isVar) {
-                    //lookup function variable
-                    var v1 = this.findVar(name, lfunc);
-                    if(v1 != null) {
-                       ret = this.getRef(v1.val.type, "$.vars." + v1.name);
-                    }
-                 } else {
-                    //lookup function arg
-                    var v2 = this.findArg(name, func);
-                    if(v2 != null) {
-                       ret = this.getRef(v2.val.type, "$.args." + v2.name);
-                    }                              
-                 }
-              }
-              //this.wr("sysGetRef: EEE");
-           }
-        }
-        this.wrVal(ret.val);
-        return ret;        
-    }
-    
-    /////////////////////////GENERIC OBJECT ID METHODS
-    /**
-     * Name: isObject 
-     * Desc: Checks if the given argument is a JSON object. 
-     * Arg1: arg(a JSON object) 
-     * Returns: ret(some bool, true or false)
-     */
-    public boolean isObject(Object arg) {
-        if(arg == null) {
-            return false;
-        } else if (arg instanceof JsonObjSysBase) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Name: isArray 
-     * Desc: Checks if the given argument is an array. 
-     * Arg1: arg(some array object) 
-     * Returns: ret(some bool, true or false)
-     */
-    public boolean isArray(Object arg) {
-        if(arg == null) {
-            return false;
-        } else 
-        if (arg instanceof List || arg instanceof ArrayList || arg instanceof LinkedTreeMap) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Name: isString 
-     * Desc: Checks if the given argument is a string. 
-     * Arg1: arg(some string) 
-     * Returns: (true | false)
-     */
-    public boolean isString(Object arg) {
-        if(arg == null) {
-            return false;
-        } else if (arg instanceof String) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    //TODO: Continue review here
-    /**
-     * Name: isNumber
-     * Desc: Checks if the given argument is a number. 
-     * Arg1: arg(some value)
-     * Returns: (true | false)
-     */
-    public boolean isNumber(Object arg) {
-        if(arg == null) {
-            return false;
-        } else if (arg instanceof Integer || arg instanceof Float) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Name: isInteger
-     * Desc: Checks if the given argument is an integer. 
-     * Arg1: arg(some value)
-     * Returns: (true | false)
-     */
-    public boolean isInteger(Object arg) {
-        if(arg == null) {
-            return false;
-        } else if (arg instanceof Integer) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * Name: isFloat
-     * Desc: Checks if the given argument is a float. 
-     * Arg1: arg(some value)
-     * Returns: (true | false)
-     */
-    public boolean isFloat(Object arg) {
-        if(arg == null) {
-            return false;
-        } else if (arg instanceof Float) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * Name: isBool
-     * Desc: Checks if the given argument is a bool. 
-     * Arg1: arg(some value)
-     * Returns: (true | false)
-     */        
-    public boolean isBool(Object arg) {
-        if(arg == null) {
-            return false;
-        } else if (arg instanceof Boolean) {
-            return true;
-        } else if(this.isInteger(arg) && (int)arg == 1 || (float)arg == 0) {
-            return true;
-        } else if(this.isFloat(arg) && (float)arg == 1.0 || (float)arg == 0.0) {
-            return true;
-        } else if(this.isString(arg) && (((String)arg).equals("yes") || ((String)arg).equals("no") || ((String)arg).equals("true") || ((String)arg).equals("false") || ((String)arg).equals("1") || ((String)arg).equals("0") || ((String)arg).equals("1.0") || ((String)arg).equals("0.0"))) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /////////////////////////OBJECT ID METHODS
-    /**
-     * Name: isSysObjIf 
-     * Desc: Checks if the given object is an if object.
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjIf(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("if")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Name: isSysObjRef Desc: 
-     * Checks if the given object is a ref object.
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjRef(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("ref")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Name: isSysObjBex 
-     * Desc: Checks if the given object is a bex object.
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjBex(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("bex")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Name: isSysObjExp 
-     * Desc: Checks if the given object is an exp object.
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjExp(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("exp")) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * Name: isSysObjVal 
-     * Desc: Checks if the given object is a val object.
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjVal(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = this.getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("val")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Name: isSysObjValArray
-     * Desc: Checks if the given object is a val object array. 
-     * Arg1: obj(sys obj to check)
-     * Returns: (true | false)
-     */
-    public boolean isSysObjValArray(JsonObjSysBase obj) {
-       if (this.isSysObjVal(obj) == true && this.validateProperties(obj, new String[] {"len"}) && this.isInteger(obj.len) && this.isArray(obj.v)) {
-          return true;
-       } else {
-          return false;
-       }
-    }    
-    
-    /**
-     * Name: isSysObjAsgn 
-     * Desc: Checks if the given object is an asgn object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjAsgn(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("asgn")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Name: isSysObjConst 
-     * Desc: Checks if the given object is a const object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjConst(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("const")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Name: isSysObjVar 
-     * Desc: Checks if the given object is a var object.
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjVar(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("var")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Name: isSysObjCall 
-     * Desc: Checks if the given object is a call object.
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjCall(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("call")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Name: isSysObjFuncLine
-     * Desc: Checks if the given object is a function line object. 
-     * Arg1: obj(sys obj to check)
-     * Returns: (true | false)
-     */
-    public boolean isSysObjFuncLine(JsonObjSysBase obj) {
-       if(this.isSysObj(obj)) {
-          if(this.getSysObjType(obj).equals("asgn")) {
-             return true;
-
-          } else if(this.getSysObjType(obj).equals("for")) {
-             return true;
-
-          } else if(this.getSysObjType(obj).equals("if")) {
-             return true;
-
-          } else if(this.getSysObjType(obj).equals("return")) {
-             return true;
-
-          } else if(this.getSysObjType(obj).equals("call")) {
-             return true;
-
-          } else {
-             return false;
-          }      
-       }
-       return false;
-    }    
-    
-    /**
-     * Name: isSysObjFunc 
-     * Desc: Checks if the given object is a func object.
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjFunc(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("func")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Name: isSysObjFor 
-     * Desc: Checks if the given object is a for object.
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjFor(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("for")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Name: isSysObjOp
-     * Desc: Checks if the given object is an op object. 
-     * Arg1: obj(sys obj to check)
-     * Returns: (true | false)
-     */    
-    public boolean isSysObjOp(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("op")) {
-                return true;
-            }
-        }
-        return false;
-    }    
-    
-    /**
-     * Name: isSysObjReturn 
-     * Desc: Checks if the given object is a return object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjReturn(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("return")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Name: isSysObj 
-     * Desc: Checks if the given object is a object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObj(JsonObjSysBase obj) {
-        if (obj != null && !Utils.IsStringEmpty(obj.sys) && this.isObject(obj) == true) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Name: getSysObjType 
-     * Desc: Gets the value of the sys attribute of the given object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public String getSysObjType(JsonObjSysBase obj) {
-        if (this.isSysObj(obj)) {
-            return obj.sys;
-        } else {
-            return null;
-        }
-    }
 
     /////////////////////////VALIDATION METHODS
     /**
@@ -1774,36 +1138,6 @@ public class JsonPlState {
         }
         return false;
     }
-     
-    /**
-     * Name: validateSysObjArray 
-     * Desc: Validates if the given object is a valid array object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct:
-     * {
-     *   "sys": "array",
-     *   "name": "a1",
-     *   "len": #,
-     *   "val": {
-     *     "sys": "val",
-     *     "type": "int",
-     *     "v": [some_array]
-     *   }
-     * }
-     */
-    /*
-    public boolean validateSysObjArray(JsonObjSysBase obj) {
-        String sysType = this.getSysObjType(obj);
-        if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.equals("array")) && this.validateProperties(obj, new String[]{"sys", "name", "len", "val"})) {
-            if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
-    */
 
     /**
      * Name: validateSysObjConst 
@@ -1898,17 +1232,18 @@ public class JsonPlState {
             boolean isArray = false;
             int arrayLen = 0;
             if(obj.type.equals("int[]") || obj.type.equals("float[]") || obj.type.equals("string[]") || obj.type.equals("bool[]")) {
-               isArray = true;
-               if(!this.validateProperties(obj, new String[] {"len"})) {
+                isArray = true;
+                if(!this.validateProperties(obj, new String[] {"len"})) {
                   this.wr("validateSysObjVal: Error: array is missing length: " + obj.v + ", type: " + obj.type);
                   return false;
-               } else {
-                  if(!this.isInteger(obj.len) && this.toInt(obj.len) >= 0) {
-                     this.wr("validateSysObjVal: Error: array length is invalid: " + obj.v + ", type: " + obj.type + ", " + obj.len + ", " + this.isInteger(obj.len));
-                  } else {
-                     arrayLen = this.toInt(obj.len);
-                  }
-               }
+                } else {
+                    if(!this.isInteger(obj.len) || this.toInt(obj.len) < 0) {
+                        this.wr("validateSysObjVal: Error: array length is invalid: " + obj.v + ", type: " + obj.type + ", " + obj.len + ", " + this.isInteger(obj.len));
+                        return false;
+                    } else {
+                        arrayLen = this.toInt(obj.len);
+                    }
+                }
             }
             
             //ignore references
@@ -2097,6 +1432,648 @@ public class JsonPlState {
         }
         return true;
     }
+    
+    
+    /////////////////////////UTILITY METHODS
+    /**
+     * Name: wr 
+     * Desc: Writes a string to standard output if LOGGING is on. 
+     *       Sets the WR_PREFIX to each string written. 
+     * Arg1: s(string to write)
+     */
+    public void wr(String s) {
+        if (this.LOGGING == true) {
+            Logger.wrl(this.WR_PREFIX + s);
+        }
+    }
+
+    /**
+     * Name: getVersion 
+     * Desc: A method to access the version of this JsonPL interpreter. 
+     * Returns: ret(string version number)
+     */
+    public String getVersion() {
+        this.wr(this.version);
+        return this.version;
+    }
+
+    /**
+     * Name: cloneJsonObj 
+     * Desc: A method to clone the given JSON object argument. 
+     * Arg1: jsonObj(the JSON object to clone) 
+     * Returns: ret(cloned JSON object)
+     */
+    public JsonObjSysBase cloneJsonObj(JsonObjSysBase jsonObj) {
+        return jsonObj.Clone();
+    }
+
+    /**
+     * Name: cloneJsonObjList
+     * Desc: A method to clone the given JSON object list argument. 
+     * Arg1: jsonObj(the JSON object list to do a shallow clone) 
+     * Returns: ret(cloned JSON object)
+     */
+    public List<JsonObjSysBase> cloneJsonObjList(List<JsonObjSysBase> jsonObjLst) {
+        List<JsonObjSysBase> ret = new ArrayList<>();
+        for (int i = 0; i < jsonObjLst.size(); i++) {
+            ret.add(jsonObjLst.get(i).Clone());
+        }
+        return ret;
+    }
+
+    /**
+     * Name: wrObj 
+     * Desc: Writes a JSON object to write to standard output if LOGGING is on. 
+     *       Sets the WR_PREFIX to each object written. 
+     *       Prints object using pretty JSON.stringify call. 
+     * Arg1: jsonObj(jsonObj to write)
+     */
+    public void wrObj(JsonObjSysBase jsonObj) {
+        if (this.LOGGING == true) {
+            Utils.PrintObject(jsonObj, "wrObj");
+            this.wr("");
+        }
+    }
+
+    /**
+     * Name: wrObjList
+     * Desc: Writes a JSON object list to write to standard output if LOGGING is on. 
+     *       Sets the WR_PREFIX to each object written. 
+     *       Prints object using pretty JSON.stringify call. 
+     * Arg1: jsonObj(jsonObj list to write)
+     */
+    public void wrObj(List<JsonObjSysBase> jsonObjs) {
+        if (this.LOGGING == true) {
+            for (int i = 0; i < jsonObjs.size(); i++) {
+                Utils.PrintObject(jsonObjs.get(i), "wrObj");
+                this.wr("");
+            }
+        }
+    }
+    
+    /**
+     * Name: wrVal
+     * Desc: Writes a JSON val object to standard output if LOGGING is on.
+     *       Sets the WR_PREFIX to each object written.
+     *       Prints object using pretty JSON.stringify call. 
+     * Arg1: v({val} obj to write)
+     */
+    public void wrVal(JsonObjSysBase v) {
+        if (this.LOGGING == true) {
+            if(this.isSysObjValArray(v)) {
+               this.wr(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+            } else {
+               this.wr(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+            }
+        }
+    }
+    
+    /**
+     * Name: sysLen
+     * Desc: Returns the length of the given object. 
+     *       Non-array objects return a value of 0. 
+     * Arg1: args(array of {arg} objects)
+     * Arg2: func(the associated {func} object if any)
+     * Returns: ret(a {const} object)
+     */ 
+    public JsonObjSysBase sysLen(List<JsonObjSysBase> args, JsonObjSysBase func) {
+        JsonObjSysBase s = args.get(0);
+        
+        //this.wr("sysType: AAA: ");
+        //this.wrObj(s);
+
+        JsonObjSysBase ret = this.getConst("int", "0");
+        s = this.getRef("string", s.val.v);
+        
+        JsonObjSysBase v = this.processRef(s, func);
+        
+        //this.wr("sysType: CCC: ");
+        //this.wrObj(v);   
+
+        if(v != null) {
+           v = v.val;
+        }
+
+        //this.wr("sysType: DDD: ");
+        //this.wrObj(v);
+        
+        if(v != null && this.isSysObj(v)) {
+           if(this.isSysObjValArray(v)) {
+              ret = this.getConst("int", this.toStr(v.len));
+           }
+        }
+
+        this.wrVal(ret.val);
+        return ret;
+    }
+    
+    /**
+     * Name: sysType
+     * Desc: Returns the type of the given class {sys}} object.
+     * Arg1: args(array of {arg} objects)
+     * Arg2: func(the associated {func} object if any)
+     * Returns: ret(a {ref} object)
+     */  
+    public JsonObjSysBase sysType(List<JsonObjSysBase> args, JsonObjSysBase func) {
+        JsonObjSysBase s = args.get(0);
+        
+        //this.wr("sysType: AAA: ");
+        //this.wrObj(s);
+
+        JsonObjSysBase ret = this.getConst("string", "");
+        s = this.getRef("string", s.val.v);
+        
+        JsonObjSysBase v = this.processRef(s, func);
+        
+        //this.wr("sysType: CCC: ");
+        //this.wrObj(v);   
+
+        if(v != null) {
+           v = v.val;
+        }
+
+        //this.wr("sysType: DDD: ");
+        //this.wrObj(v);
+        
+        if(v != null && this.isSysObj(v)) {
+           if(this.isSysObjValArray(v)) {
+              ret = this.getConst("string", this.toStr(v.type));
+           }
+        }
+
+        //this.wr("sysType: EEE: ");
+        
+        this.wrVal(ret.val);
+        return ret;
+    }
+    
+    /**
+     * Name: sysGetRefStr
+     * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
+     * Arg1: v(a {val} obj to get the reference for)
+     * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
+     * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
+     */
+    public JsonObjSysBase sysGetRefStr(List<JsonObjSysBase> args, JsonObjSysBase func) {
+        JsonObjSysBase ret = this.sysGetRef(args, func);
+        ret.sys = "const";
+        ret.val.type = "string";
+        this.wrVal(ret.val);
+        return ret; 
+    }
+    
+    /**
+     * Name: sysGetRef
+     * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
+     * Arg1: v(a {val} obj to get the reference for)
+     * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
+     * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
+     * Returns: ret(a {ref} object)
+     */
+    public JsonObjSysBase sysGetRef(List<JsonObjSysBase> args, JsonObjSysBase func) {
+        String name = this.toStr(args.get(0).val.v);
+        boolean isVar = this.toBool(args.get(1).val.v);
+        String funcName = this.toStr(args.get(2).val.v);
+        JsonObjSysBase ret = this.getRef("string", "");
+        
+        //this.wr("sysGetRef: AAA");
+        if(name != null && !name.equals("")) {
+           if(funcName == null || funcName.equals("")) {
+              //this.wr("sysGetRef: BBB");
+              //lookup class variable
+              JsonObjSysBase v = this.findVar(name, this.program);
+              if(v != null) {
+                 ret = this.getRef(v.val.type, "#.vars." + v.name);
+              }
+              //this.wr("sysGetRef: CCC");
+           } else {
+              //this.wr("sysGetRef: DDD");
+              JsonObjSysBase lfunc = this.findFunc(funcName);
+              if(lfunc != null) {
+                 if(isVar) {
+                    //lookup function variable
+                    var v1 = this.findVar(name, lfunc);
+                    if(v1 != null) {
+                       ret = this.getRef(v1.val.type, "$.vars." + v1.name);
+                    }
+                 } else {
+                    //lookup function arg
+                    var v2 = this.findArg(name, func);
+                    if(v2 != null) {
+                       ret = this.getRef(v2.val.type, "$.args." + v2.name);
+                    }                              
+                 }
+              }
+              //this.wr("sysGetRef: EEE");
+           }
+        }
+        this.wrVal(ret.val);
+        return ret;        
+    }
+    
+    
+    /////////////////////////GENERIC OBJECT ID METHODS
+    /**
+     * Name: isObject 
+     * Desc: Checks if the given argument is a JSON object. 
+     * Arg1: arg(a JSON object) 
+     * Returns: ret(some bool, true or false)
+     */
+    public boolean isObject(Object arg) {
+        if(arg == null) {
+            return false;
+        } else if (arg instanceof JsonObjSysBase) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Name: isArray 
+     * Desc: Checks if the given argument is an array. 
+     * Arg1: arg(some array object) 
+     * Returns: ret(some bool, true or false)
+     */
+    public boolean isArray(Object arg) {
+        if(arg == null) {
+            return false;
+        } else 
+        if (arg instanceof List || arg instanceof ArrayList) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Name: isString 
+     * Desc: Checks if the given argument is a string. 
+     * Arg1: arg(some string) 
+     * Returns: (true | false)
+     */
+    public boolean isString(Object arg) {
+        if(arg == null) {
+            return false;
+        } else if (arg instanceof String) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Name: isNumber
+     * Desc: Checks if the given argument is a number. 
+     * Arg1: arg(some value)
+     * Returns: (true | false)
+     */
+    public boolean isNumber(Object arg) {
+        if(arg == null) {
+            return false;
+        } else if (arg instanceof Integer || arg instanceof Float) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Name: isInteger
+     * Desc: Checks if the given argument is an integer. 
+     * Arg1: arg(some value)
+     * Returns: (true | false)
+     */
+    public boolean isInteger(Object arg) {
+        if(arg == null) {
+            return false;
+        } else if (arg instanceof Integer) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Name: isFloat
+     * Desc: Checks if the given argument is a float. 
+     * Arg1: arg(some value)
+     * Returns: (true | false)
+     */
+    public boolean isFloat(Object arg) {
+        if(arg == null) {
+            return false;
+        } else if (arg instanceof Float) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Name: isBool
+     * Desc: Checks if the given argument is a bool. 
+     * Arg1: arg(some value)
+     * Returns: (true | false)
+     */        
+    public boolean isBool(Object arg) {
+        if(arg == null) {
+            return false;
+        } else if (arg instanceof Boolean) {
+            return true;
+        } else if(this.isInteger(arg) && (int)arg == 1 || (float)arg == 0) {
+            return true;
+        } else if(this.isFloat(arg) && (float)arg == 1.0 || (float)arg == 0.0) {
+            return true;
+        } else if(this.isString(arg) && (((String)arg).equals("yes") || ((String)arg).equals("no") || ((String)arg).equals("true") || ((String)arg).equals("false") || ((String)arg).equals("1") || ((String)arg).equals("0") || ((String)arg).equals("1.0") || ((String)arg).equals("0.0"))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    
+    /////////////////////////OBJECT ID METHODS
+    /**
+     * Name: isSysObjIf 
+     * Desc: Checks if the given object is an if object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjIf(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("if")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Name: isSysObjRef Desc: 
+     * Checks if the given object is a ref object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjRef(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("ref")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Name: isSysObjBex 
+     * Desc: Checks if the given object is a bex object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjBex(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("bex")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Name: isSysObjExp 
+     * Desc: Checks if the given object is an exp object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjExp(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("exp")) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Name: isSysObjVal 
+     * Desc: Checks if the given object is a val object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjVal(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = this.getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("val")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Name: isSysObjValArray
+     * Desc: Checks if the given object is a val object array. 
+     * Arg1: obj(sys obj to check)
+     * Returns: (true | false)
+     */
+    public boolean isSysObjValArray(JsonObjSysBase obj) {
+       if (this.isSysObjVal(obj) == true && this.validateProperties(obj, new String[] {"len"}) && this.isInteger(obj.len) && this.isArray(obj.v)) {
+          return true;
+       } else {
+          return false;
+       }
+    }    
+    
+    /**
+     * Name: isSysObjAsgn 
+     * Desc: Checks if the given object is an asgn object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjAsgn(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("asgn")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Name: isSysObjConst 
+     * Desc: Checks if the given object is a const object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjConst(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("const")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Name: isSysObjVar 
+     * Desc: Checks if the given object is a var object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjVar(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("var")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Name: isSysObjCall 
+     * Desc: Checks if the given object is a call object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjCall(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("call")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Name: isSysObjFuncLine
+     * Desc: Checks if the given object is a function line object. 
+     * Arg1: obj(sys obj to check)
+     * Returns: (true | false)
+     */
+    public boolean isSysObjFuncLine(JsonObjSysBase obj) {
+       if(this.isSysObj(obj)) {
+          if(this.getSysObjType(obj).equals("asgn")) {
+             return true;
+
+          } else if(this.getSysObjType(obj).equals("for")) {
+             return true;
+
+          } else if(this.getSysObjType(obj).equals("if")) {
+             return true;
+
+          } else if(this.getSysObjType(obj).equals("return")) {
+             return true;
+
+          } else if(this.getSysObjType(obj).equals("call")) {
+             return true;
+
+          } else {
+             return false;
+          }      
+       }
+       return false;
+    }    
+    
+    /**
+     * Name: isSysObjFunc 
+     * Desc: Checks if the given object is a func object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjFunc(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("func")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Name: isSysObjFor 
+     * Desc: Checks if the given object is a for object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjFor(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("for")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Name: isSysObjOp
+     * Desc: Checks if the given object is an op object. 
+     * Arg1: obj(sys obj to check)
+     * Returns: (true | false)
+     */    
+    public boolean isSysObjOp(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("op")) {
+                return true;
+            }
+        }
+        return false;
+    }    
+    
+    /**
+     * Name: isSysObjReturn 
+     * Desc: Checks if the given object is a return object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjReturn(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("return")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Name: isSysObj 
+     * Desc: Checks if the given object is a object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObj(JsonObjSysBase obj) {
+        if (obj != null && !Utils.IsStringEmpty(obj.sys) && this.isObject(obj) == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Name: getSysObjType 
+     * Desc: Gets the value of the sys attribute of the given object. 
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public String getSysObjType(JsonObjSysBase obj) {
+        if (this.isSysObj(obj)) {
+            return obj.sys;
+        } else {
+            return null;
+        }
+    }
+
 
     /////////////////////////PROCESS METHODS
     /**
@@ -2344,6 +2321,7 @@ public class JsonPlState {
                     fnd.val.v = this.toStr(fnd.val.v);
                 }
             } else {
+                fnd.val.v = this.toArray(fnd.val.v);
                 ArrayList al = (ArrayList)fnd.val.v;
                 for(int z = 0; z < al.size(); z++) {
                     JsonObjSysBase nd = (JsonObjSysBase)al.get(z);

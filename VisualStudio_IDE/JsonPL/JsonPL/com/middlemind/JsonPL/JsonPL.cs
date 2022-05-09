@@ -9,6 +9,7 @@ namespace com.middlemind.JsonPL
 {
     /**
     * TODO
+    * 
     * @author Victor G. Brusca, Middlemind Games 03/27/2022 10:37 AM EDT
     */
     public class JsonPL
@@ -80,7 +81,8 @@ namespace com.middlemind.JsonPL
         */
 
         /**
-         * TODO
+         * Name: main (init in JavaScript)
+         * Desc: A function to init the test page.
          * @param args 
          */
         public static void Main(string[] args)
@@ -150,6 +152,7 @@ namespace com.middlemind.JsonPL
                 JsonObjSysBase tmp = null;
                 string tmpJson;
 
+
                 /////////////////////////////////////////////////////////////////////////////
                 tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.[$.vars.name1]\"}}";
                 tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
@@ -163,6 +166,7 @@ namespace com.middlemind.JsonPL
                 jpl.wr("REF 1:");
                 res = jpl.processRef(tmp, code.funcs[0]);
                 jpl.wrObj(res);
+
 
                 /////////////////////////TESTS: REFERENCE
                 tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp1\"}}";
@@ -204,16 +208,29 @@ namespace com.middlemind.JsonPL
                 res = jpl.processRef(tmp, code.funcs[0]);
                 jpl.wrObj(res);
 
+                tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"[#.vars.tmp5]\"}}";
+                tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                if (!jpl.validateSysObjRef(tmp))
+                {
+                    jpl.wr("!invalid JSON");
+                    return;
+                }
+                jpl.validateSysObjRef(tmp);
+                jpl.wr("====================== TEST 1.30: Full Dynamic Variable Reference ======================");
+                jpl.wrObj(tmp);
+                jpl.wr("REF 4:");
+                res = jpl.processRef(tmp, code.funcs[0]);
+                jpl.wrObj(res);
+
+
                 /////////////////////////TESTS: ASSIGNMENT
                 /*
-                <!-  
-                   {
-                      "sys": "asgn",
-                      "left": {ref},
-                      "op": {op & type of asgn}, 
-                      "right": {ref | const | exp | bex | call}
-                   }
-                -!>
+                {
+                   "sys": "asgn",
+                   "left": {ref},
+                   "op": {op & type of asgn}, 
+                   "right": {ref | const | exp | bex | call}
+                }
                 */
                 tmpJson = string.Join("\n", "{",
                    "\"sys\": \"asgn\",",
@@ -338,16 +355,15 @@ namespace com.middlemind.JsonPL
                 res = jpl.processRef(tmp, code.funcs[0]);
                 jpl.wrObj(res);
 
+
                 ///////////////////////////TESTS: BOOLEAN EXPRESSIONS
                 /* 
-                <!-  
-                   {
-                      "sys": "bex",
-                      "left": {ref | const | exp | bex | call},
-                      "op": {op & type of bex}, 
-                      "right": {ref | const | exp | bex | call}
-                   }
-                -!>
+                {
+                   "sys": "bex",
+                   "left": {ref | const | exp | bex | call},
+                   "op": {op & type of bex}, 
+                   "right": {ref | const | exp | bex | call}
+                }
                 */
                 tmpJson = string.Join("\n",
                    "{",
@@ -384,6 +400,7 @@ namespace com.middlemind.JsonPL
                 jpl.wr("BEX RESULT: (EXPECTS: TRUE)");
                 jpl.wrObj(res);
 
+
                 ///////////////////////////TESTS: NUMERIC EXPRESSIONS
                 tmpJson = string.Join("\n",
                    "{",
@@ -405,12 +422,13 @@ namespace com.middlemind.JsonPL
                 res = jpl.processRef(tmp, code.funcs[0]);
                 jpl.wrObj(res);
 
+
                 ///////////////////////////TESTS: FUNCTION CALLS
                 tmpJson = "{\"sys\": \"call\", \"name\": \"testFunction2\", \"args\": [{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp1\"}}]}";
                 tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
                 jpl.wr("====================== TEST 5.00: Function Call ======================");
                 jpl.wrObj(tmp);
-                res = jpl.processCall(tmp, code.funcs[0]);
+                res = jpl.processCall(tmp, code.funcs[1]);
                 jpl.wr("CALL RESULT:");
                 jpl.wrObj(res);
                 jpl.wr("CALL FUNCS[1] ARGS:");
@@ -565,7 +583,6 @@ namespace com.middlemind.JsonPL
                 jpl.wrObj(tmp);
                 jpl.runProgram();
 
-
                 jpl.wr("====================== TEST 10.00: Full Program 2 ======================");
                 string[] jplData = new string[] { "33", "true" };
                 tmp = ldr.ParseJson(JsonPL.codeStr, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
@@ -592,6 +609,7 @@ namespace com.middlemind.JsonPL
 
                 jpl.wr("TEST METHOD DATA");
                 jpl.wr("{\"33\", \"true\"}");
+
                 string jplRes = test(jplData, jplCode);
                 jpl.wr("Example Code Result: " + jplRes);
 
@@ -607,6 +625,7 @@ namespace com.middlemind.JsonPL
                 jpl.wr("====================== TEST 11.00: Full Program 3 ======================");
                 jpl.wrObj(tmp);
                 jpl.runProgram();
+
 
                 /////////////////////////////////////////////////////////////////////////////
                 tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.[$.vars.name1]\"}}";
@@ -634,6 +653,7 @@ namespace com.middlemind.JsonPL
                 jpl.wr("REF 1:");
                 res = jpl.processRef(tmp, code.funcs[0]);
                 jpl.wrObj(res);
+
 
                 /////////////////////////////////////////////////////////////////////////////
                 //tmp = '{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.[$.vars.[$.vars.name2]]"}};';
@@ -673,6 +693,43 @@ namespace com.middlemind.JsonPL
                 }
 
                 jpl.wr("====================== TEST 13.00: Pre-Processing Replacement Directives Execution ======================");
+                jpl.wrObj(tmp);
+                jpl.wr("REF 1:");
+                res = jpl.processRef(tmp, code.funcs[0]);
+                jpl.wrObj(res);
+
+
+                /////////////////////////TESTS: REFERENCE ARRAY            
+                jpl = new JsonPlState();
+                jpl.program = ldr.ParseJson(JsonPL.codeStr, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+
+                if (!jpl.validateSysObjClass(jpl.program))
+                {
+                    jpl.wr("runProgram: Error: could not validate the class object.");
+                    return;
+                }
+
+                tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp4\"}}";
+                tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                if (!jpl.validateSysObjRef(tmp))
+                {
+                    jpl.wr("!invalid JSON");
+                    return;
+                }
+                jpl.wr("====================== TEST 13.01: Class Variable Array Reference ======================");
+                jpl.wrObj(tmp);
+                jpl.wr("REF 1:");
+                res = jpl.processRef(tmp, code.funcs[0]);
+                jpl.wrObj(res);
+
+                tmpJson = "{\"sys\": \"ref\", \"val\":{\"sys\": \"val\", \"type\": \"int\", \"v\": \"#.vars.tmp4.0\"}}";
+                tmp = ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                if (!jpl.validateSysObjRef(tmp))
+                {
+                    jpl.wr("!invalid JSON");
+                    return;
+                }
+                jpl.wr("====================== TEST 13.02: Class Variable Array Index Reference ======================");
                 jpl.wrObj(tmp);
                 jpl.wr("REF 1:");
                 res = jpl.processRef(tmp, code.funcs[0]);

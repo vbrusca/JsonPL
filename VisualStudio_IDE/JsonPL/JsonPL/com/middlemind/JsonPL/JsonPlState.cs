@@ -2,6 +2,7 @@
 using com.middlemind.JsonPL.JsonObjs;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Text;
 using System.Collections;
 using System.Reflection;
@@ -9,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 /**
 * JSON Programming Language
-* EXEC JAVA PORT
+* EXEC JS C# PORT
 * Victor G. Brusca 
 * Created on 02/03/2022 1:57 PM EDT
 * Licensed under GNU General Public License v3.0
@@ -103,7 +104,7 @@ namespace com.middlemind.JsonPL
         public SystemFunctionHandlerJpl systemFunctionHandler = null;
 
         /**
-         *
+         * Generic class constructor.
          */
         public JsonPlState()
         {
@@ -113,14 +114,21 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: sysWr
-        * Desc: A system level write function.
-        * Arg1: args(arg obj, sys=arg & array of)
-        * Returns: {(const obj, sys=const)}
+        * Name: sysWr 
+        * Desc: A system level write function. 
+        * Arg1: args(an array of {arg} objects) 
+        * Arg2: func(the {func} this system function is called from) 
+        * Returns: const(a {const} bool object) 
         */
-        public JsonObjSysBase sysWr(List<JsonObjSysBase> args)
+        public JsonObjSysBase sysWr(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
-            string s = args[0].val.v + "";
+            int len = args.Count;
+            int i = 0;
+            string s = "";
+            for (; i < len; i++)
+            {
+                s += this.toStr(args[i].val.v);
+            }
             this.wr(s);
 
             JsonObjSysBase ret = new JsonObjSysBase("val");
@@ -139,7 +147,7 @@ namespace com.middlemind.JsonPL
         * Desc: A system level method to access the last asgn value object.
         * Returns: {(const obj, sys=const)}
         */
-        public JsonObjSysBase sysGetLastAsgnValue()
+        public JsonObjSysBase sysGetLastAsgnValue(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             return this.lastAsgnValue;
         }
@@ -149,15 +157,15 @@ namespace com.middlemind.JsonPL
         * Desc: A system level method to access the last exp return object.
         * Returns: {(const obj, sys=const)}
         */
-        public JsonObjSysBase sysGetLastExpReturn()
+        public JsonObjSysBase sysGetLastExpReturn(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             return this.lastExpReturn;
         }
 
         /**
-        * Name: getConstBool
-        * Desc: A method to quickly access a constant bool value object.
-        * Returns: {(const obj, sys=const)}
+        * Name: getConstBool 
+        * Desc: A method to quickly access a constant bool value object. 
+        * Returns: const(a {const} bool object)
         */
         public JsonObjSysBase getConstBool()
         {
@@ -173,12 +181,53 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: sysJob1
-        * Desc: A system level job method used to demonstrate JCL.
-        * Arg1: args(arg obj, sys=arg & array of)
-        * Returns: {(const obj, sys=const)}
-        */
-        public JsonObjSysBase sysJob1()
+         * Name: getConst
+         * Desc: A method to quickly access a constant value object.
+         * Arg1: type(a valid type string)
+         * Arg2: val(a value object)
+         * Returns: const(a {const} object)
+         */
+        public JsonObjSysBase getConst(string type, object val)
+        {
+            JsonObjSysBase ret = new JsonObjSysBase("val");
+            ret.type = type;
+            ret.v = val;
+
+            JsonObjSysBase ret2 = new JsonObjSysBase("const");
+            ret2.val = ret;
+            ret = ret2;
+
+            return ret;
+        }
+
+        /**
+         * Name: getRef
+         * Desc: A method to quickly access a ref object.
+         * Arg1: type(a valid type string)
+         * Arg2: val(a {val} object)
+         * Returns: ref(a {ref} object)
+         */
+        public JsonObjSysBase getRef(string type, object val)
+        {
+            JsonObjSysBase ret = new JsonObjSysBase("val");
+            ret.type = type;
+            ret.v = val;
+
+            JsonObjSysBase ret2 = new JsonObjSysBase("ref");
+            ret2.val = ret;
+            ret = ret2;
+
+            return ret;
+        }
+
+        /**
+         * Name: sysJob1 
+         * Desc: A system level job method used to demonstrate JCL.
+         * Arg1: args(an array of {arg} objects) 
+         * Arg2: func(the {func} this system function is called from) 
+         * Returns: const(a {const} bool value)
+         */
+        public JsonObjSysBase sysJob1(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             this.wr("sysJob1");
             JsonObjSysBase ret = this.getConstBool();
@@ -187,12 +236,13 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: sysJob2
-        * Desc: A system level job method used to demonstrate JCL.
-        * Arg1: args(arg obj, sys=arg & array of)
-        * Returns: {(const obj, sys=const)}
-        */
-        public JsonObjSysBase sysJob2()
+         * Name: sysJob2 
+         * Desc: A system level job method used to demonstrate JCL.
+         * Arg1: args(an array of {arg} objects) 
+         * Arg2: func(the {func} this system function is called from) 
+         * Returns: const(a {const} bool value)
+         */
+        public JsonObjSysBase sysJob2(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             this.wr("sysJob2");
             JsonObjSysBase ret = this.getConstBool();
@@ -201,12 +251,13 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: sysJob3
-        * Desc: A system level job method used to demonstrate JCL.
-        * Arg1: args(arg obj, sys=arg & array of)
-        * Returns: {(const obj, sys=const)}
-        */
-        public JsonObjSysBase sysJob3()
+         * Name: sysJob3 
+         * Desc: A system level job method used to demonstrate JCL.
+         * Arg1: args(an array of {arg} objects) 
+         * Arg2: func(the {func} this system function is called from) 
+         * Returns: const(a {const} bool value)
+         */
+        public JsonObjSysBase sysJob3(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             this.wr("sysJob3");
             JsonObjSysBase ret = this.getConstBool();
@@ -215,9 +266,9 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: runProgram
-        * Desc: Executes the current program and returns the result.
-        * Returns: {(some sys obj)}
+        * Name: runProgram 
+        * Desc: Executes the current program and returns the result. 
+        * Returns: ret(some {const}, {ref} object)
         */
         public JsonObjSysBase runProgram()
         {
@@ -225,7 +276,8 @@ namespace com.middlemind.JsonPL
             {
                 JsonObjSysBase callObj = this.program.call;
                 string callFuncName = callObj.name;
-                this.wr("runProgram: RUN PROGRAM: " + callFuncName);
+
+                this.wr("runProgram: Call: " + callFuncName);
                 JsonObjSysBase callFunc = this.findFunc(callFuncName);
 
                 JsonObjSysBase ret = null;
@@ -242,13 +294,14 @@ namespace com.middlemind.JsonPL
             }
         }
 
+
         /////////////////////////SEARCH METHODS
         /**
-        * Name: findArg
-        * Desc: Search the provided object for an argument with the given name.
-        * Arg1: name(string to find)
-        * Arg2: obj(func obj, sys=func)
-        * Returns: {null | (arg obj, sys=arg)}
+        * Name: findArg 
+        * Desc: Search the provided object for an argument with the given name. 
+        * Arg1: name(string to find) 
+        * Arg2: obj(a {func} object to search args for)
+        * Returns: ret(null or {arg} object)
         */
         public JsonObjSysBase findArg(string name, JsonObjSysBase obj)
         {
@@ -267,12 +320,12 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: findVar
-        * Desc: Search the provided object for a variable with the given name.
-        * Arg1: name(string to find)
-        * Arg2: obj{(func obj, sys=func) | (class obj, sys=class)}
-        * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
-         */
+        * Name: findVar 
+        * Desc: Search the provided object for a variable with the given name. 
+        * Arg1: name(string to find) 
+        * Arg2: obj(a {func} or {class} object to search) 
+        * Returns: ret(null, {val} or {arg} object)
+        */
         public JsonObjSysBase findVar(string name, JsonObjSysBase obj)
         {
             string str;
@@ -290,11 +343,11 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: findFunc
-        * Desc: Search the current program for a func with the given name.
-        * Arg1: name(string to find)
-        * Returns: {null | (func obj, sys=func)}
-         */
+        * Name: findFunc 
+        * Desc: Search the current program for a func with the given name. 
+        * Arg1: name(string to find) 
+        * Returns: ret(null or {func} object)
+        */
         public JsonObjSysBase findFunc(string name)
         {
             JsonObjSysBase prog = this.program;
@@ -313,11 +366,11 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: findSysFunc
-        * Desc: Search the current program's system functions for a func with the given name.
-        * Arg1: name(string to find)
-        * Returns: {null | (func obj, sys=func)}
-         */
+        * Name: findSysFunc 
+        * Desc: Search the current program's system functions for a func with the given name. 
+        * Arg1: name(string to find) 
+        * Returns: ret(null or {func} object)
+        */
         public JsonObjSysBase findSysFunc(string name)
         {
             JsonPlState prog = this;
@@ -336,6 +389,1474 @@ namespace com.middlemind.JsonPL
             }
             return null;
         }
+
+
+        /////////////////////////VALIDATION METHODS
+        /**
+        * Name: validateSysObjIf 
+        * Desc: Validates if the given object is a valid if object. 
+        * Arg1: obj(an {if} object to check) 
+        * Returns: ret(some bool, true or false) 
+        * Struct:
+        * {
+        *    "sys": "if",
+        *    "left": {ref | const | exp | bex | call},
+        *    "op": {op & type of bex},
+        *    "right": {ref | const | exp | bex | call},
+        *    "thn": [asgn | if | for | call | return],
+        *    "els": [asgn | if | for | call | return]
+        * }
+        */
+        public bool validateSysObjIf(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObjIf(obj) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right", "thn", "els" }))
+            {
+                JsonObjSysBase tobj = null;
+                if (obj.left != null)
+                {
+                    tobj = obj.left;
+                    if (this.isSysObjRef(tobj))
+                    {
+                        if (!this.validateSysObjRef(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate left obj as ref");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObjConst(tobj))
+                    {
+                        if (!this.validateSysObjConst(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate left obj as const");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObjExp(tobj))
+                    {
+                        if (!this.validateSysObjExp(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate left obj as exp");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObjBex(tobj))
+                    {
+                        if (!this.validateSysObjBex(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate left obj as bex");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObjCall(tobj))
+                    {
+                        if (!this.validateSysObjCall(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate left obj as call");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        this.wr("validateSysObjFor: Error: could not validate obj as left");
+                        return false;
+                    }
+                }
+                else
+                {
+                    this.wr("validateSysObjIf: Error: could not validate obj as left, null");
+                    return false;
+                }
+
+                if (obj.op != null)
+                {
+                    tobj = obj.op;
+                    if (this.isSysObjOp(tobj))
+                    {
+                        if (!this.validateSysObjOp(tobj))
+                        {
+                            return false;
+                        }
+                        else if (!tobj.type.Equals("bex"))
+                        {
+                            return false;
+                        }
+                        else if (!(tobj.v.Equals("==") || tobj.v.Equals("!=") || tobj.v.Equals("<") || tobj.v.Equals(">") || tobj.v.Equals("<=") || tobj.v.Equals(">=")))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+                if (obj.right != null)
+                {
+                    tobj = obj.right;
+                    if (this.isSysObjRef(tobj))
+                    {
+                        if (!this.validateSysObjRef(tobj))
+                        {
+                            this.wr("validateSysObjIf: Error: could not validate right obj as ref");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObjConst(tobj))
+                    {
+                        if (!this.validateSysObjConst(tobj))
+                        {
+                            this.wr("validateSysObjIf: Error: could not validate right obj as const");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObjExp(tobj))
+                    {
+                        if (!this.validateSysObjExp(tobj))
+                        {
+                            this.wr("validateSysObjIf: Error: could not validate right obj as exp");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObjBex(tobj))
+                    {
+                        if (!this.validateSysObjBex(tobj))
+                        {
+                            this.wr("validateSysObjIf: Error: could not validate right obj as bex");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObjCall(tobj))
+                    {
+                        if (!this.validateSysObjCall(tobj))
+                        {
+                            this.wr("validateSysObjIf: Error: could not validate right obj as call");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        this.wr("validateSysObjIf: Error: could not validate obj as right");
+                        return false;
+                    }
+                }
+                else
+                {
+                    this.wr("validateSysObjIf: Error: could not validate obj as right, null");
+                    return false;
+                }
+
+                if (obj.thn != null && this.isArray(obj.thn))
+                {
+                    List<JsonObjSysBase> tobjLst = obj.thn;
+                    int len = tobjLst.Count;
+                    for (int i = 0; i < len; i++)
+                    {
+                        if (!this.validateSysObjFuncLine(tobjLst[i]))
+                        {
+                            this.wr("validateSysObjIf: Error: could not validate obj as then, line: " + i);
+                            return false;
+                        }
+                    }
+                }
+
+                if (obj.els != null && this.isArray(obj.els))
+                {
+                    List<JsonObjSysBase> tobjLst = obj.els;
+                    int len = tobjLst.Count;
+                    for (int i = 0; i < len; i++)
+                    {
+                        if (!this.validateSysObjFuncLine(tobjLst[i]))
+                        {
+                            this.wr("validateSysObjIf: Error: could not validate obj as else, line: " + i);
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjFor 
+        * Desc: Validates if the given object is a valid for object. 
+        * Arg1: obj(a {for} object to check) 
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "for",
+        *   "start": {ref | const | exp | bex | call & type of int},
+        *   "stop": {ref | const | exp | bex | call & type of int},
+        *   "inc": {ref | const | exp | bex | call & type of int},
+        *   "lines": [asgn | if | for | call | return]
+        * }
+        */
+        public bool validateSysObjFor(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("for")) && this.validateProperties(obj, new string[] { "sys", "start", "stop", "inc", "lines" }))
+            {
+                JsonObjSysBase tobj = null;
+                if (obj.start != null)
+                {
+                    tobj = obj.start;
+                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
+                    {
+                        if (!this.validateSysObjRef(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as ref");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
+                    {
+                        if (!this.validateSysObjConst(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as const");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
+                    {
+                        if (!this.validateSysObjExp(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as exp");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
+                    {
+                        if (!this.validateSysObjBex(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as bex");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
+                    {
+                        if (!this.validateSysObjCall(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as call");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        this.wr("validateSysObjFor: Error: could not validate obj as right");
+                        return false;
+                    }
+                }
+                else
+                {
+                    this.wr("validateSysObjFor: Error: could not validate obj as right, null");
+                    return false;
+                }
+
+                if (obj.stop != null)
+                {
+                    tobj = obj.stop;
+                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
+                    {
+                        if (!this.validateSysObjRef(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as ref");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
+                    {
+                        if (!this.validateSysObjConst(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as const");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
+                    {
+                        if (!this.validateSysObjExp(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as exp");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
+                    {
+                        if (!this.validateSysObjBex(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as bex");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
+                    {
+                        if (!this.validateSysObjCall(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as call");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        this.wr("validateSysObjFor: Error: could not validate obj as right");
+                        return false;
+                    }
+                }
+                else
+                {
+                    this.wr("validateSysObjFor: Error: could not validate obj as right, null");
+                    return false;
+                }
+
+                if (obj.inc != null)
+                {
+                    tobj = obj.inc;
+                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
+                    {
+                        if (!this.validateSysObjRef(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as ref");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
+                    {
+                        if (!this.validateSysObjConst(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as const");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
+                    {
+                        if (!this.validateSysObjExp(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as exp");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
+                    {
+                        if (!this.validateSysObjBex(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as bex");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
+                    {
+                        if (!this.validateSysObjCall(tobj))
+                        {
+                            this.wr("validateSysObjFor: Error: could not validate right obj as call");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        this.wr("validateSysObjFor: Error: could not validate obj as right");
+                        return false;
+                    }
+                }
+                else
+                {
+                    this.wr("validateSysObjFor: Error: could not validate obj as right, null");
+                    return false;
+                }
+
+                for (int i = 0; i < obj.lines.Count; i++)
+                {
+                    if (!this.validateSysObjFuncLine(obj.lines[i]))
+                    {
+                        this.wr("validateSysObjFor: Error: could not validate obj as func, line: " + i);
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjClass 
+        * Desc: Validates if the given object is a valid class object. 
+        * Arg1: obj(a {class} object to check)
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "class",
+        *   "name": "some name",
+        *   "call": {call},
+        *   "vars": [var],
+        *   "funcs": [func],
+        *   "ret": {val}
+        * }
+        */
+        public bool validateSysObjClass(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("class")) && this.validateProperties(obj, new string[] { "sys", "name", "vars", "funcs", "ret", "call" }))
+            {
+                if (!this.validateSysObjVal(obj.ret))
+                {
+                    this.wr("validateSysObjClass: Error: could not validate obj as val");
+                    return false;
+                }
+
+                if (obj.call != null && !this.validateSysObjCall(obj.call))
+                {
+                    this.wr("validateSysObjClass: Error: could not validate obj as call");
+                    return false;
+                }
+
+                for (int i = 0; i < obj.vars.Count; i++)
+                {
+                    if (!this.validateSysObjVar(obj.vars[i]))
+                    {
+                        this.wr("validateSysObjClass: Error: could not validate obj as var");
+                        return false;
+                    }
+                }
+
+                for (int i = 0; i < obj.funcs.Count; i++)
+                {
+                    if (!this.validateSysObjFunc(obj.funcs[i]))
+                    {
+                        this.wr("validateSysObjClass: Error: could not validate obj as func: " + obj.funcs[i].name);
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjFuncLine 
+        * Desc: Validates if the given object is a valid function line object. 
+        * Arg1: obj(an {asgn}, {for}, {if}, {return}, {call} object to check) 
+        * Returns: ret(some bool, true or false) 
+        * Struct:
+        * [asgn | for | if | return | call]
+        */
+        public bool validateSysObjFuncLine(JsonObjSysBase obj)
+        {
+            if (this.isSysObjFuncLine(obj))
+            {
+                if (this.getSysObjType(obj).Equals("asgn"))
+                {
+                    if (!this.validateSysObjAsgn(obj))
+                    {
+                        this.wr("validateSysObjFuncLine: Error: could not validate obj as asgn");
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else if (this.getSysObjType(obj).Equals("for"))
+                {
+                    if (!this.validateSysObjFor(obj))
+                    {
+                        this.wr("validateSysObjFuncLine: Error: could not validate obj as for");
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else if (this.getSysObjType(obj).Equals("if"))
+                {
+                    if (!this.validateSysObjIf(obj))
+                    {
+                        this.wr("validateSysObjFuncLine: Error: could not validate obj as if");
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else if (this.getSysObjType(obj).Equals("return"))
+                {
+                    if (!this.validateSysObjReturn(obj))
+                    {
+                        this.wr("validateSysObjFuncLine: Error: could not validate obj as return");
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else if (this.getSysObjType(obj).Equals("call"))
+                {
+                    if (!this.validateSysObjCall(obj))
+                    {
+                        this.wr("validateSysObjFuncLine: Error: could not validate obj as call");
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjFunc 
+        * Desc: Validates if the given object is a valid func object. 
+        * Arg1: obj(a {func} object to check) 
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "func",
+        *   "name": "some name",
+        *   "args": [arg],
+        *   "vars": [var],
+        *   "ret": {val},
+        *   "lines": [asgn | for | if | return | call]
+        * }
+        */
+        public bool validateSysObjFunc(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("func")) && this.validateProperties(obj, new string[] { "sys", "name", "args", "vars", "ret", "lines" }))
+            {
+                if (!this.validateSysObjVal(obj.ret))
+                {
+                    this.wr("validateSysObjFunc: Error: could not validate obj as val");
+                    return false;
+                }
+
+                for (int i = 0; i < obj.vars.Count; i++)
+                {
+                    if (!this.validateSysObjVar(obj.vars[i]))
+                    {
+                        this.wr("validateSysObjFunc: Error: could not validate obj as var");
+                        return false;
+                    }
+                }
+
+                for (int i = 0; i < obj.args.Count; i++)
+                {
+                    if (!this.validateSysObjArg(obj.args[i]))
+                    {
+                        this.wr("validateSysObjFunc: Error: could not validate obj as arg");
+                        return false;
+                    }
+                }
+
+                for (int i = 0; i < obj.lines.Count; i++)
+                {
+                    if (!this.validateSysObjFuncLine(obj.lines[i]))
+                    {
+                        this.wr("validateSysObjFunc: Error: could not validate obj as func line: " + i);
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjAsgn 
+        * Desc: Validates if the given object is a valid asgn object. 
+        * Arg1: obj(a {asgn} object to check) 
+        * Returns: ret(some bool, true or false)
+        * Struct:-
+        * {
+        *   "sys": "asgn",
+        *   "left": {ref},
+        *   "op": {op & type of asgn},
+        *   "right": {ref | const | exp | bex | call}
+        * }
+        */
+        public bool validateSysObjAsgn(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("asgn")) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right" }))
+            {
+                JsonObjSysBase tobj = null;
+                if (obj.left != null)
+                {
+                    tobj = obj.left;
+                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
+                    {
+                        if (!this.validateSysObjRef(tobj))
+                        {
+                            this.wr("validateSysObjAsgn: Error: could not validate left obj as ref");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        this.wr("validateSysObjAsgn: Error: could not validate left obj as ref");
+                        return false;
+                    }
+                }
+                else
+                {
+                    this.wr("validateSysObjAsgn: Error: could not validate left obj as ref, null");
+                    return false;
+                }
+
+                if (obj.op != null)
+                {
+                    tobj = obj.op;
+                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("op"))
+                    {
+                        if (!this.validateSysObjOp(tobj))
+                        {
+                            this.wr("validateSysObjAsgn: Error: could not validate obj as op");
+                            return false;
+                        }
+                        else if (!tobj.type.Equals("asgn"))
+                        {
+                            this.wr("validateSysObjAsgn: Error: could not validate obj as op type");
+                            return false;
+                        }
+                        else if (!tobj.v.Equals("="))
+                        {
+                            this.wr("validateSysObjAsgn: Error: could not validate obj as op code");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        this.wr("validateSysObjAsgn: Error: could not validate obj as op");
+                        return false;
+                    }
+                }
+                else
+                {
+                    this.wr("validateSysObjAsgn: Error: could not validate obj as op, null");
+                    return false;
+                }
+
+                if (obj.right != null)
+                {
+                    tobj = obj.right;
+                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
+                    {
+                        if (!this.validateSysObjRef(tobj))
+                        {
+                            this.wr("validateSysObjAsgn: Error: could not validate right obj as ref");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
+                    {
+                        if (!this.validateSysObjConst(tobj))
+                        {
+                            this.wr("validateSysObjAsgn: Error: could not validate right obj as const");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
+                    {
+                        if (!this.validateSysObjExp(tobj))
+                        {
+                            this.wr("validateSysObjAsgn: Error: could not validate right obj as exp");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
+                    {
+                        if (!this.validateSysObjBex(tobj))
+                        {
+                            this.wr("validateSysObjAsgn: Error: could not validate right obj as bex");
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
+                    {
+                        if (!this.validateSysObjCall(tobj))
+                        {
+                            this.wr("validateSysObjAsgn: Error: could not validate right obj as call");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        this.wr("validateSysObjAsgn: Error: could not validate obj as right");
+                        return false;
+                    }
+                }
+                else
+                {
+                    this.wr("validateSysObjAsgn: Error: could not validate obj as right, null");
+                    return false;
+                }
+
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjBex 
+        * Desc: Validates if the given object is a valid bex object. 
+        * Arg1: obj(a {bex} object to check)
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "bex",
+        *   "left": {ref | const | exp | bex | call},
+        *   "op": {op & type of bex},
+        *   "right": {ref | const | exp | bex | call}
+        * }
+        */
+        public bool validateSysObjBex(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("bex")) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right" }))
+            {
+                JsonObjSysBase tobj = null;
+                if (obj.left != null)
+                {
+                    tobj = obj.left;
+                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
+                    {
+                        if (!this.validateSysObjRef(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
+                    {
+                        if (!this.validateSysObjConst(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
+                    {
+                        if (!this.validateSysObjExp(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
+                    {
+                        if (!this.validateSysObjBex(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
+                    {
+                        if (!this.validateSysObjCall(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+                if (obj.op != null)
+                {
+                    tobj = obj.op;
+                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("op"))
+                    {
+                        if (!this.validateSysObjOp(tobj))
+                        {
+                            return false;
+                        }
+                        else if (!tobj.type.Equals("bex"))
+                        {
+                            return false;
+                        }
+                        else if (!(tobj.v.Equals("==") || tobj.v.Equals("!=") || tobj.v.Equals("<") || tobj.v.Equals(">") || tobj.v.Equals("<=") || tobj.v.Equals(">=")))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+                if (obj.right != null)
+                {
+                    tobj = obj.right;
+                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
+                    {
+                        if (!this.validateSysObjRef(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
+                    {
+                        if (!this.validateSysObjConst(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
+                    {
+                        if (!this.validateSysObjExp(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
+                    {
+                        if (!this.validateSysObjBex(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
+                    {
+                        if (!this.validateSysObjCall(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjExp 
+        * Desc: Validates if the given object is a valid exp object. 
+        * Arg1: obj(a {exp} object to check) 
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "exp",
+        *   "left": {ref | const | exp | bex | call},
+        *   "op": {op & type of exp},
+        *   "right": {ref | const | exp | bex | call}
+        * }
+        */
+        public bool validateSysObjExp(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("exp")) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right" }))
+            {
+                JsonObjSysBase tobj = null;
+                if (obj.left != null)
+                {
+                    tobj = obj.left;
+                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
+                    {
+                        if (!this.validateSysObjRef(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
+                    {
+                        if (!this.validateSysObjConst(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
+                    {
+                        if (!this.validateSysObjExp(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
+                    {
+                        if (!this.validateSysObjBex(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
+                    {
+                        if (!this.validateSysObjCall(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+                if (obj.op != null)
+                {
+                    tobj = obj.op;
+                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("op"))
+                    {
+                        if (!this.validateSysObjOp(tobj))
+                        {
+                            return false;
+                        }
+                        else if (!tobj.type.Equals("exp"))
+                        {
+                            return false;
+                        }
+                        else if (!(tobj.v.Equals("+") || tobj.v.Equals("-") || tobj.v.Equals("/") || tobj.v.Equals("*")))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+                if (obj.right != null)
+                {
+                    tobj = obj.right;
+                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
+                    {
+                        if (!this.validateSysObjRef(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
+                    {
+                        if (!this.validateSysObjConst(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
+                    {
+                        if (!this.validateSysObjExp(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
+                    {
+                        if (!this.validateSysObjBex(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
+                    {
+                        if (!this.validateSysObjCall(tobj))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjCall 
+        * Desc: Validates if the given object is a valid call object. 
+        * Arg1: obj(a {call} object to check) 
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "call",
+        *   "name": "some name",
+        *   "args": [ref | const]
+        * }
+        */
+        public bool validateSysObjCall(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("call")) && this.validateProperties(obj, new string[] { "sys", "name", "args" }))
+            {
+                if (obj.args != null)
+                {
+                    for (int i = 0; i < obj.args.Count; i++)
+                    {
+                        JsonObjSysBase tobj = obj.args[i];
+                        //this.wr("validateSysObjCall: found " + tobj.sys + " at index " + i + ", " + tobj.val.type);
+                        if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
+                        {
+                            if (!this.validateSysObjRef(tobj))
+                            {
+                                //this.wr("validateSysObjCall: Error: could not validate ref");
+                                return false;
+                            }
+                        }
+                        else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
+                        {
+                            //this.wr("validateSysObjCall: Error: could not validate const");
+                            if (!this.validateSysObjConst(tobj))
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            this.wr("validateSysObjCall: Error: Unhandled sys obj type: " + tobj.sys);
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjCall 
+        * Desc: Validates if the given object is a valid call object. 
+        * Arg1: obj(a {op} object to check) 
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "op",
+        *   "type": "asgn | bex | exp",
+        *   "v": "some valid op value"
+        * }
+        */
+        public bool validateSysObjOp(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("op")) && this.validateProperties(obj, new string[] { "sys", "type", "v" }))
+            {
+                if (!(obj.type.Equals("asgn") || obj.type.Equals("bex") || obj.type.Equals("exp")))
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjConst 
+        * Desc: Validates if the given object is a valid const object. 
+        * Arg1: obj(a {const} object to check) 
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "const",
+        *   "val": {val}
+        * }
+        */
+        public bool validateSysObjConst(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("const")) && this.validateProperties(obj, new string[] { "sys", "val" }))
+            {
+                if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val))
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjVar 
+        * Desc: Validates if the given object is a valid var object. 
+        * Arg1: obj(a {var} object to check) 
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "var",
+        *   "name": "some name",
+        *   "val": {val}
+        * }
+        */
+        public bool validateSysObjVar(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("var")) && this.validateProperties(obj, new string[] { "sys", "name", "val" }))
+            {
+                if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val))
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjArg 
+        * Desc: Validates if the given object is a valid arg object. 
+        * Arg1: obj(a {arg} object to check)
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "arg",
+        *   "name": "some name",
+        *   "val": {val}
+        * }
+        */
+        public bool validateSysObjArg(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("arg")) && this.validateProperties(obj, new string[] { "sys", "name", "val" }))
+            {
+                if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val))
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjVal 
+        * Desc: Validates if the given object is a valid val object. 
+        * Arg1: obj(a {val} object to check) 
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "val",
+        *   "type": "int | float | string | bool & type of string",
+        *   "v": "some valid value"
+        * }
+        */
+        public bool validateSysObjVal(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObjVal(obj) && this.validateProperties(obj, new string[] { "sys", "type", "v" }))
+            {
+                if (
+                    !(obj.type.Equals("int") || obj.type.Equals("float") || obj.type.Equals("string") || obj.type.Equals("bool"))
+                    && !(obj.type.Equals("int[]") || obj.type.Equals("float[]") || obj.type.Equals("string[]") || obj.type.Equals("bool[]"))
+                )
+                {
+                    return false;
+                }
+
+                bool isArray = false;
+                int arrayLen = 0;
+                if (obj.type.Equals("int[]") || obj.type.Equals("float[]") || obj.type.Equals("string[]") || obj.type.Equals("bool[]"))
+                {
+                    isArray = true;
+                    if (!this.validateProperties(obj, new string[] { "len" }))
+                    {
+                        this.wr("validateSysObjVal: Error: array is missing length: " + obj.v + ", type: " + obj.type);
+                        return false;
+                    }
+                    else
+                    {
+                        if (!this.isInteger(obj.len) || this.toInt(obj.len) < 0)
+                        {
+                            this.wr("validateSysObjVal: Error: array length is invalid: " + obj.v + ", type: " + obj.type + ", " + obj.len + ", " + this.isInteger(obj.len));
+                            return false;
+                        }
+                        else
+                        {
+                            arrayLen = this.toInt(obj.len);
+                        }
+                    }
+                }
+
+                //ignore references
+                string tmp = this.toStr(obj.v);
+                if (tmp.IndexOf("#.") == -1 && tmp.IndexOf("$.") == -1)
+                {
+                    if (!isArray)
+                    {
+                        //base data types
+                        if (obj.type.Equals("int"))
+                        {
+                            if (!this.isInteger(this.toInt(obj.v)))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not an int value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                obj.v = this.toInt(obj.v);
+                            }
+                        }
+                        else if (obj.type.Equals("float"))
+                        {
+                            if (!this.isFloat(this.toFloat(obj.v)))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not a float value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                obj.v = this.toFloat(obj.v);
+                            }
+                        }
+                        else if (obj.type.Equals("string"))
+                        {
+                            if (!this.isString(this.toStr(obj.v)))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not a string value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                obj.v = this.toStr(obj.v);
+                            }
+                        }
+                        else if (obj.type.Equals("bool"))
+                        {
+                            if (!this.isBool(this.toBool(obj.v)))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not a bool value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                obj.v = this.toBool(obj.v);
+                            }
+                        }
+                        else
+                        {
+                            this.wr("validateSysObjVal: Error: unknown object type: " + obj.v + ", type: " + obj.type);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        List<JsonObjSysBase> tmpA = this.toArray(obj.v);
+                        int arrayLenActual = tmpA.Count;
+                        if (arrayLenActual != arrayLen)
+                        {
+                            this.wr("validateSysObjVal: Error: array length mismatch: " + obj.v + ", type: " + obj.type);
+                            return false;
+                        }
+
+                        //array data types
+                        if (obj.type.Equals("int[]"))
+                        {
+                            if (!this.isArray(obj.v))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < arrayLenActual; i++)
+                                {
+                                    JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
+                                    if (!ltmp.val.type.Equals("int"))
+                                    {
+                                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'int' but found '" + ltmp.val.type + "'");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        else if (obj.type.Equals("float[]"))
+                        {
+                            if (!this.isArray(obj.v))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < arrayLenActual; i++)
+                                {
+                                    JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
+                                    if (!ltmp.val.type.Equals("float"))
+                                    {
+                                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'float' but found '" + ltmp.val.type + "'");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        else if (obj.type.Equals("string[]"))
+                        {
+                            if (!this.isArray(obj.v))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < arrayLenActual; i++)
+                                {
+                                    JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
+                                    if (!ltmp.val.type.Equals("string"))
+                                    {
+                                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'string' but found '" + ltmp.val.type + "'");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        else if (obj.type.Equals("bool[]"))
+                        {
+                            if (!this.isArray(obj.v))
+                            {
+                                this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < arrayLenActual; i++)
+                                {
+                                    JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
+                                    if (!ltmp.val.type.Equals("bool"))
+                                    {
+                                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'bool' but found '" + ltmp.val.type + "'");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            this.wr("validateSysObjVal: Error: unknown array object type: " + obj.v + ", type: " + obj.type);
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjRef 
+        * Desc: Validates if the given object is a valid ref object. 
+        * Arg1: obj(a {ref} object to check)
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "ref",
+        *   "val": {val & with value like #.vars.tmp1 or $.vars.tmp1}
+        * }
+        */
+        public bool validateSysObjRef(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            //this.wr("validateSysObjRef: Found sys: " + sysType);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("ref")) && this.validateProperties(obj, new string[] { "sys", "val" }))
+            {
+                if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val))
+                {
+                    //this.wr("validateSysObjRef: Error: could not validate val object: ");// + this.validateSysObjVal(obj) + ", " + this.isSysObjVal(obj.val));
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateSysObjReturn 
+        * Desc: Validates if the given object is a valid return object. 
+        * Arg1: obj(a {return} object to check)
+        * Returns: ret(some bool, true or false)
+        * Struct:
+        * {
+        *   "sys": "return",
+        *   "val": {val}
+        * }
+        */
+        public bool validateSysObjReturn(JsonObjSysBase obj)
+        {
+            string sysType = this.getSysObjType(obj);
+            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("return")) && this.validateProperties(obj, new string[] { "sys", "val" }))
+            {
+                if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val))
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /**
+        * Name: validateProperties 
+        * Desc: Validates if the given object has each of the array elements specified in req. 
+        * Arg1: obj({sys} obj to check) 
+        * Arg2: req(array of attribute names to check for) 
+        * Returns: ret(some bool, true or false)
+        */
+        public bool validateProperties(JsonObjSysBase obj, string[] req)
+        {
+            FieldInfo fld = null;
+            for (int i = 0; i < req.Length; i++)
+            {
+                try
+                {
+                    fld = obj.GetType().GetField(req[i]);
+                    if (fld == null)
+                    {
+                        //this.wr("Field '" + req[i] + "' is null");
+                        return false;
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    Logger.wrlErr(e.ToString());
+                    return false;
+                }
+            }
+            return true;
+        }
+
 
         /////////////////////////UTILITY METHODS
         /**
@@ -364,17 +1885,22 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: cloneJsonObj
-        * Desc: A method to clone the given JSON object argument.
-        * Arg1: jsonObj(the JSON object to clone)
-        * Returns: {(cloned JSON object)}
+        * Name: cloneJsonObj 
+        * Desc: A method to clone the given JSON object argument. 
+        * Arg1: jsonObj(the JSON object to clone) 
+        * Returns: ret(cloned JSON object)
         */
         public JsonObjSysBase cloneJsonObj(JsonObjSysBase jsonObj)
         {
             return jsonObj.Clone();
         }
 
-        //TODO
+        /**
+        * Name: cloneJsonObjList
+        * Desc: A method to clone the given JSON object list argument. 
+        * Arg1: jsonObj(the JSON object list to do a shallow clone) 
+        * Returns: ret(cloned JSON object)
+        */
         public List<JsonObjSysBase> cloneJsonObjList(List<JsonObjSysBase> jsonObjLst)
         {
             List<JsonObjSysBase> ret = new List<JsonObjSysBase>();
@@ -401,7 +1927,13 @@ namespace com.middlemind.JsonPL
             }
         }
 
-        //TODO
+        /**
+        * Name: wrObjList
+        * Desc: Writes a JSON object list to write to standard output if LOGGING is on. 
+        *       Sets the WR_PREFIX to each object written. 
+        *       Prints object using pretty JSON.stringify call. 
+        * Arg1: jsonObj(jsonObj list to write)
+        */
         public void wrObj(List<JsonObjSysBase> jsonObjs)
         {
             if (this.LOGGING == true)
@@ -414,16 +1946,207 @@ namespace com.middlemind.JsonPL
             }
         }
 
+        /**
+         * Name: wrVal
+         * Desc: Writes a JSON val object to standard output if LOGGING is on.
+         *       Sets the WR_PREFIX to each object written.
+         *       Prints object using pretty JSON.stringify call. 
+         * Arg1: v({val} obj to write)
+         */
+        public void wrVal(JsonObjSysBase v)
+        {
+            if (this.LOGGING == true)
+            {
+                if (this.isSysObjValArray(v))
+                {
+                    this.wr(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+                }
+                else
+                {
+                    this.wr(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+                }
+            }
+        }
+
+        /**
+         * Name: sysLen
+         * Desc: Returns the length of the given object. 
+         *       Non-array objects return a value of 0. 
+         * Arg1: args(array of {arg} objects)
+         * Arg2: func(the associated {func} object if any)
+         * Returns: ret(a {const} object)
+         */
+        public JsonObjSysBase sysLen(List<JsonObjSysBase> args, JsonObjSysBase func)
+        {
+            JsonObjSysBase s = args[0];
+
+            //this.wr("sysType: AAA: ");
+            //this.wrObj(s);
+
+            JsonObjSysBase ret = this.getConst("int", "0");
+            s = this.getRef("string", s.val.v);
+
+            JsonObjSysBase v = this.processRef(s, func);
+
+            //this.wr("sysType: CCC: ");
+            //this.wrObj(v);   
+
+            if (v != null)
+            {
+                v = v.val;
+            }
+
+            //this.wr("sysType: DDD: ");
+            //this.wrObj(v);
+
+            if (v != null && this.isSysObj(v))
+            {
+                if (this.isSysObjValArray(v))
+                {
+                    ret = this.getConst("int", this.toStr(v.len));
+                }
+            }
+
+            this.wrVal(ret.val);
+            return ret;
+        }
+
+        /**
+         * Name: sysType
+         * Desc: Returns the type of the given class {sys}} object.
+         * Arg1: args(array of {arg} objects)
+         * Arg2: func(the associated {func} object if any)
+         * Returns: ret(a {ref} object)
+         */
+        public JsonObjSysBase sysType(List<JsonObjSysBase> args, JsonObjSysBase func)
+        {
+            JsonObjSysBase s = args[0];
+
+            //this.wr("sysType: AAA: ");
+            //this.wrObj(s);
+
+            JsonObjSysBase ret = this.getConst("string", "");
+            s = this.getRef("string", s.val.v);
+
+            JsonObjSysBase v = this.processRef(s, func);
+
+            //this.wr("sysType: CCC: ");
+            //this.wrObj(v);   
+
+            if (v != null)
+            {
+                v = v.val;
+            }
+
+            //this.wr("sysType: DDD: ");
+            //this.wrObj(v);
+
+            if (v != null && this.isSysObj(v))
+            {
+                if (this.isSysObjValArray(v))
+                {
+                    ret = this.getConst("string", this.toStr(v.type));
+                }
+            }
+
+            //this.wr("sysType: EEE: ");
+
+            this.wrVal(ret.val);
+            return ret;
+        }
+
+        /**
+         * Name: sysGetRefStr
+         * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
+         * Arg1: v(a {val} obj to get the reference for)
+         * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
+         * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
+         */
+        public JsonObjSysBase sysGetRefStr(List<JsonObjSysBase> args, JsonObjSysBase func)
+        {
+            JsonObjSysBase ret = this.sysGetRef(args, func);
+            ret.sys = "const";
+            ret.val.type = "string";
+            this.wrVal(ret.val);
+            return ret;
+        }
+
+        /**
+         * Name: sysGetRef
+         * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
+         * Arg1: v(a {val} obj to get the reference for)
+         * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
+         * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
+         * Returns: ret(a {ref} object)
+         */
+        public JsonObjSysBase sysGetRef(List<JsonObjSysBase> args, JsonObjSysBase func)
+        {
+            string name = this.toStr(args[0].val.v);
+            bool isVar = this.toBool(args[1].val.v);
+            string funcName = this.toStr(args[2].val.v);
+            JsonObjSysBase ret = this.getRef("string", "");
+
+            //this.wr("sysGetRef: AAA");
+            if (name != null && !name.Equals(""))
+            {
+                if (funcName == null || funcName.Equals(""))
+                {
+                    //this.wr("sysGetRef: BBB");
+                    //lookup class variable
+                    JsonObjSysBase v = this.findVar(name, this.program);
+                    if (v != null)
+                    {
+                        ret = this.getRef(v.val.type, "#.vars." + v.name);
+                    }
+                    //this.wr("sysGetRef: CCC");
+                }
+                else
+                {
+                    //this.wr("sysGetRef: DDD");
+                    JsonObjSysBase lfunc = this.findFunc(funcName);
+                    if (lfunc != null)
+                    {
+                        if (isVar)
+                        {
+                            //lookup function variable
+                            var v1 = this.findVar(name, lfunc);
+                            if (v1 != null)
+                            {
+                                ret = this.getRef(v1.val.type, "$.vars." + v1.name);
+                            }
+                        }
+                        else
+                        {
+                            //lookup function arg
+                            var v2 = this.findArg(name, func);
+                            if (v2 != null)
+                            {
+                                ret = this.getRef(v2.val.type, "$.args." + v2.name);
+                            }
+                        }
+                    }
+                    //this.wr("sysGetRef: EEE");
+                }
+            }
+            this.wrVal(ret.val);
+            return ret;
+        }
+
+
         /////////////////////////GENERIC OBJECT ID METHODS
         /**
-        * Name: isObject
+        * Name: isObject 
         * Desc: Checks if the given argument is a JSON object. 
-        * Arg1: arg(JSON object)
-        * Returns: (true | false)
+        * Arg1: arg(a JSON object) 
+        * Returns: ret(some bool, true or false)
         */
-        public bool isObject(Object arg)
+        public bool isObject(object arg)
         {
-            if (arg is JsonObjSysBase)
+            if (arg == null)
+            {
+                return false;
+            }
+            else if (arg is JsonObjSysBase)
             {
                 return true;
             }
@@ -434,14 +2157,18 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: isArray
+        * Name: isArray 
         * Desc: Checks if the given argument is an array. 
-        * Arg1: arg(javascript array)
-        * Returns: (true | false)
+        * Arg1: arg(some array object) 
+        * Returns: ret(some bool, true or false)
         */
-        public bool isArray(Object arg)
+        public bool isArray(object arg)
         {
-            if (arg is IList || arg is JArray)
+            if (arg == null)
+            {
+                return false;
+            }
+            else if (arg is IList)
             {
                 return true;
             }
@@ -457,9 +2184,13 @@ namespace com.middlemind.JsonPL
         * Arg1: arg(some string)
         * Returns: (true | false)
          */
-        public bool isString(Object arg)
+        public bool isString(object arg)
         {
-            if (arg is string)
+            if (arg == null)
+            {
+                return false;
+            }
+            else if (arg is string)
             {
                 return true;
             }
@@ -475,7 +2206,7 @@ namespace com.middlemind.JsonPL
          * Arg1: arg(some value)
          * Returns: (true | false)
          */
-        public bool isNumber(Object arg)
+        public bool isNumber(object arg)
         {
             if (arg == null)
             {
@@ -495,13 +2226,15 @@ namespace com.middlemind.JsonPL
          * Arg1: arg(some value)
          * Returns: (true | false)
          */
-        public bool isInteger(Object arg)
+        public bool isInteger(object arg)
         {
+            int ti = -1;
+            bool tr = int.TryParse(this.toStr(arg), out ti);
             if (arg == null)
             {
                 return false;
             }
-            else if (arg is int) {
+            else if (arg is int || tr == true) {
                 return true;
             } else
             {
@@ -515,7 +2248,7 @@ namespace com.middlemind.JsonPL
          * Arg1: arg(some value)
          * Returns: (true | false)
          */
-        public bool isFloat(Object arg)
+        public bool isFloat(object arg)
         {
             if (arg == null)
             {
@@ -536,7 +2269,7 @@ namespace com.middlemind.JsonPL
          * Arg1: arg(some value)
          * Returns: (true | false)
          */
-        public bool isBool(Object arg)
+        public bool isBool(object arg)
         {
             if (arg == null)
             {
@@ -544,11 +2277,11 @@ namespace com.middlemind.JsonPL
             }
             else if (arg is bool) {
                 return true;
-            } else if (this.isNumber(arg) && (int)arg == 1 || (int)arg == 0)
+            } else if (this.isInteger(arg) && (int)arg == 1 || (int)arg == 0)
             {
                 return true;
             }
-            else if (this.isNumber(arg) && (float)arg == 1.0 || (float)arg == 0.0)
+            else if (this.isFloat(arg) && (float)arg == 1.0 || (float)arg == 0.0)
             {
                 return true;
             }
@@ -561,6 +2294,7 @@ namespace com.middlemind.JsonPL
                 return false;
             }
         }
+
 
         /////////////////////////SYS OBJECT ID METHODS
         /**
@@ -640,24 +2374,6 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-         * Name: isSysObjValArray
-         * Desc: Checks if the given object is a val sys object array. 
-         * Arg1: obj(sys obj to check)
-         * Returns: (true | false)
-         */
-        public bool isSysObjValArray(JsonObjSysBase obj)
-        {
-            if (this.isSysObjVal(obj) == true && this.validateProperties(obj, new String[] { "len" }) && this.isInteger(obj.len) && this.isArray(obj.v))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /**
         * Name: isSysObjVal
         * Desc: Checks if the given object is a val sys object. 
         * Arg1: obj(sys obj to check)
@@ -679,6 +2395,24 @@ namespace com.middlemind.JsonPL
         }
 
         /**
+         * Name: isSysObjValArray
+         * Desc: Checks if the given object is a val sys object array. 
+         * Arg1: obj(sys obj to check)
+         * Returns: (true | false)
+         */
+        public bool isSysObjValArray(JsonObjSysBase obj)
+        {
+            if (this.isSysObjVal(obj) == true && this.validateProperties(obj, new string[] { "len" }) && this.isInteger(obj.len) && this.isArray(obj.v))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /**
         * Name: isSysObjAsgn
         * Desc: Checks if the given object is an asgn sys object. 
         * Arg1: obj(sys obj to check)
@@ -690,25 +2424,6 @@ namespace com.middlemind.JsonPL
             {
                 string objSys = getSysObjType(obj);
                 if (!Utils.IsStringEmpty(objSys) && objSys.Equals("asgn"))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /**
-        * Name: isSysObjArray
-        * Desc: Checks if the given object is an array sys object. 
-        * Arg1: obj(sys obj to check)
-        * Returns: (true | false)
-         */
-        public bool isSysObjArray(JsonObjSysBase obj)
-        {
-            if (this.isSysObj(obj) == true)
-            {
-                string objSys = getSysObjType(obj);
-                if (!Utils.IsStringEmpty(objSys) && objSys.Equals("array"))
                 {
                     return true;
                 }
@@ -923,1533 +2638,24 @@ namespace com.middlemind.JsonPL
             }
         }
 
-        /////////////////////////VALIDATION METHODS
-        /**
-        * Name: validateSysObjIf
-        * Desc: Validates if the given object is a valid if sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-
-             {
-                "sys": "if",
-                "left": {ref | const | exp | bex | call},
-                "op": {op & type of bex},
-                "right": {ref | const | exp | bex | call},
-                "thn": [asgn | if | for | call | return],
-                "els": [asgn | if | for | call | return]
-             }
-          -!>
-         */
-        public bool validateSysObjIf(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObjIf(obj) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right", "thn", "els" }))
-            {
-                JsonObjSysBase tobj = null;
-                if (obj.left != null)
-                {
-                    tobj = obj.left;
-                    if (this.isSysObjRef(tobj))
-                    {
-                        if (!this.validateSysObjRef(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate left obj as ref");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObjConst(tobj))
-                    {
-                        if (!this.validateSysObjConst(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate left obj as const");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObjExp(tobj))
-                    {
-                        if (!this.validateSysObjExp(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate left obj as exp");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObjBex(tobj))
-                    {
-                        if (!this.validateSysObjBex(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate left obj as bex");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObjCall(tobj))
-                    {
-                        if (!this.validateSysObjCall(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate left obj as call");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        this.wr("validateSysObjFor: Error: could not validate obj as left");
-                        return false;
-                    }
-                }
-                else
-                {
-                    this.wr("validateSysObjIf: Error: could not validate obj as left, null");
-                    return false;
-                }
-
-                if (obj.op != null)
-                {
-                    tobj = obj.op;
-                    if (this.isSysObjOp(tobj))
-                    {
-                        if (!this.validateSysObjOp(tobj))
-                        {
-                            return false;
-                        }
-                        else if (!tobj.type.Equals("bex"))
-                        {
-                            return false;
-                        }
-                        else if (!(tobj.v.Equals("==") || tobj.v.Equals("!=") || tobj.v.Equals("<") || tobj.v.Equals(">") || tobj.v.Equals("<=") || tobj.v.Equals(">=")))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-
-                if (obj.right != null)
-                {
-                    tobj = obj.right;
-                    if (this.isSysObjRef(tobj))
-                    {
-                        if (!this.validateSysObjRef(tobj))
-                        {
-                            this.wr("validateSysObjIf: Error: could not validate right obj as ref");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObjConst(tobj))
-                    {
-                        if (!this.validateSysObjConst(tobj))
-                        {
-                            this.wr("validateSysObjIf: Error: could not validate right obj as const");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObjExp(tobj))
-                    {
-                        if (!this.validateSysObjExp(tobj))
-                        {
-                            this.wr("validateSysObjIf: Error: could not validate right obj as exp");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObjBex(tobj))
-                    {
-                        if (!this.validateSysObjBex(tobj))
-                        {
-                            this.wr("validateSysObjIf: Error: could not validate right obj as bex");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObjCall(tobj))
-                    {
-                        if (!this.validateSysObjCall(tobj))
-                        {
-                            this.wr("validateSysObjIf: Error: could not validate right obj as call");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        this.wr("validateSysObjIf: Error: could not validate obj as right");
-                        return false;
-                    }
-                }
-                else
-                {
-                    this.wr("validateSysObjIf: Error: could not validate obj as right, null");
-                    return false;
-                }
-
-                if (obj.thn != null && this.isArray(obj.thn))
-                {
-                    List<JsonObjSysBase> tobjLst = obj.thn;
-                    int len = tobjLst.Count;
-                    for (int i = 0; i < len; i++)
-                    {
-                        if (!this.validateSysObjFuncLine(tobjLst[i]))
-                        {
-                            this.wr("validateSysObjIf: Error: could not validate obj as then, line: " + i);
-                            return false;
-                        }
-                    }
-                }
-
-                if (obj.els != null && this.isArray(obj.els))
-                {
-                    List<JsonObjSysBase> tobjLst = obj.els;
-                    int len = tobjLst.Count;
-                    for (int i = 0; i < len; i++)
-                    {
-                        if (!this.validateSysObjFuncLine(tobjLst[i]))
-                        {
-                            this.wr("validateSysObjIf: Error: could not validate obj as else, line: " + i);
-                            return false;
-                        }
-                    }
-                }
-
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjFor
-        * Desc: Validates if the given object is a valid for sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-
-             {
-                "sys": "for",
-                "start": {ref | const | exp | bex | call & type of int},
-                "stop": {ref | const | exp | bex | call & type of int},
-                "inc": {ref | const | exp | bex | call & type of int},
-                "lines": [asgn | if | for | call | return]
-             }
-          -!>
-         */
-        public bool validateSysObjFor(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("for")) && this.validateProperties(obj, new string[] { "sys", "start", "stop", "inc", "lines" }))
-            {
-                JsonObjSysBase tobj = null;
-                if (obj.start != null)
-                {
-                    tobj = obj.start;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
-                    {
-                        if (!this.validateSysObjRef(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as ref");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
-                    {
-                        if (!this.validateSysObjConst(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as const");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
-                    {
-                        if (!this.validateSysObjExp(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as exp");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
-                    {
-                        if (!this.validateSysObjBex(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as bex");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
-                    {
-                        if (!this.validateSysObjCall(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as call");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        this.wr("validateSysObjFor: Error: could not validate obj as right");
-                        return false;
-                    }
-                }
-                else
-                {
-                    this.wr("validateSysObjFor: Error: could not validate obj as right, null");
-                    return false;
-                }
-
-                if (obj.stop != null)
-                {
-                    tobj = obj.stop;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
-                    {
-                        if (!this.validateSysObjRef(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as ref");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
-                    {
-                        if (!this.validateSysObjConst(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as const");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
-                    {
-                        if (!this.validateSysObjExp(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as exp");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
-                    {
-                        if (!this.validateSysObjBex(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as bex");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
-                    {
-                        if (!this.validateSysObjCall(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as call");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        this.wr("validateSysObjFor: Error: could not validate obj as right");
-                        return false;
-                    }
-                }
-                else
-                {
-                    this.wr("validateSysObjFor: Error: could not validate obj as right, null");
-                    return false;
-                }
-
-                if (obj.inc != null)
-                {
-                    tobj = obj.inc;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
-                    {
-                        if (!this.validateSysObjRef(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as ref");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
-                    {
-                        if (!this.validateSysObjConst(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as const");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
-                    {
-                        if (!this.validateSysObjExp(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as exp");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
-                    {
-                        if (!this.validateSysObjBex(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as bex");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
-                    {
-                        if (!this.validateSysObjCall(tobj))
-                        {
-                            this.wr("validateSysObjFor: Error: could not validate right obj as call");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        this.wr("validateSysObjFor: Error: could not validate obj as right");
-                        return false;
-                    }
-                }
-                else
-                {
-                    this.wr("validateSysObjFor: Error: could not validate obj as right, null");
-                    return false;
-                }
-
-                for (int i = 0; i < obj.lines.Count; i++)
-                {
-                    if (!this.validateSysObjFuncLine(obj.lines[i]))
-                    {
-                        this.wr("validateSysObjFor: Error: could not validate obj as func, line: " + i);
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjClass
-        * Desc: Validates if the given object is a valid class sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-          {
-             "sys": "class",
-             "name": "some name",
-             "call": {call},
-             "vars": [var],
-             "funcs": [func],
-             "ret": {val}
-          }
-          -!>
-         */
-        public bool validateSysObjClass(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("class")) && this.validateProperties(obj, new string[] { "sys", "name", "vars", "funcs", "ret", "call" }))
-            {
-                if (!this.validateSysObjVal(obj.ret))
-                {
-                    this.wr("validateSysObjClass: Error: could not validate obj as val");
-                    return false;
-                }
-
-                if (obj.call != null && !this.validateSysObjCall(obj.call))
-                {
-                    this.wr("validateSysObjClass: Error: could not validate obj as call");
-                    return false;
-                }
-
-                for (int i = 0; i < obj.vars.Count; i++)
-                {
-                    if (!this.validateSysObjVar(obj.vars[i]))
-                    {
-                        this.wr("validateSysObjClass: Error: could not validate obj as var");
-                        return false;
-                    }
-                }
-
-                for (int i = 0; i < obj.funcs.Count; i++)
-                {
-                    if (!this.validateSysObjFunc(obj.funcs[i]))
-                    {
-                        this.wr("validateSysObjClass: Error: could not validate obj as func: " + obj.funcs[i].name);
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjFuncLine
-        * Desc: Validates if the given object is a valid function line sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-          [asgn | for | if | return | call]
-          -!>
-         */
-        public bool validateSysObjFuncLine(JsonObjSysBase obj)
-        {
-            if (this.isSysObjFuncLine(obj))
-            {
-                if (this.getSysObjType(obj).Equals("asgn"))
-                {
-                    if (!this.validateSysObjAsgn(obj))
-                    {
-                        this.wr("validateSysObjFuncLine: Error: could not validate obj as asgn");
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-                else if (this.getSysObjType(obj).Equals("for"))
-                {
-                    if (!this.validateSysObjFor(obj))
-                    {
-                        this.wr("validateSysObjFuncLine: Error: could not validate obj as for");
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-                else if (this.getSysObjType(obj).Equals("if"))
-                {
-                    if (!this.validateSysObjIf(obj))
-                    {
-                        this.wr("validateSysObjFuncLine: Error: could not validate obj as if");
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-                else if (this.getSysObjType(obj).Equals("return"))
-                {
-                    if (!this.validateSysObjReturn(obj))
-                    {
-                        this.wr("validateSysObjFuncLine: Error: could not validate obj as return");
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-                else if (this.getSysObjType(obj).Equals("call"))
-                {
-                    if (!this.validateSysObjCall(obj))
-                    {
-                        this.wr("validateSysObjFuncLine: Error: could not validate obj as call");
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjFunc
-        * Desc: Validates if the given object is a valid func sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-             {
-                "sys": "func",
-                "name": "some name",
-                "args": [arg], 
-                "vars": [var],
-                "ret": {val},
-                "lines": [asgn | for | if | return | call]
-             }
-          -!>
-         */
-        public bool validateSysObjFunc(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("func")) && this.validateProperties(obj, new string[] { "sys", "name", "args", "vars", "ret", "lines" }))
-            {
-                if (!this.validateSysObjVal(obj.ret))
-                {
-                    this.wr("validateSysObjFunc: Error: could not validate obj as val");
-                    return false;
-                }
-
-                for (int i = 0; i < obj.vars.Count; i++)
-                {
-                    if (!this.validateSysObjVar(obj.vars[i]))
-                    {
-                        this.wr("validateSysObjFunc: Error: could not validate obj as var");
-                        return false;
-                    }
-                }
-
-                for (int i = 0; i < obj.args.Count; i++)
-                {
-                    if (!this.validateSysObjArg(obj.args[i]))
-                    {
-                        this.wr("validateSysObjFunc: Error: could not validate obj as arg");
-                        return false;
-                    }
-                }
-
-                for (int i = 0; i < obj.lines.Count; i++)
-                {
-                    if (!this.validateSysObjFuncLine(obj.lines[i]))
-                    {
-                        this.wr("validateSysObjFunc: Error: could not validate obj as func line: " + i);
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjAsgn
-        * Desc: Validates if the given object is a valid asgn sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-             {
-                "sys": "asgn",
-                "left": {ref},
-                "op": {op & type of asgn}, 
-                "right": {ref | const | exp | bex | call}
-             }
-          -!>
-         */
-        public bool validateSysObjAsgn(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("asgn")) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right" }))
-            {
-                JsonObjSysBase tobj = null;
-                if (obj.left != null)
-                {
-                    tobj = obj.left;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
-                    {
-                        if (!this.validateSysObjRef(tobj))
-                        {
-                            this.wr("validateSysObjAsgn: Error: could not validate left obj as ref");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        this.wr("validateSysObjAsgn: Error: could not validate left obj as ref");
-                        return false;
-                    }
-                }
-                else
-                {
-                    this.wr("validateSysObjAsgn: Error: could not validate left obj as ref, null");
-                    return false;
-                }
-
-                if (obj.op != null)
-                {
-                    tobj = obj.op;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("op"))
-                    {
-                        if (!this.validateSysObjOp(tobj))
-                        {
-                            this.wr("validateSysObjAsgn: Error: could not validate obj as op");
-                            return false;
-                        }
-                        else if (!tobj.type.Equals("asgn"))
-                        {
-                            this.wr("validateSysObjAsgn: Error: could not validate obj as op type");
-                            return false;
-                        }
-                        else if (!tobj.v.Equals("="))
-                        {
-                            this.wr("validateSysObjAsgn: Error: could not validate obj as op code");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        this.wr("validateSysObjAsgn: Error: could not validate obj as op");
-                        return false;
-                    }
-                }
-                else
-                {
-                    this.wr("validateSysObjAsgn: Error: could not validate obj as op, null");
-                    return false;
-                }
-
-                if (obj.right != null)
-                {
-                    tobj = obj.right;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
-                    {
-                        if (!this.validateSysObjRef(tobj))
-                        {
-                            this.wr("validateSysObjAsgn: Error: could not validate right obj as ref");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
-                    {
-                        if (!this.validateSysObjConst(tobj))
-                        {
-                            this.wr("validateSysObjAsgn: Error: could not validate right obj as const");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
-                    {
-                        if (!this.validateSysObjExp(tobj))
-                        {
-                            this.wr("validateSysObjAsgn: Error: could not validate right obj as exp");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
-                    {
-                        if (!this.validateSysObjBex(tobj))
-                        {
-                            this.wr("validateSysObjAsgn: Error: could not validate right obj as bex");
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
-                    {
-                        if (!this.validateSysObjCall(tobj))
-                        {
-                            this.wr("validateSysObjAsgn: Error: could not validate right obj as call");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        this.wr("validateSysObjAsgn: Error: could not validate obj as right");
-                        return false;
-                    }
-                }
-                else
-                {
-                    this.wr("validateSysObjAsgn: Error: could not validate obj as right, null");
-                    return false;
-                }
-
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjBex
-        * Desc: Validates if the given object is a valid bex sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-             {
-                "sys": "bex",
-                "left": {ref | const | exp | bex | call},
-                "op": {op & type of bex}, 
-                "right": {ref | const | exp | bex | call}
-             }
-          -!>
-         */
-        public bool validateSysObjBex(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("bex")) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right" }))
-            {
-                JsonObjSysBase tobj = null;
-                if (obj.left != null)
-                {
-                    tobj = obj.left;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
-                    {
-                        if (!this.validateSysObjRef(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
-                    {
-                        if (!this.validateSysObjConst(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
-                    {
-                        if (!this.validateSysObjExp(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
-                    {
-                        if (!this.validateSysObjBex(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
-                    {
-                        if (!this.validateSysObjCall(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-
-                if (obj.op != null)
-                {
-                    tobj = obj.op;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("op"))
-                    {
-                        if (!this.validateSysObjOp(tobj))
-                        {
-                            return false;
-                        }
-                        else if (!tobj.type.Equals("bex"))
-                        {
-                            return false;
-                        }
-                        else if (!(tobj.v.Equals("==") || tobj.v.Equals("!=") || tobj.v.Equals("<") || tobj.v.Equals(">") || tobj.v.Equals("<=") || tobj.v.Equals(">=")))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-
-                if (obj.right != null)
-                {
-                    tobj = obj.right;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
-                    {
-                        if (!this.validateSysObjRef(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
-                    {
-                        if (!this.validateSysObjConst(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
-                    {
-                        if (!this.validateSysObjExp(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
-                    {
-                        if (!this.validateSysObjBex(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
-                    {
-                        if (!this.validateSysObjCall(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjExp
-        * Desc: Validates if the given object is a valid exp sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-             {
-                "sys": "exp",
-                "left": {ref | const | exp | bex | call},
-                "op": {op & type of exp}, 
-                "right": {ref | const | exp | bex | call}
-             }
-          -!>
-         */
-        public bool validateSysObjExp(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("exp")) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right" }))
-            {
-                JsonObjSysBase tobj = null;
-                if (obj.left != null)
-                {
-                    tobj = obj.left;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
-                    {
-                        if (!this.validateSysObjRef(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
-                    {
-                        if (!this.validateSysObjConst(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
-                    {
-                        if (!this.validateSysObjExp(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
-                    {
-                        if (!this.validateSysObjBex(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
-                    {
-                        if (!this.validateSysObjCall(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-
-                if (obj.op != null)
-                {
-                    tobj = obj.op;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("op"))
-                    {
-                        if (!this.validateSysObjOp(tobj))
-                        {
-                            return false;
-                        }
-                        else if (!tobj.type.Equals("exp"))
-                        {
-                            return false;
-                        }
-                        else if (!(tobj.v.Equals("+") || tobj.v.Equals("-") || tobj.v.Equals("/") || tobj.v.Equals("*")))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-
-                if (obj.right != null)
-                {
-                    tobj = obj.right;
-                    if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
-                    {
-                        if (!this.validateSysObjRef(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
-                    {
-                        if (!this.validateSysObjConst(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("exp"))
-                    {
-                        if (!this.validateSysObjExp(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("bex"))
-                    {
-                        if (!this.validateSysObjBex(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("call"))
-                    {
-                        if (!this.validateSysObjCall(tobj))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjCall
-        * Desc: Validates if the given object is a valid call sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-             {
-                "sys": "call", 
-                "name": "some name", 
-                "args": [ref | const]
-             }
-          -!>
-         */
-        public bool validateSysObjCall(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("call")) && this.validateProperties(obj, new string[] { "sys", "name", "args" }))
-            {
-                if (obj.args != null)
-                {
-                    for (int i = 0; i < obj.args.Count; i++)
-                    {
-                        JsonObjSysBase tobj = obj.args[i];
-                        //this.wr("validateSysObjCall: found " + tobj.sys + " at index " + i + ", " + tobj.val.type);
-                        if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("ref"))
-                        {
-                            if (!this.validateSysObjRef(tobj))
-                            {
-                                //this.wr("validateSysObjCall: Error: could not validate ref");
-                                return false;
-                            }
-                        }
-                        else if (this.isSysObj(tobj) && this.getSysObjType(tobj).Equals("const"))
-                        {
-                            //this.wr("validateSysObjCall: Error: could not validate const");
-                            if (!this.validateSysObjConst(tobj))
-                            {
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            this.wr("validateSysObjCall: Error: Unhandled sys obj type: " + tobj.sys);
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjCall
-        * Desc: Validates if the given object is a valid call sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-             {
-                "sys": "op", 
-                "type": "asgn | bex | exp", 
-                "v": "some valid op value"
-             }
-          -!>
-         */
-        public bool validateSysObjOp(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("op")) && this.validateProperties(obj, new string[] { "sys", "type", "v" }))
-            {
-                if (!(obj.type.Equals("asgn") || obj.type.Equals("bex") || obj.type.Equals("exp")))
-                {
-                    return false;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjArray
-        * Desc: Validates if the given object is a valid array sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-           {
-              "sys": "array",
-              "name": "a1",
-              "len": #,
-              "val": {
-                 "sys": "val",
-                 "type": "int",
-                 "v": [{const | ref}]
-              }
-           }
-          -!>
-         */
-        public bool validateSysObjArray(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("array")) && this.validateProperties(obj, new string[] { "sys", "name", "len", "val" }))
-            {
-                if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val))
-                {
-                    return false;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjConst
-        * Desc: Validates if the given object is a valid const sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-             {
-                "sys": "const", 
-                "val": {val}
-             }
-          -!>
-         */
-        public bool validateSysObjConst(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("const")) && this.validateProperties(obj, new string[] { "sys", "val" }))
-            {
-                if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val))
-                {
-                    return false;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjVar
-        * Desc: Validates if the given object is a valid var sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-             {
-                "sys": "var",
-                "name": "some name",
-                "val": {val}
-             }
-          -!>
-         */
-        public bool validateSysObjVar(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("var")) && this.validateProperties(obj, new string[] { "sys", "name", "val" }))
-            {
-                if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val))
-                {
-                    return false;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjArg
-        * Desc: Validates if the given object is a valid arg sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-             {
-                "sys": "arg",
-                "name": "some name",
-                "val": {val}
-             }
-          -!>
-         */
-        public bool validateSysObjArg(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("arg")) && this.validateProperties(obj, new string[] { "sys", "name", "val" }))
-            {
-                if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val))
-                {
-                    return false;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * Name: validateSysObjVal 
-         * Desc: Validates if the given object is a valid val sys object. 
-         * Arg1: obj(sys obj to check) 
-         * Returns: {false | true}
-         * Struct: <!-
-         * {
-         * "sys": "val",
-         * "type": "int | float | string | bool & type of string",
-         * "v": "some valid value"
-         * }
-         * -!>
-         */
-        public bool validateSysObjVal(JsonObjSysBase obj)
-        {
-            String sysType = this.getSysObjType(obj);
-            if (this.isSysObjVal(obj) && this.validateProperties(obj, new String[] { "sys", "type", "v" }))
-            {
-                if (
-                    !(obj.type.Equals("int") || obj.type.Equals("float") || obj.type.Equals("string") || obj.type.Equals("bool"))
-                    && !(obj.type.Equals("int[]") || obj.type.Equals("float[]") || obj.type.Equals("string[]") || obj.type.Equals("bool[]"))
-                )
-                {
-                    return false;
-                }
-
-                bool isArray = false;
-                int arrayLen = 0;
-                if (obj.type.Equals("int[]") || obj.type.Equals("float[]") || obj.type.Equals("string[]") || obj.type.Equals("bool[]"))
-                {
-                    isArray = true;
-                    if (!this.validateProperties(obj, new String[] { "len" }))
-                    {
-                        this.wr("validateSysObjVal: Error: array is missing length: " + obj.v + ", type: " + obj.type);
-                        return false;
-                    }
-                    else
-                    {
-                        if (!this.isInteger(obj.len) && this.toInt(obj.len) >= 0)
-                        {
-                            this.wr("validateSysObjVal: Error: array length is invalid: " + obj.v + ", type: " + obj.type + ", " + obj.len + ", " + this.isInteger(obj.len));
-                        }
-                        else
-                        {
-                            arrayLen = this.toInt(obj.len);
-                        }
-                    }
-                }
-
-                //ignore references
-                String tmp = this.toStr(obj.v);
-                if (tmp.IndexOf("#.") == -1 && tmp.IndexOf("$.") == -1)
-                {
-                    if (!isArray)
-                    {
-                        //base data types
-                        if (obj.type.Equals("int"))
-                        {
-                            if (!this.isInteger(this.toInt(obj.v)))
-                            {
-                                this.wr("validateSysObjVal: Error: value is not an int value: " + obj.v + ", type: " + obj.type);
-                                return false;
-                            }
-                            else
-                            {
-                                obj.v = this.toInt(obj.v);
-                            }
-                        }
-                        else if (obj.type.Equals("float"))
-                        {
-                            if (!this.isFloat(this.toFloat(obj.v)))
-                            {
-                                this.wr("validateSysObjVal: Error: value is not a float value: " + obj.v + ", type: " + obj.type);
-                                return false;
-                            }
-                            else
-                            {
-                                obj.v = this.toFloat(obj.v);
-                            }
-                        }
-                        else if (obj.type.Equals("string"))
-                        {
-                            if (!this.isString(this.toStr(obj.v)))
-                            {
-                                this.wr("validateSysObjVal: Error: value is not a string value: " + obj.v + ", type: " + obj.type);
-                                return false;
-                            }
-                            else
-                            {
-                                obj.v = this.toStr(obj.v);
-                            }
-                        }
-                        else if (obj.type.Equals("bool"))
-                        {
-                            if (!this.isBool(this.toBool(obj.v)))
-                            {
-                                this.wr("validateSysObjVal: Error: value is not a boolean value: " + obj.v + ", type: " + obj.type);
-                                return false;
-                            }
-                            else
-                            {
-                                obj.v = this.toBool(obj.v);
-                            }
-                        }
-                        else
-                        {
-                            this.wr("validateSysObjVal: Error: unknown object type: " + obj.v + ", type: " + obj.type);
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        ArrayList tmpA = this.toArray(obj.v);
-                        int arrayLenActual = tmpA.Count;
-                        if (arrayLenActual != arrayLen)
-                        {
-                            this.wr("validateSysObjVal: Error: array length mismatch: " + obj.v + ", type: " + obj.type);
-                            return false;
-                        }
-
-                        //array data types
-                        if (obj.type.Equals("int[]"))
-                        {
-                            if (!this.isArray(obj.v))
-                            {
-                                this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
-                                return false;
-                            }
-                            else
-                            {
-                                for (int i = 0; i < arrayLenActual; i++)
-                                {
-                                    JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
-                                    if (!ltmp.val.type.Equals("int"))
-                                    {
-                                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'int' but found '" + ltmp.val.type + "'");
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                        else if (obj.type.Equals("float[]"))
-                        {
-                            if (!this.isArray(obj.v))
-                            {
-                                this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
-                                return false;
-                            }
-                            else
-                            {
-                                for (int i = 0; i < arrayLenActual; i++)
-                                {
-                                    JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
-                                    if (!ltmp.val.type.Equals("float"))
-                                    {
-                                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'float' but found '" + ltmp.val.type + "'");
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                        else if (obj.type.Equals("string[]"))
-                        {
-                            if (!this.isArray(obj.v))
-                            {
-                                this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
-                                return false;
-                            }
-                            else
-                            {
-                                for (int i = 0; i < arrayLenActual; i++)
-                                {
-                                    JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
-                                    if (!ltmp.val.type.Equals("string"))
-                                    {
-                                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'string' but found '" + ltmp.val.type + "'");
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                        else if (obj.type.Equals("bool[]"))
-                        {
-                            if (!this.isArray(obj.v))
-                            {
-                                this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
-                                return false;
-                            }
-                            else
-                            {
-                                for (int i = 0; i < arrayLenActual; i++)
-                                {
-                                    JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
-                                    if (!ltmp.val.type.Equals("bool"))
-                                    {
-                                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'bool' but found '" + ltmp.val.type + "'");
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            this.wr("validateSysObjVal: Error: unknown array object type: " + obj.v + ", type: " + obj.type);
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjRef
-        * Desc: Validates if the given object is a valid ref sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-             {
-                "sys": "ref",
-                "val": {val}
-             }  
-          -!>(with value like #.vars.tmp1 or $.vars.tmp1)
-         */
-        public bool validateSysObjRef(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            //this.wr("validateSysObjRef: Found sys: " + sysType);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("ref")) && this.validateProperties(obj, new string[] { "sys", "val" }))
-            {
-                if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val))
-                {
-                    //this.wr("validateSysObjRef: Error: could not validate val object: ");// + this.validateSysObjVal(obj) + ", " + this.isSysObjVal(obj.val));
-                    return false;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateSysObjReturn
-        * Desc: Validates if the given object is a valid return sys object.
-        * Arg1: obj(sys obj to check)
-        * Returns: {false | true}
-        * Struct: <!-  
-             {
-                "sys": "return",
-                "val": {val}
-             }  
-          -!>
-         */
-        public bool validateSysObjReturn(JsonObjSysBase obj)
-        {
-            string sysType = this.getSysObjType(obj);
-            if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.Equals("return")) && this.validateProperties(obj, new string[] { "sys", "val" }))
-            {
-                if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val))
-                {
-                    return false;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        /**
-        * Name: validateProperties
-        * Desc: Validates if the given object has each of the array elements specified in req.
-        * Arg1: obj(sys obj to check)
-        * Arg2: req(array of attribute name to check for)
-        * Returns: {false | true}
-         */
-        public bool validateProperties(JsonObjSysBase obj, string[] req)
-        {
-            FieldInfo fld = null;
-            for (int i = 0; i < req.Length; i++)
-            {
-                try
-                {
-                    fld = obj.GetType().GetField(req[i]);
-                    if (fld == null)
-                    {
-                        this.wr("Field '" + req[i] + "' is null");
-                        return false;
-                    }
-
-                }
-                catch (Exception e)
-                {
-                    Logger.wrlErr(e.ToString());
-                    return false;
-                }
-            }
-            return true;
-        }
 
         /////////////////////////PROCESS METHODS
         /**
-        * Name: processRef
-        * Desc: Processes a class var or func var or arg reference string.
-        * Arg1: objRef(string ref encoding)
+        * Name: processRef 
+        * Desc: Processes a class var or func var or arg reference string. 
+        * Arg1: objRef(string ref encoding) 
         * Arg2: func(func obj, sys=func)
         * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
-         */
+        */
         public JsonObjSysBase processRef(JsonObjSysBase objRef, JsonObjSysBase func)
         {
             string path = null;
             string[] vls = null;
             JsonObjSysBase fnd = null;
             JsonObjSysBase prog = this.program;
+
+            //this.wr("OBJ REF");
+            //this.wrObj(objRef);        
 
             if (!this.isSysObjRef(objRef))
             {
@@ -2462,10 +2668,29 @@ namespace com.middlemind.JsonPL
                 return null;
             }
 
-            //this.wr("OBJ REF");
-            //this.wrObj(objRef);
-
             path = (objRef.val.v + "");
+            if (path.ToCharArray()[0] == '[')
+            {
+                string nc = path.Substring(1, path.Length - 2);
+
+                JsonObjSysBase tmp = new JsonObjSysBase();
+                tmp.sys = "ref";
+                tmp.val = new JsonObjSysBase();
+                tmp.val.sys = "val";
+                tmp.val.type = "string";
+                tmp.val.v = nc;
+
+                tmp = this.processRef(tmp, func);
+                if (tmp != null && tmp.val.type.Equals("string"))
+                {
+                    path = this.toStr(tmp.val.v);
+                }
+                else
+                {
+                    this.wr("processRef: Error: could not lookup object, for ref path: " + path);
+                }
+            }
+
             //this.wr("===============================================Found path: " + path);
             vls = path.Split(".");
 
@@ -2475,6 +2700,7 @@ namespace com.middlemind.JsonPL
             int obrk = 0;
             for (int k = 0; k < vls.Length; k++)
             {
+                //this.wr("___________________________________:" + vls[k]);
                 if (inDynRef && vls[k].IndexOf("]") != -1)
                 {
                     obrk--;
@@ -2524,6 +2750,7 @@ namespace com.middlemind.JsonPL
                 if (nvls[k] != null)
                 {
                     vls[k] = nvls[k];
+                    //this.wr("___________________________________:::" + vls[k]);
                 }
             }
 
@@ -2560,6 +2787,7 @@ namespace com.middlemind.JsonPL
                     else
                     {
                         this.wr("processRef: Error: could not find correct the ref, for source, " + c);
+                        return null;
                     }
                 }
                 else if (!foundType)
@@ -2575,6 +2803,7 @@ namespace com.middlemind.JsonPL
                         else
                         {
                             this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFunc);
+                            return null;
                         }
                         //function
                     }
@@ -2593,6 +2822,7 @@ namespace com.middlemind.JsonPL
                         else
                         {
                             this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFunc);
+                            return null;
                         }
                     }
                 }
@@ -2613,17 +2843,20 @@ namespace com.middlemind.JsonPL
                         tmp.val.v = nc;
 
                         tmp = this.processRef(tmp, func);
-                        if (tmp.val.type.Equals("string"))
+                        if (tmp != null && tmp.val.type.Equals("string"))
                         {
                             name = this.toStr(tmp.val.v + "");
                         }
                         else
                         {
                             this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                            return null;
                         }
                     }
 
                     //this.wr("processRef: looking for name: " + name);
+                    //this.wrObj(func.args);
+
                     if (!isFunc)
                     {
                         //class find name            
@@ -2634,6 +2867,7 @@ namespace com.middlemind.JsonPL
                         else
                         {
                             this.wr("processRef: Error: could not find, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                            return null;
                         }
                         //function
                     }
@@ -2650,18 +2884,23 @@ namespace com.middlemind.JsonPL
                         }
                     }
 
+                    //this.wr("CCC ");
+                    //this.wrObj(fnd);                
+
                     if (fnd != null)
                     {
                         type = fnd.val.type;
+                        foundName = true;
                     }
                     else
                     {
                         this.wr("processRef: Error: could not find an object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                        return null;
                     }
                 }
                 else if (!foundIndex)
                 {
-                    idx = toInt(c);
+                    idx = this.toInt(c);
                     JsonObjSysBase tmp = null;
                     //lookup use of string var here
                     if (c.IndexOf("[") == 0)
@@ -2675,30 +2914,96 @@ namespace com.middlemind.JsonPL
                         tmp.val.v = nc;
 
                         tmp = this.processRef(tmp, func);
-                        if (tmp.val.type.Equals("int"))
+                        if (tmp != null && tmp.val.type.Equals("int"))
                         {
                             idx = this.toInt(tmp.val.v + "");
                         }
                         else
                         {
                             this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                            return null;
                         }
                     }
 
                     if (this.isSysObjValArray(fnd.val))
                     {
-                        fnd = (JsonObjSysBase)(this.toArray(fnd.val.v)[idx]);
+                        fnd = (JsonObjSysBase)(this.toArray(fnd.val.v))[idx];
+                        foundIndex = true;
                     }
                     else
                     {
                         this.wr("processRef: Error: index entry is only for vars/args of type array, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                        return null;
                     }
                 }
             }
+            //this.wr("processRef: exiting...");
+
+            if (fnd != null)
+            {
+                if (this.isArray(fnd.val.v) == false)
+                {
+                    if ((fnd.val.v + "").IndexOf("$") == -1 && (fnd.val.v + "").IndexOf("#") == -1)
+                    {
+                        if (fnd.val.type.Equals("int"))
+                        {
+                            fnd.val.v = this.toInt(fnd.val.v);
+                        }
+                        else if (fnd.val.type.Equals("float"))
+                        {
+                            fnd.val.v = this.toFloat(fnd.val.v);
+                        }
+                        else if (fnd.val.type.Equals("string"))
+                        {
+                            fnd.val.v = this.toStr(fnd.val.v);
+                        }
+                        else if (fnd.val.type.Equals("bool"))
+                        {
+                            fnd.val.v = this.toBool(fnd.val.v);
+                        }
+                        fnd.val.v = this.toStr(fnd.val.v);
+                    }
+                }
+                else
+                {
+                    fnd.val.v = this.toArray(fnd.val.v);
+                    List<JsonObjSysBase> al = (List<JsonObjSysBase>)fnd.val.v;
+                    for (int z = 0; z < al.Count; z++)
+                    {
+                        JsonObjSysBase nd = al[z];
+                        if ((nd.val.v + "").IndexOf("$") == -1 && (nd.val.v + "").IndexOf("#") == -1)
+                        {
+                            if (nd.val.type.Equals("int"))
+                            {
+                                nd.val.v = this.toInt(nd.val.v);
+                            }
+                            else if (nd.val.type.Equals("float"))
+                            {
+                                nd.val.v = this.toFloat(nd.val.v);
+                            }
+                            else if (nd.val.type.Equals("string"))
+                            {
+                                nd.val.v = this.toStr(nd.val.v);
+                            }
+                            else if (nd.val.type.Equals("bool"))
+                            {
+                                nd.val.v = this.toBool(nd.val.v);
+                            }
+                            nd.val.v = this.toStr(nd.val.v);
+                        }
+                    }
+                }
+            }
+
             return fnd;
         }
 
-        //TODO
+        /**
+        * Name: toBoolInt
+        * Desc: Converts the boolean value v to an integer representation.
+        * Arg1: v(the value to convert)
+        * Returns: (0 | 1)
+        */
         public int toBoolInt(object v)
         {
             string vb = v + "";
@@ -2721,62 +3026,96 @@ namespace com.middlemind.JsonPL
             }
         }
 
-        //TODO
+        /**
+        * Name: toInt
+        * Desc: Converts the value v to an integer representation.
+        * Arg1: v(the value to convert)
+        * Returns: (the int value of v)
+        */
         public int toInt(object v)
         {
-            return int.Parse(v + "");
+            string s = this.toStr(v);
+            if (s.IndexOf(".") != -1)
+            {
+                s = this.toStr((int)float.Parse(s));
+            }
+            return int.Parse(s + "");
         }
 
-        //TODO
+        /**
+        * Name: toFloat
+        * Desc: Converts the value v to a float representation.
+        * Arg1: v(the value to convert)
+        * Returns: (the float value of v)
+        */
         public float toFloat(object v)
         {
             return float.Parse(v + "");
         }
 
-        //TODO
+        /**
+        * Name: toStr
+        * Desc: Converts the value v to a string representation.
+        * Arg1: v(the value to convert)
+        * Returns: (the string value of v)
+        */
         public string toStr(object v)
         {
-            return (v + "");
+            string ret = (v + "");
+            if (ret == "True")
+            {
+                ret = "1";
+            }
+            else if (ret == "False")
+            {
+                return "0";
+            }
+            return ret;
         }
 
-        //TODO
-        public ArrayList toArray(Object v)
+        /**
+        * Name: toArray
+        * Desc: Converts the value v to an array representation.
+        * Arg1: v(the value to convert)
+        * Returns: (the array value of v)
+        */
+        public List<JsonObjSysBase> toArray(object v)
         {
+            bool bb = (v is JArray);
+            this.wr("-------------------------" + this.isArray(v) + ", " + bb);
             if (this.isArray(v))
             {
                 //special case array comes in from JSON ready incorrectly
                 if (v is JArray)
                 {
                     JArray jar = (JArray)v;
-                    ArrayList al = new ArrayList();
+                    List<JsonObjSysBase> al = new List<JsonObjSysBase>();
                     for(int i = 0; i < jar.Count; i++)
                     {
-                        JsonObjSysBase jtmp = jar[i].ToObject<JsonObjSysBase>();
-                        if (this.isArray(v))
-                        {
-                            al.Add(this.toArray(v));
-                        }
-                        else
-                        {
-                            al.Add(jtmp);
-                        }
+                        JsonObjSysBase jtmp = jar[i].ToObject<JsonObjSysBase>();                     
+                        al.Add(jtmp);
                     }
                     return al;
                 }
                 else
                 {
-                    return (ArrayList)v;
+                    return (List<JsonObjSysBase>)v;
                 }
             }
             else
             {
-                ArrayList ret = new ArrayList();
-                ret.Add(v);
+                List<JsonObjSysBase> ret = new List<JsonObjSysBase>();
+                ret.Add((JsonObjSysBase)v);
                 return ret;
             }
         }
 
-        //TODO
+        /**
+        * Name: toBool
+        * Desc: Converts the value v to a boolean representation.
+        * Arg1: v(the value to convert)
+        * Returns: (the bool value of v)
+        */
         public bool toBool(object v)
         {
             string vb = v + "";
@@ -2829,9 +3168,6 @@ namespace com.middlemind.JsonPL
             right = objIf.right;
             thn = objIf.thn;
             els = objIf.els;
-
-            //Logger.wrl("===============================ThnLineCount: " + thn.Count);
-            //Logger.wrl("===============================ElsLineCount: " + els.Count);
 
             if (this.isSysObjConst(left))
             {
@@ -3204,18 +3540,14 @@ namespace com.middlemind.JsonPL
                     return null;
                 }
 
-                //Logger.wrl("===============================Ret.v: " + ret.v + " ToBool: " + this.toBool(ret.v));
-
                 if (this.toBool((ret.v + "")) == true)
                 {
                     //run thn lines
-                    //Logger.wrl("===============================Running then lines");
                     ret3 = this.processIfForLines(thn, func);
                 }
                 else
                 {
                     //run els lines
-                    //Logger.wrl("===============================Running els lines");
                     ret3 = this.processIfForLines(els, func);
                 }
 
@@ -3532,7 +3864,6 @@ namespace com.middlemind.JsonPL
             {
                 this.wr("processAsgn: Error: argument objRef is not a asgn obj");
                 return null;
-
             }
             else if (!this.isSysObjFunc(func))
             {
@@ -3647,9 +3978,9 @@ namespace com.middlemind.JsonPL
                 else if (leftIsArray && rightIsArray && !rightIsRef)
                 {
                     //left is array ref, right is array const, copy value
-                    left.val.v = new ArrayList();
-                    ArrayList tmpA = this.toArray(left.val.v);
-                    ArrayList tmpB = this.toArray(right.val.v);
+                    left.val.v = new List<JsonObjSysBase>();
+                    List<JsonObjSysBase> tmpA = this.toArray(left.val.v);
+                    List<JsonObjSysBase> tmpB = this.toArray(right.val.v);
                     for (int i = 0; i < tmpB.Count; i++)
                     {
                         tmpA.Add(tmpB[i]);
@@ -3662,6 +3993,8 @@ namespace com.middlemind.JsonPL
                 {
                     this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
                     ret.val.v = "false";
+                    this.lastAsgnValue = this.cloneJsonObj(left);
+                    this.lastAsgnReturn = ret;
                     return ret;
                 }
             }
@@ -3669,6 +4002,8 @@ namespace com.middlemind.JsonPL
             {
                 this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
                 ret.val.v = "false";
+                this.lastAsgnValue = this.cloneJsonObj(left);
+                this.lastAsgnReturn = ret;
                 return ret;
             }
         }
@@ -3690,7 +4025,6 @@ namespace com.middlemind.JsonPL
             {
                 this.wr("processBex: Error: argument objRef is not a asgn obj");
                 return null;
-
             }
             else if (!this.isSysObjFunc(func))
             {
@@ -4124,7 +4458,6 @@ namespace com.middlemind.JsonPL
             {
                 this.wr("processCall: Error: argument objRef is not a call obj");
                 return null;
-
             }
             else if (!this.isSysObjFunc(func))
             {
@@ -4157,29 +4490,56 @@ namespace com.middlemind.JsonPL
 
             if (funcArgs != null)
             {
-                if (args.Count == funcArgs.Count)
+                if (funcArgs == null || (funcArgs != null && args.Count == funcArgs.Count) || (funcArgs != null && funcArgs.Count == 0))
                 {
-                    for (int i = 0; i < args.Count; i++)
+                    if (funcArgs == null)
                     {
-                        if (!args[i].val.type.Equals(funcArgs[i].val.type))
+                        args = new List<JsonObjSysBase>();
+                    }
+                    else if (funcArgs.Count == 0)
+                    {
+                        for (int i = 0; i < args.Count; i++)
                         {
-                            this.wr("processCall: Error: type mismatch at argument index, " + i + ", func arg def: " + funcArgs[i].val.type + ", call arg: " + args[i].val.type);
-                            return null;
-                        }
-
-                        if (this.isSysObjRef(args[i]))
-                        {
-                            tmpArg = null;
-                            tmpArg = this.processRef(args[i], func);
-                            if (tmpArg != null)
+                            if (this.isSysObjRef(args[i]))
                             {
-                                args[i].val.v = tmpArg.val.v;
-                                args[i].name = funcArgs[i].name;
+                                tmpArg = null;
+                                tmpArg = this.processRef(args[i], func);
+                                if (tmpArg != null)
+                                {
+                                    args[i].val.v = tmpArg.val.v;
+                                }
+                                else
+                                {
+                                    this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
+                                    return null;
+                                }
                             }
-                            else
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < args.Count; i++)
+                        {
+                            if (!args[i].val.type.Equals(funcArgs[i].val.type))
                             {
-                                this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
+                                this.wr("processCall: Error: type mismatch at argument index, " + i + ", func arg def: " + funcArgs[i].val.type + ", call arg: " + args[i].val.type);
                                 return null;
+                            }
+
+                            if (this.isSysObjRef(args[i]))
+                            {
+                                tmpArg = null;
+                                tmpArg = this.processRef(args[i], func);
+                                if (tmpArg != null)
+                                {
+                                    args[i].val.v = tmpArg.val.v;
+                                    args[i].name = funcArgs[i].name;
+                                }
+                                else
+                                {
+                                    this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
+                                    return null;
+                                }
                             }
                         }
                     }
@@ -4193,29 +4553,59 @@ namespace com.middlemind.JsonPL
                             string lname = funcDef.fname;
                             if (lname.Equals("sysJob1"))
                             {
-                                lret = sysJob1();
+                                lret = this.sysJob1(args, func);
 
                             }
                             else if (lname.Equals("sysJob2"))
                             {
-                                lret = sysJob2();
+                                lret = this.sysJob2(args, func);
 
                             }
                             else if (lname.Equals("sysJob3"))
                             {
-                                lret = sysJob3();
+                                lret = this.sysJob3(args, func);
 
                             }
                             else if (lname.Equals("sysGetLastAsgnValue"))
                             {
-                                lret = lastAsgnValue;
+                                lret = this.lastAsgnValue;
+
+                            }
+                            else if (lname.Equals("sysGetLastExpReturn"))
+                            {
+                                lret = this.lastAsgnValue;
+
+                            }
+                            else if (lname.Equals("sysWr"))
+                            {
+                                lret = this.sysWr(args, func);
+
+                            }
+                            else if (lname.Equals("sysLen"))
+                            {
+                                lret = this.sysLen(args, func);
+
+                            }
+                            else if (lname.Equals("sysType"))
+                            {
+                                lret = this.sysType(args, func);
+
+                            }
+                            else if (lname.Equals("sysGetRef"))
+                            {
+                                lret = this.sysGetRef(args, func);
+
+                            }
+                            else if (lname.Equals("sysGetRefStr"))
+                            {
+                                lret = this.sysGetRefStr(args, func);
 
                             }
                             else
                             {
                                 if (this.systemFunctionHandler != null)
                                 {
-                                    lret = this.systemFunctionHandler.call(funcDef.fname, args, this);
+                                    lret = this.systemFunctionHandler.call(funcDef.fname, args, this, func);
                                     err = false;
                                 }
                                 else
@@ -4259,6 +4649,7 @@ namespace com.middlemind.JsonPL
 
                         //this.wr("RET_DEF");
                         //this.wrObj(funcDef.ret_def);
+
                         if (!ret.val.type.Equals(funcDef.ret_def.type))
                         {
                             this.wr("processCall: Error: function return type mismatch, return type " + ret.val.type + " expected " + funcDef.ret_def.type);
@@ -4516,7 +4907,7 @@ namespace com.middlemind.JsonPL
          * has any replacement directives defined. Arg1: src(the JSON text to check)
          * Returns: {true | false}
          */
-        public bool hasReplDirectives(String src)
+        public bool hasReplDirectives(string src)
         {
             if (src == null)
             {

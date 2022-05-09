@@ -122,7 +122,7 @@ jsonPlState.prototype.getConst = function (type, val) {
  * Name: getRef
  * Desc: A method to quickly access a ref object.
  * Arg1: type(a valid type string)
- * Arg2: val(a value object)
+ * Arg2: val(a {val} object)
  * Returns: ref(a {ref} object)
  */
 jsonPlState.prototype.getRef = function (type, val) {
@@ -417,6 +417,7 @@ jsonPlState.prototype.runProgram = function () {
       return null;
    }
 };
+
 
 /////////////////////////SEARCH METHODS
 /**
@@ -1340,7 +1341,7 @@ jsonPlState.prototype.validateSysObjVal = function (obj) {
             this.wr("validateSysObjVal: Error: array is missing length: " + obj.v + ", type: " + obj.type);
             return false;
          } else {
-            if (!this.isInteger(obj.len) && this.toInt(obj.len) >= 0) {
+            if (!this.isInteger(obj.len) || this.toInt(obj.len) < 0) {
                this.wr("validateSysObjVal: Error: array length is invalid: " + obj.v + ", type: " + obj.type + ", " + obj.len + ", " + this.isInteger(obj.len));
             } else {
                arrayLen = this.toInt(obj.len);
@@ -1520,6 +1521,7 @@ jsonPlState.prototype.validateProperties = function (obj, req) {
    }
    return true;
 };
+
 
 /////////////////////////UTILITY METHODS
 /**
@@ -1727,6 +1729,7 @@ jsonPlState.prototype.sysGetRef = function (args, func) {
    return ret;
 };
 
+
 /////////////////////////GENERIC OBJECT ID METHODS
 /**
  * Name: isObject
@@ -1846,9 +1849,8 @@ jsonPlState.prototype.isBool = function (arg) {
    }
 };
 
-/////////////////////////OBJECT ID METHODS
 
-//TODO: Continue review here
+/////////////////////////OBJECT ID METHODS
 /**
  * Name: isSysObjIf
  * Desc: Checks if the given object is an if object. 
@@ -2103,6 +2105,7 @@ jsonPlState.prototype.getSysObjType = function (obj) {
    }
 };
 
+
 /////////////////////////PROCESS METHODS
 /**
  * Name: processRef
@@ -2341,6 +2344,7 @@ jsonPlState.prototype.processRef = function (objRef, func) {
             fnd.val.v = this.toStr(fnd.val.v);
          }
       } else {
+         fnd.val.v = this.toArray(fnd.val.v);
          for(var z = 0; z < fnd.val.v.length; z++) {
             var nd = fnd.val.v[z];
             if((nd.val.v + "").indexOf("$") === -1 && (nd.val.v + "").indexOf("#") === -1) {
