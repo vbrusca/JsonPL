@@ -15,16 +15,16 @@ function jsonPlState() {
    this.lineNumCurrent = 0;
    this.lineNumPrev = 0;
    this.linNumNext = 0;
-   
+
    this.lastForReturn = null;
    this.lastIfReturn = null;
-   
-   this.lastBexReturn = null;   
+
+   this.lastBexReturn = null;
    this.lastExpReturn = null;
-   
+
    this.lastAsgnReturn = null;
    this.lastAsgnValue = null;
-   
+
    this.lastProgramReturn = null;
    this.program = {};
    this.LOGGING = true;
@@ -38,25 +38,25 @@ function jsonPlState() {
  * Arg2: func(the {func} this system function is called from) 
  * Returns: const(a {const} bool object) 
  */
-jsonPlState.prototype.sysWr = function(args, func) {
+jsonPlState.prototype.sysWr = function (args, func) {
    var len = args.length;
    var i = 0;
    var s = "";
-   for(; i < len; i++) {
+   for (; i < len; i++) {
       s += this.toStr(args[i].val.v);
    }
-   this.wr(s); 
+   this.wr(s);
 
    var ret = {};
    ret.sys = "val";
    ret.type = "bool";
    ret.v = "true";
-   
+
    var ret2 = {};
    ret2.sys = "const";
-   ret2.val = ret;   
-   ret = ret2;   
-   
+   ret2.val = ret;
+   ret = ret2;
+
    return ret;
 };
 
@@ -65,7 +65,7 @@ jsonPlState.prototype.sysWr = function(args, func) {
  * Desc: A system level method to access the last asgn value object.
  * Returns: const(a {const} bool object)
  */
-jsonPlState.prototype.sysGetLastAsgnValue = function(args, func) {   
+jsonPlState.prototype.sysGetLastAsgnValue = function (args, func) {
    return this.lastAsgnValue;
 };
 
@@ -74,7 +74,7 @@ jsonPlState.prototype.sysGetLastAsgnValue = function(args, func) {
  * Desc: A system level method to access the last exp return object.
  * Returns: const(a {const} bool object)
  */
-jsonPlState.prototype.sysGetLastExpReturn = function(args, func) {   
+jsonPlState.prototype.sysGetLastExpReturn = function (args, func) {
    return this.lastExpReturn;
 };
 
@@ -83,18 +83,18 @@ jsonPlState.prototype.sysGetLastExpReturn = function(args, func) {
  * Desc: A method to quickly access a constant bool value object.
  * Returns: const(a {const} bool object)
  */
-jsonPlState.prototype.getConstBool = function() {
+jsonPlState.prototype.getConstBool = function () {
    var ret = {};
    ret.sys = "val";
    ret.type = "bool";
    ret.v = "false";
-   
+
    var ret2 = {};
    ret2.sys = "const";
-   ret2.val = ret;   
-   ret = ret2;   
-   
-   return ret; 
+   ret2.val = ret;
+   ret = ret2;
+
+   return ret;
 };
 
 /**
@@ -104,18 +104,18 @@ jsonPlState.prototype.getConstBool = function() {
  * Arg2: val(a value object)
  * Returns: const(a {const} object)
  */
-jsonPlState.prototype.getConst = function(type, val) {
+jsonPlState.prototype.getConst = function (type, val) {
    var ret = {};
    ret.sys = "val";
    ret.type = type;
    ret.v = val;
-   
+
    var ret2 = {};
    ret2.sys = "const";
-   ret2.val = ret;   
-   ret = ret2;   
-   
-   return ret; 
+   ret2.val = ret;
+   ret = ret2;
+
+   return ret;
 };
 
 /**
@@ -125,18 +125,18 @@ jsonPlState.prototype.getConst = function(type, val) {
  * Arg2: val(a value object)
  * Returns: ref(a {ref} object)
  */
- jsonPlState.prototype.getRef = function(type, val) {
+jsonPlState.prototype.getRef = function (type, val) {
    var ret = {};
    ret.sys = "val";
    ret.type = type;
    ret.v = val;
-   
+
    var ret2 = {};
    ret2.sys = "ref";
-   ret2.val = ret;   
-   ret = ret2;   
-   
-   return ret; 
+   ret2.val = ret;
+   ret = ret2;
+
+   return ret;
 };
 
 /**
@@ -146,7 +146,7 @@ jsonPlState.prototype.getConst = function(type, val) {
  * Arg2: func(the {func} this system function is called from) 
  * Returns: const(a {const} bool value)
  */
-jsonPlState.prototype.sysJob1 = function(args, func) {
+jsonPlState.prototype.sysJob1 = function (args, func) {
    this.wr("sysJob1");
    var ret = this.getConstBool();
    ret.val.v = "true";
@@ -160,7 +160,7 @@ jsonPlState.prototype.sysJob1 = function(args, func) {
  * Arg2: func(the {func} this system function is called from) 
  * Returns: const(a {const} bool value)
  */
-jsonPlState.prototype.sysJob2 = function(args, func) {
+jsonPlState.prototype.sysJob2 = function (args, func) {
    this.wr("sysJob2");
    var ret = this.getConstBool();
    ret.val.v = "true";
@@ -174,7 +174,7 @@ jsonPlState.prototype.sysJob2 = function(args, func) {
  * Arg2: func(the {func} this system function is called from) 
  * Returns: const(a {const} bool value)
  */
-jsonPlState.prototype.sysJob3 = function(args, func) {
+jsonPlState.prototype.sysJob3 = function (args, func) {
    this.wr("sysJob3");
    var ret = this.getConstBool();
    ret.val.v = "true";
@@ -185,35 +185,35 @@ jsonPlState.prototype.sysJob3 = function(args, func) {
  * Name: system
  * Desc: Define system function signatures.
  */
-jsonPlState.prototype.system = {   
-   "functions":[
+jsonPlState.prototype.system = {
+   "functions": [
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::getLastExpReturn",
          "fname": "sysGetLastExpReturn",
          "args": [
          ]
-      },   
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::getLastAsgnValue",
          "fname": "sysGetLastAsgnValue",
          "args": [
          ]
-      },   
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::wr",
          "fname": "sysWr",
-         "args": [   
+         "args": [
 
          ]
       },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::wrInt",
          "fname": "sysWr",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "s",
@@ -226,10 +226,10 @@ jsonPlState.prototype.system = {
          ]
       },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::wrFloat",
          "fname": "sysWr",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "s",
@@ -242,10 +242,10 @@ jsonPlState.prototype.system = {
          ]
       },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::wrStr",
          "fname": "sysWr",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "s",
@@ -258,10 +258,10 @@ jsonPlState.prototype.system = {
          ]
       },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::wrBool",
          "fname": "sysWr",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "s",
@@ -272,30 +272,30 @@ jsonPlState.prototype.system = {
                }
             }
          ]
-      },      
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::job1",
          "fname": "sysJob1",
          "args": []
       },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::job2",
          "fname": "sysJob2",
          "args": []
       },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::job3",
          "fname": "sysJob3",
          "args": []
-      },   
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::len",
          "fname": "sysLen",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "s",
@@ -306,12 +306,12 @@ jsonPlState.prototype.system = {
                }
             }
          ]
-      },   
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::type",
          "fname": "sysType",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "s",
@@ -322,12 +322,12 @@ jsonPlState.prototype.system = {
                }
             }
          ]
-      },   
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::getRef",
          "fname": "sysGetRef",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "name",
@@ -354,14 +354,14 @@ jsonPlState.prototype.system = {
                   "type": "string",
                   "v": ""
                }
-            }            
+            }
          ]
-      },   
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::getRefStr",
          "fname": "sysGetRefStr",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "name",
@@ -388,7 +388,7 @@ jsonPlState.prototype.system = {
                   "type": "string",
                   "v": ""
                }
-            }            
+            }
          ]
       }
    ]
@@ -399,13 +399,13 @@ jsonPlState.prototype.system = {
  * Desc: Executes the current program and returns the result.
  * Returns: ret(some {const}, {ref} object)
  */
-jsonPlState.prototype.runProgram = function() {
-   if(this.validateSysObjClass(this.program)) {
+jsonPlState.prototype.runProgram = function () {
+   if (this.validateSysObjClass(this.program)) {
       var callObj = this.program.call;
       var callFuncName = callObj.name;
 
       this.wr("runProgram: Call: " + callFuncName);
-      var callFunc = this.findFunc(callFuncName);   
+      var callFunc = this.findFunc(callFuncName);
       var ret = this.processCall(callObj, callFunc);
       this.lastProgramReturn = ret;
 
@@ -426,7 +426,7 @@ jsonPlState.prototype.runProgram = function() {
  * Arg2: obj(a {func} object to search args for)
  * Returns: ret(null or {arg} object)
  */
-jsonPlState.prototype.findArg = function(name, obj) {
+jsonPlState.prototype.findArg = function (name, obj) {
    for (var i = 0; i < obj.args.length; i++) {
       if (obj.args[i].name === name) {
          return obj.args[i];
@@ -442,7 +442,7 @@ jsonPlState.prototype.findArg = function(name, obj) {
  * Arg2: obj(a {func} or {class} object to search) 
  * Returns: ret(null, {val} or {arg} object)
  */
-jsonPlState.prototype.findVar = function(name, obj) {
+jsonPlState.prototype.findVar = function (name, obj) {
    for (var i = 0; i < obj.vars.length; i++) {
       if (obj.vars[i].name === name) {
          return obj.vars[i];
@@ -457,7 +457,7 @@ jsonPlState.prototype.findVar = function(name, obj) {
  * Arg1: name(string to find)
  * Returns: ret(null or {func} object)
  */
-jsonPlState.prototype.findFunc = function(name) {
+jsonPlState.prototype.findFunc = function (name) {
    var prog = this.program;
    for (var i = 0; i < prog.funcs.length; i++) {
       if (prog.funcs[i].name === name) {
@@ -473,7 +473,7 @@ jsonPlState.prototype.findFunc = function(name) {
  * Arg1: name(string to find)
  * Returns: ret(null or {func} object)
  */
-jsonPlState.prototype.findSysFunc = function(name) {
+jsonPlState.prototype.findSysFunc = function (name) {
    var prog = this;
    for (var i = 0; i < prog.system.functions.length; i++) {
       if (prog.system.functions[i].name === name) {
@@ -499,36 +499,36 @@ jsonPlState.prototype.findSysFunc = function(name) {
  *    "els": [asgn | if | for | call | return]
  * }
  */
-jsonPlState.prototype.validateSysObjIf = function(obj) {
-   if(this.isSysObjIf(obj) && this.validateProperties(obj, ["sys", "left", "op", "right", "thn", "els"])) {
+jsonPlState.prototype.validateSysObjIf = function (obj) {
+   if (this.isSysObjIf(obj) && this.validateProperties(obj, ["sys", "left", "op", "right", "thn", "els"])) {
       var tobj = null;
-      if(obj.left !== null) {
+      if (obj.left !== null) {
          tobj = obj.left;
-         if(this.isSysObjRef(tobj)) {
-            if(!this.validateSysObjRef(tobj)) {
+         if (this.isSysObjRef(tobj)) {
+            if (!this.validateSysObjRef(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate left obj as ref");
                return false;
             }
-         } else if(this.isSysObjConst(tobj)) {
-            if(!this.validateSysObjConst(tobj)) {
+         } else if (this.isSysObjConst(tobj)) {
+            if (!this.validateSysObjConst(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate left obj as const");
                return false;
             }
-         } else if(this.isSysObjExp(tobj)) {
-            if(!this.validateSysObjExp(tobj)) {
+         } else if (this.isSysObjExp(tobj)) {
+            if (!this.validateSysObjExp(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate left obj as exp");
                return false;
             }
-         } else if(this.isSysObjBex(tobj)) {
-            if(!this.validateSysObjBex(tobj)) {
+         } else if (this.isSysObjBex(tobj)) {
+            if (!this.validateSysObjBex(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate left obj as bex");
                return false;
             }
-         } else if(this.isSysObjCall(tobj)) {
-            if(!this.validateSysObjCall(tobj)) {
+         } else if (this.isSysObjCall(tobj)) {
+            if (!this.validateSysObjCall(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate left obj as call");
                return false;
-            }            
+            }
          } else {
             this.wr("validateSysObjFor: Error: could not validate obj as left");
             return false;
@@ -538,14 +538,14 @@ jsonPlState.prototype.validateSysObjIf = function(obj) {
          return false;
       }
 
-     if(obj.op !== null) {
+      if (obj.op !== null) {
          tobj = obj.op;
-         if(this.isSysObjOp(tobj)) {
-            if(!this.validateSysObjOp(tobj)) {
+         if (this.isSysObjOp(tobj)) {
+            if (!this.validateSysObjOp(tobj)) {
                return false;
-            } else if(tobj.type !== 'bex') {
+            } else if (tobj.type !== 'bex') {
                return false;
-            } else if(!(tobj.v === "==" || tobj.v === "!=" || tobj.v === "<" || tobj.v === ">" || tobj.v === "<=" || tobj.v === ">=")) {
+            } else if (!(tobj.v === "==" || tobj.v === "!=" || tobj.v === "<" || tobj.v === ">" || tobj.v === "<=" || tobj.v === ">=")) {
                return false;
             }
          } else {
@@ -553,35 +553,35 @@ jsonPlState.prototype.validateSysObjIf = function(obj) {
          }
       } else {
          return false;
-      } 
+      }
 
-      if(obj.right !== null) {
+      if (obj.right !== null) {
          tobj = obj.right;
-         if(this.isSysObjRef(tobj)) {
-            if(!this.validateSysObjRef(tobj)) {
+         if (this.isSysObjRef(tobj)) {
+            if (!this.validateSysObjRef(tobj)) {
                this.wr("validateSysObjIf: Error: could not validate right obj as ref");
                return false;
             }
-         } else if(this.isSysObjConst(tobj)) {
-            if(!this.validateSysObjConst(tobj)) {
+         } else if (this.isSysObjConst(tobj)) {
+            if (!this.validateSysObjConst(tobj)) {
                this.wr("validateSysObjIf: Error: could not validate right obj as const");
                return false;
             }
-         } else if(this.isSysObjExp(tobj)) {
-            if(!this.validateSysObjExp(tobj)) {
+         } else if (this.isSysObjExp(tobj)) {
+            if (!this.validateSysObjExp(tobj)) {
                this.wr("validateSysObjIf: Error: could not validate right obj as exp");
                return false;
             }
-         } else if(this.isSysObjBex(tobj)) {
-            if(!this.validateSysObjBex(tobj)) {
+         } else if (this.isSysObjBex(tobj)) {
+            if (!this.validateSysObjBex(tobj)) {
                this.wr("validateSysObjIf: Error: could not validate right obj as bex");
                return false;
             }
-         } else if(this.isSysObjCall(tobj)) {
-            if(!this.validateSysObjCall(tobj)) {
+         } else if (this.isSysObjCall(tobj)) {
+            if (!this.validateSysObjCall(tobj)) {
                this.wr("validateSysObjIf: Error: could not validate right obj as call");
                return false;
-            }            
+            }
          } else {
             this.wr("validateSysObjIf: Error: could not validate obj as right");
             return false;
@@ -591,22 +591,22 @@ jsonPlState.prototype.validateSysObjIf = function(obj) {
          return false;
       }
 
-      if(obj.thn !== null && this.isArray(obj.thn)) {
+      if (obj.thn !== null && this.isArray(obj.thn)) {
          tobj = obj.thn;
          var len = tobj.length;
-         for(var i = 0; i < len; i++) {
-            if(!this.validateSysObjFuncLine(tobj[i])) {
+         for (var i = 0; i < len; i++) {
+            if (!this.validateSysObjFuncLine(tobj[i])) {
                this.wr("validateSysObjIf: Error: could not validate obj as then, line: " + i);
                return false;
             }
          }
       }
 
-      if(obj.els !== null && this.isArray(obj.els)) {
+      if (obj.els !== null && this.isArray(obj.els)) {
          tobj = obj.els;
          var len = tobj.length;
-         for(var i = 0; i < len; i++) {
-            if(!this.validateSysObjFuncLine(tobj[i])) {
+         for (var i = 0; i < len; i++) {
+            if (!this.validateSysObjFuncLine(tobj[i])) {
                this.wr("validateSysObjIf: Error: could not validate obj as else, line: " + i);
                return false;
             }
@@ -632,36 +632,36 @@ jsonPlState.prototype.validateSysObjIf = function(obj) {
  *   "lines": [asgn | if | for | call | return]
  * }
  */
-jsonPlState.prototype.validateSysObjFor = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "for" && this.validateProperties(obj, ["sys", "start", "stop", "inc", "lines"])) {
+jsonPlState.prototype.validateSysObjFor = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "for" && this.validateProperties(obj, ["sys", "start", "stop", "inc", "lines"])) {
       var tobj = null;
-      if(obj.start !== null) {
+      if (obj.start !== null) {
          tobj = obj.start;
-         if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
-            if(!this.validateSysObjRef(tobj)) {
+         if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
+            if (!this.validateSysObjRef(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as ref");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
-            if(!this.validateSysObjConst(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
+            if (!this.validateSysObjConst(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as const");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
-            if(!this.validateSysObjExp(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
+            if (!this.validateSysObjExp(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as exp");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
-            if(!this.validateSysObjBex(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
+            if (!this.validateSysObjBex(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as bex");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
-            if(!this.validateSysObjCall(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if (!this.validateSysObjCall(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as call");
                return false;
-            }            
+            }
          } else {
             this.wr("validateSysObjFor: Error: could not validate obj as right");
             return false;
@@ -671,33 +671,33 @@ jsonPlState.prototype.validateSysObjFor = function(obj) {
          return false;
       }
 
-      if(obj.stop !== null) {
+      if (obj.stop !== null) {
          tobj = obj.stop;
-         if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
-            if(!this.validateSysObjRef(tobj)) {
+         if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
+            if (!this.validateSysObjRef(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as ref");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
-            if(!this.validateSysObjConst(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
+            if (!this.validateSysObjConst(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as const");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
-            if(!this.validateSysObjExp(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
+            if (!this.validateSysObjExp(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as exp");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
-            if(!this.validateSysObjBex(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
+            if (!this.validateSysObjBex(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as bex");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
-            if(!this.validateSysObjCall(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if (!this.validateSysObjCall(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as call");
                return false;
-            }            
+            }
          } else {
             this.wr("validateSysObjFor: Error: could not validate obj as right");
             return false;
@@ -706,34 +706,34 @@ jsonPlState.prototype.validateSysObjFor = function(obj) {
          this.wr("validateSysObjFor: Error: could not validate obj as right, null");
          return false;
       }
-      
-      if(obj.inc !== null) {
+
+      if (obj.inc !== null) {
          tobj = obj.inc;
-         if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
-            if(!this.validateSysObjRef(tobj)) {
+         if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
+            if (!this.validateSysObjRef(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as ref");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
-            if(!this.validateSysObjConst(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
+            if (!this.validateSysObjConst(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as const");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
-            if(!this.validateSysObjExp(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
+            if (!this.validateSysObjExp(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as exp");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
-            if(!this.validateSysObjBex(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
+            if (!this.validateSysObjBex(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as bex");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
-            if(!this.validateSysObjCall(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if (!this.validateSysObjCall(tobj)) {
                this.wr("validateSysObjFor: Error: could not validate right obj as call");
                return false;
-            }            
+            }
          } else {
             this.wr("validateSysObjFor: Error: could not validate obj as right");
             return false;
@@ -741,15 +741,15 @@ jsonPlState.prototype.validateSysObjFor = function(obj) {
       } else {
          this.wr("validateSysObjFor: Error: could not validate obj as right, null");
          return false;
-      }      
-      
-      for(var i = 0; i < obj.lines.length; i++) {
-         if(!this.validateSysObjFuncLine(obj.lines[i])) {
+      }
+
+      for (var i = 0; i < obj.lines.length; i++) {
+         if (!this.validateSysObjFuncLine(obj.lines[i])) {
             this.wr("validateSysObjFor: Error: could not validate obj as func, line: " + i);
             return false;
          }
-      }      
-      
+      }
+
       return true;
    }
    return false;
@@ -770,32 +770,32 @@ jsonPlState.prototype.validateSysObjFor = function(obj) {
  *   "ret": {val}
  * }
  */
-jsonPlState.prototype.validateSysObjClass = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "class" && this.validateProperties(obj, ["sys", "name", "vars", "funcs", "ret", "call"])) {
-      if(!this.validateSysObjVal(obj.ret)) {
+jsonPlState.prototype.validateSysObjClass = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "class" && this.validateProperties(obj, ["sys", "name", "vars", "funcs", "ret", "call"])) {
+      if (!this.validateSysObjVal(obj.ret)) {
          this.wr("validateSysObjClass: Error: could not validate obj as val");
          return false;
       }
-      
-      if(obj.call !== null && !this.validateSysObjCall(obj.call)) {
-         this.wr("validateSysObjClass: Error: could not validate obj as call");         
+
+      if (obj.call !== null && !this.validateSysObjCall(obj.call)) {
+         this.wr("validateSysObjClass: Error: could not validate obj as call");
          return false;
       }
-      
-      for(var i = 0; i < obj.vars.length; i++) {
-         if(!this.validateSysObjVar(obj.vars[i])) {
+
+      for (var i = 0; i < obj.vars.length; i++) {
+         if (!this.validateSysObjVar(obj.vars[i])) {
             this.wr("validateSysObjClass: Error: could not validate obj as var: " + obj.vars[i].name);
             return false;
          }
       }
-      
-      for(var i = 0; i < obj.funcs.length; i++) {
-         if(!this.validateSysObjFunc(obj.funcs[i])) {
+
+      for (var i = 0; i < obj.funcs.length; i++) {
+         if (!this.validateSysObjFunc(obj.funcs[i])) {
             this.wr("validateSysObjClass: Error: could not validate obj as func: " + obj.funcs[i].name);
             return false;
          }
       }
-      
+
       return true;
    }
    return false;
@@ -809,38 +809,38 @@ jsonPlState.prototype.validateSysObjClass = function(obj) {
  * Struct:
  * [asgn | for | if | return | call]
  */
-jsonPlState.prototype.validateSysObjFuncLine = function(obj) {
-   if(this.isSysObjFuncLine(obj)) {
-      if(this.getSysObjType(obj) === "asgn") {
-         if(!this.validateSysObjAsgn(obj)) {
+jsonPlState.prototype.validateSysObjFuncLine = function (obj) {
+   if (this.isSysObjFuncLine(obj)) {
+      if (this.getSysObjType(obj) === "asgn") {
+         if (!this.validateSysObjAsgn(obj)) {
             this.wr("validateSysObjFuncLine: Error: could not validate obj as asgn");
             return false;
          } else {
             return true;
          }
-      } else if(this.getSysObjType(obj) === "for") {
-         if(!this.validateSysObjFor(obj)) {
+      } else if (this.getSysObjType(obj) === "for") {
+         if (!this.validateSysObjFor(obj)) {
             this.wr("validateSysObjFuncLine: Error: could not validate obj as for");
             return false;
          } else {
             return true;
          }
-      } else if(this.getSysObjType(obj) === "if") {
-         if(!this.validateSysObjIf(obj)) {
+      } else if (this.getSysObjType(obj) === "if") {
+         if (!this.validateSysObjIf(obj)) {
             this.wr("validateSysObjFuncLine: Error: could not validate obj as if");
             return false;
          } else {
             return true;
          }
-      } else if(this.getSysObjType(obj) === "return") {
-         if(!this.validateSysObjReturn(obj)) {
+      } else if (this.getSysObjType(obj) === "return") {
+         if (!this.validateSysObjReturn(obj)) {
             this.wr("validateSysObjFuncLine: Error: could not validate obj as return");
             return false;
          } else {
             return true;
          }
-      } else if(this.getSysObjType(obj) === "call") {
-         if(!this.validateSysObjCall(obj)) {
+      } else if (this.getSysObjType(obj) === "call") {
+         if (!this.validateSysObjCall(obj)) {
             this.wr("validateSysObjFuncLine: Error: could not validate obj as call");
             return false;
          } else {
@@ -868,34 +868,34 @@ jsonPlState.prototype.validateSysObjFuncLine = function(obj) {
  *   "lines": [asgn | for | if | return | call]
  * }
  */
-jsonPlState.prototype.validateSysObjFunc = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "func" && this.validateProperties(obj, ["sys", "name", "args", "vars", "ret", "lines"])) {
-      if(!this.validateSysObjVal(obj.ret)) {
+jsonPlState.prototype.validateSysObjFunc = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "func" && this.validateProperties(obj, ["sys", "name", "args", "vars", "ret", "lines"])) {
+      if (!this.validateSysObjVal(obj.ret)) {
          this.wr("validateSysObjFunc: Error: could not validate obj as val");
          return false;
       }
-            
-      for(var i = 0; i < obj.vars.length; i++) {
-         if(!this.validateSysObjVar(obj.vars[i])) {
+
+      for (var i = 0; i < obj.vars.length; i++) {
+         if (!this.validateSysObjVar(obj.vars[i])) {
             this.wr("validateSysObjFunc: Error: could not validate obj as var");
             return false;
          }
       }
-      
-      for(var i = 0; i < obj.args.length; i++) {
-         if(!this.validateSysObjArg(obj.args[i])) {
+
+      for (var i = 0; i < obj.args.length; i++) {
+         if (!this.validateSysObjArg(obj.args[i])) {
             this.wr("validateSysObjFunc: Error: could not validate obj as arg");
             return false;
          }
-      }      
-      
-      for(var i = 0; i < obj.lines.length; i++) {
-         if(!this.validateSysObjFuncLine(obj.lines[i])) {
+      }
+
+      for (var i = 0; i < obj.lines.length; i++) {
+         if (!this.validateSysObjFuncLine(obj.lines[i])) {
             this.wr("validateSysObjFunc: Error: could not validate obj as func line: " + i + ", " + obj.lines[i].sys);
             return false;
          }
       }
-      
+
       return true;
    }
    return false;
@@ -914,36 +914,36 @@ jsonPlState.prototype.validateSysObjFunc = function(obj) {
  *   "right": {ref | const | exp | bex | call}
  * }
  */
-jsonPlState.prototype.validateSysObjAsgn = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "asgn" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
+jsonPlState.prototype.validateSysObjAsgn = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "asgn" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
       var tobj = null;
-      if(obj.left !== null) {
+      if (obj.left !== null) {
          tobj = obj.left;
-         if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
-            if(!this.validateSysObjRef(tobj)) {
+         if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
+            if (!this.validateSysObjRef(tobj)) {
                this.wr("validateSysObjAsgn: Error: could not validate left obj as ref");
                return false;
             }
          } else {
-            this.wr("validateSysObjAsgn: Error: could not validate left obj as ref");            
+            this.wr("validateSysObjAsgn: Error: could not validate left obj as ref");
             return false;
          }
-      } else{
+      } else {
          this.wr("validateSysObjAsgn: Error: could not validate left obj as ref, null");
          return false;
       }
-      
-      if(obj.op !== null) {
+
+      if (obj.op !== null) {
          tobj = obj.op;
-         if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "op") {
-            if(!this.validateSysObjOp(tobj)) {
+         if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "op") {
+            if (!this.validateSysObjOp(tobj)) {
                this.wr("validateSysObjAsgn: Error: could not validate obj as op");
                return false;
-            } else if(tobj.type !== 'asgn') {
-               this.wr("validateSysObjAsgn: Error: could not validate obj as op type");               
+            } else if (tobj.type !== 'asgn') {
+               this.wr("validateSysObjAsgn: Error: could not validate obj as op type");
                return false;
-            } else if(tobj.v !== '=') {
-               this.wr("validateSysObjAsgn: Error: could not validate obj as op code");               
+            } else if (tobj.v !== '=') {
+               this.wr("validateSysObjAsgn: Error: could not validate obj as op code");
                return false;
             }
          } else {
@@ -951,37 +951,37 @@ jsonPlState.prototype.validateSysObjAsgn = function(obj) {
             return false;
          }
       } else {
-         this.wr("validateSysObjAsgn: Error: could not validate obj as op, null");         
+         this.wr("validateSysObjAsgn: Error: could not validate obj as op, null");
          return false;
-      }   
-      
-      if(obj.right !== null) {
+      }
+
+      if (obj.right !== null) {
          tobj = obj.right;
-         if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
-            if(!this.validateSysObjRef(tobj)) {
+         if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
+            if (!this.validateSysObjRef(tobj)) {
                this.wr("validateSysObjAsgn: Error: could not validate right obj as ref");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
-            if(!this.validateSysObjConst(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
+            if (!this.validateSysObjConst(tobj)) {
                this.wr("validateSysObjAsgn: Error: could not validate right obj as const");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
-            if(!this.validateSysObjExp(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
+            if (!this.validateSysObjExp(tobj)) {
                this.wr("validateSysObjAsgn: Error: could not validate right obj as exp");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
-            if(!this.validateSysObjBex(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
+            if (!this.validateSysObjBex(tobj)) {
                this.wr("validateSysObjAsgn: Error: could not validate right obj as bex");
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
-            if(!this.validateSysObjCall(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if (!this.validateSysObjCall(tobj)) {
                this.wr("validateSysObjAsgn: Error: could not validate right obj as call");
                return false;
-            }            
+            }
          } else {
             this.wr("validateSysObjAsgn: Error: could not validate obj as right");
             return false;
@@ -990,7 +990,7 @@ jsonPlState.prototype.validateSysObjAsgn = function(obj) {
          this.wr("validateSysObjAsgn: Error: could not validate obj as right, null");
          return false;
       }
-      
+
       return true;
    }
    return false;
@@ -1009,84 +1009,84 @@ jsonPlState.prototype.validateSysObjAsgn = function(obj) {
  *   "right": {ref | const | exp | bex | call}
  * }
  */
-jsonPlState.prototype.validateSysObjBex = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "bex" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
+jsonPlState.prototype.validateSysObjBex = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "bex" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
       var tobj = null;
-      if(obj.left !== null) {
+      if (obj.left !== null) {
          tobj = obj.left;
-         if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
-            if(!this.validateSysObjRef(tobj)) {
+         if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
+            if (!this.validateSysObjRef(tobj)) {
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
-            if(!this.validateSysObjConst(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
+            if (!this.validateSysObjConst(tobj)) {
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
-            if(!this.validateSysObjExp(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
+            if (!this.validateSysObjExp(tobj)) {
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
-            if(!this.validateSysObjBex(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
+            if (!this.validateSysObjBex(tobj)) {
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
-            if(!this.validateSysObjCall(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if (!this.validateSysObjCall(tobj)) {
                return false;
-            }            
+            }
          } else {
             return false;
          }
-      } else{
+      } else {
          return false;
       }
-      
-      if(obj.op !== null) {
+
+      if (obj.op !== null) {
          tobj = obj.op;
-         if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "op") {
-            if(!this.validateSysObjOp(tobj)) {
+         if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "op") {
+            if (!this.validateSysObjOp(tobj)) {
                return false;
-            } else if(tobj.type !== 'bex') {
+            } else if (tobj.type !== 'bex') {
                return false;
-            } else if(!(tobj.v === "==" || tobj.v === "!=" || tobj.v === "<" || tobj.v === ">" || tobj.v === "<=" || tobj.v === ">=")) {
-               return false;
-            }
-         } else {
-            return false;
-         }
-      } else {
-         return false;
-      }   
-      
-      if(obj.right !== null) {
-         tobj = obj.right;
-         if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
-            if(!this.validateSysObjRef(tobj)) {
+            } else if (!(tobj.v === "==" || tobj.v === "!=" || tobj.v === "<" || tobj.v === ">" || tobj.v === "<=" || tobj.v === ">=")) {
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
-            if(!this.validateSysObjConst(tobj)) {
-               return false;
-            }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
-            if(!this.validateSysObjExp(tobj)) {
-               return false;
-            }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
-            if(!this.validateSysObjBex(tobj)) {
-               return false;
-            }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
-            if(!this.validateSysObjCall(tobj)) {
-               return false;
-            }            
          } else {
             return false;
          }
       } else {
          return false;
       }
-      
+
+      if (obj.right !== null) {
+         tobj = obj.right;
+         if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
+            if (!this.validateSysObjRef(tobj)) {
+               return false;
+            }
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
+            if (!this.validateSysObjConst(tobj)) {
+               return false;
+            }
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
+            if (!this.validateSysObjExp(tobj)) {
+               return false;
+            }
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
+            if (!this.validateSysObjBex(tobj)) {
+               return false;
+            }
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if (!this.validateSysObjCall(tobj)) {
+               return false;
+            }
+         } else {
+            return false;
+         }
+      } else {
+         return false;
+      }
+
       return true;
    }
    return false;
@@ -1105,75 +1105,46 @@ jsonPlState.prototype.validateSysObjBex = function(obj) {
  *   "right": {ref | const | exp | bex | call}
  * }
  */
-jsonPlState.prototype.validateSysObjExp = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "exp" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
+jsonPlState.prototype.validateSysObjExp = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "exp" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
       var tobj = null;
-      if(obj.left !== null) {
+      if (obj.left !== null) {
          tobj = obj.left;
-         if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
-            if(!this.validateSysObjRef(tobj)) {
+         if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
+            if (!this.validateSysObjRef(tobj)) {
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
-            if(!this.validateSysObjConst(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
+            if (!this.validateSysObjConst(tobj)) {
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
-            if(!this.validateSysObjExp(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
+            if (!this.validateSysObjExp(tobj)) {
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
-            if(!this.validateSysObjBex(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
+            if (!this.validateSysObjBex(tobj)) {
                return false;
             }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
-            if(!this.validateSysObjCall(tobj)) {
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if (!this.validateSysObjCall(tobj)) {
                return false;
             }
          } else {
             return false;
          }
-      } else{
+      } else {
          return false;
       }
-      
-      if(obj.op !== null) {
+
+      if (obj.op !== null) {
          tobj = obj.op;
-         if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "op") {
-            if(!this.validateSysObjOp(tobj)) {
+         if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "op") {
+            if (!this.validateSysObjOp(tobj)) {
                return false;
-            } else if(tobj.type !== 'exp') {
+            } else if (tobj.type !== 'exp') {
                return false;
-            } else if(!(tobj.v === "+" || tobj.v === "-" || tobj.v === "/" || tobj.v === "*")) {
-               return false;
-            }
-         } else {
-            return false;
-         }
-      } else {
-         return false;
-      }   
-      
-      if(obj.right !== null) {
-         tobj = obj.right;
-         if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
-            if(!this.validateSysObjRef(tobj)) {
-               return false;
-            }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
-            if(!this.validateSysObjConst(tobj)) {
-               return false;
-            }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
-            if(!this.validateSysObjExp(tobj)) {
-               return false;
-            }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
-            if(!this.validateSysObjBex(tobj)) {
-               return false;
-            }
-         } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
-            if(!this.validateSysObjCall(tobj)) {
+            } else if (!(tobj.v === "+" || tobj.v === "-" || tobj.v === "/" || tobj.v === "*")) {
                return false;
             }
          } else {
@@ -1182,7 +1153,36 @@ jsonPlState.prototype.validateSysObjExp = function(obj) {
       } else {
          return false;
       }
-      
+
+      if (obj.right !== null) {
+         tobj = obj.right;
+         if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
+            if (!this.validateSysObjRef(tobj)) {
+               return false;
+            }
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
+            if (!this.validateSysObjConst(tobj)) {
+               return false;
+            }
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "exp") {
+            if (!this.validateSysObjExp(tobj)) {
+               return false;
+            }
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "bex") {
+            if (!this.validateSysObjBex(tobj)) {
+               return false;
+            }
+         } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "call") {
+            if (!this.validateSysObjCall(tobj)) {
+               return false;
+            }
+         } else {
+            return false;
+         }
+      } else {
+         return false;
+      }
+
       return true;
    }
    return false;
@@ -1200,19 +1200,19 @@ jsonPlState.prototype.validateSysObjExp = function(obj) {
  *   "args": [ref | const]
  * }
  */
-jsonPlState.prototype.validateSysObjCall = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "call" && this.validateProperties(obj, ["sys", "name", "args"])) {
-      if(obj.args !== null) {
-         for(var i = 0; i < obj.args.length; i++) {
+jsonPlState.prototype.validateSysObjCall = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "call" && this.validateProperties(obj, ["sys", "name", "args"])) {
+      if (obj.args !== null) {
+         for (var i = 0; i < obj.args.length; i++) {
             var tobj = obj.args[i];
-            if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
-               if(!this.validateSysObjRef(tobj)) {
+            if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
+               if (!this.validateSysObjRef(tobj)) {
                   return false;
                }
-            } else if(this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
-               if(!this.validateSysObjConst(tobj)) {
+            } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
+               if (!this.validateSysObjConst(tobj)) {
                   return false;
-               }               
+               }
             } else {
                this.wr("validateSysObjCall: Error: Unhandled sys obj type: " + tobj.sys);
                return false;
@@ -1236,16 +1236,16 @@ jsonPlState.prototype.validateSysObjCall = function(obj) {
  *   "v": "some valid op value"
  * }
  */
-jsonPlState.prototype.validateSysObjOp = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "op" && this.validateProperties(obj, ["sys", "type", "v"])) {
-      if(!(obj.type === "asgn" || obj.type === "bex" || obj.type === "exp")) {
+jsonPlState.prototype.validateSysObjOp = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "op" && this.validateProperties(obj, ["sys", "type", "v"])) {
+      if (!(obj.type === "asgn" || obj.type === "bex" || obj.type === "exp")) {
          return false;
       }
       return true;
    }
    return false;
 };
-   
+
 /**
     * Name: validateSysObjConst 
     * Desc: Validates if the given object is a valid const object. 
@@ -1257,9 +1257,9 @@ jsonPlState.prototype.validateSysObjOp = function(obj) {
     *   "val": {val}
     * }
     */
-jsonPlState.prototype.validateSysObjConst = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "const" && this.validateProperties(obj, ["sys", "val"])) {
-      if(!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
+jsonPlState.prototype.validateSysObjConst = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "const" && this.validateProperties(obj, ["sys", "val"])) {
+      if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
          return false;
       }
       return true;
@@ -1279,9 +1279,9 @@ jsonPlState.prototype.validateSysObjConst = function(obj) {
  *   "val": {val}
  * }
  */
-jsonPlState.prototype.validateSysObjVar = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "var" && this.validateProperties(obj, ["sys", "name", "val"])) {
-      if(!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
+jsonPlState.prototype.validateSysObjVar = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "var" && this.validateProperties(obj, ["sys", "name", "val"])) {
+      if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
          return false;
       }
       return true;
@@ -1301,9 +1301,9 @@ jsonPlState.prototype.validateSysObjVar = function(obj) {
  *   "val": {val}
  * }
  */
-jsonPlState.prototype.validateSysObjArg = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "arg" && this.validateProperties(obj, ["sys", "name", "val"])) {
-      if(!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
+jsonPlState.prototype.validateSysObjArg = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "arg" && this.validateProperties(obj, ["sys", "name", "val"])) {
+      if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
          return false;
       }
       return true;
@@ -1323,24 +1323,24 @@ jsonPlState.prototype.validateSysObjArg = function(obj) {
  *   "v": "some valid value"
  * }
  */
-jsonPlState.prototype.validateSysObjVal = function(obj) {
-   if(this.isSysObjVal(obj) && this.validateProperties(obj, ["sys", "type", "v"])) {
-      if(
+jsonPlState.prototype.validateSysObjVal = function (obj) {
+   if (this.isSysObjVal(obj) && this.validateProperties(obj, ["sys", "type", "v"])) {
+      if (
          !(obj.type === "int" || obj.type === "float" || obj.type === "string" || obj.type === "bool")
-         && !(obj.type === "int[]" || obj.type === "float[]" || obj.type === "string[]" || obj.type === "bool[]")         
+         && !(obj.type === "int[]" || obj.type === "float[]" || obj.type === "string[]" || obj.type === "bool[]")
       ) {
          return false;
       }
 
       var isArray = false;
       var arrayLen = 0;
-      if(obj.type === "int[]" || obj.type === "float[]" || obj.type === "string[]" || obj.type === "bool[]") {
+      if (obj.type === "int[]" || obj.type === "float[]" || obj.type === "string[]" || obj.type === "bool[]") {
          isArray = true;
-         if(!this.validateProperties(obj, ["len"])) {
+         if (!this.validateProperties(obj, ["len"])) {
             this.wr("validateSysObjVal: Error: array is missing length: " + obj.v + ", type: " + obj.type);
             return false;
          } else {
-            if(!this.isInteger(obj.len) && this.toInt(obj.len) >= 0) {
+            if (!this.isInteger(obj.len) && this.toInt(obj.len) >= 0) {
                this.wr("validateSysObjVal: Error: array length is invalid: " + obj.v + ", type: " + obj.type + ", " + obj.len + ", " + this.isInteger(obj.len));
             } else {
                arrayLen = this.toInt(obj.len);
@@ -1350,32 +1350,32 @@ jsonPlState.prototype.validateSysObjVal = function(obj) {
 
       //ignore references
       var tmp = this.toStr(obj.v);
-      if(tmp.indexOf("#.") === -1 && tmp.indexOf("$.") === -1) {
-         if(!isArray) {
+      if (tmp.indexOf("#.") === -1 && tmp.indexOf("$.") === -1) {
+         if (!isArray) {
             //base data types
-            if(obj.type === "int") {
-               if(!this.isInteger(this.toInt(obj.v))) {
+            if (obj.type === "int") {
+               if (!this.isInteger(this.toInt(obj.v))) {
                   this.wr("validateSysObjVal: Error: value is not an int value: " + obj.v + ", type: " + obj.type);
                   return false;
                } else {
                   obj.v = this.toInt(obj.v);
                }
-            } else if(obj.type === "float") {
-               if(!this.isFloat(this.toFloat(obj.v))) {
+            } else if (obj.type === "float") {
+               if (!this.isFloat(this.toFloat(obj.v))) {
                   this.wr("validateSysObjVal: Error: value is not a float value: " + obj.v + ", type: " + obj.type);
                   return false;
                } else {
                   obj.v = this.toFloat(obj.v);
                }
-            } else if(obj.type === "string") {
-               if(!this.isString(this.toStr(obj.v))) {
+            } else if (obj.type === "string") {
+               if (!this.isString(this.toStr(obj.v))) {
                   this.wr("validateSysObjVal: Error: value is not a string value: " + obj.v + ", type: " + obj.type);
                   return false;
                } else {
                   obj.v = this.toStr(obj.v);
                }
-            } else if(obj.type === "bool") {
-               if(!this.isBool(this.toBool(obj.v))) {
+            } else if (obj.type === "bool") {
+               if (!this.isBool(this.toBool(obj.v))) {
                   this.wr("validateSysObjVal: Error: value is not a boolean value: " + obj.v + ", type: " + obj.type);
                   return false;
                } else {
@@ -1387,60 +1387,60 @@ jsonPlState.prototype.validateSysObjVal = function(obj) {
             }
          } else {
             var tmpA = this.toArray(obj.v);
-            var arrayLenActual = tmpA.length;            
-            if(arrayLenActual !== arrayLen) {
+            var arrayLenActual = tmpA.length;
+            if (arrayLenActual !== arrayLen) {
                this.wr("validateSysObjVal: Error: array length mismatch: " + obj.v + ", type: " + obj.type);
-               return false;      
+               return false;
             }
 
             //array data types
-            if(obj.type === "int[]") {
-               if(!this.isArray(obj.v)) {
+            if (obj.type === "int[]") {
+               if (!this.isArray(obj.v)) {
                   this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
                   return false;
                } else {
-                  for(var i = 0; i < arrayLenActual; i++) {
+                  for (var i = 0; i < arrayLenActual; i++) {
                      var ltmp = tmpA[i];
-                     if(ltmp.val.type !== "int") {
+                     if (ltmp.val.type !== "int") {
                         this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'int' but found '" + ltmp.val.type + "'");
                         return false;
                      }
                   }
                }
-            } else if(obj.type === "float[]") {
-               if(!this.isArray(obj.v)) {
+            } else if (obj.type === "float[]") {
+               if (!this.isArray(obj.v)) {
                   this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
                   return false;
                } else {
-                  for(var i = 0; i < arrayLenActual; i++) {
+                  for (var i = 0; i < arrayLenActual; i++) {
                      var ltmp = tmpA[i];
-                     if(ltmp.val.type !== "float") {
+                     if (ltmp.val.type !== "float") {
                         this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'float' but found '" + ltmp.val.type + "'");
-                        return false;                        
-                     }
-                  }
-               }
-            } else if(obj.type === "string[]") {
-               if(!this.isArray(obj.v)) {
-                  this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
-                  return false;
-               } else {
-                  for(var i = 0; i < arrayLenActual; i++) {
-                     var ltmp = tmpA[i];
-                     if(ltmp.val.type !== "string") {
-                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'string' but found '" + ltmp.val.type + "'");                        
                         return false;
                      }
                   }
                }
-            } else if(obj.type === "bool[]") {
-               if(!this.isArray(obj.v)) {
+            } else if (obj.type === "string[]") {
+               if (!this.isArray(obj.v)) {
                   this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
                   return false;
                } else {
-                  for(var i = 0; i < arrayLenActual; i++) {
+                  for (var i = 0; i < arrayLenActual; i++) {
                      var ltmp = tmpA[i];
-                     if(ltmp.val.type !== "bool") {
+                     if (ltmp.val.type !== "string") {
+                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'string' but found '" + ltmp.val.type + "'");
+                        return false;
+                     }
+                  }
+               }
+            } else if (obj.type === "bool[]") {
+               if (!this.isArray(obj.v)) {
+                  this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
+                  return false;
+               } else {
+                  for (var i = 0; i < arrayLenActual; i++) {
+                     var ltmp = tmpA[i];
+                     if (ltmp.val.type !== "bool") {
                         this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'bool' but found '" + ltmp.val.type + "'");
                         return false;
                      }
@@ -1449,7 +1449,7 @@ jsonPlState.prototype.validateSysObjVal = function(obj) {
             } else {
                this.wr("validateSysObjVal: Error: unknown array object type: " + obj.v + ", type: " + obj.type);
                return false;
-            }            
+            }
          }
       }
       return true;
@@ -1468,9 +1468,9 @@ jsonPlState.prototype.validateSysObjVal = function(obj) {
  *   "val": {val & with value like #.vars.tmp1 or $.vars.tmp1}
  * }
  */
-jsonPlState.prototype.validateSysObjRef = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "ref" && this.validateProperties(obj, ["sys", "val"])) {
-      if(!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
+jsonPlState.prototype.validateSysObjRef = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "ref" && this.validateProperties(obj, ["sys", "val"])) {
+      if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
          return false;
       }
       return true;
@@ -1489,9 +1489,9 @@ jsonPlState.prototype.validateSysObjRef = function(obj) {
  *   "val": {val}
  * }
  */
-jsonPlState.prototype.validateSysObjReturn = function(obj) {
-   if(this.isSysObj(obj) && this.getSysObjType(obj) === "return" && this.validateProperties(obj, ["sys", "val"])) {
-      if(!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
+jsonPlState.prototype.validateSysObjReturn = function (obj) {
+   if (this.isSysObj(obj) && this.getSysObjType(obj) === "return" && this.validateProperties(obj, ["sys", "val"])) {
+      if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
          return false;
       }
       return true;
@@ -1506,7 +1506,7 @@ jsonPlState.prototype.validateSysObjReturn = function(obj) {
  * Arg2: req(array of attribute names to check for) 
  * Returns: ret(some bool, true or false)
  */
-jsonPlState.prototype.validateProperties = function(obj, req) {
+jsonPlState.prototype.validateProperties = function (obj, req) {
    if (obj === null || req === null) {
       return false;
    }
@@ -1528,7 +1528,7 @@ jsonPlState.prototype.validateProperties = function(obj, req) {
  *       Sets the WR_PREFIX to each string written. 
  * Arg1: s(string to write)
  */
-jsonPlState.prototype.wr = function(s) {
+jsonPlState.prototype.wr = function (s) {
    if (this.LOGGING === true) {
       console.log(this.WR_PREFIX + s);
    }
@@ -1539,7 +1539,7 @@ jsonPlState.prototype.wr = function(s) {
  * Desc: A method to access the version of this JsonPL interpreter.
  * Returns: ret(string version number)
  */
-jsonPlState.prototype.getVersion = function() {
+jsonPlState.prototype.getVersion = function () {
    this.wr(this.version);
    return this.version;
 };
@@ -1550,7 +1550,7 @@ jsonPlState.prototype.getVersion = function() {
  * Arg1: jsonObj(the JSON object to clone)
  * Returns: ret(cloned JSON object)
  */
-jsonPlState.prototype.cloneJsonObj = function(jsonObj) {
+jsonPlState.prototype.cloneJsonObj = function (jsonObj) {
    return JSON.parse(JSON.stringify(jsonObj));
 };
 
@@ -1561,7 +1561,7 @@ jsonPlState.prototype.cloneJsonObj = function(jsonObj) {
  *       Prints object using pretty JSON.stringify call. 
  * Arg1: jsonObj(jsonObj to write)
  */
-jsonPlState.prototype.wrObj = function(jsonObj) {
+jsonPlState.prototype.wrObj = function (jsonObj) {
    if (this.LOGGING === true) {
       this.wr(this.WR_PREFIX + JSON.stringify(jsonObj, null, 2));
       this.wr("");
@@ -1575,9 +1575,9 @@ jsonPlState.prototype.wrObj = function(jsonObj) {
  *       Prints object using pretty JSON.stringify call. 
  * Arg1: v({val} obj to write)
  */
-jsonPlState.prototype.wrVal = function(v) {
+jsonPlState.prototype.wrVal = function (v) {
    if (this.LOGGING === true) {
-      if(this.isSysObjValArray(v)) {
+      if (this.isSysObjValArray(v)) {
          this.wr(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
       } else {
          this.wr(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
@@ -1593,7 +1593,7 @@ jsonPlState.prototype.wrVal = function(v) {
  * Arg2: func(the associated {func} object if any)
  * Returns: ret(a {const} object)
  */
-jsonPlState.prototype.sysLen = function(args, func) {
+jsonPlState.prototype.sysLen = function (args, func) {
    var s = args[0];
 
    //this.wr("sysType: AAA: ");
@@ -1607,15 +1607,15 @@ jsonPlState.prototype.sysLen = function(args, func) {
    //this.wr("sysType: CCC: ");
    //this.wrObj(v);   
 
-   if(v !== null) {
+   if (v !== null) {
       v = v.val;
    }
 
    //this.wr("sysType: DDD: ");
    //this.wrObj(v);
 
-   if(v !== null && this.isSysObj(v)) {
-      if(this.isSysObjValArray(v)) {
+   if (v !== null && this.isSysObj(v)) {
+      if (this.isSysObjValArray(v)) {
          ret = this.getConst("int", this.toStr(v.len));
       }
    }
@@ -1631,7 +1631,7 @@ jsonPlState.prototype.sysLen = function(args, func) {
  * Arg2: func(the associated {func} object if any)
  * Returns: ret(a {ref} object)
  */
-jsonPlState.prototype.sysType = function(args, func) {
+jsonPlState.prototype.sysType = function (args, func) {
    var s = args[0];
 
    //this.wr("sysType: AAA: ");
@@ -1645,20 +1645,20 @@ jsonPlState.prototype.sysType = function(args, func) {
    //this.wr("sysType: CCC: ");
    //this.wrObj(v);   
 
-   if(v !== null) {
+   if (v !== null) {
       v = v.val;
    }
 
    //this.wr("sysType: DDD: ");
    //this.wrObj(v);
 
-   if(v !== null && this.isSysObj(v)) {
+   if (v !== null && this.isSysObj(v)) {
       ret = this.getConst("string", this.toStr(v.type));
    }
 
    //this.wr("sysType: EEE: ");
 
-   this.wrVal(ret.val);   
+   this.wrVal(ret.val);
    return ret;
 };
 
@@ -1670,7 +1670,7 @@ jsonPlState.prototype.sysType = function(args, func) {
  * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
  * Returns: ret(a {const} object)
  */
-jsonPlState.prototype.sysGetRefStr = function(args, func) {
+jsonPlState.prototype.sysGetRefStr = function (args, func) {
    var ret = this.sysGetRef(args, func);
    ret.sys = "const";
    ret.val.type = "string";
@@ -1678,7 +1678,6 @@ jsonPlState.prototype.sysGetRefStr = function(args, func) {
    return ret;
 };
 
-//TODO: Continue review here
 /**
  * Name: sysGetRef
  * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
@@ -1687,38 +1686,38 @@ jsonPlState.prototype.sysGetRefStr = function(args, func) {
  * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
  * Returns: ret(a {ref} object)
  */
-jsonPlState.prototype.sysGetRef = function(args, func) {
+jsonPlState.prototype.sysGetRef = function (args, func) {
    var name = this.toStr(args[0].val.v);
    var isVar = this.toBool(args[1].val.v);
    var funcName = this.toStr(args[2].val.v);
    var ret = this.getRef("string", "");
 
    //this.wr("sysGetRef: AAA");
-   if(name !== null && name !== "") {
-      if(funcName === null || funcName === "") {
+   if (name !== null && name !== "") {
+      if (funcName === null || funcName === "") {
          //this.wr("sysGetRef: BBB");
          //lookup class variable
          var v = this.findVar(name, this.program);
-         if(v !== null) {
+         if (v !== null) {
             ret = this.getRef(v.val.type, "#.vars." + v.name);
          }
          //this.wr("sysGetRef: CCC");
       } else {
          //this.wr("sysGetRef: DDD");
          var lfunc = this.findFunc(funcName);
-         if(lfunc !== null) {
-            if(isVar) {
+         if (lfunc !== null) {
+            if (isVar) {
                //lookup function variable
                var v1 = this.findVar(name, lfunc);
-               if(v1 !== null) {
+               if (v1 !== null) {
                   ret = this.getRef(v1.val.type, "$.vars." + v1.name);
                }
             } else {
                //lookup function arg
                var v2 = this.findArg(name, lfunc);
-               if(v2 !== null) {
+               if (v2 !== null) {
                   ret = this.getRef(v2.val.type, "$.args." + v2.name);
-               }                              
+               }
             }
          }
          //this.wr("sysGetRef: EEE");
@@ -1735,10 +1734,10 @@ jsonPlState.prototype.sysGetRef = function(args, func) {
  * Arg1: arg(a JSON object)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isObject = function(arg) {
-   if(arg === null) {
+jsonPlState.prototype.isObject = function (arg) {
+   if (arg === null) {
       return false;
-   } else if(typeof arg === "object") {
+   } else if (typeof arg === "object") {
       return true;
    } else {
       return false;
@@ -1751,7 +1750,7 @@ jsonPlState.prototype.isObject = function(arg) {
  * Arg1: arg(some array object)
  * Returns: ret(some bool, true or false)
  */
-jsonPlState.prototype.isArray = function(arg) {
+jsonPlState.prototype.isArray = function (arg) {
    if (arg === null) {
       return false;
    } else {
@@ -1759,14 +1758,13 @@ jsonPlState.prototype.isArray = function(arg) {
    }
 };
 
-//TODO: Continue review here
 /**
  * Name: isString
  * Desc: Checks if the given argument is a string. 
  * Arg1: arg(some string)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isString = function(arg) {
+jsonPlState.prototype.isString = function (arg) {
    if (arg === null) {
       return false;
    } else if (typeof arg === 'string' || arg instanceof String) {
@@ -1776,13 +1774,14 @@ jsonPlState.prototype.isString = function(arg) {
    }
 };
 
+//TODO: Continue review here
 /**
  * Name: isNumber
  * Desc: Checks if the given argument is a number. 
  * Arg1: arg(some value)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isNumber = function(arg) {
+jsonPlState.prototype.isNumber = function (arg) {
    var tmp = this.toInt(arg);
    if (arg === null) {
       return false;
@@ -1799,11 +1798,11 @@ jsonPlState.prototype.isNumber = function(arg) {
  * Arg1: arg(some value)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isInteger = function(arg) {
+jsonPlState.prototype.isInteger = function (arg) {
    var tmp = this.toInt(arg);
-   if(arg === null) {
+   if (arg === null) {
       return false;
-   } else if(this.isNumber(tmp) && Number.isInteger(tmp) === true) {
+   } else if (this.isNumber(tmp) && Number.isInteger(tmp) === true) {
       return true;
    } else {
       return false;
@@ -1816,10 +1815,10 @@ jsonPlState.prototype.isInteger = function(arg) {
  * Arg1: arg(some value)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isFloat = function(arg) {
-   if(arg === null) {
+jsonPlState.prototype.isFloat = function (arg) {
+   if (arg === null) {
       return false;
-   } else if(this.isNumber(arg)) {
+   } else if (this.isNumber(arg)) {
       return true;
    } else {
       return false;
@@ -1832,17 +1831,17 @@ jsonPlState.prototype.isFloat = function(arg) {
  * Arg1: arg(some value)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isBool = function(arg) {
-   if(arg === null) {
+jsonPlState.prototype.isBool = function (arg) {
+   if (arg === null) {
       return false;
    } else if (typeof arg === 'boolean' || arg instanceof Boolean) {
       return true;
-   } else if(this.isInteger(arg) && arg === 1 || arg === 0) {
+   } else if (this.isInteger(arg) && arg === 1 || arg === 0) {
       return true;
-   } else if(this.isFloat(arg) && arg === 1.0 || arg === 0.0) {
+   } else if (this.isFloat(arg) && arg === 1.0 || arg === 0.0) {
       return true;
-   } else if(this.isString(arg) && (arg === "yes" || arg === "no" || arg === "true" || arg === "false" || arg === "1" || arg === "0" || arg === "1.0" || arg === "0.0")) {
-      return true;      
+   } else if (this.isString(arg) && (arg === "yes" || arg === "no" || arg === "true" || arg === "false" || arg === "1" || arg === "0" || arg === "1.0" || arg === "0.0")) {
+      return true;
    } else {
       return false;
    }
@@ -1855,7 +1854,7 @@ jsonPlState.prototype.isBool = function(arg) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjIf = function(obj) {
+jsonPlState.prototype.isSysObjIf = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "if") {
       return true;
    } else {
@@ -1869,7 +1868,7 @@ jsonPlState.prototype.isSysObjIf = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjRef = function(obj) {
+jsonPlState.prototype.isSysObjRef = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "ref") {
       return true;
    } else {
@@ -1883,7 +1882,7 @@ jsonPlState.prototype.isSysObjRef = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjBex = function(obj) {
+jsonPlState.prototype.isSysObjBex = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "bex") {
       return true;
    } else {
@@ -1897,7 +1896,7 @@ jsonPlState.prototype.isSysObjBex = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjExp = function(obj) {
+jsonPlState.prototype.isSysObjExp = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "exp") {
       return true;
    } else {
@@ -1911,7 +1910,7 @@ jsonPlState.prototype.isSysObjExp = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjVal = function(obj) {
+jsonPlState.prototype.isSysObjVal = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "val") {
       return true;
    } else {
@@ -1925,7 +1924,7 @@ jsonPlState.prototype.isSysObjVal = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
- jsonPlState.prototype.isSysObjValArray = function(obj) {
+jsonPlState.prototype.isSysObjValArray = function (obj) {
    if (this.isSysObjVal(obj) === true && this.validateProperties(obj, ["len"]) && this.isInteger(obj.len) && this.isArray(obj.v)) {
       return true;
    } else {
@@ -1939,7 +1938,7 @@ jsonPlState.prototype.isSysObjVal = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjAsgn = function(obj) {
+jsonPlState.prototype.isSysObjAsgn = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "asgn") {
       return true;
    } else {
@@ -1953,7 +1952,7 @@ jsonPlState.prototype.isSysObjAsgn = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjConst = function(obj) {
+jsonPlState.prototype.isSysObjConst = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "const") {
       return true;
    } else {
@@ -1967,7 +1966,7 @@ jsonPlState.prototype.isSysObjConst = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjVar = function(obj) {
+jsonPlState.prototype.isSysObjVar = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "var") {
       return true;
    } else {
@@ -1981,7 +1980,7 @@ jsonPlState.prototype.isSysObjVar = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjCall = function(obj) {
+jsonPlState.prototype.isSysObjCall = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "call") {
       return true;
    } else {
@@ -1995,26 +1994,26 @@ jsonPlState.prototype.isSysObjCall = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjFuncLine = function(obj) {
-   if(this.isSysObj(obj)) {
-      if(this.getSysObjType(obj) === "asgn") {
-         return true;
-      
-      } else if(this.getSysObjType(obj) === "for") {
-         return true;
-      
-      } else if(this.getSysObjType(obj) === "if") {
+jsonPlState.prototype.isSysObjFuncLine = function (obj) {
+   if (this.isSysObj(obj)) {
+      if (this.getSysObjType(obj) === "asgn") {
          return true;
 
-      } else if(this.getSysObjType(obj) === "return") {
+      } else if (this.getSysObjType(obj) === "for") {
          return true;
 
-      } else if(this.getSysObjType(obj) === "call") {
+      } else if (this.getSysObjType(obj) === "if") {
+         return true;
+
+      } else if (this.getSysObjType(obj) === "return") {
+         return true;
+
+      } else if (this.getSysObjType(obj) === "call") {
          return true;
 
       } else {
          return false;
-      }      
+      }
    }
    return false;
 };
@@ -2025,7 +2024,7 @@ jsonPlState.prototype.isSysObjFuncLine = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjFunc = function(obj) {
+jsonPlState.prototype.isSysObjFunc = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "func") {
       return true;
    } else {
@@ -2039,7 +2038,7 @@ jsonPlState.prototype.isSysObjFunc = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjFor = function(obj) {
+jsonPlState.prototype.isSysObjFor = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "for") {
       return true;
    } else {
@@ -2053,7 +2052,7 @@ jsonPlState.prototype.isSysObjFor = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
- jsonPlState.prototype.isSysObjOp = function(obj) {
+jsonPlState.prototype.isSysObjOp = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "op") {
       return true;
    } else {
@@ -2067,7 +2066,7 @@ jsonPlState.prototype.isSysObjFor = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObjReturn = function(obj) {
+jsonPlState.prototype.isSysObjReturn = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "return") {
       return true;
    } else {
@@ -2081,7 +2080,7 @@ jsonPlState.prototype.isSysObjReturn = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.isSysObj = function(obj) {
+jsonPlState.prototype.isSysObj = function (obj) {
    if (obj !== null && obj.hasOwnProperty("sys") === true && this.isObject(obj) === true) {
       return true;
    } else {
@@ -2095,7 +2094,7 @@ jsonPlState.prototype.isSysObj = function(obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
-jsonPlState.prototype.getSysObjType = function(obj) {
+jsonPlState.prototype.getSysObjType = function (obj) {
    if (this.isSysObj(obj) === true) {
       return obj.sys;
    } else {
@@ -2111,25 +2110,25 @@ jsonPlState.prototype.getSysObjType = function(obj) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
  */
-jsonPlState.prototype.processRef = function(objRef, func) {
+jsonPlState.prototype.processRef = function (objRef, func) {
    var path = null;
    var vls = null;
    var fnd = null;
    var prog = this.program;
-   
+
    //this.wr("\n\nOBJ REF");
    //this.wrObj(objRef);
 
-   if(!this.isSysObjRef(objRef)) {
+   if (!this.isSysObjRef(objRef)) {
       this.wr("processRef: Error: argument objRef is not a ref obj");
-      return null;                  
-   } else if(!this.isSysObjFunc(func)) {
+      return null;
+   } else if (!this.isSysObjFunc(func)) {
       this.wr("processRef: Error: argument objRef is not a func obj");
       return null;
-   }   
-   
+   }
+
    path = (objRef.val.v + "");
-   if(path.charAt(0) === '[') {
+   if (path.charAt(0) === '[') {
       var nc = path.substring(1, path.length - 1);
 
       tmp = {};
@@ -2138,9 +2137,9 @@ jsonPlState.prototype.processRef = function(objRef, func) {
       tmp.val.sys = "val";
       tmp.val.type = "string";
       tmp.val.v = nc;
-      
+
       tmp = this.processRef(tmp, func);
-      if(tmp !== null && tmp.val.type === 'string') {
+      if (tmp !== null && tmp.val.type === 'string') {
          path = this.toStr(tmp.val.v);
       } else {
          this.wr("processRef: Error: could not lookup object, for name, " + name + ", ref path: " + path);
@@ -2149,109 +2148,109 @@ jsonPlState.prototype.processRef = function(objRef, func) {
 
    //this.wr("===============================================Found path: " + path);
    vls = path.split(".");
-   
+
    var inDynRef = false;
    var nvls = [];
    var tt = null;
    var obrk = 0;
-   for(var k = 0; k < vls.length; k++) {
+   for (var k = 0; k < vls.length; k++) {
       //this.wr("___________________________________:"+ vls[k].indexOf("["));
-      if(inDynRef && vls[k].indexOf("]") !== -1) {    
+      if (inDynRef && vls[k].indexOf("]") !== -1) {
          obrk--;
-         for(var i = vls[k].indexOf("]") + 1; i < vls[k].length; i++) {
-            if(vls[k].charAt(i) === ']') {
+         for (var i = vls[k].indexOf("]") + 1; i < vls[k].length; i++) {
+            if (vls[k].charAt(i) === ']') {
                obrk--;
             }
          }
-         
+
          //this.wr("___________________________________:NewBracket: " + obrk);                     
          tt += "." + vls[k];
-         if(obrk === 0) {
-            inDynRef = false;            
+         if (obrk === 0) {
+            inDynRef = false;
             nvls.push(tt);
          }
-      } else if(!inDynRef && vls[k].indexOf("[") !== -1) {
+      } else if (!inDynRef && vls[k].indexOf("[") !== -1) {
          obrk = 1;
          inDynRef = true;
          tt = vls[k];
-      } else if(inDynRef) {
-         if(vls[k].indexOf("[") !== -1) {
-            obrk++;            
+      } else if (inDynRef) {
+         if (vls[k].indexOf("[") !== -1) {
+            obrk++;
             //this.wr("___________________________________:NewBracket: " + obrk);            
          }
          tt += "." + vls[k];
       } else {
-         if(vls[k] !== null) {
+         if (vls[k] !== null) {
             nvls.push(vls[k]);
          }
       }
    }
-      
+
    vls = [];
-   for(var k = 0; k < nvls.length; k++) {
-      if(nvls[k] !== null) {
+   for (var k = 0; k < nvls.length; k++) {
+      if (nvls[k] !== null) {
          vls[k] = nvls[k];
          //this.wr("___________________________________:" + vls[k]);
       }
    }
-         
+
    var foundSource = false;
    var isFunc = false;
-   var foundType = false;   
+   var foundType = false;
    var isVars = false;
-   var foundName = false;   
+   var foundName = false;
    var name = null;
    var itm = null;
    var foundIndex = false;
    var idx = -1;
    var type = null;
-   
+
    //this.wr("===============================================Found entries: " + vls.length);
-   for(var k = 0; k < vls.length; k++) {      
+   for (var k = 0; k < vls.length; k++) {
       var c = vls[k];
       //this.wr("===============================================Found entry: " + k + ", " + vls[k]);      
-      
-      if(!foundSource) {
+
+      if (!foundSource) {
          //program/class         
-         if(c === '#') {
+         if (c === '#') {
             isFunc = false;
             foundSource = true;
-         } else if(c === '$') {
+         } else if (c === '$') {
             isFunc = true;
             foundSource = true;
          } else {
             this.wr("processRef: Error: could not find correct the ref, for source, " + c + ", ref path: " + path);
-			return null;
+            return null;
          }
-      } else if(!foundType) { 
+      } else if (!foundType) {
          //program/class
-         if(!isFunc) {
-            if(c === 'vars') {
+         if (!isFunc) {
+            if (c === 'vars') {
                isVars = true;
                foundType = true;
             } else {
                this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFunc + ", ref path: " + path);
-			   return null;
+               return null;
             }
-         //function
+            //function
          } else {
-            if(c === 'vars') {
-               isVars = true;               
+            if (c === 'vars') {
+               isVars = true;
                foundType = true;
-            } else if(c === 'args') {
+            } else if (c === 'args') {
                isVars = false;
-               foundType = true;               
+               foundType = true;
             } else {
                this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFun + ", ref path: " + pathc);
-			   return null;
+               return null;
             }
-         }         
-      } else if(!foundName) {
+         }
+      } else if (!foundName) {
          //program/class
          name = c;
          var tmp = null;
          //lookup use of string var here
-         if(c.indexOf('[') === 0) {
+         if (c.indexOf('[') === 0) {
             var nc = c.substring(1, c.length - 1);
 
             tmp = {};
@@ -2260,81 +2259,81 @@ jsonPlState.prototype.processRef = function(objRef, func) {
             tmp.val.sys = "val";
             tmp.val.type = "string";
             tmp.val.v = nc;
-            
+
             tmp = this.processRef(tmp, func);
-            if(tmp !== null && tmp.val.type === 'string') {
+            if (tmp !== null && tmp.val.type === 'string') {
                name = this.toStr(tmp.val.v);
             } else {
                this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
-			   return null;
-			}
+               return null;
+            }
          }
-              
+
          //this.wr("processRef: looking for name: " + name);
-		 //this.wrObj(func.args);
-		 
-         if(!isFunc) {
+         //this.wrObj(func.args);
+
+         if (!isFunc) {
             //class find name            
-            if(isVars) {
+            if (isVars) {
                fnd = this.findVar(name, prog);
             } else {
                this.wr("processRef: Error: could not find, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
                return null;
-			}
-         //function
+            }
+            //function
          } else {
             //function find name
-            if(isVars) {
-			   //this.wr("AAA " + name + ", " + func.name);
+            if (isVars) {
+               //this.wr("AAA " + name + ", " + func.name);
                fnd = this.findVar(name, func);
             } else {
-			   //this.wr("BBB " + name + ", " + func.name);
-			   this.wrObj(func.args);
+               //this.wr("BBB " + name + ", " + func.name);
+               this.wrObj(func.args);
                fnd = this.findArg(name, func);
             }
          }
 
-		 //this.wr("CCC ");
+         //this.wr("CCC ");
          //this.wrObj(fnd);
 
-         if(fnd !== null) {
+         if (fnd !== null) {
             type = fnd.val.type;
             foundName = true;
          } else {
             this.wr("processRef: Error: could not find an object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
             return null;
-		 }
-      } else if(!foundIndex) {
+         }
+      } else if (!foundIndex) {
          idx = this.toInt(c);
          tmp = null;
          //lookup use of string var here
-         if(c.indexOf('[') === 0) {            
+         if (c.indexOf('[') === 0) {
             var nc = c.substring(1, c.length - 1);
-            
+
             tmp = {};
             tmp.sys = "ref";
             tmp.val = {};
             tmp.val.sys = "val";
             tmp.val.type = "string";
             tmp.val.v = nc;
-            
+
             tmp = this.processRef(tmp, func);
-            if(tmp !== null && tmp.val.type === 'string') {
+            if (tmp !== null && tmp.val.type === 'string') {
                idx = this.toStr(tmp.val.v + "");
             } else {
                this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
                return null;
-			}
-         }         
-         
-         if(this.isSysObjValArray(fnd.val)) {
+            }
+         }
+
+         if (this.isSysObjValArray(fnd.val)) {
             fnd = (this.toArray(fnd.val.v)[this.toInt(idx)]);
             foundIndex = true;
          } else {
             this.wr("processRef: Error: index entry is only for vars/args of type array, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
             return null;
-		 }
-      }      
+         }
+      }
    }
    //this.wr("processRef: exiting...");
    return fnd;
@@ -2346,14 +2345,14 @@ jsonPlState.prototype.processRef = function(objRef, func) {
  * Arg1: v(the value to convert)
  * Returns: (0 | 1)
  */
-jsonPlState.prototype.toBoolInt = function(v) {
+jsonPlState.prototype.toBoolInt = function (v) {
    var vb = v + "";
    vb = vb.toLowerCase();
-   if(vb === "true") {
+   if (vb === "true") {
       return 1;
-   } else if(vb === "1") {
+   } else if (vb === "1") {
       return 1;
-   } else if(vb === "yes") {
+   } else if (vb === "yes") {
       return 1;
    } else {
       return 0;
@@ -2366,7 +2365,7 @@ jsonPlState.prototype.toBoolInt = function(v) {
  * Arg1: v(the value to convert)
  * Returns: (the int value of v)
  */
-jsonPlState.prototype.toInt = function(v) {
+jsonPlState.prototype.toInt = function (v) {
    return parseInt(v);
 };
 
@@ -2376,7 +2375,7 @@ jsonPlState.prototype.toInt = function(v) {
  * Arg1: v(the value to convert)
  * Returns: (the float value of v)
  */
-jsonPlState.prototype.toFloat = function(v) {
+jsonPlState.prototype.toFloat = function (v) {
    return parseFloat(v);
 };
 
@@ -2386,7 +2385,7 @@ jsonPlState.prototype.toFloat = function(v) {
  * Arg1: v(the value to convert)
  * Returns: (the string value of v)
  */
-jsonPlState.prototype.toStr = function(v) {
+jsonPlState.prototype.toStr = function (v) {
    return String(v + "");
 };
 
@@ -2396,8 +2395,8 @@ jsonPlState.prototype.toStr = function(v) {
  * Arg1: v(the value to convert)
  * Returns: (the array value of v)
  */
-jsonPlState.prototype.toArray = function(v) {
-   if(this.isArray(v)) {
+jsonPlState.prototype.toArray = function (v) {
+   if (this.isArray(v)) {
       return v;
    } else {
       var ret = [];
@@ -2412,14 +2411,14 @@ jsonPlState.prototype.toArray = function(v) {
  * Arg1: v(the value to convert)
  * Returns: (the bool value of v)
  */
-jsonPlState.prototype.toBool = function(v) {
+jsonPlState.prototype.toBool = function (v) {
    var vb = v + "";
    vb = vb.toLowerCase();
-   if(vb === "true") {
+   if (vb === "true") {
       return true;
-   } else if(vb === "1") {
+   } else if (vb === "1") {
       return true;
-   } else if(vb === "yes") {
+   } else if (vb === "yes") {
       return true;
    } else {
       return false;
@@ -2433,16 +2432,16 @@ jsonPlState.prototype.toBool = function(v) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const)}
  */
-jsonPlState.prototype.processIf = function(objIf, func) {
+jsonPlState.prototype.processIf = function (objIf, func) {
    var left = null;
    var op = null;
    var right = null;
    var thn = null;
    var els = null;
-             
-   if(!this.isSysObjIf(objIf)) {
+
+   if (!this.isSysObjIf(objIf)) {
       this.wr("processFor: Error: argument objIf is not an if obj");
-   } else if(!this.isSysObjFunc(func)) {
+   } else if (!this.isSysObjFunc(func)) {
       this.wr("processFor: Error: argument func is not a func obj");
       return null;
    }
@@ -2452,246 +2451,246 @@ jsonPlState.prototype.processIf = function(objIf, func) {
    right = objIf.right;
    thn = objIf.thn;
    els = objIf.els;
-   
-   if(this.isSysObjConst(left)) {
+
+   if (this.isSysObjConst(left)) {
       //do nothing
-      
-   } else if(this.isSysObjRef(left)) {
+
+   } else if (this.isSysObjRef(left)) {
       left = this.processRef(left, func);
-      
-   } else if(this.isSysObjBex(left)) {
+
+   } else if (this.isSysObjBex(left)) {
       left = this.processBex(left, func);
-      
-   } else if(this.isSysObjExp(left)) {
+
+   } else if (this.isSysObjExp(left)) {
       left = this.processExp(left, func);
-      
-   } else if(this.isSysObjCall(left)) {      
+
+   } else if (this.isSysObjCall(left)) {
       left = this.processCall(left, func);
-      
+
    } else {
       this.wr("processBex: Error: argument left must be a ref obj");
       return null;
    }
-   
-   if(left === null) {
+
+   if (left === null) {
       this.wr("processBex: Error: error processing left");
       return null;
    }
 
-   if(this.isSysObjConst(right)) {
+   if (this.isSysObjConst(right)) {
       //do nothing
-      
-   } else if(this.isSysObjRef(right)) {
+
+   } else if (this.isSysObjRef(right)) {
       right = this.processRef(right, func);
-      
-   } else if(this.isSysObjBex(right)) {
+
+   } else if (this.isSysObjBex(right)) {
       right = this.processBex(right, func);
-      
-   } else if(this.isSysObjExp(right)) {
+
+   } else if (this.isSysObjExp(right)) {
       right = this.processExp(right, func);
-      
-   } else if(this.isSysObjCall(right)) {      
+
+   } else if (this.isSysObjCall(right)) {
       right = this.processCall(right, func);
 
    } else {
       this.wr("processBex: Error: argument right is an unknown obj: " + this.getSysObjType(right));
       return null;
    }
-   
-   if(right === null) {
+
+   if (right === null) {
       this.wr("processBex: Error: error processing right");
       return null;
-   }   
-   
-   if(left.val.type === right.val.type) {
+   }
+
+   if (left.val.type === right.val.type) {
       var ret = {};
       ret.sys = "val";
       ret.type = "bool";
       ret.v = null;
-      
+
       var ret2 = {};
       ret2.sys = "const";
-      
+
       var ret3 = null;
-      
-      if(op.v === "==") {
-         if(left.val.type === "int") {
-            if(parseInt(left.val.v) === parseInt(right.val.v)) {
+
+      if (op.v === "==") {
+         if (left.val.type === "int") {
+            if (parseInt(left.val.v) === parseInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(left.val.v) === parseFloat(right.val.v)) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(left.val.v) === parseFloat(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(left.val.v) === this.toBoolInt(right.val.v)) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(left.val.v) === this.toBoolInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "string") {
-            if(String(left.val.v) === String(right.val.v)) {
+         } else if (left.val.type === "string") {
+            if (String(left.val.v) === String(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
-            }               
+            }
          }
-      } else if(op.v === "!=") {
-         if(left.val.type === "int") {
-            if(parseInt(left.val.v) !== parseInt(right.val.v)) {
+      } else if (op.v === "!=") {
+         if (left.val.type === "int") {
+            if (parseInt(left.val.v) !== parseInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(left.val.v) !== parseFloat(right.val.v)) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(left.val.v) !== parseFloat(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(left.val.v) !== this.toBoolInt(right.val.v)) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(left.val.v) !== this.toBoolInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "string") {
-            if(String(left.val.v) !== String(right.val.v)) {
+         } else if (left.val.type === "string") {
+            if (String(left.val.v) !== String(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
-            }               
+            }
          }
-      } else if(op.v === "<") {
-         if(left.val.type === "int") {
-            if(parseInt(left.val.v) < parseInt(right.val.v)) {
+      } else if (op.v === "<") {
+         if (left.val.type === "int") {
+            if (parseInt(left.val.v) < parseInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(left.val.v) < parseFloat(right.val.v)) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(left.val.v) < parseFloat(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(left.val.v) < this.toBoolInt(right.val.v)) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(left.val.v) < this.toBoolInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "string") {
-            if(String(left.val.v).length < String(right.val.v).length) {
+         } else if (left.val.type === "string") {
+            if (String(left.val.v).length < String(right.val.v).length) {
                ret.v = "true";
             } else {
                ret.v = "false";
-            }               
+            }
          }
-      } else if(op.v === ">") {
-        if(left.val.type === "int") {
-            if(parseInt(left.val.v) > parseInt(right.val.v)) {
+      } else if (op.v === ">") {
+         if (left.val.type === "int") {
+            if (parseInt(left.val.v) > parseInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(left.val.v) > parseFloat(right.val.v)) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(left.val.v) > parseFloat(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(left.val.v) > this.toBoolInt(right.val.v)) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(left.val.v) > this.toBoolInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "string") {
-            if(String(left.val.v).length > String(right.val.v).length) {
+         } else if (left.val.type === "string") {
+            if (String(left.val.v).length > String(right.val.v).length) {
                ret.v = "true";
             } else {
                ret.v = "false";
-            }               
+            }
          }
-      } else if(op.v === "<=") {
-        if(left.val.type === "int") {
-            if(parseInt(left.val.v) <= parseInt(right.val.v)) {
+      } else if (op.v === "<=") {
+         if (left.val.type === "int") {
+            if (parseInt(left.val.v) <= parseInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(left.val.v) <= parseFloat(right.val.v)) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(left.val.v) <= parseFloat(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(left.val.v) <= this.toBoolInt(right.val.v)) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(left.val.v) <= this.toBoolInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "string") {
-            if(String(left.val.v).length <= String(right.val.v).length) {
+         } else if (left.val.type === "string") {
+            if (String(left.val.v).length <= String(right.val.v).length) {
                ret.v = "true";
             } else {
                ret.v = "false";
-            }               
+            }
          }
-      } else if(op.v === ">=") {
-        if(left.val.type === "int") {
-            if(parseInt(left.val.v) >= parseInt(right.val.v)) {
+      } else if (op.v === ">=") {
+         if (left.val.type === "int") {
+            if (parseInt(left.val.v) >= parseInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(left.val.v) >= parseFloat(right.val.v)) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(left.val.v) >= parseFloat(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(left.val.v) >= this.toBoolInt(right.val.v)) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(left.val.v) >= this.toBoolInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "string") {
-            if(String(left.val.v).length >= String(right.val.v).length) {
+         } else if (left.val.type === "string") {
+            if (String(left.val.v).length >= String(right.val.v).length) {
                ret.v = "true";
             } else {
                ret.v = "false";
-            }               
+            }
          }
       } else {
          this.wr("processBex: Error: unknown operator: " + op.v);
-         return null;               
+         return null;
       }
-      
-      if(this.toBool(ret.v) === true) {
+
+      if (this.toBool(ret.v) === true) {
          //run thn lines
          ret3 = this.processIfForLines(thn, func);
       } else {
          //run els lines
-         ret3 = this.processIfForLines(els, func);            
+         ret3 = this.processIfForLines(els, func);
       }
-      
+
       ret2.val = ret;
-      ret = ret2;      
+      ret = ret2;
       this.lastIfReturn = ret;
-      
-      if(this.isSysObjReturn(ret3)) {
+
+      if (this.isSysObjReturn(ret3)) {
          return ret3;
-      } else {      
+      } else {
          return ret;
-      }      
+      }
    } else {
       this.wr("processBex: Error: type mismatch: " + left.val.type + " - " + right.val.type);
       return null;
@@ -2706,38 +2705,38 @@ jsonPlState.prototype.processIf = function(objIf, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
  */
-jsonPlState.prototype.processIfForLines = function(objLines, func) {
-   if(objLines !== null && this.isArray(objLines) && objLines.length > 0) {
+jsonPlState.prototype.processIfForLines = function (objLines, func) {
+   if (objLines !== null && this.isArray(objLines) && objLines.length > 0) {
       var j = 0;
       var len = objLines.length;
       var ret = null;
       var line = null;
-      
-      for(j = 0; j < len; j++) {
+
+      for (j = 0; j < len; j++) {
          line = objLines[j];
-         
+
          //support comments
-         if(line.hasOwnProperty("active") && line.active === false) {
+         if (line.hasOwnProperty("active") && line.active === false) {
             continue;
          }
-                  
-         if(this.isSysObjAsgn(line)) {
+
+         if (this.isSysObjAsgn(line)) {
             ret = this.processAsgn(line, func);
-         
-         } else if(this.isSysObjCall(line)) {
+
+         } else if (this.isSysObjCall(line)) {
             ret = this.processCall(line, func);
-      
-         } else if(this.isSysObjFor(line)) {
-            ret = this.processFor(line, func);         
-      
-         } else if(this.isSysObjIf(line)) {
+
+         } else if (this.isSysObjFor(line)) {
+            ret = this.processFor(line, func);
+
+         } else if (this.isSysObjIf(line)) {
             ret = this.processIf(line, func);
 
-         } else if(this.isSysObjReturn(line)) {
+         } else if (this.isSysObjReturn(line)) {
             return line;
          }
-         
-         if(ret === null) {
+
+         if (ret === null) {
             this.wr("processIfForLines: Error: processing line returned null: " + j);
             return null;
          }
@@ -2749,11 +2748,11 @@ jsonPlState.prototype.processIfForLines = function(objLines, func) {
       ret.sys = "val";
       ret.type = "bool";
       ret.v = "true";
-      
+
       var ret2 = {};
       ret2.sys = "const";
-      ret2.val = ret;   
-      ret = ret2;   
+      ret2.val = ret;
+      ret = ret2;
       return ret;
    }
 };
@@ -2765,106 +2764,106 @@ jsonPlState.prototype.processIfForLines = function(objLines, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
  */
-jsonPlState.prototype.processFor = function(objFor, func) {
+jsonPlState.prototype.processFor = function (objFor, func) {
    var start = null;
    var stop = null;
    var inc = null;
 
-   if(!this.isSysObjFor(objFor)) {
+   if (!this.isSysObjFor(objFor)) {
       this.wr("processFor: Error: argument objRef is not a for obj");
       return null;
-   } else if(!this.isSysObjFunc(func)) {
+   } else if (!this.isSysObjFunc(func)) {
       this.wr("processFor: Error: argument func is not a func obj");
       return null;
    }
 
    start = objFor.start;
-   if(this.isSysObjConst(start)) {
+   if (this.isSysObjConst(start)) {
       //do nothing
-      
-   } else if(this.isSysObjRef(start)) {
+
+   } else if (this.isSysObjRef(start)) {
       start = this.processRef(start, func);
-      
-   } else if(this.isSysObjExp(start)) {
+
+   } else if (this.isSysObjExp(start)) {
       start = this.processExp(start, func);
-      
-   } else if(this.isSysObjBex(start)) {
-      start = this.processBex(start, func);      
-      
-   } else if(this.isSysObjCall(start)) {
+
+   } else if (this.isSysObjBex(start)) {
+      start = this.processBex(start, func);
+
+   } else if (this.isSysObjCall(start)) {
       start = this.processCall(start, func);
-      
+
    } else {
       this.wr("processFor: Error: argument start unsuppoorted type: " + start.sys);
       return null;
    }
 
-   if(start === null) {
+   if (start === null) {
       this.wr("processFor: Error: argument start is null");
       return null;
    }
 
    stop = objFor.stop;
-   if(this.isSysObjConst(start)) {
+   if (this.isSysObjConst(start)) {
       //do nothing
-      
-   } else if(this.isSysObjRef(stop)) {
+
+   } else if (this.isSysObjRef(stop)) {
       stop = this.processRef(stop, func);
-      
-   } else if(this.isSysObjExp(stop)) {
+
+   } else if (this.isSysObjExp(stop)) {
       stop = this.processExp(stop, func);
-      
-   } else if(this.isSysObjBex(stop)) {
+
+   } else if (this.isSysObjBex(stop)) {
       stop = this.processBex(stop, func);
-      
-   } else if(this.isSysObjCall(stop)) {
+
+   } else if (this.isSysObjCall(stop)) {
       stop = this.processCall(stop, func);
-      
+
    } else {
       this.wr("processFor: Error: argument stop unsuppoorted type: " + stop.sys);
       return null;
    }
 
-   if(stop === null) {
+   if (stop === null) {
       this.wr("processFor: Error: argument stop is null");
       return null;
    }
 
    inc = objFor.inc;
-   if(this.isSysObjConst(inc)) {
+   if (this.isSysObjConst(inc)) {
       //do nothing
-      
-   } else if(this.isSysObjRef(inc)) {
+
+   } else if (this.isSysObjRef(inc)) {
       inc = this.processRef(inc, func);
-      
-   } else if(this.isSysObjExp(inc)) {
+
+   } else if (this.isSysObjExp(inc)) {
       inc = this.processExp(inc, func);
-      
-   } else if(this.isSysObjBex(inc)) {
+
+   } else if (this.isSysObjBex(inc)) {
       inc = this.processBex(inc, func);
-      
-   } else if(this.isSysObjCall(inc)) {
-      inc = this.processCall(inc, func); 
-      
+
+   } else if (this.isSysObjCall(inc)) {
+      inc = this.processCall(inc, func);
+
    } else {
       this.wr("processFor: Error: argument inc unsuppoorted type: " + inc.sys);
       return null;
    }
 
-   if(inc === null) {
+   if (inc === null) {
       this.wr("processFor: Error: argument inc is null");
       return null;
    }
 
-   if(start.val.type !== "int") {
+   if (start.val.type !== "int") {
       this.wr("processFor: Error: argument start unsuppoorted type: " + start.sys);
       return null;
 
-   } else if(stop.val.type !== "int") {
+   } else if (stop.val.type !== "int") {
       this.wr("processFor: Error: argument stop unsuppoorted type: " + stop.sys);
       return null;
 
-   } else if(inc.val.type !== "int") {
+   } else if (inc.val.type !== "int") {
       this.wr("processFor: Error: argument inc unsuppoorted type: " + inc.sys);
       return null;
    }
@@ -2873,10 +2872,10 @@ jsonPlState.prototype.processFor = function(objFor, func) {
    ret.sys = "val";
    ret.type = "int";
    ret.v = 0 + "";
-   
+
    var ret2 = {};
    ret2.sys = "const";
-   ret2.val = ret;   
+   ret2.val = ret;
    ret = ret2;
 
    var ret3 = null;
@@ -2886,10 +2885,10 @@ jsonPlState.prototype.processFor = function(objFor, func) {
    var startAmt = parseInt(start.val.v);
    for (i = startAmt; i < lenAmt; i += incAmt) {
       ret3 = this.processIfForLines(objFor.lines, func);
-      if(ret3 === null) {
+      if (ret3 === null) {
          this.wr("processFor: Error: process loop iteration " + i + " returned a null value.");
          return null;
-      } else if(this.isSysObjReturn(ret3)) {
+      } else if (this.isSysObjReturn(ret3)) {
          return ret3;
       } else {
          ret.val.v = i + "";
@@ -2906,7 +2905,7 @@ jsonPlState.prototype.processFor = function(objFor, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const)}
  */
-jsonPlState.prototype.processAsgn = function(objAsgn, func) {
+jsonPlState.prototype.processAsgn = function (objAsgn, func) {
    var left = null;
    var op = null;
    var right = null;
@@ -2921,67 +2920,67 @@ jsonPlState.prototype.processAsgn = function(objAsgn, func) {
    var rightIsRef = false;
    var rightOrig = null;
 
-   if(!this.isSysObjAsgn(objAsgn)) {
+   if (!this.isSysObjAsgn(objAsgn)) {
       this.wr("processAsgn: Error: argument objRef is not a asgn obj");
       return null;
-      
-   } else if(!this.isSysObjFunc(func)) {
+
+   } else if (!this.isSysObjFunc(func)) {
       this.wr("processAsgn: Error: argument func is not a func obj");
       return null;
    }
-   
+
    left = objAsgn.left;
    op = objAsgn.op;
    right = objAsgn.right;
 
    leftOrig = left;
    rightOrig = right;
-   
-   if(this.isSysObjRef(left)) {
+
+   if (this.isSysObjRef(left)) {
       leftIsRef = true;
    }
 
-   if(this.isSysObjRef(right)) {
+   if (this.isSysObjRef(right)) {
       rightIsRef = true;
    }
 
    left = this.processRef(left, func);
-   if(left === null) {
+   if (left === null) {
       this.wr("processAsgn: Error: error processing left");
       return null;
    }
 
-   if(this.isSysObjConst(right)) {
+   if (this.isSysObjConst(right)) {
       //do nothing, all set      
-   } else if(this.isSysObjRef(right)) {      
+   } else if (this.isSysObjRef(right)) {
       right = this.processRef(right, func);
-      
-   } else if(this.isSysObjBex(right)) {
+
+   } else if (this.isSysObjBex(right)) {
       right = this.processBex(right, func);
-      
-   } else if(this.isSysObjExp(right)) {
+
+   } else if (this.isSysObjExp(right)) {
       right = this.processExp(right, func);
-      
-   } else if(this.isSysObjCall(right)) {      
+
+   } else if (this.isSysObjCall(right)) {
       right = this.processCall(right, func);
-      
+
    } else {
       this.wr("processAsgn: Error: argument right is an unknown obj: " + this.getSysObjType(right));
       return null;
    }
-   
-   if(right === null) {
+
+   if (right === null) {
       this.wr("processAsgn: Error: error processing right");
       return null;
-   }   
-   
-   if(this.isSysObjValArray(left)) {
+   }
+
+   if (this.isSysObjValArray(left)) {
       leftIsArray = true;
    } else {
       leftIsBasic = true;
    }
 
-   if(this.isSysObjValArray(right)) {
+   if (this.isSysObjValArray(right)) {
       rightIsArray = true;
    } else {
       rightIsBasic = true;
@@ -2991,31 +2990,31 @@ jsonPlState.prototype.processAsgn = function(objAsgn, func) {
    ret.sys = "val";
    ret.type = "bool";
    ret.v = "true";
-   
+
    var ret2 = {};
    ret2.sys = "const";
    ret2.val = ret;
    ret = ret2;
 
-   if(left.val.type === right.val.type) {
-      if(leftIsBasic && rightIsBasic) {
+   if (left.val.type === right.val.type) {
+      if (leftIsBasic && rightIsBasic) {
          //both are basic, dereference if need be, and copy value
-         left.val.v = right.val.v;         
+         left.val.v = right.val.v;
          this.lastAsgnValue = this.cloneJsonObj(left);
          this.lastAsgnReturn = ret;
          return ret;
-      } else if(leftIsArray && rightIsArray && rightIsRef) {
+      } else if (leftIsArray && rightIsArray && rightIsRef) {
          //both are array refs, dereference if need be, and copy reference
          left.val.v = right.val.v;
          this.lastAsgnValue = this.cloneJsonObj(left);
          this.lastAsgnReturn = ret;
          return ret;
-      } else if(leftIsArray && rightIsArray && !rightIsRef) {
+      } else if (leftIsArray && rightIsArray && !rightIsRef) {
          //left is array ref, right is array const, copy value
          left.val.v = [];
          var tmpA = this.toArray(left.val.v);
          var tmpB = this.toArray(right.val.v);
-         for(var i = 0; i < tmpB.size(); i++) {
+         for (var i = 0; i < tmpB.size(); i++) {
             tmpA.push(tmpB[i]);
          }
          this.lastAsgnValue = this.cloneJsonObj(left);
@@ -3025,14 +3024,14 @@ jsonPlState.prototype.processAsgn = function(objAsgn, func) {
          this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
          ret.val.v = "false";
          this.lastAsgnValue = this.cloneJsonObj(left);
-         this.lastAsgnReturn = ret;         
+         this.lastAsgnReturn = ret;
          return ret;
       }
    } else {
       this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
       ret.val.v = "false";
       this.lastAsgnValue = this.cloneJsonObj(left);
-      this.lastAsgnReturn = ret;      
+      this.lastAsgnReturn = ret;
       return ret;
    }
 };
@@ -3044,248 +3043,248 @@ jsonPlState.prototype.processAsgn = function(objAsgn, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const)}
  */
-jsonPlState.prototype.processBex = function(objBex, func) {
+jsonPlState.prototype.processBex = function (objBex, func) {
    var left = null;
    var op = null;
    var right = null;
 
-   if(!this.isSysObjBex(objBex)) {
+   if (!this.isSysObjBex(objBex)) {
       this.wr("processBex: Error: argument objRef is not a asgn obj");
       return null;
-      
-   } else if(!this.isSysObjFunc(func)) {
+
+   } else if (!this.isSysObjFunc(func)) {
       this.wr("processBex: Error: argument func is not a func obj");
       return null;
    }
-   
+
    left = objBex.left;
    op = objBex.op;
    right = objBex.right;
-      
-   if(this.isSysObjConst(left)) {
+
+   if (this.isSysObjConst(left)) {
       //do nothing
-      
-   } else if(this.isSysObjRef(left)) {
+
+   } else if (this.isSysObjRef(left)) {
       left = this.processRef(left, func);
-      
-   } else if(this.isSysObjBex(left)) {
+
+   } else if (this.isSysObjBex(left)) {
       left = this.processBex(left, func);
-      
-   } else if(this.isSysObjExp(left)) {
+
+   } else if (this.isSysObjExp(left)) {
       left = this.processExp(left, func);
-      
-   } else if(this.isSysObjCall(left)) {      
+
+   } else if (this.isSysObjCall(left)) {
       left = this.processCall(left, func);
-      
+
    } else {
       this.wr("processBex: Error: argument left must be a ref obj");
       return null;
    }
-   
-   if(left === null) {
+
+   if (left === null) {
       this.wr("processBex: Error: error processing left");
       return null;
    }
 
-   if(this.isSysObjConst(right)) {
+   if (this.isSysObjConst(right)) {
       //do nothing
-      
-   } else if(this.isSysObjRef(right)) {
+
+   } else if (this.isSysObjRef(right)) {
       right = this.processRef(right, func);
-      
-   } else if(this.isSysObjBex(right)) {
+
+   } else if (this.isSysObjBex(right)) {
       right = this.processBex(right, func);
-      
-   } else if(this.isSysObjExp(right)) {
+
+   } else if (this.isSysObjExp(right)) {
       right = this.processExp(right, func);
-      
-   } else if(this.isSysObjCall(right)) {      
+
+   } else if (this.isSysObjCall(right)) {
       right = this.processCall(right, func);
 
    } else {
       this.wr("processBex: Error: argument right is an unknown obj: " + this.getSysObjType(right));
       return null;
    }
-   
-   if(right === null) {
+
+   if (right === null) {
       this.wr("processBex: Error: error processing right");
       return null;
-   }   
-   
-   if(left.val.type === right.val.type) {
+   }
+
+   if (left.val.type === right.val.type) {
       var ret = {};
       ret.sys = "val";
       ret.type = "bool";
       ret.v = null;
-      
+
       var ret2 = {};
       ret2.sys = "const";
-         
-      if(op.v === "==") {
-         if(left.val.type === "int") {
-            if(parseInt(left.val.v) === parseInt(right.val.v)) {
+
+      if (op.v === "==") {
+         if (left.val.type === "int") {
+            if (parseInt(left.val.v) === parseInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(left.val.v) === parseFloat(right.val.v)) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(left.val.v) === parseFloat(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(left.val.v) === this.toBoolInt(right.val.v)) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(left.val.v) === this.toBoolInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "string") {
-            if(String(left.val.v) === String(right.val.v)) {
+         } else if (left.val.type === "string") {
+            if (String(left.val.v) === String(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
-            }               
+            }
          }
-      } else if(op.v === "!=") {
-         if(left.val.type === "int") {
-            if(parseInt(left.val.v) !== parseInt(right.val.v)) {
+      } else if (op.v === "!=") {
+         if (left.val.type === "int") {
+            if (parseInt(left.val.v) !== parseInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(left.val.v) !== parseFloat(right.val.v)) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(left.val.v) !== parseFloat(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(left.val.v) !== this.toBoolInt(right.val.v)) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(left.val.v) !== this.toBoolInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "string") {
-            if(String(left.val.v) !== String(right.val.v)) {
+         } else if (left.val.type === "string") {
+            if (String(left.val.v) !== String(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
-            }               
+            }
          }
-      } else if(op.v === "<") {
-         if(left.val.type === "int") {
-            if(parseInt(left.val.v) < parseInt(right.val.v)) {
+      } else if (op.v === "<") {
+         if (left.val.type === "int") {
+            if (parseInt(left.val.v) < parseInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(left.val.v) < parseFloat(right.val.v)) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(left.val.v) < parseFloat(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(left.val.v) < this.toBoolInt(right.val.v)) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(left.val.v) < this.toBoolInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "string") {
-            if(String(left.val.v).length < String(right.val.v).length) {
+         } else if (left.val.type === "string") {
+            if (String(left.val.v).length < String(right.val.v).length) {
                ret.v = "true";
             } else {
                ret.v = "false";
-            }               
+            }
          }
-      } else if(op.v === ">") {
-        if(left.val.type === "int") {
-            if(parseInt(left.val.v) > parseInt(right.val.v)) {
+      } else if (op.v === ">") {
+         if (left.val.type === "int") {
+            if (parseInt(left.val.v) > parseInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(left.val.v) > parseFloat(right.val.v)) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(left.val.v) > parseFloat(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(left.val.v) > this.toBoolInt(right.val.v)) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(left.val.v) > this.toBoolInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "string") {
-            if(String(left.val.v).length > String(right.val.v).length) {
+         } else if (left.val.type === "string") {
+            if (String(left.val.v).length > String(right.val.v).length) {
                ret.v = "true";
             } else {
                ret.v = "false";
-            }               
+            }
          }
-      } else if(op.v === "<=") {
-        if(left.val.type === "int") {
-            if(parseInt(left.val.v) <= parseInt(right.val.v)) {
+      } else if (op.v === "<=") {
+         if (left.val.type === "int") {
+            if (parseInt(left.val.v) <= parseInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(left.val.v) <= parseFloat(right.val.v)) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(left.val.v) <= parseFloat(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(left.val.v) <= this.toBoolInt(right.val.v)) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(left.val.v) <= this.toBoolInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "string") {
-            if(String(left.val.v).length <= String(right.val.v).length) {
+         } else if (left.val.type === "string") {
+            if (String(left.val.v).length <= String(right.val.v).length) {
                ret.v = "true";
             } else {
                ret.v = "false";
-            }               
+            }
          }
-      } else if(op.v === ">=") {
-        if(left.val.type === "int") {
-            if(parseInt(left.val.v) >= parseInt(right.val.v)) {
+      } else if (op.v === ">=") {
+         if (left.val.type === "int") {
+            if (parseInt(left.val.v) >= parseInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(left.val.v) >= parseFloat(right.val.v)) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(left.val.v) >= parseFloat(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(left.val.v) >= this.toBoolInt(right.val.v)) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(left.val.v) >= this.toBoolInt(right.val.v)) {
                ret.v = "true";
             } else {
                ret.v = "false";
             }
-         } else if(left.val.type === "string") {
-            if(String(left.val.v).length >= String(right.val.v).length) {
+         } else if (left.val.type === "string") {
+            if (String(left.val.v).length >= String(right.val.v).length) {
                ret.v = "true";
             } else {
                ret.v = "false";
-            }               
-         }         
+            }
+         }
       } else {
          this.wr("processBex: Error: unknown operator: " + op.v);
-         return null;               
+         return null;
       }
-      
-      ret2.val = ret;  
-      ret = ret2;               
+
+      ret2.val = ret;
+      ret = ret2;
       this.lastBexReturn = ret;
-      return ret;      
+      return ret;
    } else {
       this.wr("processBex: Error: type mismatch: " + left.val.type + " - " + right.val.type);
       return null;
@@ -3298,14 +3297,14 @@ jsonPlState.prototype.processBex = function(objBex, func) {
  * Arg1: objFunc(bex obj, sys=func)
  * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
  */
-jsonPlState.prototype.processFunc = function(objFunc) {
-   if(!this.isSysObjFunc(objFunc)) {
+jsonPlState.prototype.processFunc = function (objFunc) {
+   if (!this.isSysObjFunc(objFunc)) {
       this.wr("processFunc: Error: argument objRef is not a call func");
       return null;
    }
-   
-   var ret3 = null;   
-   ret3 = this.processIfForLines(objFunc.lines, objFunc);      
+
+   var ret3 = null;
+   ret3 = this.processIfForLines(objFunc.lines, objFunc);
    return ret3;
 };
 
@@ -3316,90 +3315,92 @@ jsonPlState.prototype.processFunc = function(objFunc) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
  */
-jsonPlState.prototype.processCall = function(objCall, func) {
+jsonPlState.prototype.processCall = function (objCall, func) {
    var name = null;
    var args = null;
    var funcDef = null;
    var funcArgs = null;
-   var tmpArg = null;   
+   var tmpArg = null;
    var ret = null;
    var sysFunc = false;
-   
-   if(!this.isSysObjCall(objCall)) {
+
+   if (!this.isSysObjCall(objCall)) {
       this.wr("processCall: Error: argument objRef is not a call obj");
       return null;
-      
-   } else if(!this.isSysObjFunc(func)) {
+
+   } else if (!this.isSysObjFunc(func)) {
       this.wr("processCall: Error: argument func is not a func obj");
       return null;
    }
-   
+
    name = objCall.name;
    args = this.cloneJsonObj(objCall.args);
    funcDef = this.findFunc(name);
-   if(funcDef !== null) {
+   if (funcDef !== null) {
       funcArgs = funcDef.args;
-      
+
    } else {
       sysFunc = true;
       funcDef = this.findSysFunc(name);
-      if(funcDef !== null) {
+      if (funcDef !== null) {
          funcArgs = funcDef.args;
       } else {
          this.wr("processCall: Error: no function found with name: " + name);
-         return null;         
+         return null;
       }
    }
-   
-   if(funcArgs !== null) {
-	  if((args.length === funcArgs.length) || funcArgs.length === 0) {
-		if(funcArgs.length === 0) {
-			 for(var i = 0; i < args.length; i++) {
-				if(this.isSysObjRef(args[i])) {
-				   tmpArg = null;
-				   tmpArg = this.processRef(args[i], func);
-				   if(tmpArg !== null) {
-					  args[i].val.v = tmpArg.val.v;
-					  args[i].name = args[i].name;
-				   } else {
-					  this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
-					  return null;
-				   }
-				}
-			 }		
-		} else {
-			 for(var i = 0; i < args.length; i++) {
-				if(args[i].val.type !== funcArgs[i].val.type) {
-				   this.wr("processCall: Error: type mismatch at argument index, " + i + ", func arg def: " + funcArgs[i].val.type + ", call arg: " + args[i].val.type);
-				   return null;
-				}
-				
-				if(this.isSysObjRef(args[i])) {
-				   tmpArg = null;
-				   tmpArg = this.processRef(args[i], func);
-				   if(tmpArg !== null) {
-					  args[i].val.v = tmpArg.val.v;
-					  args[i].name = funcArgs[i].name;
-				   } else {
-					  this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
-					  return null;
-				   }
-				}
-			 }
-		 }
-	  
-         if(sysFunc) {
+
+   if (funcArgs !== null) {
+      if (funcArgs === null || (funcArgs !== null && args.length === funcArgs.length) || (funcArgs !== null && funcArgs.length === 0)) {
+         if(funcArgs === null) {
+            args = [];
+         } else if (funcArgs.length === 0) {
+            for (var i = 0; i < args.length; i++) {
+               if (this.isSysObjRef(args[i])) {
+                  tmpArg = null;
+                  tmpArg = this.processRef(args[i], func);
+                  if (tmpArg !== null) {
+                     args[i].val.v = tmpArg.val.v;
+                     args[i].name = args[i].name;
+                  } else {
+                     this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
+                     return null;
+                  }
+               }
+            }
+         } else {
+            for (var i = 0; i < args.length; i++) {
+               if (args[i].val.type !== funcArgs[i].val.type) {
+                  this.wr("processCall: Error: type mismatch at argument index, " + i + ", func arg def: " + funcArgs[i].val.type + ", call arg: " + args[i].val.type);
+                  return null;
+               }
+
+               if (this.isSysObjRef(args[i])) {
+                  tmpArg = null;
+                  tmpArg = this.processRef(args[i], func);
+                  if (tmpArg !== null) {
+                     args[i].val.v = tmpArg.val.v;
+                     args[i].name = funcArgs[i].name;
+                  } else {
+                     this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
+                     return null;
+                  }
+               }
+            }
+         }
+
+         if (sysFunc) {
             var err = true;
             var lret = null;
             try {
-               lret = this[funcDef.fname](args, func);            
+               lret = this[funcDef.fname](args, func);
                err = false;
             } catch (e) {
                lret = null;
-               err = true;               
+               err = true;
             }
-            
-            if(lret === null) {               
+
+            if (lret === null) {
                var ret = {};
                ret.sys = "val";
                ret.type = "bool";
@@ -3407,43 +3408,43 @@ jsonPlState.prototype.processCall = function(objCall, func) {
 
                var ret2 = {};
                ret2.sys = "const";
-               ret2.val = ret;  
+               ret2.val = ret;
                ret = ret2;
                return ret;
             } else {
                return lret;
-            }            
+            }
          } else {
             //backup default args
             funcDef.args_def = this.cloneJsonObj(funcDef.args);
             funcDef.args = args;
-            
+
             //backup default ret
-            funcDef.ret_def = this.cloneJsonObj(funcDef.ret);    
+            funcDef.ret_def = this.cloneJsonObj(funcDef.ret);
             ret = this.processFunc(funcDef);
-            
+
             //this.wr("RET_DEF");
             //this.wrObj(funcDef.ret_def);
-            
-            if(ret !== null && (ret.val.type !== funcDef.ret_def.type)) {
+
+            if (ret !== null && (ret.val.type !== funcDef.ret_def.type)) {
                this.wr("processCall: Error: function return type mismatch, return type " + ret.val.type + " expected " + funcDef.ret_def.type);
                return null;
             }
-            
+
             //restore args and ret
             funcDef.args = this.cloneJsonObj(funcDef.args_def);
             funcDef.ret = this.cloneJsonObj(funcDef.ret_def);
-            
+
             return ret;
          }
       } else {
          this.wr("processCall: Error: function argument length mismatch, func arg def: " + funcArgs.length + ", call arg: " + args.length);
-         return null;         
+         return null;
       }
    } else {
-      this.wr("processCall: Error: function arguments is null");               
+      this.wr("processCall: Error: function arguments is null");
       return null;
-   }      
+   }
 };
 
 /**
@@ -3453,75 +3454,75 @@ jsonPlState.prototype.processCall = function(objCall, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const)}
  */
-jsonPlState.prototype.processExp = function(objExp, func) {
+jsonPlState.prototype.processExp = function (objExp, func) {
    var left = null;
    var op = null;
    var right = null;
 
-   if(!this.isSysObjExp(objExp)) {
+   if (!this.isSysObjExp(objExp)) {
       this.wr("processExp: Error: argument objRef is not a asgn obj");
       return null;
-      
-   } else if(!this.isSysObjFunc(func)) {
+
+   } else if (!this.isSysObjFunc(func)) {
       this.wr("processExp: Error: argument func is not a func obj");
       return null;
    }
-   
+
    left = objExp.left;
    op = objExp.op;
    right = objExp.right;
-      
-   if(this.isSysObjConst(left)) {
+
+   if (this.isSysObjConst(left)) {
       //do nothing
-      
-   } else if(this.isSysObjRef(left)) {
+
+   } else if (this.isSysObjRef(left)) {
       left = this.processRef(left, func);
-      
-   } else if(this.isSysObjBex(left)) {
+
+   } else if (this.isSysObjBex(left)) {
       left = this.processBex(left, func);
-      
-   } else if(this.isSysObjExp(left)) {
+
+   } else if (this.isSysObjExp(left)) {
       left = this.processExp(left, func);
-      
-   } else if(this.isSysObjCall(left)) {      
+
+   } else if (this.isSysObjCall(left)) {
       left = this.processCall(left, func);
-      
+
    } else {
       this.wr("processExp: Error: argument left must be a ref obj");
       return null;
    }
-   
-   if(left === null) {
+
+   if (left === null) {
       this.wr("processExp: Error: error processing left");
       return null;
    }
 
-   if(this.isSysObjConst(right)) {
+   if (this.isSysObjConst(right)) {
       //do nothing
-      
-   } else if(this.isSysObjRef(right)) {      
+
+   } else if (this.isSysObjRef(right)) {
       right = this.processRef(right, func);
-      
-   } else if(this.isSysObjBex(right)) {
+
+   } else if (this.isSysObjBex(right)) {
       right = this.processBex(right, func);
-      
-   } else if(this.isSysObjExp(right)) {
+
+   } else if (this.isSysObjExp(right)) {
       right = this.processExp(right, func);
-      
-   } else if(this.isSysObjCall(right)) {      
+
+   } else if (this.isSysObjCall(right)) {
       right = this.processCall(right, func);
-      
+
    } else {
       this.wr("processExp: Error: argument right is an unknown obj: " + this.getSysObjType(right));
       return null;
    }
-   
-   if(right === null) {
+
+   if (right === null) {
       this.wr("processExp: Error: error processing right");
       return null;
-   }   
-   
-   if(left.val.type === right.val.type && (left.val.type === "int" || left.val.type === "float" || left.val.type === "bool")) {
+   }
+
+   if (left.val.type === right.val.type && (left.val.type === "int" || left.val.type === "float" || left.val.type === "bool")) {
       var ret = {};
       ret.sys = "val";
       ret.type = left.val.type;
@@ -3529,74 +3530,74 @@ jsonPlState.prototype.processExp = function(objExp, func) {
 
       var ret2 = {};
       ret2.sys = "const";
-      ret2.val = ret;         
-         
-      if(op.v === "+") {
-         if(left.val.type === "int") {
-            ret.v = parseInt(left.val.v) + parseInt(right.val.v); 
-         } else if(left.val.type === "float") {
-            ret.v = parseFloat(left.val.v) + parseFloat(right.val.v); 
-         } else if(left.val.type === "bool") {
-            ret.v = this.toBoolInt(left.val.v) + this.toBoolInt(right.val.v); 
-         }                  
-      } else if(op.v === "-") {
-         if(left.val.type === "int") {
-            ret.v = parseInt(left.val.v) - parseInt(right.val.v); 
-         } else if(left.val.type === "float") {
-            ret.v = parseFloat(left.val.v) - parseFloat(right.val.v); 
-         } else if(left.val.type === "bool") {
-            ret.v = this.toBoolInt(left.val.v) - this.toBoolInt(right.val.v); 
-         }         
-      } else if(op.v === "/") {
-         if(left.val.type === "int") {
-            if(parseInt(right.val.v) === 0) {
+      ret2.val = ret;
+
+      if (op.v === "+") {
+         if (left.val.type === "int") {
+            ret.v = parseInt(left.val.v) + parseInt(right.val.v);
+         } else if (left.val.type === "float") {
+            ret.v = parseFloat(left.val.v) + parseFloat(right.val.v);
+         } else if (left.val.type === "bool") {
+            ret.v = this.toBoolInt(left.val.v) + this.toBoolInt(right.val.v);
+         }
+      } else if (op.v === "-") {
+         if (left.val.type === "int") {
+            ret.v = parseInt(left.val.v) - parseInt(right.val.v);
+         } else if (left.val.type === "float") {
+            ret.v = parseFloat(left.val.v) - parseFloat(right.val.v);
+         } else if (left.val.type === "bool") {
+            ret.v = this.toBoolInt(left.val.v) - this.toBoolInt(right.val.v);
+         }
+      } else if (op.v === "/") {
+         if (left.val.type === "int") {
+            if (parseInt(right.val.v) === 0) {
                this.wr("processExp: Error: divide by zero error");
                return null;
-               
+
             } else {
                ret.v = parseInt(left.val.v) / parseInt(right.val.v);
             }
-         } else if(left.val.type === "float") {
-            if(parseFloat(right.val.v) === 0) {
+         } else if (left.val.type === "float") {
+            if (parseFloat(right.val.v) === 0) {
                this.wr("processExp: Error: divide by zero error");
                return null;
-               
+
             } else {
                ret.v = parseFloat(left.val.v) / parseFloat(right.val.v);
             }
-         } else if(left.val.type === "bool") {
-            if(this.toBoolInt(right.val.v) === 0) {
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(right.val.v) === 0) {
                this.wr("processExp: Error: divide by zero error");
                return null;
-               
+
             } else {
                ret.v = this.toBoolInt(left.val.v) / this.toBoolInt(right.val.v);
             }
          }
-      } else if(op.v === "*") {
-         if(left.val.type === "int") {
-            ret.v = parseInt(left.val.v) * parseInt(right.val.v); 
-         } else if(left.val.type === "float") {
-            ret.v = parseFloat(left.val.v) * parseFloat(right.val.v); 
-         } else if(left.val.type === "bool") {
-            ret.v = this.toBoolInt(left.val.v) * this.toBoolInt(right.val.v); 
-         }         
+      } else if (op.v === "*") {
+         if (left.val.type === "int") {
+            ret.v = parseInt(left.val.v) * parseInt(right.val.v);
+         } else if (left.val.type === "float") {
+            ret.v = parseFloat(left.val.v) * parseFloat(right.val.v);
+         } else if (left.val.type === "bool") {
+            ret.v = this.toBoolInt(left.val.v) * this.toBoolInt(right.val.v);
+         }
       } else {
          this.wr("processExp: Error: unknown operator: " + op.v);
-         return null;               
+         return null;
       }
-      
-      if(left.val.type === "int") {
+
+      if (left.val.type === "int") {
          ret.v = parseInt(ret.v) + "";
-      } else if(left.val.type === "float") {
-         ret.v = parseFloat(ret.v) + "";         
-      } else if(left.val.type === "bool") {
+      } else if (left.val.type === "float") {
+         ret.v = parseFloat(ret.v) + "";
+      } else if (left.val.type === "bool") {
          ret.v = this.toBool(ret.v) + "";
       }
-      
+
       ret = ret2;
       this.lastExpReturn = ret;
-      return ret;      
+      return ret;
    } else {
       this.wr("processExp: Error: type mismatch: " + left.val.type + " - " + right.val.type);
       return null;
@@ -3609,17 +3610,17 @@ jsonPlState.prototype.processExp = function(objExp, func) {
  * Arg1: src(the JSON text to check) 
  * Returns: {true | false}
  */
-jsonPlState.prototype.hasReplDirectives = function(src) {
-	if(src === null) {
+jsonPlState.prototype.hasReplDirectives = function (src) {
+   if (src === null) {
       this.wr("hasReplDirectives: Error: argument src cannot be null.");
       return false;
-	}
-   
-	if(src.indexOf("@(repl::") === -1) {
-		return false;
-	} else {
-		return true;
-	}
+   }
+
+   if (src.indexOf("@(repl::") === -1) {
+      return false;
+   } else {
+      return true;
+   }
 }
 
 /**
@@ -3630,32 +3631,32 @@ jsonPlState.prototype.hasReplDirectives = function(src) {
  * Arg3: src(the JSON text to process) 
  * Returns: string(new, adjusted, JSON string)
  */
-jsonPlState.prototype.processReplDirectives = function(keys, values, src) {
-   if(keys === null) {
+jsonPlState.prototype.processReplDirectives = function (keys, values, src) {
+   if (keys === null) {
       this.wr("processReplDirectives: Error: argument keys cannot be null.");
       return null;
    }
-   
-   if(values === null) {
-      this.wr("processReplDirectives: Error: argument values cannot be null.");      
+
+   if (values === null) {
+      this.wr("processReplDirectives: Error: argument values cannot be null.");
       return null;
    }
-   
-   if(values.length != keys.length) {
+
+   if (values.length != keys.length) {
       this.wr("processReplDirectives: Error: argument keys and values must have the same length.");
       return null;
    }
-   
-   if(src === null) {
+
+   if (src === null) {
       this.wr("processReplDirectives: Error: argument src cannot be null.");
       return null;
    }
 
    var nsrc = this.toStr(src);
-   for(var i = 0; i < keys.length; i++) {
+   for (var i = 0; i < keys.length; i++) {
       var fnd = "@(repl::" + keys[i] + ")";
       nsrc = nsrc.replaceAll(fnd, values[i]);
    }
-   
+
    return nsrc;
 };

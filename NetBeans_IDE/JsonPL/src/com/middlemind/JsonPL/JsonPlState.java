@@ -630,7 +630,6 @@ public class JsonPlState {
         }
     }
 
-    //TODO: Continue review here
     /**
      * Name: isString 
      * Desc: Checks if the given argument is a string. 
@@ -647,6 +646,7 @@ public class JsonPlState {
         }
     }
     
+    //TODO: Continue review here
     /**
      * Name: isNumber
      * Desc: Checks if the given argument is a number. 
@@ -3304,13 +3304,13 @@ public class JsonPlState {
                     try {
                         String lname = funcDef.fname;
                         if (lname.equals("sysJob1")) {
-                            lret = sysJob1();
+                            lret = sysJob1(args, func);
 
                         } else if (lname.equals("sysJob2")) {
-                            lret = sysJob2();
+                            lret = sysJob2(args, func);
 
                         } else if (lname.equals("sysJob3")) {
-                            lret = sysJob3();
+                            lret = sysJob3(args, func);
 
                         } else if (lname.equals("sysGetLastAsgnValue")) {
                             lret = lastAsgnValue;
