@@ -7,7 +7,7 @@
             "sys": "class",
             "name": "test1",
             "call": {"sys": "call", "name": "testFunction1", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}]},
-            "vars": [
+            "vars": [		
                {
                   "sys": "var",
                   "name": "tmp1",
@@ -604,6 +604,7 @@
             jpl.wrObj(res);            
 
             ///////////////////////////TESTS: FUNCTION CALLS
+			jpl.program = JSON.parse(JSON.stringify(code));
             tmp = {
                "sys": "call", 
                "name": "testFunction2", 
@@ -620,7 +621,7 @@
             };
             jpl.wr("====================== TEST 5.00: Function Call ======================");
             jpl.wrObj(tmp);
-            res = jpl.processCall(tmp, code.funcs[0]);
+            res = jpl.processCall(tmp, code.funcs[1]);
             jpl.wr("CALL RESULT:");
             jpl.wrObj(res);
             jpl.wr("CALL FUNCS[1] ARGS:");

@@ -19,6 +19,46 @@
          "name": "SYS::wr",
          "fname": "sysWr",
          "args": [   
+
+         ]
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::wrInt",
+         "fname": "sysWr",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "s",
+               "val": {
+                  "sys": "val",
+                  "type": "int",
+                  "v": ""
+               }
+            }
+         ]
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::wrFloat",
+         "fname": "sysWr",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "s",
+               "val": {
+                  "sys": "val",
+                  "type": "float",
+                  "v": ""
+               }
+            }
+         ]
+      },
+      {
+         "sys": "func", 
+         "name": "SYS::wrStr",
+         "fname": "sysWr",
+         "args": [   
             {
                "sys": "arg",
                "name": "s",
@@ -30,6 +70,22 @@
             }
          ]
       },
+      {
+         "sys": "func", 
+         "name": "SYS::wrBool",
+         "fname": "sysWr",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "s",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": ""
+               }
+            }
+         ]
+      },      
       {
          "sys": "func", 
          "name": "SYS::job1",
@@ -47,6 +103,106 @@
          "name": "SYS::job3",
          "fname": "sysJob3",
          "args": []
-      }            
+      },   
+      {
+         "sys": "func", 
+         "name": "SYS::len",
+         "fname": "sysLen",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "s",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }
+         ]
+      },   
+      {
+         "sys": "func", 
+         "name": "SYS::type",
+         "fname": "sysType",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "s",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }
+         ]
+      },   
+      {
+         "sys": "func", 
+         "name": "SYS::getRef",
+         "fname": "sysGetRef",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "name",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "isVar",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": "false"
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "funcName",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }            
+         ]
+      },   
+      {
+         "sys": "func", 
+         "name": "SYS::getRefStr",
+         "fname": "sysGetRefStr",
+         "args": [   
+            {
+               "sys": "arg",
+               "name": "name",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "isVar",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": "false"
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "funcName",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }            
+         ]
+      }
    ]
 }

@@ -32,10 +32,11 @@ function jsonPlState() {
 }
 
 /**
- * Name: sysWr
- * Desc: A system level write function.
- * Arg1: args(arg obj, sys=arg & array of)
- * Returns: {(const obj, sys=const)}
+ * Name: sysWr 
+ * Desc: A system level write function. 
+ * Arg1: args(an array of {arg} objects) 
+ * Arg2: func(the {func} this system function is called from) 
+ * Returns: const(a {const} bool object) 
  */
 jsonPlState.prototype.sysWr = function(args, func) {
    var len = args.length;
@@ -62,7 +63,7 @@ jsonPlState.prototype.sysWr = function(args, func) {
 /**
  * Name: sysGetLastAsgnValue
  * Desc: A system level method to access the last asgn value object.
- * Returns: {(const obj, sys=const)}
+ * Returns: const(a {const} bool object)
  */
 jsonPlState.prototype.sysGetLastAsgnValue = function(args, func) {   
    return this.lastAsgnValue;
@@ -71,7 +72,7 @@ jsonPlState.prototype.sysGetLastAsgnValue = function(args, func) {
 /**
  * Name: sysGetLastAsgnValue
  * Desc: A system level method to access the last exp return object.
- * Returns: {(const obj, sys=const)}
+ * Returns: const(a {const} bool object)
  */
 jsonPlState.prototype.sysGetLastExpReturn = function(args, func) {   
    return this.lastExpReturn;
@@ -80,7 +81,7 @@ jsonPlState.prototype.sysGetLastExpReturn = function(args, func) {
 /**
  * Name: getConstBool
  * Desc: A method to quickly access a constant bool value object.
- * Returns: {(const obj, sys=const)}
+ * Returns: const(a {const} bool object)
  */
 jsonPlState.prototype.getConstBool = function() {
    var ret = {};
@@ -99,7 +100,9 @@ jsonPlState.prototype.getConstBool = function() {
 /**
  * Name: getConst
  * Desc: A method to quickly access a constant value object.
- * Returns: {(const obj, sys=const)}
+ * Arg1: type(a valid type string)
+ * Arg2: val(a value object)
+ * Returns: const(a {const} object)
  */
 jsonPlState.prototype.getConst = function(type, val) {
    var ret = {};
@@ -118,7 +121,9 @@ jsonPlState.prototype.getConst = function(type, val) {
 /**
  * Name: getRef
  * Desc: A method to quickly access a ref object.
- * Returns: {(ref obj, sys=ref)}
+ * Arg1: type(a valid type string)
+ * Arg2: val(a value object)
+ * Returns: ref(a {ref} object)
  */
  jsonPlState.prototype.getRef = function(type, val) {
    var ret = {};
@@ -137,8 +142,9 @@ jsonPlState.prototype.getConst = function(type, val) {
 /**
  * Name: sysJob1
  * Desc: A system level job method used to demonstrate JCL.
- * Arg1: args(arg obj, sys=arg & array of)
- * Returns: {(const obj, sys=const)}
+ * Arg1: args(an array of {arg} objects) 
+ * Arg2: func(the {func} this system function is called from) 
+ * Returns: const(a {const} bool value)
  */
 jsonPlState.prototype.sysJob1 = function(args, func) {
    this.wr("sysJob1");
@@ -150,8 +156,9 @@ jsonPlState.prototype.sysJob1 = function(args, func) {
 /**
  * Name: sysJob2
  * Desc: A system level job method used to demonstrate JCL.
- * Arg1: args(arg obj, sys=arg & array of)
- * Returns: {(const obj, sys=const)}
+ * Arg1: args(an array of {arg} objects) 
+ * Arg2: func(the {func} this system function is called from) 
+ * Returns: const(a {const} bool value)
  */
 jsonPlState.prototype.sysJob2 = function(args, func) {
    this.wr("sysJob2");
@@ -163,8 +170,9 @@ jsonPlState.prototype.sysJob2 = function(args, func) {
 /**
  * Name: sysJob3
  * Desc: A system level job method used to demonstrate JCL.
- * Arg1: args(arg obj, sys=arg & array of)
- * Returns: {(const obj, sys=const)}
+ * Arg1: args(an array of {arg} objects) 
+ * Arg2: func(the {func} this system function is called from) 
+ * Returns: const(a {const} bool value)
  */
 jsonPlState.prototype.sysJob3 = function(args, func) {
    this.wr("sysJob3");
@@ -389,16 +397,18 @@ jsonPlState.prototype.system = {
 /**
  * Name: runProgram
  * Desc: Executes the current program and returns the result.
- * Returns: {(some sys obj)}
+ * Returns: ret(some {const}, {ref} object)
  */
 jsonPlState.prototype.runProgram = function() {
    if(this.validateSysObjClass(this.program)) {
       var callObj = this.program.call;
       var callFuncName = callObj.name;
+
       this.wr("runProgram: Call: " + callFuncName);
       var callFunc = this.findFunc(callFuncName);   
       var ret = this.processCall(callObj, callFunc);
       this.lastProgramReturn = ret;
+
       this.wr("runProgram: Results: ");
       this.wrObj(ret);
       return ret;
@@ -410,11 +420,11 @@ jsonPlState.prototype.runProgram = function() {
 
 /////////////////////////SEARCH METHODS
 /**
- * Name: findArg
- * Desc: Search the provided object for an argument with the given name.
- * Arg1: name(string to find)
- * Arg2: obj(func obj, sys=func)
- * Returns: {null | (arg obj, sys=arg)}
+ * Name: findArg 
+ * Desc: Search the provided object for an argument with the given name. 
+ * Arg1: name(string to find) 
+ * Arg2: obj(a {func} object to search args for)
+ * Returns: ret(null or {arg} object)
  */
 jsonPlState.prototype.findArg = function(name, obj) {
    for (var i = 0; i < obj.args.length; i++) {
@@ -429,8 +439,8 @@ jsonPlState.prototype.findArg = function(name, obj) {
  * Name: findVar
  * Desc: Search the provided object for a variable with the given name.
  * Arg1: name(string to find)
- * Arg2: obj{(func obj, sys=func) | (class obj, sys=class)}
- * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
+ * Arg2: obj(a {func} or {class} object to search) 
+ * Returns: ret(null, {val} or {arg} object)
  */
 jsonPlState.prototype.findVar = function(name, obj) {
    for (var i = 0; i < obj.vars.length; i++) {
@@ -445,7 +455,7 @@ jsonPlState.prototype.findVar = function(name, obj) {
  * Name: findFunc
  * Desc: Search the current program for a func with the given name.
  * Arg1: name(string to find)
- * Returns: {null | (func obj, sys=func)}
+ * Returns: ret(null or {func} object)
  */
 jsonPlState.prototype.findFunc = function(name) {
    var prog = this.program;
@@ -461,7 +471,7 @@ jsonPlState.prototype.findFunc = function(name) {
  * Name: findSysFunc
  * Desc: Search the current program's system functions for a func with the given name.
  * Arg1: name(string to find)
- * Returns: {null | (func obj, sys=func)}
+ * Returns: ret(null or {func} object)
  */
 jsonPlState.prototype.findSysFunc = function(name) {
    var prog = this;
@@ -475,20 +485,19 @@ jsonPlState.prototype.findSysFunc = function(name) {
 
 /////////////////////////VALIDATION METHODS
 /**
- * Name: validateSysObjIf
- * Desc: Validates if the given object is a valid if sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-
-      {
-         "sys": "if",
-         "left": {ref | const | exp | bex | call},
-         "op": {op & type of bex},
-         "right": {ref | const | exp | bex | call},
-         "thn": [asgn | if | for | call | return],
-         "els": [asgn | if | for | call | return]
-      }
-   -!>
+ * Name: validateSysObjIf 
+ * Desc: Validates if the given object is a valid if object. 
+ * Arg1: obj(an {if} object to check) 
+ * Returns: ret(some bool, true or false) 
+ * Struct:
+ * {
+ *    "sys": "if",
+ *    "left": {ref | const | exp | bex | call},
+ *    "op": {op & type of bex},
+ *    "right": {ref | const | exp | bex | call},
+ *    "thn": [asgn | if | for | call | return],
+ *    "els": [asgn | if | for | call | return]
+ * }
  */
 jsonPlState.prototype.validateSysObjIf = function(obj) {
    if(this.isSysObjIf(obj) && this.validateProperties(obj, ["sys", "left", "op", "right", "thn", "els"])) {
@@ -610,19 +619,18 @@ jsonPlState.prototype.validateSysObjIf = function(obj) {
 };
 
 /**
- * Name: validateSysObjFor
- * Desc: Validates if the given object is a valid for sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-
-      {
-         "sys": "for",
-         "start": {ref | const | exp | bex | call & type of int},
-         "stop": {ref | const | exp | bex | call & type of int},
-         "inc": {ref | const | exp | bex | call & type of int},
-         "lines": [asgn | if | for | call | return]
-      }
-   -!>
+ * Name: validateSysObjFor 
+ * Desc: Validates if the given object is a valid for object. 
+ * Arg1: obj(a {for} object to check) 
+ * Returns: ret(some bool, true or false)
+ * Struct:
+ * {
+ *   "sys": "for",
+ *   "start": {ref | const | exp | bex | call & type of int},
+ *   "stop": {ref | const | exp | bex | call & type of int},
+ *   "inc": {ref | const | exp | bex | call & type of int},
+ *   "lines": [asgn | if | for | call | return]
+ * }
  */
 jsonPlState.prototype.validateSysObjFor = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "for" && this.validateProperties(obj, ["sys", "start", "stop", "inc", "lines"])) {
@@ -748,20 +756,19 @@ jsonPlState.prototype.validateSysObjFor = function(obj) {
 };
 
 /**
- * Name: validateSysObjClass
- * Desc: Validates if the given object is a valid class sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-   {
-      "sys": "class",
-      "name": "some name",
-      "call": {call},
-      "vars": [var],
-      "funcs": [func],
-      "ret": {val}
-   }
-   -!>
+ * Name: validateSysObjClass 
+ * Desc: Validates if the given object is a valid class object. 
+ * Arg1: obj(a {class} object to check)
+ * Returns: ret(some bool, true or false)
+ * Struct:
+ * {
+ *   "sys": "class",
+ *   "name": "some name",
+ *   "call": {call},
+ *   "vars": [var],
+ *   "funcs": [func],
+ *   "ret": {val}
+ * }
  */
 jsonPlState.prototype.validateSysObjClass = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "class" && this.validateProperties(obj, ["sys", "name", "vars", "funcs", "ret", "call"])) {
@@ -795,13 +802,12 @@ jsonPlState.prototype.validateSysObjClass = function(obj) {
 };
 
 /**
- * Name: validateSysObjFuncLine
- * Desc: Validates if the given object is a valid function line sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-   [asgn | for | if | return | call]
-   -!>
+ * Name: validateSysObjFuncLine 
+ * Desc: Validates if the given object is a valid function line object. 
+ * Arg1: obj(an {asgn}, {for}, {if}, {return}, {call} object to check) 
+ * Returns: ret(some bool, true or false) 
+ * Struct:
+ * [asgn | for | if | return | call]
  */
 jsonPlState.prototype.validateSysObjFuncLine = function(obj) {
    if(this.isSysObjFuncLine(obj)) {
@@ -848,20 +854,19 @@ jsonPlState.prototype.validateSysObjFuncLine = function(obj) {
 };
 
 /**
- * Name: validateSysObjFunc
- * Desc: Validates if the given object is a valid func sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-      {
-         "sys": "func",
-         "name": "some name",
-         "args": [arg], 
-         "vars": [var],
-         "ret": {val},
-         "lines": [asgn | for | if | return | call]
-      }
-   -!>
+ * Name: validateSysObjFunc 
+ * Desc: Validates if the given object is a valid func object. 
+ * Arg1: obj(a {func} object to check)
+ * Returns: ret(some bool, true or false)
+ * Struct:
+ * {
+ *   "sys": "func",
+ *   "name": "some name",
+ *   "args": [arg],
+ *   "vars": [var],
+ *   "ret": {val},
+ *   "lines": [asgn | for | if | return | call]
+ * }
  */
 jsonPlState.prototype.validateSysObjFunc = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "func" && this.validateProperties(obj, ["sys", "name", "args", "vars", "ret", "lines"])) {
@@ -897,18 +902,17 @@ jsonPlState.prototype.validateSysObjFunc = function(obj) {
 };
 
 /**
- * Name: validateSysObjAsgn
- * Desc: Validates if the given object is a valid asgn sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-      {
-         "sys": "asgn",
-         "left": {ref},
-         "op": {op & type of asgn}, 
-         "right": {ref | const | exp | bex | call}
-      }
-   -!>
+ * Name: validateSysObjAsgn 
+ * Desc: Validates if the given object is a valid asgn object. 
+ * Arg1: obj(a {asgn} object to check) 
+ * Returns: ret(some bool, true or false)
+ * Struct:-
+ * {
+ *   "sys": "asgn",
+ *   "left": {ref},
+ *   "op": {op & type of asgn},
+ *   "right": {ref | const | exp | bex | call}
+ * }
  */
 jsonPlState.prototype.validateSysObjAsgn = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "asgn" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
@@ -938,7 +942,7 @@ jsonPlState.prototype.validateSysObjAsgn = function(obj) {
             } else if(tobj.type !== 'asgn') {
                this.wr("validateSysObjAsgn: Error: could not validate obj as op type");               
                return false;
-            }else if(tobj.v !== '=') {
+            } else if(tobj.v !== '=') {
                this.wr("validateSysObjAsgn: Error: could not validate obj as op code");               
                return false;
             }
@@ -993,18 +997,17 @@ jsonPlState.prototype.validateSysObjAsgn = function(obj) {
 };
 
 /**
- * Name: validateSysObjBex
- * Desc: Validates if the given object is a valid bex sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-      {
-         "sys": "bex",
-         "left": {ref | const | exp | bex | call},
-         "op": {op & type of bex}, 
-         "right": {ref | const | exp | bex | call}
-      }
-   -!>
+ * Name: validateSysObjBex 
+ * Desc: Validates if the given object is a valid bex object. 
+ * Arg1: obj(a {bex} object to check)
+ * Returns: ret(some bool, true or false)
+ * Struct:
+ * {
+ *   "sys": "bex",
+ *   "left": {ref | const | exp | bex | call},
+ *   "op": {op & type of bex},
+ *   "right": {ref | const | exp | bex | call}
+ * }
  */
 jsonPlState.prototype.validateSysObjBex = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "bex" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
@@ -1090,18 +1093,17 @@ jsonPlState.prototype.validateSysObjBex = function(obj) {
 };
 
 /**
- * Name: validateSysObjExp
- * Desc: Validates if the given object is a valid exp sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-      {
-         "sys": "exp",
-         "left": {ref | const | exp | bex | call},
-         "op": {op & type of exp}, 
-         "right": {ref | const | exp | bex | call}
-      }
-   -!>
+ * Name: validateSysObjExp 
+ * Desc: Validates if the given object is a valid exp object. 
+ * Arg1: obj(a {exp} object to check) 
+ * Returns: ret(some bool, true or false)
+ * Struct:
+ * {
+ *   "sys": "exp",
+ *   "left": {ref | const | exp | bex | call},
+ *   "op": {op & type of exp},
+ *   "right": {ref | const | exp | bex | call}
+ * }
  */
 jsonPlState.prototype.validateSysObjExp = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "exp" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
@@ -1187,17 +1189,16 @@ jsonPlState.prototype.validateSysObjExp = function(obj) {
 };
 
 /**
- * Name: validateSysObjCall
- * Desc: Validates if the given object is a valid call sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-      {
-         "sys": "call", 
-         "name": "some name", 
-         "args": [ref | const]
-      }
-   -!>
+ * Name: validateSysObjCall 
+ * Desc: Validates if the given object is a valid call object. 
+ * Arg1: obj(a {call} object to check) 
+ * Returns: ret(some bool, true or false)
+ * Struct:
+ * {
+ *   "sys": "call",
+ *   "name": "some name",
+ *   "args": [ref | const]
+ * }
  */
 jsonPlState.prototype.validateSysObjCall = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "call" && this.validateProperties(obj, ["sys", "name", "args"])) {
@@ -1224,17 +1225,16 @@ jsonPlState.prototype.validateSysObjCall = function(obj) {
 };
 
 /**
- * Name: validateSysObjOp
- * Desc: Validates if the given object is a valid call sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-      {
-         "sys": "op", 
-         "type": "asgn | bex | exp", 
-         "v": "some valid op value"
-      }
-   -!>
+ * Name: validateSysObjCall 
+ * Desc: Validates if the given object is a valid call object. 
+ * Arg1: obj(a {op} object to check) 
+ * Returns: ret(some bool, true or false)
+ * Struct:
+ * {
+ *   "sys": "op",
+ *   "type": "asgn | bex | exp",
+ *   "v": "some valid op value"
+ * }
  */
 jsonPlState.prototype.validateSysObjOp = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "op" && this.validateProperties(obj, ["sys", "type", "v"])) {
@@ -1245,19 +1245,18 @@ jsonPlState.prototype.validateSysObjOp = function(obj) {
    }
    return false;
 };
-
+   
 /**
- * Name: validateSysObjConst
- * Desc: Validates if the given object is a valid const sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-      {
-         "sys": "const", 
-         "val": {val}
-      }
-   -!>
- */
+    * Name: validateSysObjConst 
+    * Desc: Validates if the given object is a valid const object. 
+    * Arg1: obj(a {const} object to check) 
+    * Returns: ret(some bool, true or false)
+    * Struct:
+    * {
+    *   "sys": "const",
+    *   "val": {val}
+    * }
+    */
 jsonPlState.prototype.validateSysObjConst = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "const" && this.validateProperties(obj, ["sys", "val"])) {
       if(!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
@@ -1269,17 +1268,16 @@ jsonPlState.prototype.validateSysObjConst = function(obj) {
 };
 
 /**
- * Name: validateSysObjVar
- * Desc: Validates if the given object is a valid var sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-      {
-         "sys": "var",
-         "name": "some name",
-         "val": {val}
-      }
-   -!>
+ * Name: validateSysObjVar 
+ * Desc: Validates if the given object is a valid var object. 
+ * Arg1: obj(a {var} object to check) 
+ * Returns: ret(some bool, true or false)
+ * Struct:
+ * {
+ *   "sys": "var",
+ *   "name": "some name",
+ *   "val": {val}
+ * }
  */
 jsonPlState.prototype.validateSysObjVar = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "var" && this.validateProperties(obj, ["sys", "name", "val"])) {
@@ -1292,17 +1290,16 @@ jsonPlState.prototype.validateSysObjVar = function(obj) {
 };
 
 /**
- * Name: validateSysObjArg
- * Desc: Validates if the given object is a valid arg sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-      {
-         "sys": "arg",
-         "name": "some name",
-         "val": {val}
-      }
-   -!>
+ * Name: validateSysObjArg 
+ * Desc: Validates if the given object is a valid arg object. 
+ * Arg1: obj(a {arg} object to check)
+ * Returns: ret(some bool, true or false)
+ * Struct:
+ * {
+ *   "sys": "arg",
+ *   "name": "some name",
+ *   "val": {val}
+ * }
  */
 jsonPlState.prototype.validateSysObjArg = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "arg" && this.validateProperties(obj, ["sys", "name", "val"])) {
@@ -1315,17 +1312,16 @@ jsonPlState.prototype.validateSysObjArg = function(obj) {
 };
 
 /**
- * Name: validateSysObjVal
- * Desc: Validates if the given object is a valid val sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-      {
-         "sys": "val",
-         "type": "{int | float | string | bool | array}",
-         "v": "some valid value"
-      }
-   -!>
+ * Name: validateSysObjVal 
+ * Desc: Validates if the given object is a valid val object. 
+ * Arg1: obj(a {val} object to check) 
+ * Returns: ret(some bool, true or false)
+ * Struct:
+ * {
+ *   "sys": "val",
+ *   "type": "int | float | string | bool & type of string",
+ *   "v": "some valid value"
+ * }
  */
 jsonPlState.prototype.validateSysObjVal = function(obj) {
    if(this.isSysObjVal(obj) && this.validateProperties(obj, ["sys", "type", "v"])) {
@@ -1462,16 +1458,15 @@ jsonPlState.prototype.validateSysObjVal = function(obj) {
 };
 
 /**
- * Name: validateSysObjRef
- * Desc: Validates if the given object is a valid ref sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-      {
-         "sys": "ref",
-         "val": {val}
-      }  
-   -!>(with value like #.vars.tmp1 or $.vars.tmp1)
+ * Name: validateSysObjRef 
+ * Desc: Validates if the given object is a valid ref object. 
+ * Arg1: obj(a {ref} object to check)
+ * Returns: ret(some bool, true or false)
+ * Struct:
+ * {
+ *   "sys": "ref",
+ *   "val": {val & with value like #.vars.tmp1 or $.vars.tmp1}
+ * }
  */
 jsonPlState.prototype.validateSysObjRef = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "ref" && this.validateProperties(obj, ["sys", "val"])) {
@@ -1484,16 +1479,15 @@ jsonPlState.prototype.validateSysObjRef = function(obj) {
 };
 
 /**
- * Name: validateSysObjReturn
- * Desc: Validates if the given object is a valid return sys object.
- * Arg1: obj(sys obj to check)
- * Returns: {false | true}
- * Struct: <!-  
-      {
-         "sys": "return",
-         "val": {val}
-      }  
-   -!>
+ * Name: validateSysObjReturn 
+ * Desc: Validates if the given object is a valid return object. 
+ * Arg1: obj(a {return} object to check)
+ * Returns: ret(some bool, true or false)
+ * Struct:
+ * {
+ *   "sys": "return",
+ *   "val": {val}
+ * }
  */
 jsonPlState.prototype.validateSysObjReturn = function(obj) {
    if(this.isSysObj(obj) && this.getSysObjType(obj) === "return" && this.validateProperties(obj, ["sys", "val"])) {
@@ -1506,11 +1500,11 @@ jsonPlState.prototype.validateSysObjReturn = function(obj) {
 };
 
 /**
- * Name: validateProperties
- * Desc: Validates if the given object has each of the array elements specified in req.
- * Arg1: obj(sys obj to check)
- * Arg2: req(array of attribute name to check for)
- * Returns: {false | true}
+ * Name: validateProperties 
+ * Desc: Validates if the given object has each of the array elements specified in req. 
+ * Arg1: obj({sys} obj to check) 
+ * Arg2: req(array of attribute names to check for) 
+ * Returns: ret(some bool, true or false)
  */
 jsonPlState.prototype.validateProperties = function(obj, req) {
    if (obj === null || req === null) {
@@ -1543,7 +1537,7 @@ jsonPlState.prototype.wr = function(s) {
 /**
  * Name: getVersion
  * Desc: A method to access the version of this JsonPL interpreter.
- * Returns: {(string version number)}
+ * Returns: ret(string version number)
  */
 jsonPlState.prototype.getVersion = function() {
    this.wr(this.version);
@@ -1554,7 +1548,7 @@ jsonPlState.prototype.getVersion = function() {
  * Name: cloneJsonObj
  * Desc: A method to clone the given JSON object argument.
  * Arg1: jsonObj(the JSON object to clone)
- * Returns: {(cloned JSON object)}
+ * Returns: ret(cloned JSON object)
  */
 jsonPlState.prototype.cloneJsonObj = function(jsonObj) {
    return JSON.parse(JSON.stringify(jsonObj));
@@ -1565,36 +1559,39 @@ jsonPlState.prototype.cloneJsonObj = function(jsonObj) {
  * Desc: Writes a JSON object to standard output if LOGGING is on.
  *       Sets the WR_PREFIX to each object written.
  *       Prints object using pretty JSON.stringify call. 
- * Arg1: s(string to write)
+ * Arg1: jsonObj(jsonObj to write)
  */
-jsonPlState.prototype.wrObj = function(s) {
+jsonPlState.prototype.wrObj = function(jsonObj) {
    if (this.LOGGING === true) {
-      console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
+      this.wr(this.WR_PREFIX + JSON.stringify(jsonObj, null, 2));
+      this.wr("");
    }
 };
 
 /**
  * Name: wrVal
- * Desc: Writes a JSON val sys obj object to standard output if LOGGING is on.
+ * Desc: Writes a JSON val object to standard output if LOGGING is on.
  *       Sets the WR_PREFIX to each object written.
  *       Prints object using pretty JSON.stringify call. 
- * Arg1: v(val obj to write)
+ * Arg1: v({val} obj to write)
  */
 jsonPlState.prototype.wrVal = function(v) {
    if (this.LOGGING === true) {
       if(this.isSysObjValArray(v)) {
-         console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+         this.wr(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
       } else {
-         console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+         this.wr(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
       }
    }
 };
 
 /**
  * Name: sysLen
- * Desc: Returns the length of the given sys object. Non-array objects return a value of 0. 
- * Arg1: args(arg obj, sys=arg & array of)
- * Returns: {(const obj, sys=const)}
+ * Desc: Returns the length of the given object. 
+ *       Non-array objects return a value of 0. 
+ * Arg1: args(array of {arg} objects)
+ * Arg2: func(the associated {func} object if any)
+ * Returns: ret(a {const} object)
  */
 jsonPlState.prototype.sysLen = function(args, func) {
    var s = args[0];
@@ -1628,10 +1625,11 @@ jsonPlState.prototype.sysLen = function(args, func) {
 };
 
 /**
- * Name: sysTypeC
- * Desc: Returns the type of the given class sys var object.
- * Arg1: args(arg obj, sys=arg & array of)
- * Returns: {(ref obj, sys=ref)}
+ * Name: sysType
+ * Desc: Returns the type of the given class {sys}} object.
+ * Arg1: args(array of {arg} objects)
+ * Arg2: func(the associated {func} object if any)
+ * Returns: ret(a {ref} object)
  */
 jsonPlState.prototype.sysType = function(args, func) {
    var s = args[0];
@@ -1666,10 +1664,11 @@ jsonPlState.prototype.sysType = function(args, func) {
 
 /**
  * Name: sysGetRefStr
- * Desc: Returns a string object with a reference to the val or arg specified.
- * Arg1: v(val obj to get the reference for)
- * Arg2: isVar(bool indicating is the v object is a var or arg)
+ * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
+ * Arg1: v(a {val} obj to get the reference for)
+ * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
  * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
+ * Returns: ret(a {const} object)
  */
 jsonPlState.prototype.sysGetRefStr = function(args, func) {
    var ret = this.sysGetRef(args, func);
@@ -1677,14 +1676,16 @@ jsonPlState.prototype.sysGetRefStr = function(args, func) {
    ret.val.type = "string";
    this.wrVal(ret.val);
    return ret;
-}
+};
 
+//TODO: Continue review here
 /**
  * Name: sysGetRef
- * Desc: Returns a string object with a reference to the val or arg specified.
- * Arg1: v(val obj to get the reference for)
- * Arg2: isVar(bool indicating is the v object is a var or arg)
+ * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
+ * Arg1: v(a {val} obj to get the reference for)
+ * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
  * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
+ * Returns: ret(a {ref} object)
  */
 jsonPlState.prototype.sysGetRef = function(args, func) {
    var name = this.toStr(args[0].val.v);
@@ -1704,19 +1705,19 @@ jsonPlState.prototype.sysGetRef = function(args, func) {
          //this.wr("sysGetRef: CCC");
       } else {
          //this.wr("sysGetRef: DDD");
-         var func = this.findFunc(funcName);
-         if(func !== null) {
+         var lfunc = this.findFunc(funcName);
+         if(lfunc !== null) {
             if(isVar) {
                //lookup function variable
-               var v1 = this.findVar(name, func);
+               var v1 = this.findVar(name, lfunc);
                if(v1 !== null) {
-                  ret = this.getRef(v.val.type, "$.vars." + v.name);
+                  ret = this.getRef(v1.val.type, "$.vars." + v1.name);
                }
             } else {
                //lookup function arg
-               var v2 = this.findArg(name, func);
+               var v2 = this.findArg(name, lfunc);
                if(v2 !== null) {
-                  ret = this.getRef(v.val.type, "$.args." + v.name);
+                  ret = this.getRef(v2.val.type, "$.args." + v2.name);
                }                              
             }
          }
@@ -1731,7 +1732,7 @@ jsonPlState.prototype.sysGetRef = function(args, func) {
 /**
  * Name: isObject
  * Desc: Checks if the given argument is a JSON object. 
- * Arg1: arg(JSON object)
+ * Arg1: arg(a JSON object)
  * Returns: (true | false)
  */
 jsonPlState.prototype.isObject = function(arg) {
@@ -1747,8 +1748,8 @@ jsonPlState.prototype.isObject = function(arg) {
 /**
  * Name: isArray
  * Desc: Checks if the given argument is an array. 
- * Arg1: arg(javascript array)
- * Returns: (true | false)
+ * Arg1: arg(some array object)
+ * Returns: ret(some bool, true or false)
  */
 jsonPlState.prototype.isArray = function(arg) {
    if (arg === null) {
@@ -1758,6 +1759,7 @@ jsonPlState.prototype.isArray = function(arg) {
    }
 };
 
+//TODO: Continue review here
 /**
  * Name: isString
  * Desc: Checks if the given argument is a string. 
@@ -1846,10 +1848,10 @@ jsonPlState.prototype.isBool = function(arg) {
    }
 };
 
-/////////////////////////SYS OBJECT ID METHODS
+/////////////////////////OBJECT ID METHODS
 /**
  * Name: isSysObjIf
- * Desc: Checks if the given object is an if sys object. 
+ * Desc: Checks if the given object is an if object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -1863,7 +1865,7 @@ jsonPlState.prototype.isSysObjIf = function(obj) {
 
 /**
  * Name: isSysObjRef
- * Desc: Checks if the given object is a ref sys object. 
+ * Desc: Checks if the given object is a ref object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -1877,7 +1879,7 @@ jsonPlState.prototype.isSysObjRef = function(obj) {
 
 /**
  * Name: isSysObjBex
- * Desc: Checks if the given object is a bex sys object. 
+ * Desc: Checks if the given object is a bex object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -1891,7 +1893,7 @@ jsonPlState.prototype.isSysObjBex = function(obj) {
 
 /**
  * Name: isSysObjExp
- * Desc: Checks if the given object is an exp sys object. 
+ * Desc: Checks if the given object is an exp object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -1905,7 +1907,7 @@ jsonPlState.prototype.isSysObjExp = function(obj) {
 
 /**
  * Name: isSysObjVal
- * Desc: Checks if the given object is a val sys object. 
+ * Desc: Checks if the given object is a val object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -1919,7 +1921,7 @@ jsonPlState.prototype.isSysObjVal = function(obj) {
 
 /**
  * Name: isSysObjValArray
- * Desc: Checks if the given object is a val sys object array. 
+ * Desc: Checks if the given object is a val object array. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -1933,7 +1935,7 @@ jsonPlState.prototype.isSysObjVal = function(obj) {
 
 /**
  * Name: isSysObjAsgn
- * Desc: Checks if the given object is an asgn sys object. 
+ * Desc: Checks if the given object is an asgn object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -1947,7 +1949,7 @@ jsonPlState.prototype.isSysObjAsgn = function(obj) {
 
 /**
  * Name: isSysObjConst
- * Desc: Checks if the given object is a const sys object. 
+ * Desc: Checks if the given object is a const object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -1961,7 +1963,7 @@ jsonPlState.prototype.isSysObjConst = function(obj) {
 
 /**
  * Name: isSysObjVar
- * Desc: Checks if the given object is a var sys object. 
+ * Desc: Checks if the given object is a var object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -1975,7 +1977,7 @@ jsonPlState.prototype.isSysObjVar = function(obj) {
 
 /**
  * Name: isSysObjCall
- * Desc: Checks if the given object is a call sys object. 
+ * Desc: Checks if the given object is a call object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -1989,7 +1991,7 @@ jsonPlState.prototype.isSysObjCall = function(obj) {
 
 /**
  * Name: isSysObjFuncLine
- * Desc: Checks if the given object is a functio line sys object. 
+ * Desc: Checks if the given object is a functio line object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -2019,7 +2021,7 @@ jsonPlState.prototype.isSysObjFuncLine = function(obj) {
 
 /**
  * Name: isSysObjFunc
- * Desc: Checks if the given object is a func sys object. 
+ * Desc: Checks if the given object is a func object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -2033,7 +2035,7 @@ jsonPlState.prototype.isSysObjFunc = function(obj) {
 
 /**
  * Name: isSysObjFor
- * Desc: Checks if the given object is a for sys object. 
+ * Desc: Checks if the given object is a for object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -2047,7 +2049,7 @@ jsonPlState.prototype.isSysObjFor = function(obj) {
 
 /**
  * Name: isSysObjOp
- * Desc: Checks if the given object is an op sys object. 
+ * Desc: Checks if the given object is an op object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -2061,7 +2063,7 @@ jsonPlState.prototype.isSysObjFor = function(obj) {
 
 /**
  * Name: isSysObjReturn
- * Desc: Checks if the given object is a return sys object. 
+ * Desc: Checks if the given object is a return object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -2075,7 +2077,7 @@ jsonPlState.prototype.isSysObjReturn = function(obj) {
 
 /**
  * Name: isSysObj
- * Desc: Checks if the given object is a sys object. 
+ * Desc: Checks if the given object is a object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -2089,7 +2091,7 @@ jsonPlState.prototype.isSysObj = function(obj) {
 
 /**
  * Name: getSysObjType
- * Desc: Gets the value of the sys attribute of the given sys object. 
+ * Desc: Gets the value of the sys attribute of the given object. 
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
@@ -2115,7 +2117,7 @@ jsonPlState.prototype.processRef = function(objRef, func) {
    var fnd = null;
    var prog = this.program;
    
-   //this.wr("OBJ REF");
+   //this.wr("\n\nOBJ REF");
    //this.wrObj(objRef);
 
    if(!this.isSysObjRef(objRef)) {
@@ -2219,6 +2221,7 @@ jsonPlState.prototype.processRef = function(objRef, func) {
             foundSource = true;
          } else {
             this.wr("processRef: Error: could not find correct the ref, for source, " + c + ", ref path: " + path);
+			return null;
          }
       } else if(!foundType) { 
          //program/class
@@ -2228,6 +2231,7 @@ jsonPlState.prototype.processRef = function(objRef, func) {
                foundType = true;
             } else {
                this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFunc + ", ref path: " + path);
+			   return null;
             }
          //function
          } else {
@@ -2239,6 +2243,7 @@ jsonPlState.prototype.processRef = function(objRef, func) {
                foundType = true;               
             } else {
                this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFun + ", ref path: " + pathc);
+			   return null;
             }
          }         
       } else if(!foundName) {
@@ -2261,33 +2266,44 @@ jsonPlState.prototype.processRef = function(objRef, func) {
                name = this.toStr(tmp.val.v);
             } else {
                this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
-            }
+			   return null;
+			}
          }
               
          //this.wr("processRef: looking for name: " + name);
+		 //this.wrObj(func.args);
+		 
          if(!isFunc) {
             //class find name            
             if(isVars) {
                fnd = this.findVar(name, prog);
             } else {
                this.wr("processRef: Error: could not find, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
-            }
+               return null;
+			}
          //function
          } else {
             //function find name
             if(isVars) {
+			   //this.wr("AAA " + name + ", " + func.name);
                fnd = this.findVar(name, func);
             } else {
+			   //this.wr("BBB " + name + ", " + func.name);
+			   this.wrObj(func.args);
                fnd = this.findArg(name, func);
             }
          }
-         
+
+		 //this.wr("CCC ");
+         //this.wrObj(fnd);
+
          if(fnd !== null) {
             type = fnd.val.type;
             foundName = true;
          } else {
             this.wr("processRef: Error: could not find an object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
-         }
+            return null;
+		 }
       } else if(!foundIndex) {
          idx = this.toInt(c);
          tmp = null;
@@ -2307,7 +2323,8 @@ jsonPlState.prototype.processRef = function(objRef, func) {
                idx = this.toStr(tmp.val.v + "");
             } else {
                this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
-            }
+               return null;
+			}
          }         
          
          if(this.isSysObjValArray(fnd.val)) {
@@ -2315,7 +2332,8 @@ jsonPlState.prototype.processRef = function(objRef, func) {
             foundIndex = true;
          } else {
             this.wr("processRef: Error: index entry is only for vars/args of type array, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
-         }
+            return null;
+		 }
       }      
    }
    //this.wr("processRef: exiting...");
@@ -3334,27 +3352,42 @@ jsonPlState.prototype.processCall = function(objCall, func) {
    }
    
    if(funcArgs !== null) {
-      if((args.length === funcArgs.length) || funcArgs.length === 0) { 
-         funcArgs = this.toArray(args);        
-         for(var i = 0; i < args.length; i++) {
-            if(args[i].val.type !== funcArgs[i].val.type) {
-               this.wr("processCall: Error: type mismatch at argument index, " + i + ", func arg def: " + funcArgs[i].val.type + ", call arg: " + args[i].val.type);
-               return null;
-            }
-            
-            if(this.isSysObjRef(args[i])) {
-               tmpArg = null;
-               tmpArg = this.processRef(args[i], func);
-               if(tmpArg !== null) {
-                  args[i].val.v = tmpArg.val.v;
-                  args[i].name = funcArgs[i].name;
-               } else {
-                  this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
-                  return null;
-               }
-            }
-         }
-         
+	  if((args.length === funcArgs.length) || funcArgs.length === 0) {
+		if(funcArgs.length === 0) {
+			 for(var i = 0; i < args.length; i++) {
+				if(this.isSysObjRef(args[i])) {
+				   tmpArg = null;
+				   tmpArg = this.processRef(args[i], func);
+				   if(tmpArg !== null) {
+					  args[i].val.v = tmpArg.val.v;
+					  args[i].name = args[i].name;
+				   } else {
+					  this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
+					  return null;
+				   }
+				}
+			 }		
+		} else {
+			 for(var i = 0; i < args.length; i++) {
+				if(args[i].val.type !== funcArgs[i].val.type) {
+				   this.wr("processCall: Error: type mismatch at argument index, " + i + ", func arg def: " + funcArgs[i].val.type + ", call arg: " + args[i].val.type);
+				   return null;
+				}
+				
+				if(this.isSysObjRef(args[i])) {
+				   tmpArg = null;
+				   tmpArg = this.processRef(args[i], func);
+				   if(tmpArg !== null) {
+					  args[i].val.v = tmpArg.val.v;
+					  args[i].name = funcArgs[i].name;
+				   } else {
+					  this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
+					  return null;
+				   }
+				}
+			 }
+		 }
+	  
          if(sysFunc) {
             var err = true;
             var lret = null;

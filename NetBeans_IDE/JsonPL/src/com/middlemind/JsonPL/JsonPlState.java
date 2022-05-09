@@ -8,12 +8,13 @@ import java.util.List;
 
 /**
  * JSON Programming Language 
- * EXEC JAVA PORT 
+ * EXEC JS JAVA PORT 
  * Victor G. Brusca Created on 02/03/2022 1:57 PM EDT 
  * Licensed under GNU General Public License v3.0
  */
+
 /**
- *
+ * The main object used to track the programming language state.
  * @author Victor G. Brusca, Middlemind Games 03/27/2022 11:17 AM EDT
  */
 @SuppressWarnings("UnusedAssignment")
@@ -100,7 +101,7 @@ public class JsonPlState {
     public SystemFunctionHandlerJpl systemFunctionHandler = null;
 
     /**
-     *
+     * Generic class constructor.
      */
     public JsonPlState() {
         List<JsonObjSysBase> sfuncs = new ArrayList<>();
@@ -111,11 +112,17 @@ public class JsonPlState {
     /**
      * Name: sysWr 
      * Desc: A system level write function. 
-     * Arg1: args(arg obj, sys=arg & array of) 
-     * Returns: {(const obj, sys=const)}
+     * Arg1: args(an array of {arg} objects) 
+     * Arg2: func(the {func} this system function is called from) 
+     * Returns: const(a {const} bool object) 
      */
-    public JsonObjSysBase sysWr(List<JsonObjSysBase> args) throws Exception {
-        String s = args.get(0).val.v + "";
+    public JsonObjSysBase sysWr(List<JsonObjSysBase> args, JsonObjSysBase func) throws Exception {        
+        int len = args.size();
+        int i = 0;
+        String s = "";
+        for(; i < len; i++) {
+            s += this.toStr(args.get(i).val.v);
+        }
         this.wr(s);
 
         JsonObjSysBase ret = new JsonObjSysBase("val");
@@ -132,25 +139,25 @@ public class JsonPlState {
     /**
      * Name: sysGetLastAsgnValue 
      * Desc: A system level method to access the last asgn value object. 
-     * Returns: {(const obj, sys=const)}
+     * Returns: const(a {const} bool object)
      */
-    public JsonObjSysBase sysGetLastAsgnValue() {
+    public JsonObjSysBase sysGetLastAsgnValue(List<JsonObjSysBase> args, JsonObjSysBase func) {
         return this.lastAsgnValue;
     }
 
     /**
      * Name: sysGetLastAsgnValue 
      * Desc: A system level method to access the last exp return object. 
-     * Returns: {(const obj, sys=const)}
+     * Returns: const(a {const} bool object)
      */
-    public JsonObjSysBase sysGetLastExpReturn() {
+    public JsonObjSysBase sysGetLastExpReturn(List<JsonObjSysBase> args, JsonObjSysBase func) {
         return this.lastExpReturn;
     }
 
     /**
      * Name: getConstBool 
      * Desc: A method to quickly access a constant bool value object. 
-     * Returns: {(const obj, sys=const)}
+     * Returns: const(a {const} bool object)
      */
     public JsonObjSysBase getConstBool() {
         JsonObjSysBase ret = new JsonObjSysBase("val");
@@ -163,14 +170,53 @@ public class JsonPlState {
 
         return ret;
     }
+    
+    /**
+     * Name: getConst
+     * Desc: A method to quickly access a constant value object.
+     * Arg1: type(a valid type string)
+     * Arg2: val(a value object)
+     * Returns: const(a {const} object)
+     */    
+    public JsonObjSysBase getConst(String type, Object val) {
+        JsonObjSysBase ret = new JsonObjSysBase("val");
+        ret.type = type;
+        ret.v = val;
+
+        JsonObjSysBase ret2 = new JsonObjSysBase("const");
+        ret2.val = ret;
+        ret = ret2;
+
+        return ret;
+    }
+    
+    /**
+     * Name: getRef
+     * Desc: A method to quickly access a ref object.
+     * Arg1: type(a valid type string)
+     * Arg2: val(a value object)
+     * Returns: ref(a {ref} object)
+     */    
+    public JsonObjSysBase getRef(String type, Object val) {
+        JsonObjSysBase ret = new JsonObjSysBase("val");
+        ret.type = type;
+        ret.v = val;
+
+        JsonObjSysBase ret2 = new JsonObjSysBase("ref");
+        ret2.val = ret;
+        ret = ret2;
+
+        return ret;
+    }    
 
     /**
      * Name: sysJob1 
      * Desc: A system level job method used to demonstrate JCL.
-     * Arg1: args(arg obj, sys=arg & array of) 
-     * Returns: {(const obj, sys=const)}
+     * Arg1: args(an array of {arg} objects) 
+     * Arg2: func(the {func} this system function is called from) 
+     * Returns: const(a {const} bool value)
      */
-    public JsonObjSysBase sysJob1() {
+    public JsonObjSysBase sysJob1(List<JsonObjSysBase> args, JsonObjSysBase func) {
         this.wr("sysJob1");
         JsonObjSysBase ret = this.getConstBool();
         ret.val.v = "true";
@@ -178,11 +224,13 @@ public class JsonPlState {
     }
 
     /**
-     * Name: sysJob2 Desc: A system level job method used to demonstrate JCL.
-     * Arg1: args(arg obj, sys=arg & array of) 
-     * Returns: {(const obj, sys=const)}
+     * Name: sysJob2 
+     * Desc: A system level job method used to demonstrate JCL.
+     * Arg1: args(an array of {arg} objects) 
+     * Arg2: func(the {func} this system function is called from) 
+     * Returns: const(a {const} bool value)
      */
-    public JsonObjSysBase sysJob2() {
+    public JsonObjSysBase sysJob2(List<JsonObjSysBase> args, JsonObjSysBase func) {
         this.wr("sysJob2");
         JsonObjSysBase ret = this.getConstBool();
         ret.val.v = "true";
@@ -190,11 +238,13 @@ public class JsonPlState {
     }
 
     /**
-     * Name: sysJob3 Desc: A system level job method used to demonstrate JCL.
-     * Arg1: args(arg obj, sys=arg & array of) 
-     * Returns: {(const obj, sys=const)}
+     * Name: sysJob3
+     * Desc: A system level job method used to demonstrate JCL.
+     * Arg1: args(an array of {arg} objects) 
+     * Arg2: func(the {func} this system function is called from) 
+     * Returns: const(a {const} bool value)
      */
-    public JsonObjSysBase sysJob3() {
+    public JsonObjSysBase sysJob3(List<JsonObjSysBase> args, JsonObjSysBase func) {
         this.wr("sysJob3");
         JsonObjSysBase ret = this.getConstBool();
         ret.val.v = "true";
@@ -204,20 +254,21 @@ public class JsonPlState {
     /**
      * Name: runProgram 
      * Desc: Executes the current program and returns the result. 
-     * Returns: {(some sys obj)}
+     * Returns: ret(some {const}, {ref} object)
      */
     public JsonObjSysBase runProgram() {
         if (this.validateSysObjClass(this.program)) {
             JsonObjSysBase callObj = this.program.call;
             String callFuncName = callObj.name;
-            this.wr("runProgram: RUN PROGRAM: " + callFuncName);
+            
+            this.wr("runProgram: Call: " + callFuncName);
             JsonObjSysBase callFunc = this.findFunc(callFuncName);
-
             JsonObjSysBase ret = null;
             ret = this.processCall(callObj, callFunc);
             this.lastProgramReturn = ret;
 
-            //this.wrObj(res);
+            this.wr("runProgram: Results: ");
+            this.wrObj(ret);
             return ret;
         } else {
             this.wr("runProgram: Error: could not validate the class object.");
@@ -230,8 +281,8 @@ public class JsonPlState {
      * Name: findArg 
      * Desc: Search the provided object for an argument with the given name. 
      * Arg1: name(string to find) 
-     * Arg2: obj(func obj, sys=func)
-     * Returns: {null | (arg obj, sys=arg)}
+     * Arg2: obj(a {func} object to search args for)
+     * Returns: ret(null or {arg} object)
      */
     public JsonObjSysBase findArg(String name, JsonObjSysBase obj) {
         String str;
@@ -250,8 +301,8 @@ public class JsonPlState {
      * Name: findVar 
      * Desc: Search the provided object for a variable with the given name. 
      * Arg1: name(string to find) 
-     * Arg2: obj{(func obj, sys=func) | (class obj, sys=class)} 
-     * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
+     * Arg2: obj(a {func} or {class} object to search) 
+     * Returns: ret(null, {val} or {arg} object)
      */
     public JsonObjSysBase findVar(String name, JsonObjSysBase obj) {
         String str;
@@ -270,7 +321,7 @@ public class JsonPlState {
      * Name: findFunc 
      * Desc: Search the current program for a func with the given name. 
      * Arg1: name(string to find) 
-     * Returns: {null | (func obj, sys=func)}
+     * Returns: ret(null or {func} object)
      */
     public JsonObjSysBase findFunc(String name) {
         JsonObjSysBase prog = this.program;
@@ -290,7 +341,7 @@ public class JsonPlState {
      * Name: findSysFunc 
      * Desc: Search the current program's system functions for a func with the given name. 
      * Arg1: name(string to find) 
-     * Returns: {null | (func obj, sys=func)}
+     * Returns: ret(null or {func} object)
      */
     public JsonObjSysBase findSysFunc(String name) {
         JsonPlState prog = this;
@@ -311,7 +362,8 @@ public class JsonPlState {
     /////////////////////////UTILITY METHODS
     /**
      * Name: wr 
-     * Desc: Writes a string to standard output if LOGGING is on. Sets the WR_PREFIX to each string written. 
+     * Desc: Writes a string to standard output if LOGGING is on. 
+     *       Sets the WR_PREFIX to each string written. 
      * Arg1: s(string to write)
      */
     public void wr(String s) {
@@ -323,7 +375,7 @@ public class JsonPlState {
     /**
      * Name: getVersion 
      * Desc: A method to access the version of this JsonPL interpreter. 
-     * Returns: {(string version number)}
+     * Returns: ret(string version number)
      */
     public String getVersion() {
         this.wr(this.version);
@@ -331,15 +383,21 @@ public class JsonPlState {
     }
 
     /**
-     * Name: cloneJsonObj Desc: A method to clone the given JSON object argument. 
+     * Name: cloneJsonObj 
+     * Desc: A method to clone the given JSON object argument. 
      * Arg1: jsonObj(the JSON object to clone) 
-     * Returns: {(cloned JSON object)}
+     * Returns: ret(cloned JSON object)
      */
     public JsonObjSysBase cloneJsonObj(JsonObjSysBase jsonObj) {
         return jsonObj.Clone();
     }
 
-    //TODO
+    /**
+     * Name: cloneJsonObjList
+     * Desc: A method to clone the given JSON object list argument. 
+     * Arg1: jsonObj(the JSON object list to do a shallow clone) 
+     * Returns: ret(cloned JSON object)
+     */
     public List<JsonObjSysBase> cloneJsonObjList(List<JsonObjSysBase> jsonObjLst) {
         List<JsonObjSysBase> ret = new ArrayList<>();
         for (int i = 0; i < jsonObjLst.size(); i++) {
@@ -350,8 +408,10 @@ public class JsonPlState {
 
     /**
      * Name: wrObj 
-     * Desc: Writes a JSON object to standard output if LOGGING is on. Sets the WR_PREFIX to each object written. Prints object using pretty JSON.stringify call. 
-     * Arg1: s(string to write)
+     * Desc: Writes a JSON object to write to standard output if LOGGING is on. 
+     *       Sets the WR_PREFIX to each object written. 
+     *       Prints object using pretty JSON.stringify call. 
+     * Arg1: jsonObj(jsonObj to write)
      */
     public void wrObj(JsonObjSysBase jsonObj) {
         if (this.LOGGING == true) {
@@ -360,7 +420,13 @@ public class JsonPlState {
         }
     }
 
-    //TODO
+    /**
+     * Name: wrObjList
+     * Desc: Writes a JSON object list to write to standard output if LOGGING is on. 
+     *       Sets the WR_PREFIX to each object written. 
+     *       Prints object using pretty JSON.stringify call. 
+     * Arg1: jsonObj(jsonObj list to write)
+     */
     public void wrObj(List<JsonObjSysBase> jsonObjs) {
         if (this.LOGGING == true) {
             for (int i = 0; i < jsonObjs.size(); i++) {
@@ -369,13 +435,173 @@ public class JsonPlState {
             }
         }
     }
+    
+    /**
+     * Name: wrVal
+     * Desc: Writes a JSON val object to standard output if LOGGING is on.
+     *       Sets the WR_PREFIX to each object written.
+     *       Prints object using pretty JSON.stringify call. 
+     * Arg1: v({val} obj to write)
+     */
+    public void wrVal(JsonObjSysBase v) {
+        if (this.LOGGING == true) {
+            if(this.isSysObjValArray(v)) {
+               this.wr(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+            } else {
+               this.wr(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+            }
+        }
+    }
+    
+    /**
+     * Name: sysLen
+     * Desc: Returns the length of the given object. 
+     *       Non-array objects return a value of 0. 
+     * Arg1: args(array of {arg} objects)
+     * Arg2: func(the associated {func} object if any)
+     * Returns: ret(a {const} object)
+     */ 
+    public JsonObjSysBase sysLen(List<JsonObjSysBase> args, JsonObjSysBase func) {
+        JsonObjSysBase s = args.get(0);
+        
+        //this.wr("sysType: AAA: ");
+        //this.wrObj(s);
 
+        JsonObjSysBase ret = this.getConst("int", "0");
+        s = this.getRef("string", s.val.v);
+        
+        JsonObjSysBase v = this.processRef(s, func);
+        
+        //this.wr("sysType: CCC: ");
+        //this.wrObj(v);   
+
+        if(v != null) {
+           v = v.val;
+        }
+
+        //this.wr("sysType: DDD: ");
+        //this.wrObj(v);
+        
+        if(v != null && this.isSysObj(v)) {
+           if(this.isSysObjValArray(v)) {
+              ret = this.getConst("int", this.toStr(v.len));
+           }
+        }
+
+        this.wrVal(ret.val);
+        return ret;
+    }
+    
+    /**
+     * Name: sysType
+     * Desc: Returns the type of the given class {sys}} object.
+     * Arg1: args(array of {arg} objects)
+     * Arg2: func(the associated {func} object if any)
+     * Returns: ret(a {ref} object)
+     */  
+    public JsonObjSysBase sysType(List<JsonObjSysBase> args, JsonObjSysBase func) {
+        JsonObjSysBase s = args.get(0);
+        
+        //this.wr("sysType: AAA: ");
+        //this.wrObj(s);
+
+        JsonObjSysBase ret = this.getConst("string", "");
+        s = this.getRef("string", s.val.v);
+        
+        JsonObjSysBase v = this.processRef(s, func);
+        
+        //this.wr("sysType: CCC: ");
+        //this.wrObj(v);   
+
+        if(v != null) {
+           v = v.val;
+        }
+
+        //this.wr("sysType: DDD: ");
+        //this.wrObj(v);
+        
+        if(v != null && this.isSysObj(v)) {
+           if(this.isSysObjValArray(v)) {
+              ret = this.getConst("string", this.toStr(v.type));
+           }
+        }
+
+        //this.wr("sysType: EEE: ");
+        
+        this.wrVal(ret.val);
+        return ret;
+    }
+    
+    /**
+     * Name: sysGetRefStr
+     * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
+     * Arg1: v(a {val} obj to get the reference for)
+     * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
+     * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
+     */
+    public JsonObjSysBase sysGetRefStr(List<JsonObjSysBase> args, JsonObjSysBase func) {
+        JsonObjSysBase ret = this.sysGetRef(args, func);
+        ret.sys = "const";
+        ret.val.type = "string";
+        this.wrVal(ret.val);
+        return ret; 
+    }
+    
+    /**
+     * Name: sysGetRef
+     * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
+     * Arg1: v(a {val} obj to get the reference for)
+     * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
+     * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
+     * Returns: ret(a {ref} object)
+     */
+    public JsonObjSysBase sysGetRef(List<JsonObjSysBase> args, JsonObjSysBase func) {
+        String name = this.toStr(args.get(0).val.v);
+        boolean isVar = this.toBool(args.get(1).val.v);
+        String funcName = this.toStr(args.get(2).val.v);
+        JsonObjSysBase ret = this.getRef("string", "");
+        
+        //this.wr("sysGetRef: AAA");
+        if(name != null && !name.equals("")) {
+           if(funcName == null || funcName.equals("")) {
+              //this.wr("sysGetRef: BBB");
+              //lookup class variable
+              JsonObjSysBase v = this.findVar(name, this.program);
+              if(v != null) {
+                 ret = this.getRef(v.val.type, "#.vars." + v.name);
+              }
+              //this.wr("sysGetRef: CCC");
+           } else {
+              //this.wr("sysGetRef: DDD");
+              JsonObjSysBase lfunc = this.findFunc(funcName);
+              if(lfunc != null) {
+                 if(isVar) {
+                    //lookup function variable
+                    var v1 = this.findVar(name, lfunc);
+                    if(v1 != null) {
+                       ret = this.getRef(v1.val.type, "$.vars." + v1.name);
+                    }
+                 } else {
+                    //lookup function arg
+                    var v2 = this.findArg(name, func);
+                    if(v2 != null) {
+                       ret = this.getRef(v2.val.type, "$.args." + v2.name);
+                    }                              
+                 }
+              }
+              //this.wr("sysGetRef: EEE");
+           }
+        }
+        this.wrVal(ret.val);
+        return ret;        
+    }
+    
     /////////////////////////GENERIC OBJECT ID METHODS
     /**
      * Name: isObject 
      * Desc: Checks if the given argument is a JSON object. 
-     * Arg1: arg(JSON object) 
-     * Returns: (true | false)
+     * Arg1: arg(a JSON object) 
+     * Returns: ret(some bool, true or false)
      */
     public boolean isObject(Object arg) {
         if(arg == null) {
@@ -390,8 +616,8 @@ public class JsonPlState {
     /**
      * Name: isArray 
      * Desc: Checks if the given argument is an array. 
-     * Arg1: arg(javascript array) 
-     * Returns: (true | false)
+     * Arg1: arg(some array object) 
+     * Returns: ret(some bool, true or false)
      */
     public boolean isArray(Object arg) {
         if(arg == null) {
@@ -404,6 +630,7 @@ public class JsonPlState {
         }
     }
 
+    //TODO: Continue review here
     /**
      * Name: isString 
      * Desc: Checks if the given argument is a string. 
@@ -490,10 +717,10 @@ public class JsonPlState {
         }
     }
     
-    /////////////////////////SYS OBJECT ID METHODS
+    /////////////////////////OBJECT ID METHODS
     /**
      * Name: isSysObjIf 
-     * Desc: Checks if the given object is an if sys object.
+     * Desc: Checks if the given object is an if object.
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -509,7 +736,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObjRef Desc: 
-     * Checks if the given object is a ref sys object.
+     * Checks if the given object is a ref object.
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -525,7 +752,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObjBex 
-     * Desc: Checks if the given object is a bex sys object.
+     * Desc: Checks if the given object is a bex object.
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -541,7 +768,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObjExp 
-     * Desc: Checks if the given object is an exp sys object.
+     * Desc: Checks if the given object is an exp object.
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -557,7 +784,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObjValArray
-     * Desc: Checks if the given object is a val sys object array. 
+     * Desc: Checks if the given object is a val object array. 
      * Arg1: obj(sys obj to check)
      * Returns: (true | false)
      */
@@ -571,7 +798,7 @@ public class JsonPlState {
     
     /**
      * Name: isSysObjVal 
-     * Desc: Checks if the given object is a val sys object.
+     * Desc: Checks if the given object is a val object.
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -589,7 +816,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObjAsgn 
-     * Desc: Checks if the given object is an asgn sys object. 
+     * Desc: Checks if the given object is an asgn object. 
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -605,7 +832,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObjArray 
-     * Desc: Checks if the given object is an array sys object. 
+     * Desc: Checks if the given object is an array object. 
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -621,7 +848,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObjConst 
-     * Desc: Checks if the given object is a const sys object. 
+     * Desc: Checks if the given object is a const object. 
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -637,7 +864,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObjVar 
-     * Desc: Checks if the given object is a var sys object.
+     * Desc: Checks if the given object is a var object.
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -653,7 +880,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObjCall 
-     * Desc: Checks if the given object is a call sys object.
+     * Desc: Checks if the given object is a call object.
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -669,7 +896,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObjFuncLine
-     * Desc: Checks if the given object is a functio line sys object. 
+     * Desc: Checks if the given object is a function line object. 
      * Arg1: obj(sys obj to check)
      * Returns: (true | false)
      */
@@ -699,7 +926,7 @@ public class JsonPlState {
     
     /**
      * Name: isSysObjFunc 
-     * Desc: Checks if the given object is a func sys object.
+     * Desc: Checks if the given object is a func object.
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -715,7 +942,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObjFor 
-     * Desc: Checks if the given object is a for sys object.
+     * Desc: Checks if the given object is a for object.
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -731,7 +958,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObjOp
-     * Desc: Checks if the given object is an op sys object. 
+     * Desc: Checks if the given object is an op object. 
      * Arg1: obj(sys obj to check)
      * Returns: (true | false)
      */    
@@ -747,7 +974,7 @@ public class JsonPlState {
     
     /**
      * Name: isSysObjReturn 
-     * Desc: Checks if the given object is a return sys object. 
+     * Desc: Checks if the given object is a return object. 
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -763,7 +990,7 @@ public class JsonPlState {
 
     /**
      * Name: isSysObj 
-     * Desc: Checks if the given object is a sys object. 
+     * Desc: Checks if the given object is a object. 
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -777,7 +1004,7 @@ public class JsonPlState {
 
     /**
      * Name: getSysObjType 
-     * Desc: Gets the value of the sys attribute of the given sys object. 
+     * Desc: Gets the value of the sys attribute of the given object. 
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
@@ -792,18 +1019,18 @@ public class JsonPlState {
     /////////////////////////VALIDATION METHODS
     /**
      * Name: validateSysObjIf 
-     * Desc: Validates if the given object is a valid if sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true} Struct: <!-
+     * Desc: Validates if the given object is a valid if object. 
+     * Arg1: obj(an {if} object to check) 
+     * Returns: ret(some bool, true or false) 
+     * Struct:
      * {
-     * "sys": "if",
-     * "left": {ref | const | exp | bex | call},
-     * "op": {op & type of bex},
-     * "right": {ref | const | exp | bex | call},
-     * "thn": [asgn | if | for | call | return],
-     * "els": [asgn | if | for | call | return]
+     *    "sys": "if",
+     *    "left": {ref | const | exp | bex | call},
+     *    "op": {op & type of bex},
+     *    "right": {ref | const | exp | bex | call},
+     *    "thn": [asgn | if | for | call | return],
+     *    "els": [asgn | if | for | call | return]
      * }
-     * -!>
      */
     public boolean validateSysObjIf(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -927,18 +1154,17 @@ public class JsonPlState {
 
     /**
      * Name: validateSysObjFor 
-     * Desc: Validates if the given object is a valid for sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid for object. 
+     * Arg1: obj(a {for} object to check) 
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "for",
-     * "start": {ref | const | exp | bex | call & type of int},
-     * "stop": {ref | const | exp | bex | call & type of int},
-     * "inc": {ref | const | exp | bex | call & type of int},
-     * "lines": [asgn | if | for | call | return]
+     *   "sys": "for",
+     *   "start": {ref | const | exp | bex | call & type of int},
+     *   "stop": {ref | const | exp | bex | call & type of int},
+     *   "inc": {ref | const | exp | bex | call & type of int},
+     *   "lines": [asgn | if | for | call | return]
      * }
-     * -!>
      */
     public boolean validateSysObjFor(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1066,19 +1292,18 @@ public class JsonPlState {
 
     /**
      * Name: validateSysObjClass 
-     * Desc: Validates if the given object is a valid class sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid class object. 
+     * Arg1: obj(a {class} object to check)
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "class",
-     * "name": "some name",
-     * "call": {call},
-     * "vars": [var],
-     * "funcs": [func],
-     * "ret": {val}
+     *   "sys": "class",
+     *   "name": "some name",
+     *   "call": {call},
+     *   "vars": [var],
+     *   "funcs": [func],
+     *   "ret": {val}
      * }
-     * -!>
      */
     public boolean validateSysObjClass(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1114,12 +1339,11 @@ public class JsonPlState {
 
     /**
      * Name: validateSysObjFuncLine 
-     * Desc: Validates if the given object is a valid function line sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true} 
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid function line object. 
+     * Arg1: obj(an {asgn}, {for}, {if}, {return}, {call} object to check) 
+     * Returns: ret(some bool, true or false) 
+     * Struct:
      * [asgn | for | if | return | call]
-     * -!>
      */
     public boolean validateSysObjFuncLine(JsonObjSysBase obj) {
         if (this.isSysObjFuncLine(obj)) {
@@ -1167,19 +1391,18 @@ public class JsonPlState {
 
     /**
      * Name: validateSysObjFunc 
-     * Desc: Validates if the given object is a valid func sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid func object. 
+     * Arg1: obj(a {func} object to check) 
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "func",
-     * "name": "some name",
-     * "args": [arg],
-     * "vars": [var],
-     * "ret": {val},
-     * "lines": [asgn | for | if | return | call]
+     *   "sys": "func",
+     *   "name": "some name",
+     *   "args": [arg],
+     *   "vars": [var],
+     *   "ret": {val},
+     *   "lines": [asgn | for | if | return | call]
      * }
-     * -!>
      */
     public boolean validateSysObjFunc(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1214,20 +1437,19 @@ public class JsonPlState {
         }
         return false;
     }
-
+   
     /**
      * Name: validateSysObjAsgn 
-     * Desc: Validates if the given object is a valid asgn sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid asgn object. 
+     * Arg1: obj(a {asgn} object to check) 
+     * Returns: ret(some bool, true or false)
+     * Struct:-
      * {
-     * "sys": "asgn",
-     * "left": {ref},
-     * "op": {op & type of asgn},
-     * "right": {ref | const | exp | bex | call}
+     *   "sys": "asgn",
+     *   "left": {ref},
+     *   "op": {op & type of asgn},
+     *   "right": {ref | const | exp | bex | call}
      * }
-     * -!>
      */
     public boolean validateSysObjAsgn(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1314,17 +1536,16 @@ public class JsonPlState {
 
     /**
      * Name: validateSysObjBex 
-     * Desc: Validates if the given object is a valid bex sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid bex object. 
+     * Arg1: obj(a {bex} object to check)
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "bex",
-     * "left": {ref | const | exp | bex | call},
-     * "op": {op & type of bex},
-     * "right": {ref | const | exp | bex | call}
+     *   "sys": "bex",
+     *   "left": {ref | const | exp | bex | call},
+     *   "op": {op & type of bex},
+     *   "right": {ref | const | exp | bex | call}
      * }
-     * -!>
      */
     public boolean validateSysObjBex(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1412,17 +1633,16 @@ public class JsonPlState {
 
     /**
      * Name: validateSysObjExp 
-     * Desc: Validates if the given object is a valid exp sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid exp object. 
+     * Arg1: obj(a {exp} object to check) 
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "exp",
-     * "left": {ref | const | exp | bex | call},
-     * "op": {op & type of exp},
-     * "right": {ref | const | exp | bex | call}
+     *   "sys": "exp",
+     *   "left": {ref | const | exp | bex | call},
+     *   "op": {op & type of exp},
+     *   "right": {ref | const | exp | bex | call}
      * }
-     * -!>
      */
     public boolean validateSysObjExp(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1510,16 +1730,15 @@ public class JsonPlState {
 
     /**
      * Name: validateSysObjCall 
-     * Desc: Validates if the given object is a valid call sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid call object. 
+     * Arg1: obj(a {call} object to check) 
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "call",
-     * "name": "some name",
-     * "args": [ref | const]
+     *   "sys": "call",
+     *   "name": "some name",
+     *   "args": [ref | const]
      * }
-     * -!>
      */
     public boolean validateSysObjCall(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1548,19 +1767,18 @@ public class JsonPlState {
         }
         return false;
     }
-
+ 
     /**
      * Name: validateSysObjCall 
-     * Desc: Validates if the given object is a valid call sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid call object. 
+     * Arg1: obj(a {op} object to check) 
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "op",
-     * "type": "asgn | bex | exp",
-     * "v": "some valid op value"
+     *   "sys": "op",
+     *   "type": "asgn | bex | exp",
+     *   "v": "some valid op value"
      * }
-     * -!>
      */
     public boolean validateSysObjOp(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1572,25 +1790,25 @@ public class JsonPlState {
         }
         return false;
     }
-
+     
     /**
      * Name: validateSysObjArray 
-     * Desc: Validates if the given object is a valid array sys object. 
+     * Desc: Validates if the given object is a valid array object. 
      * Arg1: obj(sys obj to check) 
      * Returns: {false | true}
-     * Struct: <!-
+     * Struct:
      * {
-     * "sys": "array",
-     * "name": "a1",
-     * "len": #,
-     * "val": {
-     * "sys": "val",
-     * "type": "int",
-     * "v": [some_array]
+     *   "sys": "array",
+     *   "name": "a1",
+     *   "len": #,
+     *   "val": {
+     *     "sys": "val",
+     *     "type": "int",
+     *     "v": [some_array]
+     *   }
      * }
-     * }
-     * -!>
      */
+    /*
     public boolean validateSysObjArray(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
         if (this.isSysObj(obj) && (!Utils.IsStringEmpty(sysType) && sysType.equals("array")) && this.validateProperties(obj, new String[]{"sys", "name", "len", "val"})) {
@@ -1601,18 +1819,18 @@ public class JsonPlState {
         }
         return false;
     }
+    */
 
     /**
      * Name: validateSysObjConst 
-     * Desc: Validates if the given object is a valid const sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid const object. 
+     * Arg1: obj(a {const} object to check) 
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "const",
-     * "val": {val}
+     *   "sys": "const",
+     *   "val": {val}
      * }
-     * -!>
      */
     public boolean validateSysObjConst(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1624,19 +1842,18 @@ public class JsonPlState {
         }
         return false;
     }
-
+ 
     /**
      * Name: validateSysObjVar 
-     * Desc: Validates if the given object is a valid var sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid var object. 
+     * Arg1: obj(a {var} object to check) 
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "var",
-     * "name": "some name",
-     * "val": {val}
+     *   "sys": "var",
+     *   "name": "some name",
+     *   "val": {val}
      * }
-     * -!>
      */
     public boolean validateSysObjVar(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1648,19 +1865,18 @@ public class JsonPlState {
         }
         return false;
     }
-
+    
     /**
      * Name: validateSysObjArg 
-     * Desc: Validates if the given object is a valid arg sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid arg object. 
+     * Arg1: obj(a {arg} object to check)
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "arg",
-     * "name": "some name",
-     * "val": {val}
+     *   "sys": "arg",
+     *   "name": "some name",
+     *   "val": {val}
      * }
-     * -!>
      */
     public boolean validateSysObjArg(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1675,16 +1891,15 @@ public class JsonPlState {
 
     /**
      * Name: validateSysObjVal 
-     * Desc: Validates if the given object is a valid val sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid val object. 
+     * Arg1: obj(a {val} object to check) 
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "val",
-     * "type": "int | float | string | bool & type of string",
-     * "v": "some valid value"
+     *   "sys": "val",
+     *   "type": "int | float | string | bool & type of string",
+     *   "v": "some valid value"
      * }
-     * -!>
      */
     public boolean validateSysObjVal(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1823,15 +2038,14 @@ public class JsonPlState {
 
     /**
      * Name: validateSysObjRef 
-     * Desc: Validates if the given object is a valid ref sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid ref object. 
+     * Arg1: obj(a {ref} object to check)
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "ref",
-     * "val": {val}
+     *   "sys": "ref",
+     *   "val": {val & with value like #.vars.tmp1 or $.vars.tmp1}
      * }
-     * -!>(with value like #.vars.tmp1 or $.vars.tmp1)
      */
     public boolean validateSysObjRef(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1848,15 +2062,14 @@ public class JsonPlState {
 
     /**
      * Name: validateSysObjReturn 
-     * Desc: Validates if the given object is a valid return sys object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: {false | true}
-     * Struct: <!-
+     * Desc: Validates if the given object is a valid return object. 
+     * Arg1: obj(a {return} object to check)
+     * Returns: ret(some bool, true or false)
+     * Struct:
      * {
-     * "sys": "return",
-     * "val": {val}
+     *   "sys": "return",
+     *   "val": {val}
      * }
-     * -!>
      */
     public boolean validateSysObjReturn(JsonObjSysBase obj) {
         String sysType = this.getSysObjType(obj);
@@ -1872,11 +2085,15 @@ public class JsonPlState {
     /**
      * Name: validateProperties 
      * Desc: Validates if the given object has each of the array elements specified in req. 
-     * Arg1: obj(sys obj to check) 
-     * Arg2: req(array of attribute name to check for) 
-     * Returns: {false | true}
+     * Arg1: obj({sys} obj to check) 
+     * Arg2: req(array of attribute names to check for) 
+     * Returns: ret(some bool, true or false)
      */
     public boolean validateProperties(JsonObjSysBase obj, String[] req) {
+        if(obj == null || req == null) {
+            return false;
+        }
+        
         Class clss = null;
         Field fld = null;
         for (int i = 0; i < req.length; i++) {
@@ -1885,7 +2102,7 @@ public class JsonPlState {
                 fld = clss.getField(req[i]);
 
                 if (fld.get(obj) == null) {
-                    this.wr("Field '" + req[i] + "' is null");
+                    //this.wr("Field '" + req[i] + "' is null");
                     return false;
                 }
 
