@@ -2770,7 +2770,9 @@ namespace com.middlemind.JsonPL
             }
             else
             {
-                return null;
+                ArrayList ret = new ArrayList();
+                ret.Add(v);
+                return ret;
             }
         }
 

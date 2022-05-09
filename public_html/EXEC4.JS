@@ -1774,7 +1774,6 @@ jsonPlState.prototype.isString = function (arg) {
    }
 };
 
-//TODO: Continue review here
 /**
  * Name: isNumber
  * Desc: Checks if the given argument is a number. 
@@ -1848,6 +1847,8 @@ jsonPlState.prototype.isBool = function (arg) {
 };
 
 /////////////////////////OBJECT ID METHODS
+
+//TODO: Continue review here
 /**
  * Name: isSysObjIf
  * Desc: Checks if the given object is an if object. 
@@ -2139,10 +2140,10 @@ jsonPlState.prototype.processRef = function (objRef, func) {
       tmp.val.v = nc;
 
       tmp = this.processRef(tmp, func);
-      if (tmp !== null && tmp.val.type === 'string') {
+      if (tmp !== null && tmp.val.type === "string") {
          path = this.toStr(tmp.val.v);
       } else {
-         this.wr("processRef: Error: could not lookup object, for name, " + name + ", ref path: " + path);
+         this.wr("processRef: Error: could not lookup object, for ref path: " + path);
       }
    }
 
@@ -2284,11 +2285,8 @@ jsonPlState.prototype.processRef = function (objRef, func) {
          } else {
             //function find name
             if (isVars) {
-               //this.wr("AAA " + name + ", " + func.name);
                fnd = this.findVar(name, func);
             } else {
-               //this.wr("BBB " + name + ", " + func.name);
-               this.wrObj(func.args);
                fnd = this.findArg(name, func);
             }
          }
@@ -2336,6 +2334,22 @@ jsonPlState.prototype.processRef = function (objRef, func) {
       }
    }
    //this.wr("processRef: exiting...");
+
+   if(fnd != null) {
+      if(this.isArray(fnd.val.v) == false) {
+         if((fnd.val.v + "").indexOf("$") === -1 && (fnd.val.v + "").indexOf("#") === -1) {
+            fnd.val.v = this.toStr(fnd.val.v);
+         }
+      } else {
+         for(var z = 0; z < fnd.val.v.length; z++) {
+            var nd = fnd.val.v[z];
+            if((nd.val.v + "").indexOf("$") === -1 && (nd.val.v + "").indexOf("#") === -1) {
+               nd.val.v = this.toStr(nd.val.v);
+            }            
+         }
+      }
+   }
+
    return fnd;
 };
 
@@ -2923,7 +2937,6 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
    if (!this.isSysObjAsgn(objAsgn)) {
       this.wr("processAsgn: Error: argument objRef is not a asgn obj");
       return null;
-
    } else if (!this.isSysObjFunc(func)) {
       this.wr("processAsgn: Error: argument func is not a func obj");
       return null;
@@ -3051,7 +3064,6 @@ jsonPlState.prototype.processBex = function (objBex, func) {
    if (!this.isSysObjBex(objBex)) {
       this.wr("processBex: Error: argument objRef is not a asgn obj");
       return null;
-
    } else if (!this.isSysObjFunc(func)) {
       this.wr("processBex: Error: argument func is not a func obj");
       return null;
@@ -3327,7 +3339,6 @@ jsonPlState.prototype.processCall = function (objCall, func) {
    if (!this.isSysObjCall(objCall)) {
       this.wr("processCall: Error: argument objRef is not a call obj");
       return null;
-
    } else if (!this.isSysObjFunc(func)) {
       this.wr("processCall: Error: argument func is not a func obj");
       return null;
@@ -3361,7 +3372,6 @@ jsonPlState.prototype.processCall = function (objCall, func) {
                   tmpArg = this.processRef(args[i], func);
                   if (tmpArg !== null) {
                      args[i].val.v = tmpArg.val.v;
-                     args[i].name = args[i].name;
                   } else {
                      this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
                      return null;
@@ -3553,7 +3563,6 @@ jsonPlState.prototype.processExp = function (objExp, func) {
             if (parseInt(right.val.v) === 0) {
                this.wr("processExp: Error: divide by zero error");
                return null;
-
             } else {
                ret.v = parseInt(left.val.v) / parseInt(right.val.v);
             }
@@ -3561,7 +3570,6 @@ jsonPlState.prototype.processExp = function (objExp, func) {
             if (parseFloat(right.val.v) === 0) {
                this.wr("processExp: Error: divide by zero error");
                return null;
-
             } else {
                ret.v = parseFloat(left.val.v) / parseFloat(right.val.v);
             }
@@ -3569,7 +3577,6 @@ jsonPlState.prototype.processExp = function (objExp, func) {
             if (this.toBoolInt(right.val.v) === 0) {
                this.wr("processExp: Error: divide by zero error");
                return null;
-
             } else {
                ret.v = this.toBoolInt(left.val.v) / this.toBoolInt(right.val.v);
             }
@@ -3642,7 +3649,7 @@ jsonPlState.prototype.processReplDirectives = function (keys, values, src) {
       return null;
    }
 
-   if (values.length != keys.length) {
+   if (values.length !== keys.length) {
       this.wr("processReplDirectives: Error: argument keys and values must have the same length.");
       return null;
    }

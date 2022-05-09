@@ -1,6 +1,8 @@
 package com.middlemind.JsonPL;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.middlemind.JsonPL.JsonObjs.JsonObjSysBase;
+import com.middlemind.JsonPL.Loaders.LoaderSysBase;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -623,7 +625,7 @@ public class JsonPlState {
         if(arg == null) {
             return false;
         } else 
-        if (arg instanceof List || arg instanceof ArrayList) {
+        if (arg instanceof List || arg instanceof ArrayList || arg instanceof LinkedTreeMap) {
             return true;
         } else {
             return false;
@@ -706,9 +708,9 @@ public class JsonPlState {
             return false;
         } else if (arg instanceof Boolean) {
             return true;
-        } else if(this.isNumber(arg) && (int)arg == 1 || (float)arg == 0) {
+        } else if(this.isInteger(arg) && (int)arg == 1 || (float)arg == 0) {
             return true;
-        } else if(this.isNumber(arg) && (float)arg == 1.0 || (float)arg == 0.0) {
+        } else if(this.isFloat(arg) && (float)arg == 1.0 || (float)arg == 0.0) {
             return true;
         } else if(this.isString(arg) && (((String)arg).equals("yes") || ((String)arg).equals("no") || ((String)arg).equals("true") || ((String)arg).equals("false") || ((String)arg).equals("1") || ((String)arg).equals("0") || ((String)arg).equals("1.0") || ((String)arg).equals("0.0"))) {
             return true;
@@ -781,6 +783,22 @@ public class JsonPlState {
         }
         return false;
     }
+    
+    /**
+     * Name: isSysObjVal 
+     * Desc: Checks if the given object is a val object.
+     * Arg1: obj(sys obj to check) 
+     * Returns: (true | false)
+     */
+    public boolean isSysObjVal(JsonObjSysBase obj) {
+        if (this.isSysObj(obj) == true) {
+            String objSys = this.getSysObjType(obj);
+            if (!Utils.IsStringEmpty(objSys) && objSys.equals("val")) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Name: isSysObjValArray
@@ -797,24 +815,6 @@ public class JsonPlState {
     }    
     
     /**
-     * Name: isSysObjVal 
-     * Desc: Checks if the given object is a val object.
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjVal(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = this.getSysObjType(obj);
-            //this.wr("ObjSys: " + objSys + ", " + Utils.IsStringEmpty(objSys) + ", " + objSys.equals("val"));
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("val")) {
-                return true;
-            }
-        }
-        //this.wr("not sys object");
-        return false;
-    }
-
-    /**
      * Name: isSysObjAsgn 
      * Desc: Checks if the given object is an asgn object. 
      * Arg1: obj(sys obj to check) 
@@ -824,22 +824,6 @@ public class JsonPlState {
         if (this.isSysObj(obj) == true) {
             String objSys = getSysObjType(obj);
             if (!Utils.IsStringEmpty(objSys) && objSys.equals("asgn")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Name: isSysObjArray 
-     * Desc: Checks if the given object is an array object. 
-     * Arg1: obj(sys obj to check) 
-     * Returns: (true | false)
-     */
-    public boolean isSysObjArray(JsonObjSysBase obj) {
-        if (this.isSysObj(obj) == true) {
-            String objSys = getSysObjType(obj);
-            if (!Utils.IsStringEmpty(objSys) && objSys.equals("array")) {
                 return true;
             }
         }
@@ -2129,6 +2113,9 @@ public class JsonPlState {
         JsonObjSysBase fnd = null;
         JsonObjSysBase prog = this.program;
 
+        //this.wr("OBJ REF");
+        //this.wrObj(objRef);        
+        
         if (!this.isSysObjRef(objRef)) {
             this.wr("processRef: Error: argument objRef is not a ref obj");
             return null;
@@ -2137,9 +2124,25 @@ public class JsonPlState {
             return null;
         }
 
-        //this.wr("OBJ REF");
-        //this.wrObj(objRef);
         path = (objRef.val.v + "");
+        if (path.charAt(0) == '[') {
+           String nc = path.substring(1, path.length() - 1);
+
+           JsonObjSysBase tmp = new JsonObjSysBase();
+           tmp.sys = "ref";
+           tmp.val = new JsonObjSysBase();
+           tmp.val.sys = "val";
+           tmp.val.type = "string";
+           tmp.val.v = nc;
+
+           tmp = this.processRef(tmp, func);
+           if (tmp != null && tmp.val.type.equals("string")) {
+              path = this.toStr(tmp.val.v);
+           } else {
+              this.wr("processRef: Error: could not lookup object, for ref path: " + path);
+           }
+        }        
+        
         //this.wr("===============================================Found path: " + path);
         vls = path.split("\\.");
 
@@ -2214,6 +2217,7 @@ public class JsonPlState {
                     foundSource = true;
                 } else {
                     this.wr("processRef: Error: could not find correct the ref, for source, " + c);
+                    return null;
                 }
             } else if (!foundType) {
                 //program/class
@@ -2223,6 +2227,7 @@ public class JsonPlState {
                         foundType = true;
                     } else {
                         this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFunc);
+                        return null;
                     }
                     //function
                 } else {
@@ -2234,6 +2239,7 @@ public class JsonPlState {
                         foundType = true;
                     } else {
                         this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFunc);
+                        return null;
                     }
                 }
             } else if (!foundName) {
@@ -2255,16 +2261,20 @@ public class JsonPlState {
                         name = this.toStr(tmp.val.v + "");
                     } else {
                         this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                        return null;
                     }
                 }
 
                 //this.wr("processRef: looking for name: " + name);
+                //this.wrObj(func.args);
+                
                 if (!isFunc) {
                     //class find name            
                     if (isVars) {
                         fnd = this.findVar(name, prog);
                     } else {
                         this.wr("processRef: Error: could not find, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                        return null;
                     }
                     //function
                 } else {
@@ -2276,10 +2286,15 @@ public class JsonPlState {
                     }
                 }
 
+                //this.wr("CCC ");
+                //this.wrObj(fnd);                
+                
                 if (fnd != null) {
                     type = fnd.val.type;
+                    foundName = true;
                 } else {
                     this.wr("processRef: Error: could not find an object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                    return null;
                 }
             } else if (!foundIndex) {
                 idx = this.toInt(c);
@@ -2299,20 +2314,64 @@ public class JsonPlState {
                         idx = this.toInt(tmp.val.v + "");
                     } else {
                         this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                        return null;
                     }
                 }
 
                 if (this.isSysObjValArray(fnd.val)) {
                     fnd = (JsonObjSysBase) (this.toArray(fnd.val.v)).get(idx);
+                    foundIndex = true;
                 } else {
                     this.wr("processRef: Error: index entry is only for vars/args of type array, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                    return null;
                 }
             }
         }
+        //this.wr("processRef: exiting...");
+        
+        if(fnd != null) {
+            if(this.isArray(fnd.val.v) == false) {
+                if((fnd.val.v + "").indexOf("$") == -1 && (fnd.val.v + "").indexOf("#") == -1) {
+                    if(fnd.val.type.equals("int")) {
+                        fnd.val.v = this.toInt(fnd.val.v);
+                    } else if(fnd.val.type.equals("float")) {
+                        fnd.val.v = this.toFloat(fnd.val.v);
+                    } else if(fnd.val.type.equals("string")) {
+                        fnd.val.v = this.toStr(fnd.val.v);
+                    } else if(fnd.val.type.equals("bool")) {                
+                        fnd.val.v = this.toBool(fnd.val.v);
+                    }
+                    fnd.val.v = this.toStr(fnd.val.v);
+                }
+            } else {
+                ArrayList al = (ArrayList)fnd.val.v;
+                for(int z = 0; z < al.size(); z++) {
+                    JsonObjSysBase nd = (JsonObjSysBase)al.get(z);
+                    if((nd.val.v + "").indexOf("$") == -1 && (nd.val.v + "").indexOf("#") == -1) {
+                        if(nd.val.type.equals("int")) {
+                            nd.val.v = this.toInt(nd.val.v);
+                        } else if(nd.val.type.equals("float")) {
+                            nd.val.v = this.toFloat(nd.val.v);
+                        } else if(nd.val.type.equals("string")) {
+                            nd.val.v = this.toStr(nd.val.v);
+                        } else if(nd.val.type.equals("bool")) {                
+                            nd.val.v = this.toBool(nd.val.v);
+                        }
+                        nd.val.v = this.toStr(nd.val.v);
+                    }   
+                }
+            }
+        }
+        
         return fnd;
     }
 
-    //TODO
+    /**
+     * Name: toBoolInt
+     * Desc: Converts the boolean value v to an integer representation.
+     * Arg1: v(the value to convert)
+     * Returns: (0 | 1)
+     */
     public int toBoolInt(Object v) {
         String vb = v + "";
         vb = vb.toLowerCase();
@@ -2327,31 +2386,95 @@ public class JsonPlState {
         }
     }
 
-    //TODO
+    /**
+     * Name: toInt
+     * Desc: Converts the value v to an integer representation.
+     * Arg1: v(the value to convert)
+     * Returns: (the int value of v)
+     */
     public int toInt(Object v) {
-        return Integer.parseInt(v + "");
+        String s = this.toStr(v);
+        if(s.indexOf(".") != -1) {
+            s = this.toStr((int)Float.parseFloat(s));
+        }
+        return Integer.parseInt(s);
     }
 
-    //TODO
+    /**
+     * Name: toFloat
+     * Desc: Converts the value v to a float representation.
+     * Arg1: v(the value to convert)
+     * Returns: (the float value of v)
+     */
     public float toFloat(Object v) {
         return Float.parseFloat(v + "");
     }
 
-    //TODO
+    /**
+     * Name: toStr
+     * Desc: Converts the value v to a string representation.
+     * Arg1: v(the value to convert)
+     * Returns: (the string value of v)
+     */
     public String toStr(Object v) {
         return (v + "");
     }
 
-    //TODO
+    /**
+     * Name: toArray
+     * Desc: Converts the value v to an array representation.
+     * Arg1: v(the value to convert)
+     * Returns: (the array value of v)
+     */
     public ArrayList toArray(Object v) {
-        if(this.isArray(v)) {
-            return (ArrayList)v;
+        if(this.isArray(v)) {            
+            ArrayList al = (ArrayList)v;
+            LoaderSysBase ldr = new LoaderSysBase();
+             
+            for(int i = 0; i < al.size(); i++) {
+                Object t = al.get(i);
+                if(t instanceof LinkedTreeMap) {                    
+                    LinkedTreeMap lltmp = (LinkedTreeMap)t;
+                    Object[] keys = lltmp.keySet().toArray();
+                    String sys = lltmp.get(keys[0]) + "";
+                    String name = lltmp.get(keys[1]) + "";
+                    String val = lltmp.get(keys[2]) + "";                    
+                    JsonObjSysBase nd = new JsonObjSysBase();
+                    
+                    if(sys.equals("const")) {
+                        nd.sys = "const";
+                        nd.name = name + "";
+                        try {
+                            nd.val = ldr.ParseJson(val, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else if(sys.equals("ref")) {
+                        nd.sys = "ref";
+                        nd.name = name + "";
+                        try {
+                            nd.val = ldr.ParseJson(val, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    al.set(i, nd);
+                }
+            }
+            return al;
         } else {
-            return null;
+            ArrayList ret = new ArrayList();
+            ret.add(v);
+            return ret;
         }
     }
     
-    //TODO
+    /**
+     * Name: toBool
+     * Desc: Converts the value v to a boolean representation.
+     * Arg1: v(the value to convert)
+     * Returns: (the bool value of v)
+     */
     public boolean toBool(Object v) {
         String vb = v + "";
         vb = vb.toLowerCase();
@@ -2858,7 +2981,6 @@ public class JsonPlState {
         if (!this.isSysObjAsgn(objAsgn)) {
             this.wr("processAsgn: Error: argument objRef is not a asgn obj");
             return null;
-
         } else if (!this.isSysObjFunc(func)) {
             this.wr("processAsgn: Error: argument func is not a func obj");
             return null;
@@ -2954,13 +3076,17 @@ public class JsonPlState {
                 this.lastAsgnReturn = ret;
                 return ret;
             } else {
-               this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
-               ret.val.v = "false";
-               return ret;
+                this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+                ret.val.v = "false";
+                this.lastAsgnValue = this.cloneJsonObj(left);
+                this.lastAsgnReturn = ret;               
+                return ret;
             }
         } else {
             this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
             ret.val.v = "false";
+            this.lastAsgnValue = this.cloneJsonObj(left);
+            this.lastAsgnReturn = ret;            
             return ret;
         }
     }
@@ -2980,7 +3106,6 @@ public class JsonPlState {
         if (!this.isSysObjBex(objBex)) {
             this.wr("processBex: Error: argument objRef is not a asgn obj");
             return null;
-
         } else if (!this.isSysObjFunc(func)) {
             this.wr("processBex: Error: argument func is not a func obj");
             return null;
@@ -3254,7 +3379,6 @@ public class JsonPlState {
         if (!this.isSysObjCall(objCall)) {
             this.wr("processCall: Error: argument objRef is not a call obj");
             return null;
-
         } else if (!this.isSysObjFunc(func)) {
             this.wr("processCall: Error: argument func is not a func obj");
             return null;
@@ -3278,22 +3402,39 @@ public class JsonPlState {
         }
 
         if (funcArgs != null) {
-            if (args.size() == funcArgs.size()) {
-                for (int i = 0; i < args.size(); i++) {
-                    if (!args.get(i).val.type.equals(funcArgs.get(i).val.type)) {
-                        this.wr("processCall: Error: type mismatch at argument index, " + i + ", func arg def: " + funcArgs.get(i).val.type + ", call arg: " + args.get(i).val.type);
-                        return null;
-                    }
-
-                    if (this.isSysObjRef(args.get(i))) {
-                        tmpArg = null;
-                        tmpArg = this.processRef(args.get(i), func);
-                        if (tmpArg != null) {
-                            args.get(i).val.v = tmpArg.val.v;
-                            args.get(i).name = funcArgs.get(i).name;
-                        } else {
-                            this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args.get(i).val.v);
+            if (funcArgs == null || (funcArgs != null && args.size() == funcArgs.size()) || (funcArgs != null && funcArgs.size() == 0)) {
+                if(funcArgs == null) {
+                    args = new ArrayList();
+                } else if (funcArgs.size() == 0) {
+                    for (int i = 0; i < args.size(); i++) {
+                        if (this.isSysObjRef(args.get(i))) {
+                            tmpArg = null;
+                            tmpArg = this.processRef(args.get(i), func);
+                            if (tmpArg != null) {
+                                args.get(i).val.v = tmpArg.val.v;
+                            } else {
+                                this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args.get(i).val.v);
+                                return null;
+                            }
+                        }
+                    }                
+                } else {    
+                    for (int i = 0; i < args.size(); i++) {
+                        if (!args.get(i).val.type.equals(funcArgs.get(i).val.type)) {
+                            this.wr("processCall: Error: type mismatch at argument index, " + i + ", func arg def: " + funcArgs.get(i).val.type + ", call arg: " + args.get(i).val.type);
                             return null;
+                        }
+
+                        if (this.isSysObjRef(args.get(i))) {
+                            tmpArg = null;
+                            tmpArg = this.processRef(args.get(i), func);
+                            if (tmpArg != null) {
+                                args.get(i).val.v = tmpArg.val.v;
+                                args.get(i).name = funcArgs.get(i).name;
+                            } else {
+                                this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args.get(i).val.v);
+                                return null;
+                            }
                         }
                     }
                 }
@@ -3304,20 +3445,38 @@ public class JsonPlState {
                     try {
                         String lname = funcDef.fname;
                         if (lname.equals("sysJob1")) {
-                            lret = sysJob1(args, func);
+                            lret = this.sysJob1(args, func);
 
                         } else if (lname.equals("sysJob2")) {
-                            lret = sysJob2(args, func);
+                            lret = this.sysJob2(args, func);
 
                         } else if (lname.equals("sysJob3")) {
-                            lret = sysJob3(args, func);
+                            lret = this.sysJob3(args, func);
 
                         } else if (lname.equals("sysGetLastAsgnValue")) {
-                            lret = lastAsgnValue;
+                            lret = this.lastAsgnValue;
 
+                        } else if (lname.equals("sysGetLastExpReturn")) {
+                            lret = this.lastAsgnValue;                            
+                            
+                        } else if (lname.equals("sysWr")) {
+                            lret = this.sysWr(args, func);                            
+                            
+                        } else if (lname.equals("sysLen")) {
+                            lret = this.sysLen(args, func);                                                        
+                            
+                        } else if (lname.equals("sysType")) {
+                            lret = this.sysType(args, func);                            
+                            
+                        } else if (lname.equals("sysGetRef")) {
+                            lret = this.sysGetRef(args, func);                            
+                                                        
+                        } else if (lname.equals("sysGetRefStr")) {
+                            lret = this.sysGetRefStr(args, func);  
+                            
                         } else {
                             if (this.systemFunctionHandler != null) {
-                                lret = this.systemFunctionHandler.call(funcDef.fname, args, this);
+                                lret = this.systemFunctionHandler.call(funcDef.fname, args, this, func);
                                 err = false;
                             } else {
                                 lret = null;
@@ -3352,6 +3511,7 @@ public class JsonPlState {
 
                     //this.wr("RET_DEF");
                     //this.wrObj(funcDef.ret_def);
+                    
                     if (!ret.val.type.equals(funcDef.ret_def.type)) {
                         this.wr("processCall: Error: function return type mismatch, return type " + ret.val.type + " expected " + funcDef.ret_def.type);
                         return null;

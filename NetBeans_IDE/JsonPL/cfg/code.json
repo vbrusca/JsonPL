@@ -2,7 +2,7 @@
    "sys": "class",
    "name": "test1",
    "call": {"sys": "call", "name": "testFunction1", "args": [{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}}]},
-   "vars": [
+   "vars": [		
       {
          "sys": "var",
          "name": "tmp1",
@@ -32,7 +32,29 @@
 
             ]
          }         
-      }
+      },
+      {
+         "sys": "var",
+         "name": "tmp4",
+         "val": {
+            "sys": "val",
+            "type": "int[]",
+            "len": "2",
+            "v": [
+               {"sys":"const", "name":"0", "val":{"sys":"val", "type":"int", "v":"0"}},
+               {"sys":"const", "name":"1", "val":{"sys":"val", "type":"int", "v":"1"}}                        
+            ]
+         }         
+      },
+      {
+         "sys": "var",
+         "name": "tmp5",
+         "val": {
+            "sys": "val",
+            "type": "string",
+            "v": "#.vars.tmp1"
+         }
+      }               
    ],
    "funcs": [
       {

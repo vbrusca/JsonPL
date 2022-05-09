@@ -374,6 +374,7 @@
             var res = null;
             var tmp = null;
 
+
             /////////////////////////////////////////////////////////////////////////////
             tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.[$.vars.name1]"}};
             if(!jpl.validateSysObjRef(tmp)) {
@@ -435,16 +436,15 @@
             res = jpl.processRef(tmp, code.funcs[0]);
             jpl.wrObj(res);            
 
+
             /////////////////////////TESTS: ASSIGNMENT
             /*
-            <!-  
-               {
-                  "sys": "asgn",
-                  "left": {ref},
-                  "op": {op & type of asgn}, 
-                  "right": {ref | const | exp | bex | call}
-               }
-            -!>
+            {
+               "sys": "asgn",
+               "left": {ref},
+               "op": {op & type of asgn}, 
+               "right": {ref | const | exp | bex | call}
+            }
             */
             tmp = {
                "sys": "asgn",
@@ -546,16 +546,15 @@
             res = jpl.processRef(tmp, code.funcs[0]);
             jpl.wrObj(res);
 
+
             ///////////////////////////TESTS: BOOLEAN EXPRESSIONS
             /* 
-            <!-  
-               {
-                  "sys": "bex",
-                  "left": {ref | const | exp | bex | call},
-                  "op": {op & type of bex}, 
-                  "right": {ref | const | exp | bex | call}
-               }
-            -!>
+            {
+               "sys": "bex",
+               "left": {ref | const | exp | bex | call},
+               "op": {op & type of bex}, 
+               "right": {ref | const | exp | bex | call}
+            }
             */   
             tmp = {
                "sys": "bex", 
@@ -602,6 +601,7 @@
             jpl.wr("REF $.args.i1 VAL:");
             res = jpl.processRef(tmp, code.funcs[0]);
             jpl.wrObj(res);            
+
 
             ///////////////////////////TESTS: FUNCTION CALLS
             tmp = {
@@ -781,6 +781,7 @@
             jpl.wrObj(tmp);
             jpl.runProgram();
             
+
             /////////////////////////////////////////////////////////////////////////////
             tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.[$.vars.name1]"}};
             if(!jpl.validateSysObjRef(tmp)) {
@@ -803,6 +804,7 @@
             jpl.wr("REF 1:");
             res = jpl.processRef(tmp, code.funcs[0]);
             jpl.wrObj(res);
+
 
 			   /////////////////////////////////////////////////////////////////////////////
             //tmp = '{"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.[$.vars.[$.vars.name2]]"}};';
@@ -830,7 +832,8 @@
             if(!jpl.validateSysObjRef(tmp)) {
                jpl.wr("!invalid JSON");
                return;
-            }            
+            }
+                    
             jpl.wr("====================== TEST 13.00: Pre-Processing Replacement Directives Execution ======================");
             jpl.wrObj(tmp);
             jpl.wr("REF 1:");
