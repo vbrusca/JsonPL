@@ -160,14 +160,7 @@
                         "op": {"sys":"op", "type":"asgn", "v":"="},
                         "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.args.i1"}}
                      },
-                     {
-                        "sys": "return",
-                        "val": {
-                              "sys": "val",
-                              "type": "bool",
-                              "v": "true"
-                        }
-                     }
+                     {"sys": "return", "val": {"sys":"const", "val":{"sys": "val", "type": "bool", "v": "true"}}}
                   ]
                },
                {
@@ -202,7 +195,7 @@
                   },
                   "lines": [
                      {"sys": "call", "name": "SYS::wr", "args": [{"sys": "const", "val":{"sys": "val", "type": "string", "v": "hello world"}}]},
-                     {"sys":"return", "val": {"sys": "val", "type": "bool", "v":"true"}}
+                     {"sys":"return", "val": {"sys":"const", "val":{"sys": "val", "type": "bool", "v":"true"}}}
                   ]
                }
             ],

@@ -1,0 +1,104 @@
+<html>
+   <head>
+      <title>JsonPL Test 14</title>
+      <script type="text/javascript" src="../exec4.js"></script>
+      <script type="text/javascript">
+         var code = {
+            "sys":"class", "name":"program1",
+            "call":{"sys":"call", "name":"main", "args":[]},
+            "vars":[
+               {
+                  "sys":"var", "name":"tmp1",
+                  "val":{
+                     "sys":"val",
+                     "type":"int[]",
+                     "len":"2",
+                     "v":[
+                        {"sys":"const", "name":"item0", "val":{"sys":"val", "type":"int", "v":"0"}},
+                        {"sys":"const", "name":"item1", "val":{"sys":"val", "type":"int", "v":"1"}}                        
+                     ]
+                  }         
+               }
+            ],
+            "funcs":[
+               {
+                  "sys":"func", "name":"main",
+                  "args":[ 
+                  ],
+                  "vars":[
+                  ],
+                  "ret":{"sys":"val", "type":"string", "v":"-1"},
+                  "lines":[
+                     {"sys":"call", "name":"SYS::getArrayIdxRefStr", "args":[
+                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":"tmp1"}},
+                        {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}},
+                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":"0"}}                        
+                     ]},
+                     {"sys":"call", "name":"SYS::getArrayIdxRefStr", "args":[
+                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":"tmp1"}},
+                        {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}},
+                        {"sys":"const", "val":{"sys":"val", "type":"string", "v":"item0"}}                        
+                     ]}                     
+                  ]
+               }
+            ],
+            "ret":{"sys":"val", "type":"string", "v":"-2"}
+         };            
+         
+         /**
+          * Name: init
+          * Desc: A function to init the test page.
+          */
+         function init() {
+            var desc = "A test to demonstrate getting a class variable, of type array index, reference as a const object using numeric index or item name.";
+            var txtArea = document.getElementById('message');
+         
+            jsonPlState.prototype.wr = function(s) {
+               if (this.LOGGING === true) {
+                  console.log(this.WR_PREFIX + s);
+                  txtArea.value += (this.WR_PREFIX + s + "\n");
+               }
+            };
+            
+            jsonPlState.prototype.wrObj = function(s) {
+               if (this.LOGGING === true) {
+                  console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
+                  txtArea.value += (this.WR_PREFIX + JSON.stringify(s, null, 2) + "\n");
+               }
+            };
+
+            jsonPlState.prototype.wrVal = function(v) {
+               if (this.LOGGING === true) {
+                  if(this.isSysObjValArray(v)) {
+                     console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+                     txtArea.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len + "\n");
+                  } else {
+                     console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+                     txtArea.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v + "\n");
+                  }
+               }
+            };
+         
+            /////////////////////////PROGRAM SECTION
+            var jpl = new jsonPlState();
+            jpl.program = JSON.parse(JSON.stringify(code));
+            
+            if(!jpl.validateSysObjClass(jpl.program)) {
+               jpl.wr("runProgram: Error: could not validate the class object.");
+               return;
+            }
+
+            jpl.wr(desc);
+            jpl.wr("====================== Program Results ======================");
+            jpl.runProgram();             
+         }
+      </script>
+   </head>
+   <body style="padding: 4px;" onload="init()">
+      <span style="font-size:14px;">Test Output (See page source for more details):</span><br/>
+      <textarea cols="125" rows="25" id="message" style="font-size:12px;">
+      </textarea>
+   </body>
+</html>
