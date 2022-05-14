@@ -38,12 +38,26 @@ function jsonPlState() {
  * Arg2: func(the {func} this system function is called from) 
  * Returns: const(a {const} bool object) 
  */
-jsonPlState.prototype.sysWr = function (args, func) {
+jsonPlState.prototype.sysWr = function (args, func, sep) {
    var len = args.length;
    var i = 0;
    var s = "";
+
+   if(sep === null || sep === "" || sep === undefined) {
+      sep = null;
+   }
+
    for (; i < len; i++) {
-      s += this.toStr(args[i].val.v);
+      if(this.isArray(args[i].val.v)) {
+         this.sysWr(args[i].val.v, func, ", ");
+      } else {
+         s += this.toStr(args[i].val.v);
+         if(sep !== null) {
+            if(i < len - 1) {
+               s += sep;
+            }
+         }
+      }
    }
    this.wr(s);
 
@@ -2490,6 +2504,8 @@ jsonPlState.prototype.processRef = function (objRef, func) {
             if (isVars) {
                fnd = this.findVar(name, func);
             } else {
+               //this.wr("processRef: function find arg: " + name);
+               //this.wrObj(func);
                fnd = this.findArg(name, func);
             }
          }
@@ -3033,6 +3049,7 @@ jsonPlState.prototype.processFor = function (objFor, func) {
    }
 
    if(fullLst) {
+      //this.wr("processFor: AAA");
       start = objFor.start;
       if (this.isSysObjConst(start)) {
          //do nothing
@@ -3060,7 +3077,7 @@ jsonPlState.prototype.processFor = function (objFor, func) {
       }
 
       stop = objFor.stop;
-      if (this.isSysObjConst(start)) {
+      if (this.isSysObjConst(stop)) {  //Check this line
          //do nothing
 
       } else if (this.isSysObjRef(stop)) {
@@ -3156,6 +3173,9 @@ jsonPlState.prototype.processFor = function (objFor, func) {
    var incAmt = this.toInt(inc.val.v);
    var lenAmt = this.toInt(stop.val.v);
    var startAmt = this.toInt(start.val.v);
+
+   //this.wr("processFor: BBB: " + incAmt + ", " + lenAmt + ", " + startAmt);
+   //this.wrObj(stop);
 
    for (i = startAmt; i < lenAmt; i += incAmt) {
       ret3 = this.processIfForLines(objFor.lines, func);
@@ -3608,7 +3628,7 @@ jsonPlState.prototype.processCall = function (objCall, func) {
    }
 
    if(this.isSysObjConst(objCall.name)) {
-      //this.wr("processCall: found const");
+      // const");
       if(objCall.name.val.type === "string") {
          name = objCall.name.val.v;
       } else {
@@ -3687,6 +3707,8 @@ jsonPlState.prototype.processCall = function (objCall, func) {
                      this.wr("processCall: Error: could not process argument index, " + i + ", with path: " + args[i].val.v);
                      return null;
                   }
+               } else {
+                  args[i].name = funcArgs[i].name;
                }
             }
          }
@@ -3720,6 +3742,10 @@ jsonPlState.prototype.processCall = function (objCall, func) {
             //backup default args and vars
             funcDef.vars_def = this.cloneJsonObj(funcDef.vars);
             funcDef.args_def = this.cloneJsonObj(funcDef.args);
+
+            //this.wr("setting args:");
+            //this.wrObj(args);
+
             funcDef.args = args;
 
             //backup default ret
