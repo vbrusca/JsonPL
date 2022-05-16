@@ -1,0 +1,187 @@
+<html>
+   <head>
+      <title>JsonPL Test 23</title>
+      <script type="text/javascript" src="../exec4.js"></script>
+      <script type="text/javascript">
+         var jpl = null;
+         var code = {
+            "sys":"class", "name":"MallocArrayDemo",
+            "call":{"sys":"call", "name":"main", "args":[]},
+            "vars":[
+               {
+                  "sys":"var", "name":"f1",
+                  "val": {
+                     "sys":"val",
+                     "type":"string",
+                     "v":"getSmallestIdx"
+                  }
+               },
+               {
+                  "sys":"var", "name":"ptr1",
+                  "val": {
+                     "sys":"val",
+                     "type":"string",
+                     "v":"#.vars.f1"
+                  }
+               }
+            ],
+            "funcs":[
+               {"sys":"func", "name":"main",
+                  "args":[ 
+                  ],
+                  "vars":[
+                  ],
+                  "ret":{"sys":"val", "type":"bool", "v":"false"},
+                  "lines":[
+
+                     {
+                        "sys":"call", "name":"SYS::wr", "args":[
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Ptr1 Before: "}},
+                           {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ptr1"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
+                        ]
+                     },
+                     {
+                        "sys":"call", "name":"SYS::wr", "args":[
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Value Of Ptr1 Before: "}},
+                           {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"[#.vars.ptr1]"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
+                        ]
+                     },
+                     {
+                        "sys":"asgn",
+                        "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}},
+                        "op":{"sys":"op", "type":"asgn", "v":"="},
+                        "right":{
+                           "sys":"call", "name":"SYS::amlc", "args":[
+                              {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                              {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}},
+                              {"sys":"const", "val":{"sys":"val", "type":"string", "v":"int[]"}},
+                              {"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}},
+                              {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                              {"sys":"const", "val":{"sys":"val", "type":"string", "v":"itm0,int,11"}}                              
+                           ]
+                        }
+                     },
+                    {
+                        "sys":"call", "name":"SYS::amlc", "args":[
+                           {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"ar2"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"string[]"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"int", "v":"3"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"false"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"next,string,null"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"prev,string,null"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"active,bool,true"}}
+                        ]
+                     },
+                     {
+                        "sys":"call", "name":"SYS::wr", "args":[
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Ptr1 After: "}},
+                           {"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
+                        ]
+                     },
+                     {
+                        "sys":"call", "name":"SYS::wr", "args":[
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Value Of Ptr1 Before Assign: "}},
+                           {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"[#.vars.ptr1]"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
+                        ]
+                     },
+                     {
+                        "sys":"asgn",
+                        "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"[#.vars.ptr1].0"}},
+                        "op":{"sys":"op", "type":"asgn", "v":"="},
+                        "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"12"}}
+                     },
+                     {
+                        "sys":"call", "name":"SYS::wr", "args":[
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Value Of Ptr1 After Assign: "}},
+                           {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"[#.vars.ptr1]"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
+                        ]
+                     },
+                     {
+                        "sys":"call", "name":"SYS::wr", "args":[
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"About to call clean: "}}
+                        ]
+                     },                     
+                     {
+                        "sys":"call", "name":"SYS::cln", "args":[
+                           {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                           {"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}}                       
+                        ]
+                     },
+                     {
+                        "sys":"call", "name":"SYS::cln", "args":[
+                           {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"objId_0"}}                       
+                        ]
+                     },
+                     {
+                        "sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}
+                     }
+
+                  ]
+               }
+
+            ],
+            "ret":{"sys":"val", "type":"bool", "v":"false"}
+         };            
+         
+         /**
+          * Name: init
+          * Desc: A function to init the test page.
+          */
+         function init() {
+            var desc = "A test to demonstrate allocating a new array variable and getting its value.";
+            var txtArea = document.getElementById('message');
+         
+            jsonPlState.prototype.wr = function(s) {
+               if (this.LOGGING === true) {
+                  console.log(this.WR_PREFIX + s);
+                  txtArea.value += (this.WR_PREFIX + s + "\n");
+               }
+            };
+            
+            jsonPlState.prototype.wrObj = function(s) {
+               if (this.LOGGING === true) {
+                  console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
+                  txtArea.value += (this.WR_PREFIX + JSON.stringify(s, null, 2) + "\n");
+               }
+            };
+
+            jsonPlState.prototype.wrVal = function(v) {
+               if (this.LOGGING === true) {
+                  if(this.isSysObjValArray(v)) {
+                     console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+                     txtArea.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len + "\n");
+                  } else {
+                     console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+                     txtArea.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v + "\n");
+                  }
+               }
+            };
+         
+            /////////////////////////PROGRAM SECTION
+            jpl = new jsonPlState();
+            jpl.program = JSON.parse(JSON.stringify(code));
+            
+            if(!jpl.validateSysObjClass(jpl.program)) {
+               jpl.wr("runProgram: Error: could not validate the class object.");
+               return;
+            }
+
+            jpl.wr(desc);
+            jpl.wr("====================== Program Results ======================");
+            jpl.runProgram();             
+         }
+      </script>
+   </head>
+   <body style="padding: 4px;" onload="init()">
+      <span style="font-size:14px;">Test Output (See page source for more details):</span><br/>
+      <textarea cols="125" rows="25" id="message" style="font-size:12px;">
+      </textarea>
+   </body>
+</html>
