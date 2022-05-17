@@ -61,6 +61,14 @@ public class JsonPL {
         if(args.length >= 1) {            
             String target = args[0];
             String json = null;
+            
+            if(args.length == 2) {
+                //TODO: test14, test15, test16, 
+                //TODO: test17, test19, test20, 
+                //TODO: test21, test23            
+                target = "test14.json";
+            }
+            
             Logger.wrl("JsonPL: running program: " + target);
             try {
                 tmpStr = FileLoader.LoadStr(target);
@@ -102,6 +110,8 @@ public class JsonPL {
                 
                 if(target.equals("test0.json")) {
                     desc = "A test to demonstrate getting a length from a class variable of type array.";
+                } else {
+                    desc = "Running program: " + target;
                 }
                 
                 jpl.wr(desc);
