@@ -1,7 +1,8 @@
 {
   "profiles": {
     "JsonPL": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "test0.json test"
     }
   }
 }

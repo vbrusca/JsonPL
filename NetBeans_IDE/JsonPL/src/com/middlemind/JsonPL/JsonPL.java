@@ -57,16 +57,17 @@ public class JsonPL {
         JsonObjSysBase tmp = null;
         String tmpJson = null;
         String desc = null;
+        String root = "";
         
         if(args.length >= 1) {            
-            String target = args[0];
+            String target = root + args[0] + ".json";
             String json = null;
             
             if(args.length == 2) {
                 //TODO: test14, test15, test16, 
                 //TODO: test17, test19, test20, 
                 //TODO: test21, test23            
-                target = "test14.json";
+                target = root + "test14" + ".json";
             }
             
             Logger.wrl("JsonPL: running program: " + target);
