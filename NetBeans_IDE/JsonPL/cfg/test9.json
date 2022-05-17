@@ -1,0 +1,34 @@
+{
+    "sys":"class", "name":"test9",
+    "call":{"sys":"call", "name":"main", "args":[]},
+    "vars":[
+       {"sys":"var", "name":"tmp1", "val":{"sys":"val", "type":"int", "v":"5"}},
+       {"sys":"var", "name":"ptr1", "val":{"sys":"val", "type":"string", "v":""}}               
+    ],
+    "funcs":[
+       {
+          "sys":"func", "name":"main",
+          "args":[ 
+          ],
+          "vars":[
+          ],
+          "ret":{"sys":"val", "type":"bool", "v":"false"},
+          "lines":[
+             {
+                "sys":"asgn",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}},
+                "op":{"sys":"op", "type":"asgn", "v":"="},
+                "right":{"sys":"call", "name":"SYS::getRefStr", "args":[
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"tmp1"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}
+                ]}
+             },
+             {"sys":"call", "name":"SYS::wr", "args":[
+                {"sys":"ref", "val":{"sys":"val", "type":"string", "v":"[#.vars.ptr1]"}}
+             ]}                     
+          ]
+       }
+    ],
+    "ret":{"sys":"val", "type":"string", "v":"-2"}
+}

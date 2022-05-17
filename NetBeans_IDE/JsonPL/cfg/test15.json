@@ -1,0 +1,42 @@
+{
+    "sys":"class", "name":"test15",
+    "call":{"sys":"call", "name":"main", "args":[]},
+    "vars":[
+       {"sys":"var", "name":"tmp0", "val":{"sys":"val", "type":"int", "v":"5"}},
+       {
+          "sys":"var", "name":"tmp1",
+          "val":{
+             "sys":"val",
+             "type":"int[]",
+             "len":"2",
+             "v":[
+                {"sys":"var", "name":"item0", "val":{"sys":"val", "type":"int", "v":"0"}},
+                {"sys":"var", "name":"item1", "val":{"sys":"val", "type":"int", "v":"1"}}                        
+             ]
+          }         
+       }
+    ],
+    "funcs":[
+       {
+          "sys":"func", "name":"main",
+          "args":[ 
+          ],
+          "vars":[
+          ],
+          "ret":{"sys":"val", "type":"bool", "v":"false"},
+          "lines":[
+             {
+                "sys":"asgn",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1.0"}},
+                "op":{"sys":"op", "type":"asgn", "v":"="},
+                "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp0"}}
+             },
+             {"sys":"call", "name":"SYS::wr", "args":[
+                {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Index0 Value: "}},                        
+                {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1.item0"}}
+             ]}                     
+          ]
+       }
+    ],
+    "ret":{"sys":"val", "type":"string", "v":"-2"}
+}

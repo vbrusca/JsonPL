@@ -305,8 +305,8 @@ public class JsonPlState {
             ret = this.processCall(callObj, callFunc);
             this.lastProgramReturn = ret;
 
-            //this.wr("runProgram: Results: ");            
-            //this.wrObj(ret);
+            this.wr("runProgram: Results: ");            
+            this.wrObj(ret);
             return ret;
         } else {
             this.wr("runProgram: Error: could not validate the class object.");

@@ -1,0 +1,55 @@
+{
+    "sys":"class", "name":"test18",
+    "call":{"sys":"call", "name":"main", "args":[]},
+    "vars":[
+       {
+          "sys":"var", "name":"tmp1",
+          "val":{
+             "sys":"val",
+             "type":"int[]",
+             "strict":"true",
+             "len":"2",
+             "v":[
+                {"sys":"var", "name":"item0", "val":{"sys":"val", "type":"int", "v":"-1"}},
+                {"sys":"var", "name":"item1", "val":{"sys":"val", "type":"int", "v":"-1"}}                        
+             ]
+          }         
+       }
+    ],
+    "funcs":[
+       {
+          "sys":"func", "name":"main",
+          "args":[ 
+          ],
+          "vars":[
+             {"sys":"var", "name":"idx", "val":{"sys":"val", "type":"int", "v":"0"}}
+          ],
+          "ret":{"sys":"val", "type":"int", "v":"-1"},
+          "lines":[
+             {
+                "sys": "for",
+                "each": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.tmp1"}},
+                "lines": [
+                   {
+                      "sys":"asgn",
+                      "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                      "op":{"sys":"op", "type":"asgn", "v":"="},
+                      "right":{
+                         "sys":"exp",
+                         "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                         "op":{"sys":"op", "type":"exp", "v":"+"},
+                         "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}
+                      }
+                   },                           
+                   {
+                      "sys":"call", "name":"SYS::wr", "args":[
+                      {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Index Value: "}},                        
+                      {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}}
+                   ]} 
+                ]
+             }                   
+          ]
+       }
+    ],
+    "ret":{"sys":"val", "type":"string", "v":"-2"}
+}

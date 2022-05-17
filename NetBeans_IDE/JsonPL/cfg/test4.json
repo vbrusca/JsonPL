@@ -1,0 +1,23 @@
+{
+    "sys":"class", "name":"test4",
+    "call":{"sys":"call", "name":"main", "args":[]},
+    "vars":[
+       {"sys":"var", "name":"tmp1", "val":{"sys":"val", "type":"int", "v":"5"}}
+    ],
+    "funcs":[
+       {
+          "sys":"func", "name":"main",
+          "args":[ 
+          ],
+          "vars":[
+          ],
+          "ret":{"sys":"val", "type":"string", "v":"-1"},
+          "lines":[
+             {"sys":"call", "name":"SYS::type", "args":[
+                {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.tmp1"}}
+             ]}
+          ]
+       }
+    ],
+    "ret":{"sys":"val", "type":"string", "v":"-2"}
+}

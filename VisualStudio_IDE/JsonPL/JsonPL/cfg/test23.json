@@ -1,0 +1,126 @@
+{
+    "sys":"class", "name":"test23",
+    "call":{"sys":"call", "name":"main", "args":[]},
+    "vars":[
+       {
+          "sys":"var", "name":"f1",
+          "val": {
+             "sys":"val",
+             "type":"string",
+             "v":"getSmallestIdx"
+          }
+       },
+       {
+          "sys":"var", "name":"ptr1",
+          "val": {
+             "sys":"val",
+             "type":"string",
+             "v":"#.vars.f1"
+          }
+       }
+    ],
+    "funcs":[
+       {"sys":"func", "name":"main",
+          "args":[ 
+          ],
+          "vars":[
+          ],
+          "ret":{"sys":"val", "type":"bool", "v":"false"},
+          "lines":[
+
+             {
+                "sys":"call", "name":"SYS::wr", "args":[
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Ptr1 Before: "}},
+                   {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ptr1"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
+                ]
+             },
+             {
+                "sys":"call", "name":"SYS::wr", "args":[
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Value Of Ptr1 Before: "}},
+                   {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"[#.vars.ptr1]"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
+                ]
+             },
+             {
+                "sys":"asgn",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}},
+                "op":{"sys":"op", "type":"asgn", "v":"="},
+                "right":{
+                   "sys":"call", "name":"SYS::amlc", "args":[
+                      {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                      {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}},
+                      {"sys":"const", "val":{"sys":"val", "type":"string", "v":"int[]"}},
+                      {"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}},
+                      {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                      {"sys":"const", "val":{"sys":"val", "type":"string", "v":"itm0,int,11"}}                              
+                   ]
+                }
+             },
+            {
+                "sys":"call", "name":"SYS::amlc", "args":[
+                   {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"ar2"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"string[]"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"int", "v":"4"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"false"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"next,string,null"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"prev,string,null"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"value,string,null"}},                           
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"active,bool,true"}}
+                ]
+             },
+             {
+                "sys":"call", "name":"SYS::wr", "args":[
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Ptr1 After: "}},
+                   {"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
+                ]
+             },
+             {
+                "sys":"call", "name":"SYS::wr", "args":[
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Value Of Ptr1 Before Assign: "}},
+                   {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"[#.vars.ptr1]"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
+                ]
+             },
+             {
+                "sys":"asgn",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"[#.vars.ptr1].0"}},
+                "op":{"sys":"op", "type":"asgn", "v":"="},
+                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"12"}}
+             },
+             {
+                "sys":"call", "name":"SYS::wr", "args":[
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Value Of Ptr1 After Assign: "}},
+                   {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"[#.vars.ptr1]"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
+                ]
+             },
+             {
+                "sys":"call", "name":"SYS::wr", "args":[
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"About to call clean: "}}
+                ]
+             },                     
+             {
+                "sys":"call", "name":"SYS::cln", "args":[
+                   {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                   {"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}}                       
+                ]
+             },
+             {
+                "sys":"call", "name":"SYS::cln", "args":[
+                   {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"objId_0"}}                       
+                ]
+             },
+             {
+                "sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}
+             }
+
+          ]
+       }
+
+    ],
+    "ret":{"sys":"val", "type":"bool", "v":"false"}
+}

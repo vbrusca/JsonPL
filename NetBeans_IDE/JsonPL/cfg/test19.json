@@ -1,0 +1,88 @@
+{
+    "sys":"class", "name":"test19",
+    "call":{"sys":"call", "name":"main", "args":[]},
+    "vars":[
+       {
+          "sys":"var", "name":"ar1",
+          "val":{
+             "sys":"val",
+             "type":"int[]",
+             "len":"5",
+             "v":[
+                {"sys":"var", "name":"item0", "val":{"sys":"val", "type":"int", "v":"-4"}},
+                {"sys":"var", "name":"item1", "val":{"sys":"val", "type":"int", "v":"8"}},
+                {"sys":"var", "name":"item2", "val":{"sys":"val", "type":"int", "v":"47"}},
+                {"sys":"var", "name":"item3", "val":{"sys":"val", "type":"int", "v":"21"}},
+                {"sys":"var", "name":"item4", "val":{"sys":"val", "type":"int", "v":"-56"}}
+             ]
+          }         
+       }
+    ],
+    "funcs":[
+       {
+          "sys":"func", "name":"main",
+          "args":[ 
+          ],
+          "vars":[
+             {"sys":"var", "name":"idx", "val":{"sys":"val", "type":"int", "v":"-1"}},
+             {"sys":"var", "name":"sml", "val":{"sys":"val", "type":"int", "v":"0"}}                                          
+          ],
+          "ret":{"sys":"val", "type":"bool", "v":"false"},
+          "lines":[
+             {
+                "sys": "for",
+                "each": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.ar1"}},
+                "lines": [
+                   {
+                      "sys":"asgn",
+                      "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                      "op":{"sys":"op", "type":"asgn", "v":"="},
+                      "right":{
+                         "sys":"exp",
+                         "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                         "op":{"sys":"op", "type":"exp", "v":"+"},
+                         "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}
+                      }
+                   },
+
+                   {
+                      "sys":"if",
+                      "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.idx]"}},
+                      "op":{"sys":"op", "type":"bex", "v":"<"},
+                      "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.sml"}},
+                      "thn":[
+                         {
+                            "sys":"asgn",
+                            "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.sml"}},
+                            "op":{"sys":"op", "type":"asgn", "v":"="},
+                            "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.idx]"}}
+                         }
+                      ],
+                      "els":[
+                      ]
+                   },
+
+                   {
+                      "sys":"call", "name":"SYS::wr", "args":[
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Index: "}},
+                         {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},                              
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Value: "}},                              
+                         {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.idx]"}}
+                      ]
+                   }
+                ]
+             },
+
+             {
+                "sys":"call", "name":"SYS::wr", "args":[
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Smallest: "}},
+                   {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.sml"}}
+                ]
+             }
+
+          ]
+       }
+    ],
+    "ret":{"sys":"val", "type":"string", "v":"-2"}
+}

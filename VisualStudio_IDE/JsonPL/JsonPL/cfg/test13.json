@@ -1,0 +1,39 @@
+{
+    "sys":"class", "name":"test13",
+    "call":{"sys":"call", "name":"main", "args":[]},
+    "vars":[
+       {"sys":"var", "name":"tmp1", "val":{"sys":"val", "type":"int", "v":"5"}},
+       {"sys":"var", "name":"tmp2", "val":{"sys":"val", "type":"float", "v":"5.1"}},
+       {"sys":"var", "name":"tmp3", "val":{"sys":"val", "type":"string", "v":"five"}},
+       {"sys":"var", "name":"tmp4", "val":{"sys":"val", "type":"bool", "v":"true"}}               
+    ],
+    "funcs":[
+       {
+          "sys":"func", "name":"main",
+          "args":[ 
+          ],
+          "vars":[
+          ],
+          "ret":{"sys":"val", "type":"bool", "v":"false"},
+          "lines":[
+             {"sys":"call", "name":"SYS::wr", "args":[
+                {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Program "}}, 
+                {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Output"}}
+             ]},                     
+             {"sys":"call", "name":"SYS::wrInt", "args":[
+                {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}}
+             ]},
+             {"sys":"call", "name":"SYS::wrFloat", "args":[
+                {"sys":"ref", "val":{"sys":"val", "type":"float", "v":"#.vars.tmp2"}}
+             ]},
+             {"sys":"call", "name":"SYS::wrStr", "args":[
+                {"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.tmp3"}}
+             ]},
+             {"sys":"call", "name":"SYS::wrBool", "args":[
+                {"sys":"ref", "val":{"sys":"val", "type":"bool", "v":"#.vars.tmp4"}}
+             ]}
+          ]
+       }
+    ],
+    "ret":{"sys":"val", "type":"string", "v":"-2"}
+}

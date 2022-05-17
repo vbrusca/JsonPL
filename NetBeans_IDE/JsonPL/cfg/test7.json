@@ -1,0 +1,34 @@
+{
+    "sys":"class", "name":"test7",
+    "call":{"sys":"call", "name":"main", "args":[]},
+    "vars":[
+    ],
+    "funcs":[
+       {
+          "sys":"func", "name":"main",
+          "args":[ 
+          ],
+          "vars":[
+             {
+                "sys":"var", "name":"tmp1",
+                "val":{
+                   "sys":"val",
+                   "type":"int[]",
+                   "len":"2",
+                   "v":[
+                      {"sys":"var", "name":"item0", "val":{"sys":"val", "type":"int", "v":"0"}},
+                      {"sys":"var", "name":"item1", "val":{"sys":"val", "type":"int", "v":"1"}}                        
+                   ]
+                }         
+             }
+          ],
+          "ret":{"sys":"val", "type":"int", "v":"-1"},
+          "lines":[
+             {"sys":"call", "name":"SYS::len", "args":[
+                {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.vars.tmp1"}}
+             ]}
+          ]
+       }
+    ],
+    "ret":{"sys":"val", "type":"string", "v":"-2"}
+}

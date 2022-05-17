@@ -331,8 +331,8 @@ namespace com.middlemind.JsonPL
                 ret = this.processCall(callObj, callFunc);
                 this.lastProgramReturn = ret;
 
-                //this.wr("runProgram: Results: ");            
-                //this.wrObj(ret);
+                this.wr("runProgram: Results: ");            
+                this.wrObj(ret);
                 return ret;
             }
             else

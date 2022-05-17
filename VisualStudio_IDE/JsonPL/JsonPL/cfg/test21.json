@@ -1,0 +1,337 @@
+{
+    "sys":"class", "name":"test21",
+    "call":{"sys":"call", "name":"main", "args":[]},
+    "vars":[
+       {
+          "sys":"var", "name":"ar1",
+          "val":{
+             "sys":"val",
+             "type":"int[]",
+             "len":"5",
+             "v":[
+                {"sys":"var", "name":"item0", "val":{"sys":"val", "type":"int", "v":"-4"}},
+                {"sys":"var", "name":"item1", "val":{"sys":"val", "type":"int", "v":"8"}},
+                {"sys":"var", "name":"item2", "val":{"sys":"val", "type":"int", "v":"47"}},
+                {"sys":"var", "name":"item3", "val":{"sys":"val", "type":"int", "v":"21"}},
+                {"sys":"var", "name":"item4", "val":{"sys":"val", "type":"int", "v":"-56"}}
+             ]
+          }         
+       },
+       {
+          "sys":"var", "name":"f1",
+          "val": {
+             "sys":"val",
+             "type":"string",
+             "v":"getSmallestIdx"
+          }
+       },
+       {
+          "sys":"var", "name":"pf1",
+          "val": {
+             "sys":"val",
+             "type":"string",
+             "v":"#.vars.f1"
+          }
+       }
+    ],
+    "funcs":[
+       {"sys":"func", "name":"main",
+          "args":[ 
+          ],
+          "vars":[
+             {"sys":"var", "name":"idx", "val":{"sys":"val", "type":"int", "v":"-1"}},
+             {"sys":"var", "name":"nidx", "val":{"sys":"val", "type":"int", "v":"0"}},
+             {"sys":"var", "name":"len", "val":{"sys":"val", "type":"int", "v":"0"}},
+             {"sys":"var", "name":"ftmp", "val":{"sys":"val", "type":"int", "v":"0"}}                     
+          ],
+          "ret":{"sys":"val", "type":"int", "v":"-1"},
+          "lines":[
+
+             {
+                "sys":"asgn",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.len"}},
+                "op":{"sys":"op", "type":"asgn", "v":"="},
+                "right":{"sys":"call", "name":"SYS::len", "args":[
+                      {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1"}}
+                   ]
+                }
+             },
+
+             {
+                "sys": "for",
+                "each": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.ar1"}},
+                "lines": [
+                   {
+                      "sys":"asgn",
+                      "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                      "op":{"sys":"op", "type":"asgn", "v":"="},
+                      "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"-1"}}
+                   },
+                   {
+                      "sys":"asgn",
+                      "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.nidx"}},
+                      "op":{"sys":"op", "type":"asgn", "v":"="},
+                      "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"0"}}
+                   },
+                   {
+                      "sys": "for",
+                      "each": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.ar1"}},
+                      "lines": [
+                         {
+                            "sys":"asgn",
+                            "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                            "op":{"sys":"op", "type":"asgn", "v":"="},
+                            "right":{
+                               "sys":"exp",
+                               "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                               "op":{"sys":"op", "type":"exp", "v":"+"},
+                               "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}
+                            }
+                         },
+                         {
+                            "sys":"asgn",
+                            "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.nidx"}},
+                            "op":{"sys":"op", "type":"asgn", "v":"="},
+                            "right":{
+                               "sys":"exp",
+                               "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.nidx"}},
+                               "op":{"sys":"op", "type":"exp", "v":"+"},
+                               "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}
+                            }
+                         },
+                         {
+                            "sys":"if",
+                            "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.nidx"}},
+                            "op":{"sys":"op", "type":"bex", "v":"<"},
+                            "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.len"}},
+                            "thn":[
+                               {
+                                  "sys":"if",
+                                  "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]"}},
+                                  "op":{"sys":"op", "type":"bex", "v":"<"},
+                                  "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.idx]"}},
+                                  "thn":[
+                                     {
+                                        "sys":"call", "name":"flipIdxs", "args":[
+                                           {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                                           {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.nidx"}}
+                                        ]
+                                     }
+                                  ]
+                               }
+                            ]
+                         },
+                         {
+                            "sys":"call", "name":"SYS::wr", "args":[
+                               {"sys":"const", "val":{"sys":"val", "type":"string", "v":"-----Index: "}},
+                               {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                               {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                               {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.nidx"}},
+                               {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                               {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.len"}},                                       
+                               {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                               {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Value: "}},                              
+                               {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.idx]"}},
+                               {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                               {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1"}},
+                               {"sys":"const", "val":{"sys":"val", "type":"string", "v":"\n"}}                            
+                            ]
+                         }
+                      ]
+                   }
+                ]
+             }
+          ]
+       },
+
+
+       {"sys":"func", "name":"flipIdxs",
+          "args":[ 
+             {"sys":"arg", "name":"toIdx", "val":{"sys":"val", "type":"int", "v":"0"}},
+             {"sys":"arg", "name":"fromIdx", "val":{"sys":"val", "type":"int", "v":"0"}}
+          ],
+          "vars":[
+             {"sys":"var", "name":"tmp", "val":{"sys":"val", "type":"int", "v":"-1"}}
+          ],
+          "ret":{"sys":"val", "type":"bool", "v":"false"},
+          "lines":[
+             {
+                "sys":"asgn",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.tmp"}},
+                "op":{"sys":"op", "type":"asgn", "v":"="},
+                "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.args.toIdx]"}}
+             },
+             {
+                "sys":"asgn",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.args.toIdx]"}},
+                "op":{"sys":"op", "type":"asgn", "v":"="},
+                "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.args.fromIdx]"}}
+             },
+             {
+                "sys":"asgn",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.args.fromIdx]"}},
+                "op":{"sys":"op", "type":"asgn", "v":"="},
+                "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.tmp"}}
+             },
+
+             {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}}                     
+
+          ]
+       },
+
+
+       {"sys":"func", "name":"getSmallestIdx",
+          "args":[ 
+             {"sys":"arg", "name":"start", "val":{"sys":"val", "type":"int", "v":"0"}},
+             {"sys":"arg", "name":"stop", "val":{"sys":"val", "type":"int", "v":"0"}}
+          ],
+          "vars":[
+             {"sys":"var", "name":"idx", "val":{"sys":"val", "type":"int", "v":"-1"}},
+             {"sys":"var", "name":"sml", "val":{"sys":"val", "type":"int", "v":"0"}},
+             {"sys":"var", "name":"smlIdx", "val":{"sys":"val", "type":"int", "v":"0"}}                                          
+          ],
+          "ret":{"sys":"val", "type":"int", "v":"-1"},
+          "lines":[
+             {
+                "sys": "for",
+                "start":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.start"}},
+                "stop":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.stop"}},
+                "inc":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}},
+                "lines": [
+                   {
+                      "sys":"asgn",
+                      "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                      "op":{"sys":"op", "type":"asgn", "v":"="},
+                      "right":{
+                         "sys":"exp",
+                         "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                         "op":{"sys":"op", "type":"exp", "v":"+"},
+                         "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}
+                      }
+                   },
+
+                   {
+                      "sys":"if",
+                      "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.idx]"}},
+                      "op":{"sys":"op", "type":"bex", "v":"<"},
+                      "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.sml"}},
+                      "thn":[
+                         {
+                            "sys":"asgn",
+                            "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.sml"}},
+                            "op":{"sys":"op", "type":"asgn", "v":"="},
+                            "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.idx]"}}
+                         },
+
+                         {
+                            "sys":"asgn",
+                            "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.smlIdx"}},
+                            "op":{"sys":"op", "type":"asgn", "v":"="},
+                            "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}}
+                         }                                 
+                      ],
+                      "els":[
+                      ]
+                   },
+
+                   {
+                      "sys":"call", "name":"SYS::wr", "args":[
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":"     Index: "}},
+                         {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Value: "}},                              
+                         {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.idx]"}},
+
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},                              
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":"MinThusFar: "}},                    
+                         {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.smlIdx"}}                                 
+                      ]
+                   }
+
+                ]
+             },
+
+             {"sys":"return", "val":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"[$.vars.smlIdx]"}}}
+
+          ]
+       },
+
+
+       {"sys":"func", "name":"getLargestIdx",
+          "args":[ 
+             {"sys":"arg", "name":"start", "val":{"sys":"val", "type":"int", "v":"0"}},
+             {"sys":"arg", "name":"stop", "val":{"sys":"val", "type":"int", "v":"0"}}
+          ],
+          "vars":[
+             {"sys":"var", "name":"idx", "val":{"sys":"val", "type":"int", "v":"-1"}},
+             {"sys":"var", "name":"lrg", "val":{"sys":"val", "type":"int", "v":"0"}},
+             {"sys":"var", "name":"lrgIdx", "val":{"sys":"val", "type":"int", "v":"0"}}                                          
+          ],
+          "ret":{"sys":"val", "type":"int", "v":"-1"},
+          "lines":[
+             {
+                "sys": "for",
+                "start":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.start"}},
+                "stop":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.stop"}},
+                "inc":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}},
+                "lines": [
+                   {
+                      "sys":"asgn",
+                      "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                      "op":{"sys":"op", "type":"asgn", "v":"="},
+                      "right":{
+                         "sys":"exp",
+                         "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                         "op":{"sys":"op", "type":"exp", "v":"+"},
+                         "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}
+                      }
+                   },
+
+                   {
+                      "sys":"if",
+                      "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.idx]"}},
+                      "op":{"sys":"op", "type":"bex", "v":">"},
+                      "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.lrg"}},
+                      "thn":[
+                         {
+                            "sys":"asgn",
+                            "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.lrg"}},
+                            "op":{"sys":"op", "type":"asgn", "v":"="},
+                            "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.idx]"}}
+                         },
+
+                         {
+                            "sys":"asgn",
+                            "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.lrgIdx"}},
+                            "op":{"sys":"op", "type":"asgn", "v":"="},
+                            "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}}
+                         }                                 
+                      ]
+                   },
+
+                   {
+                      "sys":"call", "name":"SYS::wr", "args":[
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":"     Index: "}},
+                         {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx"}},
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Value: "}},                              
+                         {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.idx]"}},
+
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},                              
+                         {"sys":"const", "val":{"sys":"val", "type":"string", "v":"MaxThusFar: "}},                    
+                         {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.lrgIdx"}}                                 
+                      ]
+                   }
+
+                ]
+             },
+
+             {"sys":"return", "val":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"[$.vars.lrgIdx]"}}}
+
+          ]
+       }
+
+
+    ],
+    "ret":{"sys":"val", "type":"string", "v":"-2"}
+}
