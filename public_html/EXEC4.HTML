@@ -299,41 +299,6 @@
             }
          };
 
-         //EXTRA DEMO CODE
-         /*
-             ,
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}
-            },
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}
-            },
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "bex", "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "$.vars.tmp1"}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
-            },
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.vars.b1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "bex", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}, "op": {"sys":"op", "type":"bex", "v":"=="}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
-            },
-            {
-               "sys": "asgn",
-               "left": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}},
-               "op": {"sys":"op", "type":"asgn", "v":"="},
-               "right": {"sys": "exp", "left": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "25"}}, "op": {"sys":"op", "type":"exp", "v":"+"}, "right": {"sys":"ref", "val":{"sys": "val", "type": "int", "v": "#.args.i1"}}}
-            }
-         */      
-         
          /**
           * Name: init
           * Desc: A function to init the test page.
@@ -617,7 +582,7 @@
             jpl.wr("CALL RESULT:");
             jpl.wrObj(res);
             jpl.wr("CALL FUNCS[1] ARGS:");
-            jpl.wrObj(code.funcs[1].args);
+            jpl.wrObjList(code.funcs[1].args);
 
             tmp = {
                "sys": "if",
@@ -727,7 +692,7 @@
 
             jpl.wr("====================== TEST 8.00: Call Statement ======================");
             var callObj = code.call;
-            var callFuncName = callObj.name;
+            var callFuncName = jpl.toStr(callObj.name);
             var callFunc = jpl.findFunc(callFuncName);
             res = jpl.processCall(callObj, callFunc);
             jpl.wr("RUN FUNCTION 1: " + callFuncName);

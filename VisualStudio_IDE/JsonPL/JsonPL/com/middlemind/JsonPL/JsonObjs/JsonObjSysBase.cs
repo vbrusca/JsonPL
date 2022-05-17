@@ -19,7 +19,7 @@ namespace com.middlemind.JsonPL.JsonObjs
         /**
         *
         */
-        public string name;
+        public Object name;
 
         /**
         * 
@@ -30,6 +30,11 @@ namespace com.middlemind.JsonPL.JsonObjs
         *
         */
         public List<JsonObjSysBase> args;
+
+        /**
+         *
+         */
+        public List<JsonObjSysBase> vars_def;
 
         /**
         *
@@ -122,6 +127,11 @@ namespace com.middlemind.JsonPL.JsonObjs
         public JsonObjSysBase inc;
 
         /**
+         *
+         */
+        public JsonObjSysBase each;
+
+        /**
         * 
         */
         public Object active;
@@ -130,6 +140,11 @@ namespace com.middlemind.JsonPL.JsonObjs
         * 
         */
         public Object len;
+
+        /**
+        * 
+        */
+        public Object strict;
 
         /**
         * 
@@ -199,9 +214,17 @@ namespace com.middlemind.JsonPL.JsonObjs
                 ret.loader = new string(this.loader.ToCharArray());
             }
 
+            JsonPlState jpl = new JsonPlState();
             if (this.name != null)
             {
-                ret.name = new string(this.name.ToCharArray());
+                if (jpl.isString(this.name))
+                {
+                    ret.name = jpl.toStr(this.name);
+                }
+                else
+                {
+                    this.name = jpl.cloneJsonObj((JsonObjSysBase)this.name);
+                }
             }
 
             if (this.obj_name != null)
@@ -232,6 +255,11 @@ namespace com.middlemind.JsonPL.JsonObjs
             if (this.stop != null)
             {
                 ret.stop = this.stop.Clone();
+            }
+
+            if (this.each != null)
+            {
+                ret.each = this.each.Clone();
             }
 
             if (this.sys != null)
@@ -294,7 +322,19 @@ namespace com.middlemind.JsonPL.JsonObjs
                 }
             }
 
+            if (this.vars_def != null)
+            {
+                ret.vars_def = new List<JsonObjSysBase>();
+                for (int i = 0; i < this.vars_def.Count; i++)
+                {
+                    ret.vars_def.Add(this.vars_def[i].Clone());
+                }
+            }
+
+
             ret.active = this.active;
+            ret.len = this.len;
+            ret.strict = this.strict;
             return ret;
         }
 

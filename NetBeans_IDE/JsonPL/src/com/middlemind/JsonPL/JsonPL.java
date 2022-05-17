@@ -410,7 +410,7 @@ public class JsonPL {
             jpl.wr("CALL RESULT:");
             jpl.wrObj(res);
             jpl.wr("CALL FUNCS[1] ARGS:");
-            jpl.wrObj(code.funcs.get(1).args);
+            jpl.wrObjList(code.funcs.get(1).args);
 
             tmpJson = String.join("\n",
                 "{",
@@ -537,7 +537,7 @@ public class JsonPL {
 
             jpl.wr("====================== TEST 8.00: Call Statement ======================");
             JsonObjSysBase callObj = code.call;
-            String callFuncName = callObj.name;
+            String callFuncName = jpl.toStr(callObj.name);
             JsonObjSysBase callFunc = jpl.findFunc(callFuncName);
             res = jpl.processCall(callObj, callFunc);
             jpl.wr("RUN FUNCTION 1: " + callFuncName);

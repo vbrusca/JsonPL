@@ -1,32 +1,31 @@
 {
    "funcs": [
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::getLastExpReturn",
          "fname": "sysGetLastExpReturn",
          "args": [
          ]
-      },   
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::getLastAsgnValue",
          "fname": "sysGetLastAsgnValue",
          "args": [
          ]
-      },   
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::wr",
          "fname": "sysWr",
-         "args": [   
-
+         "args": [
          ]
       },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::wrInt",
          "fname": "sysWr",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "s",
@@ -39,10 +38,10 @@
          ]
       },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::wrFloat",
          "fname": "sysWr",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "s",
@@ -55,10 +54,10 @@
          ]
       },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::wrStr",
          "fname": "sysWr",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "s",
@@ -71,10 +70,10 @@
          ]
       },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::wrBool",
          "fname": "sysWr",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "s",
@@ -85,30 +84,30 @@
                }
             }
          ]
-      },      
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::job1",
          "fname": "sysJob1",
          "args": []
       },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::job2",
          "fname": "sysJob2",
          "args": []
       },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::job3",
          "fname": "sysJob3",
          "args": []
-      },   
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::len",
          "fname": "sysLen",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "s",
@@ -119,12 +118,12 @@
                }
             }
          ]
-      },   
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::type",
          "fname": "sysType",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "s",
@@ -135,12 +134,12 @@
                }
             }
          ]
-      },   
+      },
       {
-         "sys": "func", 
+         "sys": "func",
          "name": "SYS::getRef",
          "fname": "sysGetRef",
-         "args": [   
+         "args": [
             {
                "sys": "arg",
                "name": "name",
@@ -162,6 +161,126 @@
             {
                "sys": "arg",
                "name": "funcName",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }
+         ]
+      },
+      {
+         "sys": "func",
+         "name": "SYS::getRefStr",
+         "fname": "sysGetRefStr",
+         "args": [
+            {
+               "sys": "arg",
+               "name": "name",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "isVar",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": "false"
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "funcName",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }
+         ]
+      },
+      {
+         "sys": "func",
+         "name": "SYS::getArrayIdxRef",
+         "fname": "sysGetArrayIdxRef",
+         "args": [
+            {
+               "sys": "arg",
+               "name": "name",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "isVar",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": "false"
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "funcName",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "idx",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }
+         ]
+      },
+      {
+         "sys": "func",
+         "name": "SYS::getArrayIdxRefStr",
+         "fname": "sysGetArrayIdxRefStr",
+         "args": [
+            {
+               "sys": "arg",
+               "name": "name",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "isVar",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": "false"
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "funcName",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "idx",
                "val": {
                   "sys": "val",
                   "type": "string",
@@ -169,12 +288,21 @@
                }
             }            
          ]
-      },   
+      },
       {
-         "sys": "func", 
-         "name": "SYS::getRefStr",
-         "fname": "sysGetRefStr",
-         "args": [   
+         "sys": "func",
+         "name": "SYS::mlc",
+         "fname": "sysMalloc",
+         "args": [
+            {
+               "sys": "arg",
+               "name": "isClassVar",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": "false"
+               }
+            },
             {
                "sys": "arg",
                "name": "name",
@@ -186,7 +314,32 @@
             },
             {
                "sys": "arg",
-               "name": "isVar",
+               "name": "type",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "val",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            }                        
+         ]
+      },
+      {
+         "sys": "func",
+         "name": "SYS::cln",
+         "fname": "sysClean",
+         "args": [
+            {
+               "sys": "arg",
+               "name": "isClassVar",
                "val": {
                   "sys": "val",
                   "type": "bool",
@@ -195,13 +348,65 @@
             },
             {
                "sys": "arg",
-               "name": "funcName",
+               "name": "name",
                "val": {
                   "sys": "val",
                   "type": "string",
                   "v": ""
                }
             }            
+         ]
+      },
+      {
+         "sys": "func",
+         "name": "SYS::amlc",
+         "fname": "sysMallocArray",
+         "args": [
+            {
+               "sys": "arg",
+               "name": "isClassVar",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": "false"
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "name",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "type",
+               "val": {
+                  "sys": "val",
+                  "type": "string",
+                  "v": ""
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "len",
+               "val": {
+                  "sys": "val",
+                  "type": "int",
+                  "v": "0"
+               }
+            },
+            {
+               "sys": "arg",
+               "name": "strict",
+               "val": {
+                  "sys": "val",
+                  "type": "bool",
+                  "v": "false"
+               }
+            }
          ]
       }
    ]

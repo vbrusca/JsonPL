@@ -36,7 +36,8 @@ function jsonPlState() {
  * Name: sysWr 
  * Desc: A system level write function. 
  * Arg1: args(an array of {arg} objects) 
- * Arg2: func(the {func} this system function is called from) 
+ * Arg2: func(the {func} this system function is called from)
+ * Arg3: sep(an optional string separator) 
  * Returns: const(a {const} bool object) 
  */
 
@@ -53,7 +54,7 @@ jsonPlState.prototype.sysWr = function (args, func, sep) {
 
    for (; i < len; i++) {
       if(this.isArray(args[i].val.v)) {
-         this.sysWr(args[i].val.v, func, ", ");
+         this.sysWr(this.toArray(args[i].val.v), func, ", ");
       } else {
          s += this.toStr(args[i].val.v);
          if(sep !== null) {
@@ -625,15 +626,24 @@ jsonPlState.prototype.system = {
 jsonPlState.prototype.runProgram = function () {
    if (this.validateSysObjClass(this.program)) {
       var callObj = this.program.call;
-      var callFuncName = callObj.name;
+      var callFuncName = null;
+
+      if(!this.isObject(callObj.name)) {
+         callFuncName = this.toStr(callObj.name);
+      } else {
+         this.wr("runProgram: Error: cannot process call name objects at the class level.");
+         return null;
+      }
 
       this.wr("runProgram: Call: " + callFuncName);
       var callFunc = this.findFunc(callFuncName);
-      var ret = this.processCall(callObj, callFunc);
+
+      var ret = null;
+      ret = this.processCall(callObj, callFunc);
       this.lastProgramReturn = ret;
 
-      this.wr("runProgram: Results: ");
-      this.wrObj(ret);
+      //this.wr("runProgram: Results: ");
+      //this.wrObj(ret);
       return ret;
    } else {
       this.wr("runProgram: Error: could not validate the class object.");
@@ -651,9 +661,13 @@ jsonPlState.prototype.runProgram = function () {
  * Returns: ret(null or {arg} object)
  */
 jsonPlState.prototype.findArg = function (name, obj) {
+   var str;
+   var subj;
    for (var i = 0; i < obj.args.length; i++) {
-      if (obj.args[i].name === name) {
-         return obj.args[i];
+      subj = obj.args[i];
+      str = this.toStr(subj.name); 
+      if (str !== null && str !== "" && str === name) {
+         return subj;
       }
    }
    return null;
@@ -667,9 +681,13 @@ jsonPlState.prototype.findArg = function (name, obj) {
  * Returns: ret(null, {val} or {arg} object)
  */
 jsonPlState.prototype.findVar = function (name, obj) {
+   var str;
+   var subj;
    for (var i = 0; i < obj.vars.length; i++) {
-      if (obj.vars[i].name === name) {
-         return obj.vars[i];
+      subj = obj.vars[i];
+      str = this.toStr(subj.name);
+      if (str !== null && str !== "" && str === name) {
+         return subj;
       }
    }
    return null;
@@ -683,9 +701,13 @@ jsonPlState.prototype.findVar = function (name, obj) {
  */
 jsonPlState.prototype.findFunc = function (name) {
    var prog = this.program;
+   var str;
+   var subj;
    for (var i = 0; i < prog.funcs.length; i++) {
-      if (prog.funcs[i].name === name) {
-         return prog.funcs[i];
+      subj = prog.funcs[i];
+      str = this.toStr(subj.name); 
+      if (str !== null && str !== "" && str === name) {
+         return subj;
       }
    }
    return null;
@@ -699,13 +721,20 @@ jsonPlState.prototype.findFunc = function (name) {
  */
 jsonPlState.prototype.findSysFunc = function (name) {
    var prog = this;
-   for (var i = 0; i < prog.system.functions.length; i++) {
-      if (prog.system.functions[i].name === name) {
-         return prog.system.functions[i];
+   var str;
+   var subj;
+   var sFuncs = prog.system.functions;
+
+   for (var i = 0; i < sFuncs.length; i++) {
+      subj = sFuncs[i];
+      str = this.toStr(subj.name); 
+      if (str !== null && str !== "" && str === name) {
+         return subj;
       }
    }
    return null;
 };
+
 
 /////////////////////////VALIDATION METHODS
 /**
@@ -843,27 +872,30 @@ jsonPlState.prototype.validateSysObjIf = function (obj) {
 };
 
 /**
- * TODO
+ * Name: isForEach
+ * Desc: Determines if the given argument, obj, is a for each loop
+ * Arg1: obj(the object to inspect)
+ * Returns: ret(some bool, true or false)
  */
 jsonPlState.prototype.isForEach = function (obj) {
-   return !this.isFullFor(obj);
+   return (this.isSysObjFor(obj) && !this.isFullFor(obj));
 }
 
 /**
- * TODO
+ * Name: isFullFor
+ * Desc: Determines if the given argument, obj, is a full for loop
+ * Arg1: obj(the object to inspect)
+ * Returns: ret(some bool, true or false)
  */
 jsonPlState.prototype.isFullFor = function (obj) {
    if(obj === null) {
       return false;
    } else if(this.isSysObjFor(obj) === true) {
-      var fullLst = false;
       if(this.validateProperties(obj, ["sys", "start", "stop", "inc", "lines"]) === true) {
-         fullLst = true;
+         return true;
       }
-      return fullLst;
-   } else {
-      return false;
    }
+   return false;
 }
 
 /**
@@ -889,7 +921,7 @@ jsonPlState.prototype.isFullFor = function (obj) {
  * }
  */
 jsonPlState.prototype.validateSysObjFor = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "for" && (this.validateProperties(obj, ["sys", "start", "stop", "inc", "lines"]) || this.validateProperties(obj, ["sys", "each", "lines"]))) {
+   if (this.isSysObjFor(obj) && (this.validateProperties(obj, ["sys", "start", "stop", "inc", "lines"]) || this.validateProperties(obj, ["sys", "each", "lines"]))) {
       var tobj = null;
       var fullLst = this.isFullFor(obj);
 
@@ -1049,7 +1081,7 @@ jsonPlState.prototype.validateSysObjFor = function (obj) {
  * }
  */
 jsonPlState.prototype.validateSysObjClass = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "class" && this.validateProperties(obj, ["sys", "name", "vars", "funcs", "ret", "call"])) {
+   if (this.isSysObjClass(obj) && this.validateProperties(obj, ["sys", "name", "vars", "funcs", "ret", "call"])) {
       if (!this.validateSysObjVal(obj.ret)) {
          this.wr("validateSysObjClass: Error: could not validate obj as val");
          return false;
@@ -1147,7 +1179,7 @@ jsonPlState.prototype.validateSysObjFuncLine = function (obj) {
  * }
  */
 jsonPlState.prototype.validateSysObjFunc = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "func" && this.validateProperties(obj, ["sys", "name", "args", "vars", "ret", "lines"])) {
+   if (this.isSysObjFunc(obj) && this.validateProperties(obj, ["sys", "name", "args", "vars", "ret", "lines"])) {
       if (!this.validateSysObjVal(obj.ret)) {
          this.wr("validateSysObjFunc: Error: could not validate obj as val");
          return false;
@@ -1193,7 +1225,7 @@ jsonPlState.prototype.validateSysObjFunc = function (obj) {
  * }
  */
 jsonPlState.prototype.validateSysObjAsgn = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "asgn" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
+   if (this.isSysObjAsgn(obj) && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
       var tobj = null;
       if (obj.left !== null) {
          tobj = obj.left;
@@ -1288,7 +1320,7 @@ jsonPlState.prototype.validateSysObjAsgn = function (obj) {
  * }
  */
 jsonPlState.prototype.validateSysObjBex = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "bex" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
+   if (this.isSysObjBex(obj) && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
       var tobj = null;
       if (obj.left !== null) {
          tobj = obj.left;
@@ -1384,7 +1416,7 @@ jsonPlState.prototype.validateSysObjBex = function (obj) {
  * }
  */
 jsonPlState.prototype.validateSysObjExp = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "exp" && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
+   if (this.isSysObjExp(obj) && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
       var tobj = null;
       if (obj.left !== null) {
          tobj = obj.left;
@@ -1478,11 +1510,8 @@ jsonPlState.prototype.validateSysObjExp = function (obj) {
  *   "args": [ref | const]
  * }
  */
-
-//TODO: sync function
-
 jsonPlState.prototype.validateSysObjCall = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "call" && this.validateProperties(obj, ["sys", "name", "args"])) {
+   if (this.isSysObjCall(obj) && this.validateProperties(obj, ["sys", "name", "args"])) {
       if(obj.name !== null) {
          if(!this.isString(obj.name) && !this.isSysObjConst(obj.name) && !this.isSysObjRef(obj.name)) {
             this.wr("validateSysObjCall: Error: name is of unknown object type");
@@ -1513,8 +1542,8 @@ jsonPlState.prototype.validateSysObjCall = function (obj) {
 };
 
 /**
- * Name: validateSysObjCall 
- * Desc: Validates if the given object is a valid call object. 
+ * Name: validateSysObjOp
+ * Desc: Validates if the given object is a valid {op} object. 
  * Arg1: obj(a {op} object to check) 
  * Returns: ret(some bool, true or false)
  * Struct:
@@ -1525,7 +1554,7 @@ jsonPlState.prototype.validateSysObjCall = function (obj) {
  * }
  */
 jsonPlState.prototype.validateSysObjOp = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "op" && this.validateProperties(obj, ["sys", "type", "v"])) {
+   if (this.isSysObjOp(obj) && this.validateProperties(obj, ["sys", "type", "v"])) {
       if (!(obj.type === "asgn" || obj.type === "bex" || obj.type === "exp")) {
          return false;
       }
@@ -1546,7 +1575,7 @@ jsonPlState.prototype.validateSysObjOp = function (obj) {
     * }
     */
 jsonPlState.prototype.validateSysObjConst = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "const" && this.validateProperties(obj, ["sys", "val"])) {
+   if (this.isSysObjConst(obj) && this.validateProperties(obj, ["sys", "val"])) {
       if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
          return false;
       }
@@ -1568,7 +1597,7 @@ jsonPlState.prototype.validateSysObjConst = function (obj) {
  * }
  */
 jsonPlState.prototype.validateSysObjVar = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "var" && this.validateProperties(obj, ["sys", "name", "val"])) {
+   if (this.isSysObjVar(obj) && this.validateProperties(obj, ["sys", "name", "val"])) {
       if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
          return false;
       }
@@ -1590,7 +1619,7 @@ jsonPlState.prototype.validateSysObjVar = function (obj) {
  * }
  */
 jsonPlState.prototype.validateSysObjArg = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "arg" && this.validateProperties(obj, ["sys", "name", "val"])) {
+   if (this.isSysObjArg(obj) && this.validateProperties(obj, ["sys", "name", "val"])) {
       if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
          return false;
       }
@@ -1611,10 +1640,9 @@ jsonPlState.prototype.validateSysObjArg = function (obj) {
  *   "v": "some valid value"
  * }
  */
-
-//TODO: sync
-
 jsonPlState.prototype.validateSysObjVal = function (obj) {
+   //this.wr("validateSysObjVal: Receiving: ");
+   //this.wrObj(obj);   
    if (this.isSysObjVal(obj) && this.validateProperties(obj, ["sys", "type", "v"])) {
       if (
          !(obj.type === "int" || obj.type === "float" || obj.type === "string" || obj.type === "bool")
@@ -1633,6 +1661,7 @@ jsonPlState.prototype.validateSysObjVal = function (obj) {
          } else {
             if (!this.isInteger(obj.len) || this.toInt(obj.len) < 0) {
                this.wr("validateSysObjVal: Error: array length is invalid: " + obj.v + ", type: " + obj.type + ", " + obj.len + ", " + this.isInteger(obj.len));
+               return false;
             } else {
                arrayLen = this.toInt(obj.len);
             }
@@ -1695,63 +1724,52 @@ jsonPlState.prototype.validateSysObjVal = function (obj) {
                   this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
                   return false;
                } else {
-                  //if(!skipArVer) {
-                     for (var i = 0; i < arrayLenActual; i++) {
-                        var ltmp = tmpA[i];
-                        if (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "int")) {
-                           this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'int' but found '" + ltmp.val.type + "'");
-                           return false;
-                        }
+                  for (var i = 0; i < arrayLenActual; i++) {
+                     var ltmp = tmpA[i];
+                     if (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "int")) {
+                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'int' but found '" + ltmp.val.type + "'");
+                        return false;
                      }
-                  //}
+                  }
                }
             } else if (obj.type === "float[]") {
                if (!this.isArray(obj.v)) {
                   this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
                   return false;
                } else {
-                  //if(!skipArVer) {
-                     for (var i = 0; i < arrayLenActual; i++) {
-                        var ltmp = tmpA[i];
-                        //if (ltmp.val.type !== "float") {
-                           if (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "float")) {
-                           this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'float' but found '" + ltmp.val.type + "'");
-                           return false;
-                        }
+                  for (var i = 0; i < arrayLenActual; i++) {
+                     var ltmp = tmpA[i];
+                     if (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "float")) {
+                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'float' but found '" + ltmp.val.type + "'");
+                        return false;
                      }
-                  //}
+                  }
                }
             } else if (obj.type === "string[]") {
                if (!this.isArray(obj.v)) {
                   this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
                   return false;
                } else {
-                  //if(!skipArVer) {                  
-                     for (var i = 0; i < arrayLenActual; i++) {
-                        var ltmp = tmpA[i];
-                        //if (ltmp.val.type !== "string") {
-                        if (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "string")) {
-                           this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'string' but found '" + ltmp.val.type + "'");
-                           return false;
-                        }
+                  for (var i = 0; i < arrayLenActual; i++) {
+                     var ltmp = tmpA[i];
+                     if (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "string")) {
+                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'string' but found '" + ltmp.val.type + "'");
+                        return false;
                      }
-                  //}
+                  }
                }
             } else if (obj.type === "bool[]") {
                if (!this.isArray(obj.v)) {
                   this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
                   return false;
                } else {
-                  //if(!skipArVer) {
-                     for (var i = 0; i < arrayLenActual; i++) {
-                        var ltmp = tmpA[i];
-                        //if (ltmp.val.type !== "bool") {
-                        if (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "bool")) { 
-                           this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'bool' but found '" + ltmp.val.type + "'");
-                           return false;
-                        }
+                  for (var i = 0; i < arrayLenActual; i++) {
+                     var ltmp = tmpA[i];
+                     if (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "bool")) { 
+                        this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'bool' but found '" + ltmp.val.type + "'");
+                        return false;
                      }
-                  //}
+                  }
                }
             } else {
                this.wr("validateSysObjVal: Error: unknown array object type: " + obj.v + ", type: " + obj.type);
@@ -1776,7 +1794,7 @@ jsonPlState.prototype.validateSysObjVal = function (obj) {
  * }
  */
 jsonPlState.prototype.validateSysObjRef = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "ref" && this.validateProperties(obj, ["sys", "val"])) {
+   if (this.isSysObjRef(obj) && this.validateProperties(obj, ["sys", "val"])) {
       if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
          return false;
       }
@@ -1796,11 +1814,8 @@ jsonPlState.prototype.validateSysObjRef = function (obj) {
  *   "val": {ref} | {const}
  * }
  */
-
-//TODO: sync
-
 jsonPlState.prototype.validateSysObjReturn = function (obj) {
-   if (this.isSysObj(obj) && this.getSysObjType(obj) === "return" && this.validateProperties(obj, ["sys", "val"])) {
+   if (this.isSysObjReturn(obj) && this.validateProperties(obj, ["sys", "val"])) {
       if (!this.isSysObjRef(obj.val) && !this.isSysObjConst(obj.val)) {
          return false;
       }
@@ -1824,7 +1839,6 @@ jsonPlState.prototype.validateProperties = function (obj, req) {
    for (var i = 0; i < req.length; i++) {
       var r = req[i];
       if (obj.hasOwnProperty(r) === false) {
-         //this.wr("validateProperties: Error: missing property: " + r);
          return false;
       }
    }
@@ -1866,6 +1880,16 @@ jsonPlState.prototype.cloneJsonObj = function (jsonObj) {
 };
 
 /**
+ * Name: cloneJsonObjList
+ * Desc: A method to clone the given JSON object list argument. 
+ * Arg1: jsonObj(the JSON object list to do a shallow clone) 
+ * Returns: ret(cloned JSON object)
+ */
+jsonPlState.prototype.cloneJsonObjList = function (jsonObj) {
+   return JSON.parse(JSON.stringify(jsonObj));
+};
+
+/**
  * Name: wrObj
  * Desc: Writes a JSON object to standard output if LOGGING is on.
  *       Sets the WR_PREFIX to each object written.
@@ -1874,8 +1898,23 @@ jsonPlState.prototype.cloneJsonObj = function (jsonObj) {
  */
 jsonPlState.prototype.wrObj = function (jsonObj) {
    if (this.LOGGING === true) {
-      this.wr(this.WR_PREFIX + JSON.stringify(jsonObj, null, 2));
+      this.wr(JSON.stringify(jsonObj, null, 2));
       this.wr("");
+   }
+};
+
+/**
+ * Name: wrObjList
+ * Desc: Writes a JSON object list to write to standard output if LOGGING is on. 
+ *       Sets the WR_PREFIX to each object written. 
+ *       Prints object using pretty JSON.stringify call. 
+ * Arg1: jsonObj(jsonObj list to write)
+ */
+jsonPlState.prototype.wrObjList = function (jsonObjs) {
+   if (this.LOGGING === true) {
+      for(var i = 0; i < jsonObjs.length; i++) {
+         this.wrObj(jsonObjs[i]);
+      }
    }
 };
 
@@ -1912,7 +1951,6 @@ jsonPlState.prototype.sysLen = function (args, func) {
 
    var ret = this.getConst("int", "0");
    s = this.getRef("string", s.val.v);
-
    var v = this.processRef(s, func);
 
    //this.wr("sysType: CCC: ");
@@ -1950,7 +1988,6 @@ jsonPlState.prototype.sysType = function (args, func) {
 
    var ret = this.getConst("string", "");
    s = this.getRef("string", s.val.v);
-
    var v = this.processRef(s, func);
 
    //this.wr("sysType: CCC: ");
@@ -1968,7 +2005,6 @@ jsonPlState.prototype.sysType = function (args, func) {
    }
 
    //this.wr("sysType: EEE: ");
-
    //this.wrVal(ret.val);
    return ret;
 };
@@ -1976,9 +2012,8 @@ jsonPlState.prototype.sysType = function (args, func) {
 /**
  * Name: sysGetRefStr
  * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
- * Arg1: v(a {val} obj to get the reference for)
- * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
- * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
+ * Arg1: args(a list of {arg} objects)
+ * Arg2: func(the {func} object associated with this function call)
  * Returns: ret(a {const} object)
  */
 jsonPlState.prototype.sysGetRefStr = function (args, func) {
@@ -1989,10 +2024,13 @@ jsonPlState.prototype.sysGetRefStr = function (args, func) {
    return ret;
 };
 
-/*
- * TODO
- *
- */ 
+/**
+ * Name: sysGetArrayIdxRefStr
+ * Desc: Returns a string object with a reference to the specified array item.
+ * Arg1: args(a list of {arg} objects)
+ * Arg2: func(the {func} object associated with this function call)
+ * Returns: ret(a {const} object)
+ */
 jsonPlState.prototype.sysGetArrayIdxRefStr = function (args, func) {
    var ret = this.sysGetArrayIdxRef(args, func);
    ret.sys = "const";
@@ -2001,10 +2039,13 @@ jsonPlState.prototype.sysGetArrayIdxRefStr = function (args, func) {
    return ret;
 };
 
-/*
- * TODO
- *
- */ 
+/**
+ * Name: sysGetArrayIdxRef
+ * Desc: Returns a {ref}} to the specified array item.
+ * Arg1: args(a list of {arg} objects)
+ * Arg2: func(the {func} object associated with this function call)
+ * Returns: ret(a {const} object)
+ */
 jsonPlState.prototype.sysGetArrayIdxRef = function (args, func) {
    var ret = this.sysGetRef(args, func);
    var idx = this.toStr(args[3].val.v);
@@ -2071,9 +2112,6 @@ jsonPlState.prototype.sysGetRef = function (args, func) {
  * Arg4: val(a {const} or {ref} used as the value for the new variable)
  * Returns: ret(a {ref} object)
  */
-
-//TODO: sync
-
 jsonPlState.prototype.sysMalloc = function (args, func) {
    var isClassVar = this.toBool(args[0].val.v);
    var name = this.toStr(args[1].val.v);
@@ -2142,9 +2180,6 @@ jsonPlState.prototype.sysMalloc = function (args, func) {
  * Arg4: len(a {const} or {ref} with an integer representing the array length)
  * Returns: ret(a {ref} object)
  */
-
-//TODO: sync
-
 jsonPlState.prototype.sysMallocArray = function (args, func) {
    var tt = null;
    var isClassVar = this.toBool(args[0].val.v);
@@ -2257,6 +2292,9 @@ jsonPlState.prototype.sysClean = function (args, func) {
    
    var isClassVar = this.toBool(args[0].val.v);
    var name = this.toStr(args[1].val.v);
+   var ret = this.getConst("bool", "false");
+   var res = null;
+   var prog = this.program;
    var refDec = null;   
    //process ref for name
    if (this.isSysObjRef(args[1])) {
@@ -2267,16 +2305,12 @@ jsonPlState.prototype.sysClean = function (args, func) {
 
       refDec = this.processRef(args[1], func);
       if (refDec !== null) {
-         name = refDec.name;
+         name = this.toStr(refDec.name);
       } else {
          this.wr("sysClean: Error: could not resolve referece value, " + args[1].val.v + ", for arg name");
          return ret;
       }
    }
-
-   var ret = this.getConst("bool", "false");
-   var res = null;
-   var prog = this.program;
 
    //this.wr("sysClean: LookingFor: " + isClassVar + ", " + name);
 
@@ -2336,11 +2370,9 @@ jsonPlState.prototype.isObject = function (arg) {
  * Arg1: s(some string with a valid reference value)
  * Returns: ret(some bool, true or false)
  */
-
-//TODO: sync
-
 jsonPlState.prototype.isRefString = function (s) {
-   if (s.indexOf("$.") === 0 || s.indexOf("#.") === 0) {
+   var ns = this.toStr(s);
+   if (ns.indexOf("$.") === 0 || ns.indexOf("#.") === 0) {
       return true;
    }
    return false;
@@ -2352,15 +2384,13 @@ jsonPlState.prototype.isRefString = function (s) {
  * Arg1: s(some string with a valid array reference value)
  * Returns: ret(some bool, true or false)
  */
-
-//TODO: sync
-
 jsonPlState.prototype.isRefStringArray = function (s) {
    if (this.isRefString(s)) {
-      var len = s.length;
+      var ns = this.toStr(s);
+      var len = ns.length;
       var cnt = 0;
       for(var i = 0; i < len; i++) {
-         if(s.charAt(i) === '.') {
+         if(ns.charAt(i) === '.') {
             cnt++;
          }
       }
@@ -2378,12 +2408,10 @@ jsonPlState.prototype.isRefStringArray = function (s) {
  * Arg1: s(some string with a valid reference value)
  * Returns: ret(some bool, true or false)
  */
-
-//TODO: sync
-
 jsonPlState.prototype.isRefStringDec = function (s) {
    if (this.isRefString(s)) {
-      if (s.indexOf("[") === -1 && s.indexOf("]") === -1) {
+      var ns = this.toStr(s);
+      if (ns.indexOf("[") === -1 && ns.indexOf("]") === -1) {
          return true;
       }
    }
@@ -2396,9 +2424,6 @@ jsonPlState.prototype.isRefStringDec = function (s) {
  * Arg1: s(some string with a valid array item reference value)
  * Returns: ret(some bool, true or false)
  */
-
-//TODO: sync
-
 jsonPlState.prototype.isRefStringArrayDec = function (s) {
    if(this.isRefStringDec(s) && this.isRefStringArray(s)) {
       return true;
@@ -2412,11 +2437,9 @@ jsonPlState.prototype.isRefStringArrayDec = function (s) {
  * Arg1: type(some string with a valid type value)
  * Returns: ret(some bool, true or false)
  */
-
-//TODO: sync
-
 jsonPlState.prototype.isArrayType = function (type) {
-   if (type === "int[]" || type === "float[]" || type === "string[]" || type === "bool[]") {
+   var ns = this.toStr(type);
+   if (ns === "int[]" || ns === "float[]" || ns === "string[]" || ns === "bool[]") {
       return true;
    } else {
       return false;
@@ -2429,11 +2452,9 @@ jsonPlState.prototype.isArrayType = function (type) {
  * Arg1: type(some string with a valid type value)
  * Returns: ret(some bool, true or false)
  */
-
-//TODO: sync
-
 jsonPlState.prototype.isBaseType = function (type) {
-   if (type === "int" || type === "float" || type === "string" || type === "bool") {
+   var ns = this.toStr(type);
+   if (ns === "int" || ns === "float" || ns === "string" || ns === "bool") {
       return true;
    } else {
       return false;
@@ -2615,6 +2636,20 @@ jsonPlState.prototype.isSysObjVal = function (obj) {
 };
 
 /**
+ * Name: isSysObjArg
+ * Desc: Checks if the given object is an {arg} object. 
+ * Arg1: obj(sys obj to check)
+ * Returns: (true | false)
+ */
+ jsonPlState.prototype.isSysObjArg = function (obj) {
+   if (this.isSysObj(obj) === true && obj.sys === "arg") {
+      return true;
+   } else {
+      return false;
+   }
+};
+
+/**
  * Name: isSysObjValArray
  * Desc: Checks if the given object is a val object array. 
  * Arg1: obj(sys obj to check)
@@ -2678,6 +2713,20 @@ jsonPlState.prototype.isSysObjVar = function (obj) {
  */
 jsonPlState.prototype.isSysObjCall = function (obj) {
    if (this.isSysObj(obj) === true && obj.sys === "call") {
+      return true;
+   } else {
+      return false;
+   }
+};
+
+/**
+ * Name: isSysObjClass
+ * Desc: Checks if the given object is a {class} object. 
+ * Arg1: obj(sys obj to check)
+ * Returns: (true | false)
+ */
+ jsonPlState.prototype.isSysObjClass = function (obj) {
+   if (this.isSysObj(obj) === true && obj.sys === "class") {
       return true;
    } else {
       return false;
@@ -2807,9 +2856,6 @@ jsonPlState.prototype.getSysObjType = function (obj) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
  */
-
-//TODO: sync
-
 jsonPlState.prototype.processRef = function (objRef, func) {
    var path = null;
    var vls = null;
@@ -2827,16 +2873,18 @@ jsonPlState.prototype.processRef = function (objRef, func) {
       return null;
    }
 
-   path = (objRef.val.v + "");
+   path = this.toStr(objRef.val.v);
    //this.wr("-----processRef: AAA: " + path);
 
    if (path.charAt(0) === '[') {
       var cnt = 0;
       var i = 0;
-      for (; i < path.length; i++) {
-         if (path.charAt(i) === "[") {
+      var cs = path;
+      var llen = path.length;
+      for (; i < llen; i++) {
+         if (cs.charAt(i) === "[") {
             cnt += 1;
-         } else if(path.charAt(i) === "]") {
+         } else if(cs.charAt(i) === "]") {
             cnt -= 1;
          }
          
@@ -2857,7 +2905,6 @@ jsonPlState.prototype.processRef = function (objRef, func) {
       tmp.val.v = nc;
 
       tmp = this.cloneJsonObj(this.processRef(tmp, func));
-
       if (path.length >= i) {
          tmp.val.v += path.substring(i);
          //this.wr("-----processRef: CCC: " + path.substring(i));
@@ -2866,7 +2913,7 @@ jsonPlState.prototype.processRef = function (objRef, func) {
 
       if (tmp !== null) {
          path = this.toStr(tmp.val.v);
-         if(path.indexOf(".") === -1 && path.indexOf('[') === -1) {
+         if(path.indexOf("[") === -1 && path.indexOf("#.") === -1 && path.indexOf("$.") === -1) {
             //this.wr("processRef: Returning: ");
             //this.wrObj(tmp);
             return tmp;
@@ -2992,7 +3039,7 @@ jsonPlState.prototype.processRef = function (objRef, func) {
             tmp.val.v = nc;
 
             tmp = this.cloneJsonObj(this.processRef(tmp, func));
-            if (tmp !== null) {
+            if (tmp !== null && tmp.val.type === "string") {
                name = this.toStr(tmp.val.v);
             } else {
                this.wr("processRef: Error 2: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
@@ -3049,8 +3096,8 @@ jsonPlState.prototype.processRef = function (objRef, func) {
             tmp.val.v = nc;
 
             tmp = this.cloneJsonObj(this.processRef(tmp, func));
-            if (tmp !== null) {
-               idx = this.toStr(tmp.val.v + "");
+            if (tmp !== null && tmp.val.type === "int") {
+               idx = this.toInt(tmp.val.v);
             } else {
                this.wr("processRef: Error 3: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
                return null;
@@ -3065,9 +3112,9 @@ jsonPlState.prototype.processRef = function (objRef, func) {
                var ar = this.toArray(fnd.val.v);
                var len = ar.length;
                var target = this.toStr(idx);
-               for(var k = 0; k < len; k++) {
-                  if(ar[k].name === target) {
-                     fnd = ar[k];
+               for(var l = 0; l < len; l++) {
+                  if(ar[l].name === target) {
+                     fnd = ar[l];
                      foundIndex = true;
                      break;
                   }
@@ -3083,15 +3130,17 @@ jsonPlState.prototype.processRef = function (objRef, func) {
 
    if(fnd != null) {
       if(this.isArray(fnd.val.v) == false) {
-         if((fnd.val.v + "").indexOf("$") === -1 && (fnd.val.v + "").indexOf("#") === -1) {
-            fnd.val.v = this.toStr(fnd.val.v);
+         var ns = this.toStr(fnd.val.v);
+         if(ns.indexOf("$") === -1 && ns.indexOf("#") === -1) {
+            fnd.val.v = ns;
          }
       } else {
          fnd.val.v = this.toArray(fnd.val.v);
          for(var z = 0; z < fnd.val.v.length; z++) {
             var nd = fnd.val.v[z];
-            if((nd.val.v + "").indexOf("$") === -1 && (nd.val.v + "").indexOf("#") === -1) {
-               nd.val.v = this.toStr(nd.val.v);
+            var nds = this.toStr(nd.val.v);
+            if(nds.indexOf("$") === -1 && nds.indexOf("#") === -1) {
+               nd.val.v =nds;
             }            
          }
       }
@@ -3478,9 +3527,6 @@ jsonPlState.prototype.processIf = function (objIf, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
  */
-
-//TODO: sync
-
 jsonPlState.prototype.processIfForLines = function (objLines, func) {
    if (objLines !== null && this.isArray(objLines) && objLines.length > 0) {
       var j = 0;
@@ -3553,7 +3599,6 @@ jsonPlState.prototype.processFor = function (objFor, func) {
    var stop = null;
    var inc = null;
    var each = null;
-   var fullLst = this.isFullFor(objFor);
 
    if (!this.isSysObjFor(objFor)) {
       this.wr("processFor: Error: argument objRef is not a for obj");
@@ -3563,6 +3608,7 @@ jsonPlState.prototype.processFor = function (objFor, func) {
       return null;
    }
 
+   var fullLst = this.isFullFor(objFor);
    if(fullLst) {
       //this.wr("processFor: AAA");
       start = objFor.start;
@@ -3845,12 +3891,13 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
          return ret;
       } else if (leftIsArray && rightIsArray && !rightIsRef) {
          //left is array ref, right is array const, copy value
-         left.val.v = [];
+         //left.val.v = [];
          var tmpA = []; //this.toArray(left.val.v);
          var tmpB = this.toArray(right.val.v);
          for (var i = 0; i < tmpB.size(); i++) {
             tmpA.push(tmpB[i]);
          }
+         left.val.v = tmpA;
 
          //this.wr("-----left after:");
          //this.wrObj(left);
@@ -4174,32 +4221,32 @@ jsonPlState.prototype.processCall = function (objCall, func) {
       return null;
    }
 
-   if(this.isSysObjConst(objCall.name)) {
+   if(!this.isString(objCall.name) && this.isSysObjConst(objCall.name)) {
       // const");
       if(objCall.name.val.type === "string") {
-         name = objCall.name.val.v;
+         name = this.toStr(objCall.name.val.v);
       } else {
          return null;
       }
       //this.wr("processCall: found const: " + name);
-   } else if (this.isSysObjRef(objCall.name)) {
+   } else if (!this.isString(objCall.name) && this.isSysObjRef(objCall.name)) {
       //this.wr("processCall: found ref");
       //this.wrObj(objCall.name);
       var tnm = this.processRef(objCall.name, func);      
       //this.wr("processCall: found ref: " + tnm);
       //this.wrObj(tnm);
       if(tnm !== null && tnm.val.type === "string") {      
-         name = tnm.val.v;
+         name = this.toStr(tnm.val.v);
       } else {
          return null;
       }
       //this.wr("processCall: found name: " + name);
    } else {
       //this.wr("processCall: found string: " + objCall.name);
-      name = objCall.name;
+      name = this.toStr(objCall.name);
    }
 
-   args = this.cloneJsonObj(objCall.args);
+   args = this.cloneJsonObjList(objCall.args);
    funcDef = this.findFunc(name);
    //this.wr("processCall: found function def: " + funcDef);
    //this.wrObj(funcDef);
@@ -4291,8 +4338,8 @@ jsonPlState.prototype.processCall = function (objCall, func) {
             }
          } else {
             //backup default args and vars
-            funcDef.vars_def = this.cloneJsonObj(funcDef.vars);
-            funcDef.args_def = this.cloneJsonObj(funcDef.args);
+            funcDef.vars_def = this.cloneJsonObjList(funcDef.vars);
+            funcDef.args_def = this.cloneJsonObjList(funcDef.args);
 
             //this.wr("setting args:");
             //this.wrObj(args);
@@ -4314,10 +4361,6 @@ jsonPlState.prototype.processCall = function (objCall, func) {
             }
 
             //restore args and ret
-            //funcDef.vars = this.cloneJsonObj(funcDef.vars_def);
-            //funcDef.args = this.cloneJsonObj(funcDef.args_def);
-            //funcDef.ret = this.cloneJsonObj(funcDef.ret_def);
-
             funcDef.vars = funcDef.vars_def;
             funcDef.args = funcDef.args_def;
             funcDef.ret = funcDef.ret_def;            

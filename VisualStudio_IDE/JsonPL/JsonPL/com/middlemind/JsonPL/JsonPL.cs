@@ -432,7 +432,7 @@ namespace com.middlemind.JsonPL
                 jpl.wr("CALL RESULT:");
                 jpl.wrObj(res);
                 jpl.wr("CALL FUNCS[1] ARGS:");
-                jpl.wrObj(code.funcs[1].args);
+                jpl.wrObjList(code.funcs[1].args);
 
                 tmpJson = string.Join("\n",
                    "{",
@@ -559,7 +559,7 @@ namespace com.middlemind.JsonPL
 
                 jpl.wr("====================== TEST 8.00: Call Statement ======================");
                 JsonObjSysBase callObj = code.call;
-                string callFuncName = callObj.name;
+                string callFuncName = jpl.toStr(callObj.name);
                 JsonObjSysBase callFunc = jpl.findFunc(callFuncName);
                 res = jpl.processCall(callObj, callFunc);
                 jpl.wr("RUN FUNCTION 1: " + callFuncName);
