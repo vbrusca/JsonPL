@@ -3,7 +3,6 @@
       <title>JsonPL Test 23</title>
       <script type="text/javascript" src="../exec4.js"></script>
       <script type="text/javascript">
-         var jpl = null;
          var code = {
             "sys":"class", "name":"MallocArrayDemo",
             "call":{"sys":"call", "name":"main", "args":[]},
@@ -68,10 +67,11 @@
                            {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}},
                            {"sys":"const", "val":{"sys":"val", "type":"string", "v":"ar2"}},
                            {"sys":"const", "val":{"sys":"val", "type":"string", "v":"string[]"}},
-                           {"sys":"const", "val":{"sys":"val", "type":"int", "v":"3"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"int", "v":"4"}},
                            {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"false"}},
                            {"sys":"const", "val":{"sys":"val", "type":"string", "v":"next,string,null"}},
                            {"sys":"const", "val":{"sys":"val", "type":"string", "v":"prev,string,null"}},
+                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"value,string,null"}},                           
                            {"sys":"const", "val":{"sys":"val", "type":"string", "v":"active,bool,true"}}
                         ]
                      },
@@ -165,7 +165,7 @@
             };
          
             /////////////////////////PROGRAM SECTION
-            jpl = new jsonPlState();
+            var jpl = new jsonPlState();
             jpl.program = JSON.parse(JSON.stringify(code));
             
             if(!jpl.validateSysObjClass(jpl.program)) {
