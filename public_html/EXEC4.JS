@@ -30,6 +30,7 @@ function jsonPlState() {
    this.LOGGING = true;
    this.WR_PREFIX = "";
    this.objId = -1;
+   this.VERBOSE = true;
 }
 
 /**
@@ -1848,6 +1849,17 @@ jsonPlState.prototype.validateProperties = function (obj, req) {
 
 /////////////////////////UTILITY METHODS
 /**
+ * Name: wrErr
+ * Desc: Writes a string to standard error if LOGGING is on.
+ * Arg1: e(exception to write)
+ */
+ jsonPlState.prototype.wrErr = function (e) {
+   if (this.LOGGING === true) {
+      console.log(e);
+   }
+};
+
+/**
  * Name: wr
  * Desc: Writes a string to standard output if LOGGING is on.
  *       Sets the WR_PREFIX to each string written. 
@@ -2282,9 +2294,6 @@ jsonPlState.prototype.sysMallocArray = function (args, func) {
  * Arg2: name(a {const} or {ref} string indicating the name of the var to delete)
  * Returns: ret(a {const} object with a bool value indicating the operation was successful)
  */
-
-//TODO: sync
-
 jsonPlState.prototype.sysClean = function (args, func) {
    //this.wr("sysClean: Info: Receiving ");
    //this.wrObj(args[0]);
@@ -2856,14 +2865,19 @@ jsonPlState.prototype.getSysObjType = function (obj) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
  */
+
+//TODO: sync
+
 jsonPlState.prototype.processRef = function (objRef, func) {
    var path = null;
    var vls = null;
    var fnd = null;
    var prog = this.program;
 
-   //this.wr("processRef: Receiving: ");
-   //this.wrObj(objRef);
+   if (this.VERBOSE) {
+      this.wr("processRef: Receiving: ");
+      this.wrObj(objRef);
+   }
 
    if (!this.isSysObjRef(objRef)) {
       this.wr("processRef: Error: argument objRef is not a ref obj");
@@ -2874,7 +2888,10 @@ jsonPlState.prototype.processRef = function (objRef, func) {
    }
 
    path = this.toStr(objRef.val.v);
-   //this.wr("-----processRef: AAA: " + path);
+
+   if (this.VERBOSE) {
+      this.wr("processRef: Initial Path: " + path);
+   }
 
    if (path.charAt(0) === '[') {
       var cnt = 0;
@@ -2893,9 +2910,8 @@ jsonPlState.prototype.processRef = function (objRef, func) {
          }
       }
 
-      var nc = path.substring(1, i); //path.length - 1);
+      var nc = path.substring(1, i);
       i += 1;
-      //this.wr("-----processRef: BBB:" + nc);
 
       tmp = {};
       tmp.sys = "ref";
@@ -2904,18 +2920,23 @@ jsonPlState.prototype.processRef = function (objRef, func) {
       tmp.val.type = "string";
       tmp.val.v = nc;
 
+      if (this.VERBOSE) {
+         this.wr("processRef: Initial Dereference:");
+         this.wrObj(tmp);
+      }
+
       tmp = this.cloneJsonObj(this.processRef(tmp, func));
       if (path.length >= i) {
          tmp.val.v += path.substring(i);
-         //this.wr("-----processRef: CCC: " + path.substring(i));
-         //this.wrObj(tmp);         
       }
 
       if (tmp !== null) {
          path = this.toStr(tmp.val.v);
          if(path.indexOf("[") === -1 && path.indexOf("#.") === -1 && path.indexOf("$.") === -1) {
-            //this.wr("processRef: Returning: ");
-            //this.wrObj(tmp);
+            if (this.VERBOSE) {
+               this.wr("processRef: Returning: ");
+               this.wrObj(tmp);
+            }
             return tmp;
          }
       } else {
@@ -2924,7 +2945,6 @@ jsonPlState.prototype.processRef = function (objRef, func) {
       }
    }
 
-   //this.wr("===============================================Found path: " + path);
    vls = path.split(".");
 
    var inDynRef = false;
@@ -2932,7 +2952,6 @@ jsonPlState.prototype.processRef = function (objRef, func) {
    var tt = null;
    var obrk = 0;
    for (var k = 0; k < vls.length; k++) {
-      //this.wr("___________________________________:"+ vls[k].indexOf("["));
       if (inDynRef && vls[k].indexOf("]") !== -1) {
          obrk--;
          for (var i = vls[k].indexOf("]") + 1; i < vls[k].length; i++) {
@@ -2941,7 +2960,6 @@ jsonPlState.prototype.processRef = function (objRef, func) {
             }
          }
 
-         //this.wr("___________________________________:NewBracket: " + obrk);                     
          tt += "." + vls[k];
          if (obrk === 0) {
             inDynRef = false;
@@ -2954,7 +2972,6 @@ jsonPlState.prototype.processRef = function (objRef, func) {
       } else if (inDynRef) {
          if (vls[k].indexOf("[") !== -1) {
             obrk++;
-            //this.wr("___________________________________:NewBracket: " + obrk);            
          }
          tt += "." + vls[k];
       } else {
@@ -2968,7 +2985,6 @@ jsonPlState.prototype.processRef = function (objRef, func) {
    for (var k = 0; k < nvls.length; k++) {
       if (nvls[k] !== null) {
          vls[k] = nvls[k];
-         //this.wr("___________________________________:" + vls[k]);
       }
    }
 
@@ -2983,10 +2999,8 @@ jsonPlState.prototype.processRef = function (objRef, func) {
    var idx = -1;
    var type = null;
 
-   //this.wr("===============================================Found entries: " + vls.length);
    for (var k = 0; k < vls.length; k++) {
       var c = vls[k];
-      //this.wr("===============================================Found entry: " + k + ", " + vls[k]);      
 
       if (!foundSource) {
          //program/class         
@@ -3047,9 +3061,6 @@ jsonPlState.prototype.processRef = function (objRef, func) {
             }
          }
 
-         //this.wr("processRef: looking for name: " + name);
-         //this.wrObj(func.args);
-
          if (!isFunc) {
             //class find name            
             if (isVars) {
@@ -3064,14 +3075,9 @@ jsonPlState.prototype.processRef = function (objRef, func) {
             if (isVars) {
                fnd = this.findVar(name, func);
             } else {
-               //this.wr("processRef: function find arg: " + name);
-               //this.wrObj(func);
                fnd = this.findArg(name, func);
             }
          }
-
-         //this.wr("CCC ");
-         //this.wrObj(fnd);
 
          if (fnd !== null) {
             type = fnd.val.type;
@@ -3126,7 +3132,6 @@ jsonPlState.prototype.processRef = function (objRef, func) {
          }
       }
    }
-   //this.wr("processRef: exiting...");
 
    if(fnd != null) {
       if(this.isArray(fnd.val.v) == false) {
@@ -3140,14 +3145,16 @@ jsonPlState.prototype.processRef = function (objRef, func) {
             var nd = fnd.val.v[z];
             var nds = this.toStr(nd.val.v);
             if(nds.indexOf("$") === -1 && nds.indexOf("#") === -1) {
-               nd.val.v =nds;
+               nd.val.v = nds;
             }            
          }
       }
    }
 
-   //this.wr("processRef: Returning: ");
-   //this.wrObj(fnd);   
+   if (this.VERBOSE) {
+      this.wr("processRef: Returning: ");
+      this.wrObj(fnd);
+   }  
    return fnd;
 };
 
@@ -4213,6 +4220,11 @@ jsonPlState.prototype.processCall = function (objCall, func) {
    var ret = null;
    var sysFunc = false;
 
+   if (this.VERBOSE) {
+      this.wr("processCall: Receiving:");
+      this.wrObj(objCall);
+   }
+
    if (!this.isSysObjCall(objCall)) {
       this.wr("processCall: Error: argument objRef is not a call obj");
       return null;
@@ -4222,41 +4234,33 @@ jsonPlState.prototype.processCall = function (objCall, func) {
    }
 
    if(!this.isString(objCall.name) && this.isSysObjConst(objCall.name)) {
-      // const");
       if(objCall.name.val.type === "string") {
          name = this.toStr(objCall.name.val.v);
       } else {
          return null;
       }
-      //this.wr("processCall: found const: " + name);
    } else if (!this.isString(objCall.name) && this.isSysObjRef(objCall.name)) {
-      //this.wr("processCall: found ref");
-      //this.wrObj(objCall.name);
-      var tnm = this.processRef(objCall.name, func);      
-      //this.wr("processCall: found ref: " + tnm);
-      //this.wrObj(tnm);
+      var tnm = this.processRef(objCall.name, func);
       if(tnm !== null && tnm.val.type === "string") {      
          name = this.toStr(tnm.val.v);
       } else {
          return null;
       }
-      //this.wr("processCall: found name: " + name);
    } else {
-      //this.wr("processCall: found string: " + objCall.name);
       name = this.toStr(objCall.name);
+   }
+
+   if (this.VERBOSE) {
+      this.wr("processCall: Function Name: " + name);
    }
 
    args = this.cloneJsonObjList(objCall.args);
    funcDef = this.findFunc(name);
-   //this.wr("processCall: found function def: " + funcDef);
-   //this.wrObj(funcDef);
 
    if (funcDef !== null) {
-      //this.wr("processCall: AAA");
       funcArgs = funcDef.args;
 
    } else {
-      //this.wr("processCall: BBB");      
       sysFunc = true;
       funcDef = this.findSysFunc(name);
       if (funcDef !== null) {
@@ -4316,7 +4320,7 @@ jsonPlState.prototype.processCall = function (objCall, func) {
                lret = this[funcDef.fname](args, func);
                err = false;
             } catch (e) {
-               this.wr("processFunc: Error: ");
+               this.wr("processCall: Error calling system function: ");
                this.wr(e);
                lret = null;
                err = true;
@@ -4340,20 +4344,11 @@ jsonPlState.prototype.processCall = function (objCall, func) {
             //backup default args and vars
             funcDef.vars_def = this.cloneJsonObjList(funcDef.vars);
             funcDef.args_def = this.cloneJsonObjList(funcDef.args);
-
-            //this.wr("setting args:");
-            //this.wrObj(args);
-
             funcDef.args = args;
 
             //backup default ret
             funcDef.ret_def = this.cloneJsonObj(funcDef.ret);
-            //this.wr("processCall: CCC");
             ret = this.processFunc(funcDef);
-
-            //this.wr("RET_DEF");
-            //this.wrObj(ret);
-            //this.wrObj(funcDef.ret_def);
 
             if (ret !== null && (ret.val.type !== funcDef.ret_def.type)) {
                this.wr("processCall: Error: function return type mismatch, return type " + ret.val.type + " expected " + funcDef.ret_def.type);
@@ -4365,8 +4360,11 @@ jsonPlState.prototype.processCall = function (objCall, func) {
             funcDef.args = funcDef.args_def;
             funcDef.ret = funcDef.ret_def;            
 
-            //this.wr("processCall: Returning: ");
-            //this.wrObj(this.getConst(ret.val.type, ret.val.v));
+            if (this.VERBOSE) {
+               this.wr("processCall: Returning: ");
+               this.wrObj(this.getConst(ret.val.type, ret.val.v));
+            }
+
             return this.getConst(ret.val.type, ret.val.v);
          }
       } else {
