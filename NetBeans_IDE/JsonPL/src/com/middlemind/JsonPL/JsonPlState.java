@@ -1179,6 +1179,20 @@ public class JsonPlState {
    public boolean validateSysObjCall(JsonObjSysBase obj) {
       if (this.isSysObjCall(obj) && this.validateProperties(obj, new String[]{"sys", "name", "args"})) {
          if (obj.name != null) {
+            
+            if (this.VERBOSE) {
+               this.wr("validateSysObjCall: logging name object");
+               this.wrObj(obj);
+               if(obj.name instanceof LinkedTreeMap) {
+                  this.wr("validateSysObjCall: logging name object 222");
+                  this.wr(((LinkedTreeMap)obj.name).toString());
+               }
+            }
+            
+            if(obj.name instanceof LinkedTreeMap) {
+               obj.name = this.processLinkedTreeMap((LinkedTreeMap)obj.name);
+            }
+            
             if (!this.isString(obj.name) && !this.isSysObjConst((JsonObjSysBase) obj.name) && !this.isSysObjRef((JsonObjSysBase) obj.name)) {
                this.wr("validateSysObjCall: Error: name is of unknown object type");
                return false;
@@ -2182,9 +2196,16 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
     */
+   
+   //TODO: sync
+   
    public boolean isNumber(Object arg) {
       if (arg == null) {
          return false;
+      } else if(this.isInteger(arg)) {
+         return true;
+      } else if(this.isFloat(arg)) {
+         return true;           
       } else if (arg instanceof Integer || arg instanceof Float) {
          return true;
       } else {
@@ -2198,9 +2219,22 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
     */
+   
+   //TODO: sync
+   
    public boolean isInteger(Object arg) {
+      boolean isIntStr = false;
+      try {
+         Integer.parseInt(this.toStr(arg));
+         isIntStr = true;
+      } catch (Exception e) {
+         isIntStr = false;
+      }
+
       if (arg == null) {
          return false;
+      } else if(isIntStr) {
+         return true;
       } else if (arg instanceof Integer) {
          return true;
       } else {
@@ -2214,9 +2248,22 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
     */
+   
+   //TODO: sync
+   
    public boolean isFloat(Object arg) {
+      boolean isFltStr = false;
+      try {
+         Float.parseFloat(this.toStr(arg));
+         isFltStr = true;
+      } catch (Exception e) {
+         isFltStr = false;
+      }      
+      
       if (arg == null) {
          return false;
+      } else if(isFltStr) {
+         return true;
       } else if (arg instanceof Float) {
          return true;
       } else {
@@ -2230,7 +2277,18 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
     */
+   
+   //TODO: sync
+   
    public boolean isBool(Object arg) {
+      boolean isBlStr = false;
+      try {
+         Boolean.parseBoolean(this.toStr(arg));
+         isBlStr = true;
+      } catch (Exception e) {
+         isBlStr = false;
+      }      
+      
       if (arg == null) {
          return false;
       } else if (arg instanceof Boolean) {
@@ -2240,6 +2298,8 @@ public class JsonPlState {
       } else if (this.isFloat(arg) && (float) arg == 1.0 || (float) arg == 0.0) {
          return true;
       } else if (this.isString(arg) && (((String) arg).equals("yes") || ((String) arg).equals("no") || ((String) arg).equals("true") || ((String) arg).equals("false") || ((String) arg).equals("1") || ((String) arg).equals("0") || ((String) arg).equals("1.0") || ((String) arg).equals("0.0"))) {
+         return true;
+      } else if(isBlStr) {
          return true;
       } else {
          return false;
@@ -2621,7 +2681,7 @@ public class JsonPlState {
          tmp.val.v = nc;
 
          if (this.VERBOSE) {
-            this.wr("processRef: Initial Dereference:");
+            this.wr("processRef: Initial De-Reference:");
             this.wrObj(tmp);
          }
          
@@ -2684,6 +2744,10 @@ public class JsonPlState {
       for (int k = 0; k < nvls.size(); k++) {
          if (nvls.get(k) != null) {
             vls[k] = nvls.get(k);
+            
+            if (this.VERBOSE) {
+               this.wr("processRef: path idx: " + k + " val: " + vls[k]);
+            }
          }
       }
 
@@ -2702,6 +2766,10 @@ public class JsonPlState {
          String c = vls[k];
 
          if (!foundSource) {
+            if (this.VERBOSE) {
+               this.wr("processRef: AAA");
+            }
+            
             //program/class         
             if (c != null && c.equals("#")) {
                isFunc = false;
@@ -2714,6 +2782,10 @@ public class JsonPlState {
                return null;
             }
          } else if (!foundType) {
+            if (this.VERBOSE) {
+               this.wr("processRef: BBB");
+            }            
+            
             //program/class
             if (!isFunc) {
                if (c != null && c.equals("vars")) {
@@ -2737,6 +2809,10 @@ public class JsonPlState {
                }
             }
          } else if (!foundName) {
+            if (this.VERBOSE) {
+               this.wr("processRef: CCC");
+            }            
+            
             //program/class
             name = c;
             JsonObjSysBase tmp = null;
@@ -2747,7 +2823,8 @@ public class JsonPlState {
                tmp = new JsonObjSysBase();
                tmp.sys = "ref";
                tmp.val = new JsonObjSysBase();
-               tmp.val.sys = "ref";
+               tmp.val.sys = "val";
+               tmp.val.type = "string";
                tmp.val.v = nc;
 
                tmp = this.cloneJsonObj(this.processRef(tmp, func));
@@ -2785,22 +2862,32 @@ public class JsonPlState {
                return null;
             }
          } else if (!foundIndex) {
-            idx = this.toInt(c);
+            if (this.VERBOSE) {
+               this.wr("processRef: DDD");
+            }
+            
+            String lidx = this.toStr(c);
             JsonObjSysBase tmp = null;
 
             //lookup use of string var here
             if (c.indexOf("[") == 0) {
+               if (this.VERBOSE) {
+                  this.wr("processRef: DDD - 0");
+               }
+            
                String nc = c.substring(1, c.length() - 1);
 
                tmp = new JsonObjSysBase();
                tmp.sys = "ref";
                tmp.val = new JsonObjSysBase();
-               tmp.val.sys = "ref";
+               tmp.val.sys = "val";
+               tmp.val.type = "string";
                tmp.val.v = nc;
 
                tmp = this.cloneJsonObj(this.processRef(tmp, func));
                if (tmp != null && tmp.val.type.equals("int")) {
                   idx = this.toInt(tmp.val.v);
+                  lidx = this.toStr(tmp.val.v);
                } else {
                   this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
                   return null;
@@ -2808,13 +2895,26 @@ public class JsonPlState {
             }
 
             if (this.isSysObjValArray(fnd.val)) {
-               if (this.isNumber(idx)) {
+               if (this.VERBOSE) {
+                  this.wr("processRef: DDD - 1: " + lidx);
+               }
+               
+               if (this.isNumber(lidx)) {
+                  if (this.VERBOSE) {
+                     this.wr("processRef: DDD - 2");
+                  }
+               
+                  idx = this.toInt(lidx);
                   fnd = (JsonObjSysBase) (this.toArray(fnd.val.v)).get(idx);
                   foundIndex = true;
                } else {
+                  if (this.VERBOSE) {
+                     this.wr("processRef: DDD - 3");
+                  }                  
+                  
                   ArrayList ar = this.toArray(fnd.val.v);
                   int len = ar.size();
-                  String target = this.toStr(idx);
+                  String target = this.toStr(lidx);
                   for (int l = 0; l < len; l++) {
                      if (((JsonObjSysBase) ar.get(l)).name.equals(target)) {
                         fnd = (JsonObjSysBase) ar.get(l);
@@ -2929,6 +3029,66 @@ public class JsonPlState {
    }
 
    /*
+    *
+    */
+   public JsonObjSysBase processLinkedTreeMap(LinkedTreeMap t) {
+      LoaderSysBase ldr = new LoaderSysBase();
+      LinkedTreeMap lltmp = (LinkedTreeMap) t;
+      Object[] keys = lltmp.keySet().toArray();
+      
+      if (this.VERBOSE) {
+         /*
+         this.wr("processLinkedTreeMap: -------------------------");
+         for(int i = 0; i < keys.length; i++) {
+            this.wr(i + ": " + keys[i] + "");
+         }
+         this.wr("-------------------------");
+         */
+      }
+      
+      String sys = lltmp.get(keys[0]) + "";
+      String name = null;
+      String val = null;
+      JsonObjSysBase nd = null;
+
+      if (sys.equals("const")) {
+         val = lltmp.get(keys[1]) + "";
+         nd = new JsonObjSysBase("const");
+         try {
+            nd.val = ldr.ParseJson(val, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         } catch (Exception e) {
+            e.printStackTrace();
+         }
+      } else if (sys.equals("ref")) {
+         val = lltmp.get(keys[1]) + "";
+         nd = new JsonObjSysBase("ref");         
+         try {
+            nd.val = ldr.ParseJson(val, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         } catch (Exception e) {
+            e.printStackTrace();
+         }
+      } else if (sys.equals("var")) {
+         if(keys[1].equals("name")) {
+            name = lltmp.get(keys[1]) + "";
+            val = lltmp.get(keys[2]) + "";
+         } else {
+            val = lltmp.get(keys[1]) + "";
+            name = lltmp.get(keys[2]) + "";            
+         }
+         
+         nd = new JsonObjSysBase("var");
+         nd.name = name + "";
+         try {
+            nd.val = ldr.ParseJson(val, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+         } catch (Exception e) {
+            e.printStackTrace();
+         }
+      }
+      
+      return nd;
+   }
+   
+   /*
      * Name: toArray
      * Desc: Converts the value v to an array representation.
      * Arg1: v(the value to convert)
@@ -2936,45 +3096,11 @@ public class JsonPlState {
     */
    public ArrayList toArray(Object v) {
       if (this.isArray(v)) {
-         ArrayList al = (ArrayList) v;
-         LoaderSysBase ldr = new LoaderSysBase();
-
+         ArrayList al = (ArrayList) v;         
          for (int i = 0; i < al.size(); i++) {
             Object t = al.get(i);
             if (t instanceof LinkedTreeMap) {
-               LinkedTreeMap lltmp = (LinkedTreeMap) t;
-               Object[] keys = lltmp.keySet().toArray();
-               String sys = lltmp.get(keys[0]) + "";
-               String name = lltmp.get(keys[1]) + "";
-               String val = lltmp.get(keys[2]) + "";
-               JsonObjSysBase nd = new JsonObjSysBase();
-
-               if (sys.equals("const")) {
-                  nd.sys = "const";
-                  nd.name = name + "";
-                  try {
-                     nd.val = ldr.ParseJson(val, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
-                  } catch (Exception e) {
-                     e.printStackTrace();
-                  }
-               } else if (sys.equals("ref")) {
-                  nd.sys = "ref";
-                  nd.name = name + "";
-                  try {
-                     nd.val = ldr.ParseJson(val, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
-                  } catch (Exception e) {
-                     e.printStackTrace();
-                  }
-               } else if (sys.equals("var")) {
-                  nd.sys = "var";
-                  nd.name = name + "";
-                  try {
-                     nd.val = ldr.ParseJson(val, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
-                  } catch (Exception e) {
-                     e.printStackTrace();
-                  }
-               }
-               al.set(i, nd);
+               al.set(i, this.processLinkedTreeMap((LinkedTreeMap)t));
             }
          }
          return al;
@@ -4107,7 +4233,7 @@ public class JsonPlState {
                   }
                } catch (Exception e) {
                   this.wr("processCall: Error calling system function: ");
-                  e.printStackTrace();
+                  this.wrErr(e);
                   lret = null;
                   err = true;
                }
@@ -4130,6 +4256,10 @@ public class JsonPlState {
                funcDef.args_def = this.cloneJsonObjList(funcDef.args);
                funcDef.args = args;
 
+               if (this.VERBOSE) {
+                  this.wr("processCall: Process Function: " + funcDef.name);                  
+               }
+                  
                //backup default ret
                funcDef.ret_def = this.cloneJsonObj(funcDef.ret);
                ret = this.processFunc(funcDef);
@@ -4145,7 +4275,9 @@ public class JsonPlState {
                funcDef.ret = funcDef.ret_def;
 
                if (this.VERBOSE) {
-                  this.wr("processCall: Returning: ");
+                  this.wr("processCall: Returning: AAA:");
+                  this.wrObj(ret);
+                  this.wr("processCall: Returning: BBB:");               
                   this.wrObj(this.getConst(ret.val.type, ret.val.v));
                }
             

@@ -64,10 +64,10 @@ public class JsonPL {
          String json = null;
 
          if (args.length == 2) {
-            //TODO: test14, test15, test16, 
-            //TODO: test17, test19, test20, 
-            //TODO: test21, test23            
-            target = root + "test14" + ".json";
+            //TODO: test15, test16, 
+            //TODO: test17, test18, test19, test20, 
+            //TODO: test21, test22, test23            
+            target = root + "test20" + ".json";
          }
 
          Logger.wrl("JsonPL: running program: " + target);
