@@ -286,6 +286,7 @@ public class JsonPlState {
      */
     public JsonObjSysBase runProgram() {
         if (this.validateSysObjClass(this.program)) {
+            long start = System.currentTimeMillis();
             JsonObjSysBase callObj = this.program.call;
             String callFuncName = null;
 
@@ -312,6 +313,9 @@ public class JsonPlState {
 
             this.wr("runProgram: Results: ");
             this.wrObj(ret);
+            
+            long duration = System.currentTimeMillis() - start;
+            this.wr("runProgram: Execution time: " + duration/1000.0 + "s"); 
             return ret;
         } else {
             this.wr("runProgram: Error: could not validate the class object.");

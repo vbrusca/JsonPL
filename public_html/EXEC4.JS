@@ -626,6 +626,7 @@ jsonPlState.prototype.system = {
  */
 jsonPlState.prototype.runProgram = function () {
    if (this.validateSysObjClass(this.program)) {
+      var start = Date.now();
       var callObj = this.program.call;
       var callFuncName = null;
 
@@ -645,6 +646,9 @@ jsonPlState.prototype.runProgram = function () {
 
       this.wr("runProgram: Results: ");
       this.wrObj(ret);
+
+      var duration = Date.now() - start;
+      this.wr("runProgram: Execution time: " + duration/1000.0 + "s");            
       return ret;
    } else {
       this.wr("runProgram: Error: could not validate the class object.");

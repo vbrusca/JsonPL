@@ -96,11 +96,21 @@ int main()
     //test_str();
     //test_list();
     //test_hash();
-    test_str2();
+
+    //test_str2();
+    test_list2();
 
     vgb_mmgr_cleanup();
     return 0;
 }
+
+/**
+ * TODO
+ */
+ void test_list2(void) {
+    struct vgb_list *lst1 = create_vgb_list();
+    print_vgb_list(lst1);
+ }
 
 /**
  * TODO

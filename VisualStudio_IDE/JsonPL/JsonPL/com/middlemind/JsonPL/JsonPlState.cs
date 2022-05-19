@@ -305,6 +305,7 @@ namespace com.middlemind.JsonPL
         {
             if (this.validateSysObjClass(this.program))
             {
+                long start = System.DateTime.Now.Ticks;
                 JsonObjSysBase callObj = this.program.call;
                 string callFuncName = null;
 
@@ -339,6 +340,10 @@ namespace com.middlemind.JsonPL
 
                 this.wr("runProgram: Results: ");
                 this.wrObj(ret);
+
+                long duration = System.DateTime.Now.Ticks - start;
+                TimeSpan ts = new TimeSpan(duration);
+                this.wr("runProgram: Execution time: " + ts.Milliseconds / 1000.0 + "s");
                 return ret;
             }
             else
