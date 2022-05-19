@@ -8,16 +8,18 @@ JsonPL the language that nobody yet needs but is good for the following:
 4. Run on any interpreter: Because the code is in JSON object notation the same code can be run on any properly working interpreter so long as the same system level functions are defined in the interpreter or added system method callback event handler. The function signatures also must be the same, these are stored in the class object's system attribute under the key functions.
 
 Recent Updates:
-1. Added initial support for the array data type by including the isSysObjArray and validateSysObjArray functions to the JS, Java, and C# versions of the interpreter.
-2. Added support for dynamic variable refereces to the JS, Java, and C# versions of the interpreter. Now you can use variables in the reference path. For instance to use a variable value as the name of a variable you would use syntax like this, #.vars.[$.vars.name1].
-3. Added array index support to the process reference function, $.vars.some_array.numeric_array_index i.e. $.vars.some_array.1
-4. Added preprocessor, replacement directive support via the processReplDirectives. You can now specify text, @(repl::some string here), to be replaced by the pre-processor.
+1. Finished support for the use of arrays. You can now create arrays of one data type, strict = true, and arrays of multiple data types, strict = false. You cannot create arrays of arrays at this point.
+2. Added support for de-referencing values passed from function calls.
+3. Added support for a for-each loop that takes a reference to an array as an argument to define the start and stop values.
+4. Synced up the Javascript, Java, and C# versions to support all 24 test programs.
+5. Ability to create new variables with system calls to mlc, malloc, and amlc, array malloc.
+6. Ability to delete variables with system calls to cln, clean.
 
 Up Next: 
 1. A C version of the base 0.5.1 interpreter. The C version of the 0.5.1 interpreter is coming along. A lot of the base code to handle strings, lists, memory management, etc. is done and ready for testing.
 2. A Pascal version of the 0.5.1 interpreter.
 3. A Python version of the 0.5.1 interpreter.
-4. Adding an "imports" attribute to the class object, type of array, that stores loaded classes, @imports.class_name.vars.var_name, @imports.class_name.funcs.func_name
+4. Adding an "imports" attribute to the class object, type of array, that stores loaded classes, @imports.class_name.vars.var_name, @imports.class_name.funcs.func_name.
 5. Step through execution and proper line number tracking.
 
 ## Main Sections:
