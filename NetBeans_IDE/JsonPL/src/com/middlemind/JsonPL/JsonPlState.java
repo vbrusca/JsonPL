@@ -319,6 +319,7 @@ public class JsonPlState {
         }
     }
 
+    
     /////////////////////////SEARCH METHODS
     /*
      * Name: findArg 
@@ -402,6 +403,7 @@ public class JsonPlState {
         return null;
     }
 
+    
     /////////////////////////VALIDATION METHODS
     /*
      * Name: validateSysObjIf 
@@ -882,7 +884,7 @@ public class JsonPlState {
      * Desc: Validates if the given object is a valid asgn object. 
      * Arg1: obj(a {asgn} object to check) 
      * Returns: ret(some bool, true or false)
-     * Struct:-
+     * Struct:
      * {
      *   "sys": "asgn",
      *   "left": {ref},
@@ -4127,7 +4129,7 @@ public class JsonPlState {
         }
 
         if (funcArgs != null) {
-            if (funcArgs == null || (funcArgs != null && args.size() == funcArgs.size()) || (funcArgs != null && funcArgs.size() == 0)) {
+            if (funcArgs == null || (funcArgs != null && args.size() >= funcArgs.size()) || (funcArgs != null && funcArgs.size() == 0)) {
                 if (funcArgs == null) {
                     args = new ArrayList<JsonObjSysBase>();
                 } else if (funcArgs.size() == 0) {

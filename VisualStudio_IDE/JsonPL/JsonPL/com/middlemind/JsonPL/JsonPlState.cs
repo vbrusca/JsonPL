@@ -7,6 +7,7 @@ using System.Text;
 using System.Collections;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
+using com.middlemind.JsonPL.Loaders;
 
 /**
 * JSON Programming Language
@@ -1104,7 +1105,7 @@ namespace com.middlemind.JsonPL
         * Desc: Validates if the given object is a valid asgn object. 
         * Arg1: obj(a {asgn} object to check) 
         * Returns: ret(some bool, true or false)
-        * Struct:-
+        * Struct:
         * {
         *   "sys": "asgn",
         *   "left": {ref},
@@ -1543,6 +1544,10 @@ namespace com.middlemind.JsonPL
         {
             if (this.isSysObjCall(obj) && this.validateProperties(obj, new string[] { "sys", "name", "args" }))
             {
+                if (obj.name is JObject) {
+                    obj.name = this.processLinkedTreeMap((JObject)obj.name);
+                }
+
                 if (obj.name != null)
                 {
                     if (!this.isString(obj.name) && !this.isSysObjConst((JsonObjSysBase)obj.name) && !this.isSysObjRef((JsonObjSysBase)obj.name))
@@ -1981,8 +1986,7 @@ namespace com.middlemind.JsonPL
                 try
                 {
                     fld = obj.GetType().GetField(req[i]);
-
-                    if (fld == null)
+                    if (fld == null || fld.GetValue(obj) == null)
                     {
                         return false;
                     }
@@ -3821,12 +3825,23 @@ namespace com.middlemind.JsonPL
         }
 
         /**
-        * Name: toArray
-        * Desc: Converts the value v to an array representation.
-        * Arg1: v(the value to convert)
-        * Returns: (the array value of v)
-        */
-        public List<JsonObjSysBase> toArray(object v)
+         *
+         */
+        public JsonObjSysBase processLinkedTreeMap(JObject t)
+        {
+            this.wr("processLinkedTreeMap: " + t.ToString());
+            LoaderSysBase ldr = new LoaderSysBase();
+            JsonObjSysBase obj  = ldr.ParseJson(t.ToString(), "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+            return obj;
+        }
+
+            /**
+            * Name: toArray
+            * Desc: Converts the value v to an array representation.
+            * Arg1: v(the value to convert)
+            * Returns: (the array value of v)
+            */
+            public List<JsonObjSysBase> toArray(object v)
         {
             if (this.isArray(v))
             {
@@ -5357,7 +5372,7 @@ namespace com.middlemind.JsonPL
 
             if (funcArgs != null)
             {
-                if (funcArgs == null || (funcArgs != null && args.Count == funcArgs.Count) || (funcArgs != null && funcArgs.Count == 0))
+                if (funcArgs == null || (funcArgs != null && args.Count >= funcArgs.Count) || (funcArgs != null && funcArgs.Count == 0))
                 {
                     if (funcArgs == null)
                     {
@@ -5497,7 +5512,7 @@ namespace com.middlemind.JsonPL
                             }
                             else if (lname.Equals("sysClean"))
                             {
-                                lret = this.sysMallocArray(args, func);
+                                lret = this.sysClean(args, func);
 
                             }
                             else

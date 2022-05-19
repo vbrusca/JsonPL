@@ -1217,7 +1217,7 @@ jsonPlState.prototype.validateSysObjFunc = function (obj) {
  * Desc: Validates if the given object is a valid asgn object. 
  * Arg1: obj(a {asgn} object to check) 
  * Returns: ret(some bool, true or false)
- * Struct:-
+ * Struct:
  * {
  *   "sys": "asgn",
  *   "left": {ref},
