@@ -101,6 +101,11 @@ namespace com.middlemind.JsonPL
         /**
          * 
          */
+        public bool VERBOSE = true;
+
+        /**
+         * 
+         */
         public Dictionary<string, List<JsonObjSysBase>> system;
 
         /**
@@ -152,7 +157,7 @@ namespace com.middlemind.JsonPL
                             s += sep;
                         }
                     }
-                }                
+                }
             }
             this.wr(s);
 
@@ -311,13 +316,13 @@ namespace com.middlemind.JsonPL
                     if (this.isSysObjConst((JsonObjSysBase)callObj.name))
                     {
                         callFuncName = this.toStr(((JsonObjSysBase)callObj.name).val.v);
-                    } 
+                    }
                     else if (this.isSysObjRef((JsonObjSysBase)callObj.name))
                     {
                         this.wr("runProgram: Error: cannot process call name {ref} objects at the class level.");
                         return null;
-                    } 
-                    else 
+                    }
+                    else
                     {
                         this.wr("runProgram: Error: cannot process unknown call name objects at the class level.");
                         return null;
@@ -331,7 +336,7 @@ namespace com.middlemind.JsonPL
                 ret = this.processCall(callObj, callFunc);
                 this.lastProgramReturn = ret;
 
-                this.wr("runProgram: Results: ");            
+                this.wr("runProgram: Results: ");
                 this.wrObj(ret);
                 return ret;
             }
@@ -1976,7 +1981,7 @@ namespace com.middlemind.JsonPL
                 try
                 {
                     fld = obj.GetType().GetField(req[i]);
-                    
+
                     if (fld == null)
                     {
                         return false;
@@ -1994,6 +1999,20 @@ namespace com.middlemind.JsonPL
 
 
         /////////////////////////UTILITY METHODS
+        /**
+         * Name: wrErr 
+         * Desc: Writes a string to standard error if LOGGING is on.
+         * Arg1: e(exception to write)
+         */
+        public void wrErr(Exception e)
+        {
+            if (this.LOGGING == true)
+            {
+                this.wr(e.Message);
+                this.wr(e.StackTrace);
+            }
+        }
+
         /**
         * Name: wr
         * Desc: Writes a string to standard output if LOGGING is on.
@@ -2784,9 +2803,19 @@ namespace com.middlemind.JsonPL
             {
                 return false;
             }
-            else if (arg is int || arg is float) {
+            else if (this.isInteger(arg))
+            {
                 return true;
-            } else
+            }
+            else if (this.isFloat(arg))
+            {
+                return true;
+            }
+            else if (arg is int || arg is float)
+            {
+                return true;
+            }
+            else
             {
                 return false;
             }
@@ -2802,6 +2831,7 @@ namespace com.middlemind.JsonPL
         {
             int ti = -1;
             bool tr = int.TryParse(this.toStr(arg), out ti);
+        
             if (arg == null)
             {
                 return false;
@@ -2824,9 +2854,24 @@ namespace com.middlemind.JsonPL
          */
         public bool isFloat(object arg)
         {
+            bool isFltStr = false;
+            try
+            {
+                float.Parse(this.toStr(arg));
+                isFltStr = true;
+            }
+            catch (Exception e)
+            {
+                isFltStr = false;
+            }
+
             if (arg == null)
             {
                 return false;
+            }
+            else if (isFltStr) 
+            {
+                return true;
             }
             else if (arg is float) 
             {
@@ -2845,13 +2890,30 @@ namespace com.middlemind.JsonPL
          */
         public bool isBool(object arg)
         {
+            bool isBlStr = false;
+            try
+            {
+                Boolean.Parse(this.toStr(arg));
+                isBlStr = true;
+            }
+            catch (Exception e)
+            {
+                isBlStr = false;
+            }
+
             if (arg == null)
             {
                 return false;
             }
-            else if (arg is bool) {
+            else if (arg is bool)
+            {
                 return true;
-            } else if (this.isInteger(arg) && (int)arg == 1 || (int)arg == 0)
+            }
+            else if (isBlStr)
+            {
+                return true;
+            }
+            else if (this.isInteger(arg) && (int)arg == 1 || (int)arg == 0)
             {
                 return true;
             }
@@ -3264,8 +3326,11 @@ namespace com.middlemind.JsonPL
             JsonObjSysBase fnd = null;
             JsonObjSysBase prog = this.program;
 
-            //this.wr("OBJ REF");
-            //this.wrObj(objRef);        
+            if (this.VERBOSE)
+            {
+                this.wr("processRef: Receiving: ");
+                this.wrObj(objRef);
+            }
 
             if (!this.isSysObjRef(objRef))
             {
@@ -3279,7 +3344,11 @@ namespace com.middlemind.JsonPL
             }
 
             path = this.toStr(objRef.val.v);
-            //this.wr("-----processRef: AAA: " + path);
+
+            if (this.VERBOSE)
+            {
+                this.wr("processRef: Initial Path: " + path);
+            }
 
             if (path.ToCharArray()[0] == '[')
             {
@@ -3304,7 +3373,7 @@ namespace com.middlemind.JsonPL
                     }
                 }
 
-                string nc = path.Substring(1, i - 1); // path.Length - 2);
+                string nc = path.Substring(1, i - 1);
                 i += 1;
 
                 JsonObjSysBase tmp = new JsonObjSysBase();
@@ -3314,31 +3383,37 @@ namespace com.middlemind.JsonPL
                 tmp.val.type = "string";
                 tmp.val.v = nc;
 
+                if (this.VERBOSE)
+                {
+                    this.wr("processRef: Initial De-Reference:");
+                    this.wrObj(tmp);
+                }
+
                 tmp = this.cloneJsonObj(this.processRef(tmp, func));
                 if (path.Length >= i)
                 {
                     tmp.val.v += path.Substring(i);
-                    //this.wr("-----processRef: CCC: " + path.substring(i));
-                    //this.wrObj(tmp);         
                 }
 
-                if (tmp != null && tmp.val.type.Equals("string"))
+                if (tmp != null)
                 {
                     path = this.toStr(tmp.val.v);
                     if (path.IndexOf("[") == -1 && path.IndexOf("#.") == -1 && path.IndexOf("$.") == -1)
                     {
-                        //this.wr("processRef: Returning: ");
-                        //this.wrObj(tmp);
+                        if (this.VERBOSE)
+                        {
+                            this.wr("processRef: Returning: ");
+                            this.wrObj(tmp);
+                        }
                         return tmp;
                     }
                 }
                 else
                 {
-                    this.wr("processRef: Error: could not lookup object, for ref path: " + path);
+                    this.wr("processRef: Error 1: could not lookup object, for ref path: " + path);
                 }
             }
 
-            //this.wr("===============================================Found path: " + path);
             vls = path.Split(".");
 
             bool inDynRef = false;
@@ -3347,7 +3422,6 @@ namespace com.middlemind.JsonPL
             int obrk = 0;
             for (int k = 0; k < vls.Length; k++)
             {
-                //this.wr("___________________________________:" + vls[k]);
                 if (inDynRef && vls[k].IndexOf("]") != -1)
                 {
                     obrk--;
@@ -3359,7 +3433,6 @@ namespace com.middlemind.JsonPL
                         }
                     }
 
-                    //this.wr("___________________________________:NewBracket: " + obrk); 
                     tt += "." + vls[k];
                     if (obrk == 0)
                     {
@@ -3378,7 +3451,6 @@ namespace com.middlemind.JsonPL
                     if (vls[k].IndexOf("[") != -1)
                     {
                         obrk++;
-                        //this.wr("___________________________________:NewBracket: " + obrk);            
                     }
                     tt += "." + vls[k];
                 }
@@ -3397,7 +3469,11 @@ namespace com.middlemind.JsonPL
                 if (nvls[k] != null)
                 {
                     vls[k] = nvls[k];
-                    //this.wr("___________________________________:::" + vls[k]);
+
+                    if (this.VERBOSE)
+                    {
+                        this.wr("processRef: path idx: " + k + " val: " + vls[k]);
+                    }
                 }
             }
 
@@ -3412,11 +3488,9 @@ namespace com.middlemind.JsonPL
             int idx = -1;
             string type = null;
 
-            //this.wr("===============================================Found entries: " + vls.length);
             for (int k = 0; k < vls.Length; k++)
             {
                 string c = vls[k];
-                //this.wr("===============================================Found entry: " + k + ", " + vls[k]);      
 
                 if (!foundSource)
                 {
@@ -3486,7 +3560,8 @@ namespace com.middlemind.JsonPL
                         tmp = new JsonObjSysBase();
                         tmp.sys = "ref";
                         tmp.val = new JsonObjSysBase();
-                        tmp.val.sys = "ref";
+                        tmp.val.sys = "val";
+                        tmp.val.type = "string";
                         tmp.val.v = nc;
 
                         tmp = this.cloneJsonObj(this.processRef(tmp, func));
@@ -3496,13 +3571,10 @@ namespace com.middlemind.JsonPL
                         }
                         else
                         {
-                            this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                            this.wr("processRef: Error 2: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
                             return null;
                         }
                     }
-
-                    //this.wr("processRef: looking for name: " + name);
-                    //this.wrObj(func.args);
 
                     if (!isFunc)
                     {
@@ -3531,9 +3603,6 @@ namespace com.middlemind.JsonPL
                         }
                     }
 
-                    //this.wr("CCC ");
-                    //this.wrObj(fnd);                
-
                     if (fnd != null)
                     {
                         type = fnd.val.type;
@@ -3547,7 +3616,7 @@ namespace com.middlemind.JsonPL
                 }
                 else if (!foundIndex)
                 {
-                    idx = this.toInt(c);
+                    string lidx = this.toStr(c);
                     JsonObjSysBase tmp = null;
 
                     //lookup use of string var here
@@ -3558,25 +3627,28 @@ namespace com.middlemind.JsonPL
                         tmp = new JsonObjSysBase();
                         tmp.sys = "ref";
                         tmp.val = new JsonObjSysBase();
-                        tmp.val.sys = "ref";
+                        tmp.val.sys = "val";
+                        tmp.val.type = "string";
                         tmp.val.v = nc;
 
-                        tmp = this.processRef(tmp, func);
+                        tmp = this.cloneJsonObj(this.processRef(tmp, func));
                         if (tmp != null && tmp.val.type.Equals("int"))
                         {
-                            idx = this.toInt(tmp.val.v + "");
+                            idx = this.toInt(tmp.val.v);
+                            lidx = this.toStr(tmp.val.v);
                         }
                         else
                         {
-                            this.wr("processRef: Error: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
+                            this.wr("processRef: Error 3: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
                             return null;
                         }
                     }
 
                     if (this.isSysObjValArray(fnd.val))
                     {
-                        if (this.isNumber(idx))
+                        if (this.isNumber(lidx))
                         {
+                            idx = this.toInt(lidx);
                             fnd = (JsonObjSysBase)(this.toArray(fnd.val.v))[idx];
                             foundIndex = true;
                         }
@@ -3584,7 +3656,7 @@ namespace com.middlemind.JsonPL
                         {
                             List<JsonObjSysBase> ar = this.toArray(fnd.val.v);
                             int len = ar.Count;
-                            string target = this.toStr(idx);
+                            string target = this.toStr(lidx);
                             for (int l = 0; l < len; l++)
                             {
                                 if (((JsonObjSysBase)ar[l]).name.Equals(target))
@@ -3603,7 +3675,6 @@ namespace com.middlemind.JsonPL
                     }
                 }
             }
-            //this.wr("processRef: exiting...");
 
             if (fnd != null)
             {
@@ -3663,8 +3734,11 @@ namespace com.middlemind.JsonPL
                 }
             }
 
-            //this.wr("processRef: Returning: ");
-            //this.wrObj(fnd);   
+            if (this.VERBOSE)
+            {
+                this.wr("processRef: Returning: ");
+                this.wrObj(fnd);
+            }
             return fnd;
         }
 
@@ -3709,7 +3783,7 @@ namespace com.middlemind.JsonPL
             {
                 s = this.toStr((int)float.Parse(s));
             }
-            return int.Parse(s + "");
+            return int.Parse(s);
         }
 
         /**
@@ -5208,6 +5282,12 @@ namespace com.middlemind.JsonPL
             JsonObjSysBase ret = null;
             bool sysFunc = false;
 
+            if (this.VERBOSE)
+            {
+                this.wr("processCall: Receiving:");
+                this.wrObj(objCall);
+            }
+
             if (!this.isSysObjCall(objCall))
             {
                 this.wr("processCall: Error: argument objRef is not a call obj");
@@ -5221,7 +5301,6 @@ namespace com.middlemind.JsonPL
 
             if (!this.isString(objCall.name) && this.isSysObjConst((JsonObjSysBase)objCall.name))
             {
-                // const");
                 if (((JsonObjSysBase)objCall.name).val.type.Equals("string"))
                 {
                     name = this.toStr(((JsonObjSysBase)objCall.name).val.v);
@@ -5230,15 +5309,10 @@ namespace com.middlemind.JsonPL
                 {
                     return null;
                 }
-                //this.wr("processCall: found const: " + name);
             }
             else if (!this.isString(objCall.name) && this.isSysObjRef((JsonObjSysBase)objCall.name))
             {
-                //this.wr("processCall: found ref");
-                //this.wrObj(objCall.name);
                 var tnm = this.processRef((JsonObjSysBase)objCall.name, func);
-                //this.wr("processCall: found ref: " + tnm);
-                //this.wrObj(tnm);
                 if (tnm != null && tnm.val.type.Equals("string"))
                 {
                     name = this.toStr(tnm.val.v);
@@ -5247,29 +5321,27 @@ namespace com.middlemind.JsonPL
                 {
                     return null;
                 }
-                //this.wr("processCall: found name: " + name);
             }
             else
             {
-                //this.wr("processCall: found string: " + objCall.name);
                 name = this.toStr(objCall.name);
             }
 
+            if (this.VERBOSE)
+            {
+                this.wr("processCall: Function Name: " + name);
+            }
 
             args = this.cloneJsonObjList(objCall.args);
             funcDef = this.findFunc(name);
-            //this.wr("processCall: found function def: " + funcDef);
-            //this.wrObj(funcDef);
 
             if (funcDef != null)
             {
-                //this.wr("processCall: AAA");
                 funcArgs = funcDef.args;
 
             }
             else
-            {
-                //this.wr("processCall: BBB"); 
+            { 
                 sysFunc = true;
                 funcDef = this.findSysFunc(name);
                 if (funcDef != null)
@@ -5403,6 +5475,16 @@ namespace com.middlemind.JsonPL
                                 lret = this.sysGetRefStr(args, func);
 
                             }
+                            else if (lname.Equals("sysGetArrayIdxRef"))
+                            {
+                                lret = this.sysGetArrayIdxRef(args, func);
+
+                            }
+                            else if (lname.Equals("sysGetArrayIdxRefStr"))
+                            {
+                                lret = this.sysGetArrayIdxRefStr(args, func);
+
+                            }
                             else if (lname.Equals("sysMalloc"))
                             {
                                 lret = this.sysMalloc(args, func);
@@ -5420,6 +5502,7 @@ namespace com.middlemind.JsonPL
                             }
                             else
                             {
+                                this.wr("processCall: Warning: system function not found, falling back to handler ");
                                 if (this.systemFunctionHandler != null)
                                 {
                                     lret = this.systemFunctionHandler.call(funcDef.fname, args, this, func);
@@ -5434,6 +5517,8 @@ namespace com.middlemind.JsonPL
                         }
                         catch (Exception e)
                         {
+                            this.wr("processCall: Error calling system function: ");
+                            this.wrErr(e);
                             lret = null;
                             err = true;
                         }
@@ -5459,22 +5544,13 @@ namespace com.middlemind.JsonPL
                         //backup default args
                         funcDef.vars_def = this.cloneJsonObjList(funcDef.vars);
                         funcDef.args_def = this.cloneJsonObjList(funcDef.args);
-
-                        //this.wr("setting args:");
-                        //this.wrObj(args);
-
                         funcDef.args = args;
 
                         //backup default ret
                         funcDef.ret_def = this.cloneJsonObj(funcDef.ret);
-                        //this.wr("processCall: CCC");
                         ret = this.processFunc(funcDef);
 
-                        //this.wr("RET_DEF");
-                        //this.wrObj(ret);
-                        //this.wrObj(funcDef.ret_def);
-
-                        if (!ret.val.type.Equals(funcDef.ret_def.type))
+                        if (ret != null && !ret.val.type.Equals(funcDef.ret_def.type))
                         {
                             this.wr("processCall: Error: function return type mismatch, return type " + ret.val.type + " expected " + funcDef.ret_def.type);
                             return null;
@@ -5485,8 +5561,12 @@ namespace com.middlemind.JsonPL
                         funcDef.args = funcDef.args_def;
                         funcDef.ret = funcDef.ret_def;
 
-                        //this.wr("processCall: Returning: ");
-                        //this.wrObj(this.getConst(ret.val.type, ret.val.v));                    
+                        if (this.VERBOSE)
+                        {
+                            this.wr("processCall: Returning:");
+                            this.wrObj(this.getConst(ret.val.type, ret.val.v));
+                        }
+
                         return this.getConst(ret.val.type, ret.val.v);
                     }
                 }

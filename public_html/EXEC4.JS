@@ -1514,12 +1514,6 @@ jsonPlState.prototype.validateSysObjExp = function (obj) {
 jsonPlState.prototype.validateSysObjCall = function (obj) {
    if (this.isSysObjCall(obj) && this.validateProperties(obj, ["sys", "name", "args"])) {
       if(obj.name !== null) {
-         
-         if (this.VERBOSE) {
-            this.wr("validateSysObjCall: logging name object");
-            this.wrObj(obj);
-         }
-
          if(!this.isString(obj.name) && !this.isSysObjConst(obj.name) && !this.isSysObjRef(obj.name)) {
             this.wr("validateSysObjCall: Error: name is of unknown object type");
             return false;
@@ -3028,10 +3022,6 @@ jsonPlState.prototype.processRef = function (objRef, func) {
       var c = vls[k];
 
       if (!foundSource) {
-         if (this.VERBOSE) {
-            this.wr("processRef: AAA");
-         }
-
          //program/class         
          if (c === '#') {
             isFunc = false;
@@ -3044,10 +3034,6 @@ jsonPlState.prototype.processRef = function (objRef, func) {
             return null;
          }
       } else if (!foundType) {
-         if (this.VERBOSE) {
-            this.wr("processRef: BBB");
-         }
-
          //program/class
          if (!isFunc) {
             if (c === 'vars') {
@@ -3071,10 +3057,6 @@ jsonPlState.prototype.processRef = function (objRef, func) {
             }
          }
       } else if (!foundName) {
-         if (this.VERBOSE) {
-            this.wr("processRef: CCC");
-         }
-
          //program/class
          name = c;
          var tmp = null;
@@ -3124,19 +3106,11 @@ jsonPlState.prototype.processRef = function (objRef, func) {
             return null;
          }
       } else if (!foundIndex) {
-         if (this.VERBOSE) {
-            this.wr("processRef: DDD");
-         }
-
          var lidx = this.toStr(c);
          tmp = null;
 
          //lookup use of string var here
          if (c.indexOf('[') === 0) {
-            if (this.VERBOSE) {
-               this.wr("processRef: DDD - 0");
-            }
-
             var nc = c.substring(1, c.length - 1);
 
             tmp = {};
@@ -3157,23 +3131,11 @@ jsonPlState.prototype.processRef = function (objRef, func) {
          }
 
          if (this.isSysObjValArray(fnd.val)) {
-            if (this.VERBOSE) {
-               this.wr("processRef: DDD - 1: " + lidx);
-            }
-
             if(this.isNumber(lidx)) {
-               if (this.VERBOSE) {
-                  this.wr("processRef: DDD - 2");
-               }
-
                idx = this.toInt(lidx);
                fnd = (this.toArray(fnd.val.v)[idx]);
                foundIndex = true;
             } else {
-               if (this.VERBOSE) {
-                  this.wr("processRef: DDD - 3");
-               }
-
                var ar = this.toArray(fnd.val.v);
                var len = ar.length;
                var target = this.toStr(lidx);
@@ -4424,9 +4386,7 @@ jsonPlState.prototype.processCall = function (objCall, func) {
             funcDef.ret = funcDef.ret_def;            
 
             if (this.VERBOSE) {
-               this.wr("processCall: Returning: AAA:");
-               this.wrObj(ret);
-               this.wr("processCall: Returning: BBB:");               
+               this.wr("processCall: Returning:");     
                this.wrObj(this.getConst(ret.val.type, ret.val.v));
             }
 
