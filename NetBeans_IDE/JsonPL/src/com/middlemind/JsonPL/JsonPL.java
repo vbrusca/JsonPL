@@ -67,7 +67,7 @@ public class JsonPL {
             //TODO: test15, test16, 
             //TODO: test17, test18, test19, test20, 
             //TODO: test21, test22, test23            
-            target = root + "test23" + ".json";
+            target = root + "test21" + ".json";
          }
 
          Logger.wrl("JsonPL: running program: " + target);
