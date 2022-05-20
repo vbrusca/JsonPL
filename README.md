@@ -14,6 +14,7 @@ Recent Updates:
 4. Synced up the Javascript, Java, and C# versions to support all 24 test programs.
 5. Ability to create new variables with system calls to mlc, malloc, and amlc, array malloc.
 6. Ability to delete variables with system calls to cln, clean.
+7. Added ability to use a server to host variable values into the languages referencing string encoding. An example can be found in test program 24 in the Javascript interpreter's cfg directory.
 
 Up Next: 
 1. A C version of the base 0.5.1 interpreter. The C version of the 0.5.1 interpreter is coming along. A lot of the base code to handle strings, lists, memory management, etc. is done and ready for testing.
@@ -21,6 +22,34 @@ Up Next:
 3. A Python version of the 0.5.1 interpreter.
 4. Adding an "imports" attribute to the class object, type of array, that stores loaded classes, @imports.class_name.vars.var_name, @imports.class_name.funcs.func_name.
 5. Step through execution and proper line number tracking.
+
+## URL Referencing:
+Now you can specify a URL that points to a server that handles the specific JSON based requests from Json PL.
+An example server can be run from the CLI using Node JS, details below, and used to host the variables pulled into the current program.
+<pre>
+{
+   "sys":"call", "name":"SYS::wr", "args":[
+      {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Ptr1 Before: "}},
+      {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/?type=get&ref=)"}},
+      {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
+   ]
+}
+</pre>
+
+An example of the expected return value format:
+<pre>
+{"type":"get","ref":"#.vars.ar1.2","error":"false","result":{"sys":"var","name":"item2","val":{"sys":"val","type":"int","v":"47"}},"message":"notice: found a variable for the information provided"}
+</pre>
+
+The location of the server in the project dirs:
+<pre>
+public_html/svr/EXEC4SVR.JS
+</pre>
+
+How to start the server from the CLI with Node JS installed and enabled:
+<pre>
+node EXEC4SVR.JS
+</pre>
 
 ## Main Sections:
 
@@ -42,20 +71,24 @@ A description of the project's current contents.
 <pre>
 JS AND HTML JsonPL Interpreter v0.5.1 Implementation: public_html
 EXEC4.JS:   The JsonPL main class and interpreter, functional.
-TEST4.HTML: An html file that tests JsonPL objects, functional.
+EXEC4.HTML: An html file that tests JsonPL objects, functional.
 
 IDE4.JS:    JsonPL IDE JS, very early stages, NOT functional.
 IDE4.HTML:  JsonPL JS, very early stages, NOT functional.
+cfg: Contains a series of isolated test programs for this version of the interpreter.
+svr: Contains an example Node JS http server that can process variable get requests from the Json PL programming language.
 </pre>
 
 <pre>
 JAVA JsonPL Interpreter v0.5.1 Implementation: NetBeans_IDE
 JsonPL:   A Java CLI implmentation of the 0.5.1 JsonPL interpreter, functional.
-**Please note that the project has/expects the working directory set to .\cfg\, the same directory as the JSON data files. Adjust your paths and working directory as needed to run the example.
+**Please note that the project has/expects the working directory set to .\cfg\, the same directory as the JSON data files. Adjust your paths and working directory as needed to run the example. Use two arguments on the CLI to run the hardcoded program name, use one argument to run that program name, use no arguments to run the base tests.
+cfg: Contains a series of isolated test programs for this version of the interpreter.
 
 C# JsonPL Interpreter v0.5.1 Implementation: VisualStudio_IDE
 JsonPL:   A C# CLI implmentation of the 0.5.1 JsonPL interpreter, functional.
-**Please note that the project expects to be run from the '\bin\Debug\netcoreapp3.1' directory. Change paths in JsonPL.cs according to your expected use to run the example.
+**Please note that the project expects to be run from the '\bin\Debug\netcoreapp3.1' directory. Change paths in JsonPL.cs according to your expected use to run the example. Use two arguments on the CLI to run the hardcoded program name, use one argument to run that program name, use no arguments to run the base tests.
+cfg: Contains a series of isolated test programs for this version of the interpreter.
 </pre>
 
 ## JsonPL General Use Case
