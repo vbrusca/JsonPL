@@ -2941,14 +2941,13 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
       this.wr("processRef: Url Start Index: " + urlStart);
    }
 
+   var nvs = null;
+   var nurl = null;
+   var npath = null;   
    if(urlStart !== -1) {
-      var nvs = null;
-      var nurl = null;
-      var npath = null;
-
       nvs = path.split("->(");
       npath = nvs[0].trim();
-      nurl = nvs[1].substring(0, nvs[1].length - 1).trim() + encodeURIComponent(npath);
+      nurl = nvs[1].substring(0, nvs[1].length - 1).trim();
 
       if (this.VERBOSE) {
          this.wr("processRef: New Path: " + npath);
@@ -2959,6 +2958,14 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
       url = nurl;
       path = npath;
    }
+
+   if(url !== null) {
+      hasUrl = true;
+   }
+
+   if (this.VERBOSE) {
+      this.wr("processRef: Has URL: " + hasUrl);
+   }   
 
    if (path.charAt(0) === '[') {
       var cnt = 0;
@@ -3136,7 +3143,7 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
             //class find name            
             if (isVars) {
                if(hasUrl) {
-                  fnd = this.processUrlFind(url);
+                  fnd = this.processUrlFind(url + encodeURIComponent("#.vars." + name));
                } else {
                   fnd = this.findVar(name, prog);
                }
@@ -3149,13 +3156,13 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
             //function find name
             if (isVars) {
                if(hasUrl) {
-                  fnd = this.processUrlFind(url);
+                  fnd = this.processUrlFind(url + encodeURIComponent("$.vars." + name));
                } else {               
                   fnd = this.findVar(name, func);
                }
             } else {
                if(hasUrl) {
-                  fnd = this.processUrlFind(url);
+                  fnd = this.processUrlFind(url + encodeURIComponent("$.args." + name));
                } else {               
                   fnd = this.findArg(name, func);
                }
