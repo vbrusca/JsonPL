@@ -31,6 +31,8 @@ function jsonPlState() {
    this.WR_PREFIX = "";
    this.objId = -1;
    this.VERBOSE = true;
+
+   this.lastProcessUrlFindPath = null;
 }
 
 /**
@@ -158,6 +160,40 @@ jsonPlState.prototype.getRef = function (type, val) {
 
    return ret;
 };
+
+/**
+ * Name: getPathAndUrlFromRef
+ * Desc: 
+ * Arg1: 
+ * Returns: 
+ */
+
+//TODO: sync
+
+jsonPlState.prototype.getPathAndUrlFromRef = function(path) {
+   this.wr("getPathAndUrlFromRef: Receiving: " + path);
+   if(this.isRefStringUrl(path)) {
+      //check for URL
+      var urlStart = path.indexOf("->(");
+      var hasUrl = false;
+
+      var nvs = null;
+      var nurl = null;
+      var npath = null;   
+      if(urlStart !== -1) {
+         nvs = path.split("->(");
+         npath = nvs[0].trim();
+         nurl = nvs[1].substring(0, nvs[1].length - 1).trim();
+         hasUrl = true;
+         this.wr("getPathAndUrlFromRef: Returning: " + nurl + ", " + npath);
+         return [nurl, npath];
+      }
+   }
+
+   this.wr("getPathAndUrlFromRef: Returning: null");
+   return null;
+};
+
 
 /**
  * Name: sysJob1
@@ -2395,6 +2431,23 @@ jsonPlState.prototype.isRefString = function (s) {
 };
 
 /**
+ * Name: isRefStringUrl
+ * Desc: Checks if the given argument is a URL reference string. 
+ * Arg1: s(some string with a valid reference value)
+ * Returns: ret(some bool, true or false)
+ */
+
+//TODO: sync
+
+jsonPlState.prototype.isRefStringUrl = function (s) {
+   var ns = this.toStr(s);
+   if (ns.indexOf("->(") !== -1) {
+      return true;
+   }
+   return false;
+};
+
+/**
  * Name: isRefStringArray
  * Desc: Checks if the given argument is an array item reference string. 
  * Arg1: s(some string with a valid array reference value)
@@ -2876,7 +2929,7 @@ jsonPlState.prototype.getSysObjType = function (obj) {
  * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
  */
 
-//TODO
+//TODO: sync
 
 jsonPlState.prototype.processUrlFind = function(url) {
    this.wr("processUrlFind: Received url: " + url);
@@ -2894,6 +2947,36 @@ jsonPlState.prototype.processUrlFind = function(url) {
       }
    } else {
       this.wr("processUrlFind: Error: bad status code received: " + xhr.status);
+   }
+   return null; 
+};
+
+/**
+ * Name: processUrlSet
+ * Desc: 
+ * Arg1: 
+ * Arg2: 
+ * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
+ */
+
+//TODO: sync
+
+jsonPlState.prototype.processUrlSet = function(url) {
+   this.wr("processUrlSet: Received url: " + url);
+   var xhr = new XMLHttpRequest();
+   xhr.open('GET', url, false);
+   xhr.send();
+
+   if (xhr.status === 200) {
+      var obj = JSON.parse(xhr.responseText);
+      if(this.toBool(obj.error) === false) {
+         return obj.result;
+      } else {
+         this.wr("processUrlSet: Error: ref request had issues: " + obj.message + ", " + xhr.responseText);
+         return null;
+      }
+   } else {
+      this.wr("processUrlSet: Error: bad status code received: " + xhr.status);
    }
    return null; 
 };
@@ -2943,7 +3026,12 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
 
    var nvs = null;
    var nurl = null;
-   var npath = null;   
+   var npath = null;
+
+   if(url === null) {
+      this.lastProcessUrlFindPath = null;
+   }
+
    if(urlStart !== -1) {
       nvs = path.split("->(");
       npath = nvs[0].trim();
@@ -3143,7 +3231,10 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
             //class find name            
             if (isVars) {
                if(hasUrl) {
-                  fnd = this.processUrlFind(url + encodeURIComponent("#.vars." + name));
+                  if(this.lastProcessUrlFindPath === null) {
+                     this.lastProcessUrlFindPath = "#.vars." + name;
+                  }
+                  fnd = this.processUrlFind(url + "?type=get&ref=" + encodeURIComponent("#.vars." + name));
                } else {
                   fnd = this.findVar(name, prog);
                }
@@ -3156,13 +3247,19 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
             //function find name
             if (isVars) {
                if(hasUrl) {
-                  fnd = this.processUrlFind(url + encodeURIComponent("$.vars." + name));
+                  if(this.lastProcessUrlFindPath === null) {
+                     this.lastProcessUrlFindPath = "$.vars." + name;
+                  }                  
+                  fnd = this.processUrlFind(url + "?type=get&ref=" + encodeURIComponent("$.vars." + name));
                } else {               
                   fnd = this.findVar(name, func);
                }
             } else {
                if(hasUrl) {
-                  fnd = this.processUrlFind(url + encodeURIComponent("$.args." + name));
+                  if(this.lastProcessUrlFindPath === null) {
+                     this.lastProcessUrlFindPath = "$.args." + name;
+                  }
+                  fnd = this.processUrlFind(url + "?type=get&ref=" + encodeURIComponent("$.args." + name));
                } else {               
                   fnd = this.findArg(name, func);
                }
@@ -3205,6 +3302,11 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
             if(this.isNumber(lidx)) {
                idx = this.toInt(lidx);
                fnd = (this.toArray(fnd.val.v)[idx]);
+
+               if(hasUrl && this.lastProcessUrlFindPath !== null) {
+                  this.lastProcessUrlFindPath += "." + idx;
+               }
+
                foundIndex = true;
             } else {
                var ar = this.toArray(fnd.val.v);
@@ -3212,6 +3314,11 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
                var target = this.toStr(lidx);
                for(var l = 0; l < len; l++) {
                   if(ar[l].name === target) {
+
+                     if(hasUrl && this.lastProcessUrlFindPath !== null) {
+                        this.lastProcessUrlFindPath += "." + target;
+                     }
+
                      fnd = ar[l];
                      foundIndex = true;
                      break;
@@ -3225,6 +3332,7 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
       }
    }
 
+   //clean up values, v, force to string formating
    if(fnd != null) {
       if(this.isArray(fnd.val.v) == false) {
          var ns = this.toStr(fnd.val.v);
@@ -3859,6 +3967,9 @@ jsonPlState.prototype.processFor = function (objFor, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const)}
  */
+
+//TODO: sync
+
 jsonPlState.prototype.processAsgn = function (objAsgn, func) {
    var left = null;
    var op = null;
@@ -3900,7 +4011,31 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
    //this.wr("-----------------111:");
    //this.wrObj(left);
 
+   var hasUrl = this.isRefStringUrl(left.val.v);
+   var vals = null;
+   var url = null;
+   var path = null;
+
+   if(hasUrl) {
+      vals = this.getPathAndUrlFromRef(left.val.v);
+   }
+
    left = this.processRef(left, func);
+
+   if(this.VERBOSE) {
+      this.wr("processAsgn: HasUrl: " + hasUrl);      
+   }
+
+   if(hasUrl) {
+      path = this.lastProcessUrlFindPath;
+      url = vals[0];
+
+      if(this.VERBOSE) {
+         this.wr("processAsgn: Path: " + path);
+         this.wr("processAsgn: Url: " + url);
+      }
+   }
+
    if (left === null) {
       this.wr("processAsgn: Error: error processing left");
       return null;
@@ -3966,7 +4101,13 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
    if (left.val.type === right.val.type) {
       if (leftIsBasic && rightIsBasic) {
          //both are basic, dereference if need be, and copy value
-         left.val.v = right.val.v;
+         if(hasUrl) {
+            //url, path, obj
+            //?type=set&ref=   &cat=   &obj=
+            this.processUrlSet(url + "?type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(right.val.v));
+         } else {
+            left.val.v = right.val.v;
+         }
 
          //this.wr("-----left after:");
          //this.wrObj(left);
@@ -3978,7 +4119,12 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
          return ret;
       } else if (leftIsArray && rightIsArray && rightIsRef) {
          //both are array refs, dereference if need be, and copy reference
-         left.val.v = right.val.v;
+         if(hasUrl) {
+            //url, path, obj
+            this.processUrlSet(url + "?type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(right.val.v));
+         } else {
+            left.val.v = right.val.v;
+         }
 
          //this.wr("-----left after:");
          //this.wrObj(left);
@@ -3996,7 +4142,13 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
          for (var i = 0; i < tmpB.size(); i++) {
             tmpA.push(tmpB[i]);
          }
-         left.val.v = tmpA;
+
+         if(hasUrl) {
+            //url, path, obj
+            this.processUrlSet(url + encodeURIComponent(path) + "&cat=array&obj=" + encodeURIComponent(tmpA));            
+         } else {         
+            left.val.v = tmpA;
+         }
 
          //this.wr("-----left after:");
          //this.wrObj(left);
