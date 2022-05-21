@@ -1,20 +1,21 @@
-# JsonPL Version 0.5.1 - The Json Programming Language? Job Control Language? Scripting Language?
+# JsonPL Version 0.5.1 - The Json Programming Language
 
-JsonPL the language that nobody yet needs but is good for the following:
+JsonPL is good for the following:
 
 1. Learning about programming languages: Because JSON is a structured object notation we don't have to worry about lexers, tokeners, etc., we can work directly with the loaded object structure simplifying the logic one has to learn to understand what the code is doing.
 2. Cross platform code examples: There are interpreters written in 3 languages currently, with a fourth on the way. This gives you a great source of cross-platform coding examples and how to overcome inherent differences in programming languages to maintain a ubiquitous code base.
 3. Fun to play around with. Try connecting it to AJAX calls and using it as a job control language. Add your own functionality.
 4. Run on any interpreter: Because the code is in JSON object notation the same code can be run on any properly working interpreter so long as the same system level functions are defined in the interpreter or added system method callback event handler. The function signatures also must be the same, these are stored in the class object's system attribute under the key functions.
+5. Create highly distributed programs using the replacement preprocessor and URL based variable referencing.
 
 Recent Updates:
 1. Finished support for the use of arrays. You can now create arrays of one data type, strict = true, and arrays of multiple data types, strict = false. You cannot create arrays of arrays at this point.
 2. Added support for de-referencing values passed from function calls.
 3. Added support for a for-each loop that takes a reference to an array as an argument to define the start and stop values.
-4. Synced up the Javascript, Java, and C# versions to support all 24 test programs.
+4. Synced up the Javascript, Java, and C# versions to support all 25 test programs.
 5. Ability to create new variables with system calls to mlc, malloc, and amlc, array malloc.
 6. Ability to delete variables with system calls to cln, clean.
-7. Added ability to use a server to host variable values into the languages referencing string encoding. An example can be found in test program 24 in the Javascript interpreter's cfg directory.
+7. Added ability to use a server to host variable values into the languages referencing string encoding. An example can be found in test program 24 in the Javascript, Java, and C# interpreter's cfg directory. Requires the Node JS server, public_html/svr/EXEC4SVR.JS running on the URL specified in test program 24.
 
 Up Next: 
 1. A C version of the base 0.5.1 interpreter. The C version of the 0.5.1 interpreter is coming along. A lot of the base code to handle strings, lists, memory management, etc. is done and ready for testing.
@@ -22,6 +23,7 @@ Up Next:
 3. A Python version of the 0.5.1 interpreter.
 4. Adding an "imports" attribute to the class object, type of array, that stores loaded classes, @imports.class_name.vars.var_name, @imports.class_name.funcs.func_name.
 5. Step through execution and proper line number tracking.
+6. Use of URLs with the asgn, left ref attribute, support setting the value of remote variables.
 
 ## URL Referencing:
 Now you can specify a URL that points to a server that handles the specific JSON based requests from Json PL.
@@ -38,7 +40,8 @@ An example server can be run from the CLI using Node JS, details below, and used
 
 An example of the expected return value format:
 <pre>
-{"type":"get","ref":"#.vars.ar1.2","error":"false","result":{"sys":"var","name":"item2","val":{"sys":"val","type":"int","v":"47"}},"message":"notice: found a variable for the information provided"}
+//Note that the 'ref' attribute from the get string becomes the 'path' attribute on the way back.
+{"type":"get","path":"#.vars.ar1.2","error":"false","result":{"sys":"var","name":"item2","val":{"sys":"val","type":"int","v":"47"}},"message":"notice: found a variable for the information provided"}
 </pre>
 
 The location of the server in the project dirs:
@@ -49,6 +52,7 @@ public_html/svr/EXEC4SVR.JS
 How to start the server from the CLI with Node JS installed and enabled:
 <pre>
 node EXEC4SVR.JS
+Server is running on http://localhost:8000
 </pre>
 
 ## Main Sections:
