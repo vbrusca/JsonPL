@@ -64,10 +64,7 @@ public class JsonPL {
          String json = null;
 
          if (args.length == 2) {
-            //TODO: test15, test16, 
-            //TODO: test17, test18, test19, test20, 
-            //TODO: test21, test22, test23            
-            target = root + "test21" + ".json";
+            target = root + "test24" + ".json";
          }
 
          Logger.wrl("JsonPL: running program: " + target);
@@ -91,6 +88,9 @@ public class JsonPL {
 
          ldr = new LoaderSysBase();
          jpl = new JsonPlState();
+         
+         //jpl.processUrlFind("http://localhost:8000/?type=get&ref=%23.vars.ar1.2");
+         
          res = null;
          tmp = null;
          tmpJson = null;

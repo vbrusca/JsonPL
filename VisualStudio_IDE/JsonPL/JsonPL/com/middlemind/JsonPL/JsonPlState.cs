@@ -8,6 +8,9 @@ using System.Collections;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 using com.middlemind.JsonPL.Loaders;
+using System.Net;
+using System.IO;
+using System.Web;
 
 /**
 * JSON Programming Language
@@ -3321,6 +3324,55 @@ namespace com.middlemind.JsonPL
 
 
         /////////////////////////PROCESS METHODS
+        /*
+         * From: https://zetcode.com/csharp/getpostrequest/
+         * Name: processUrlFind
+         * Desc: 
+         * Arg1: 
+         * Arg2: 
+         * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
+         */
+        public JsonObjSysBase processUrlFind(String url)
+        {
+            this.wr("processUrlFind: Received url: " + url);
+            try
+            {
+                var request = WebRequest.Create(url);
+                request.Method = "GET";
+
+                using var webResponse = request.GetResponse();
+                using var webStream = webResponse.GetResponseStream();
+
+                using var reader = new StreamReader(webStream);
+                string responseText = reader.ReadToEnd();
+
+                if (!Utils.IsStringEmpty(responseText))
+                {
+                    LoaderSvrBase ldr = new LoaderSvrBase();
+                    JsonObjSvrBase obj = (JsonObjSvrBase)ldr.ParseJson(responseText, "com.middlemind.JsonPL.JsonObjs.JsonObjSvrBase");
+                    if (this.toBool(obj.error) == false)
+                    {
+                        return obj.result;
+                    }
+                    else
+                    {
+                        this.wr("processUrlFind: Error: ref request had issues: " + obj.message + ", " + responseText);
+                        return null;
+                    }
+                }
+                else
+                {
+                    this.wr("processUrlFind: Error: bad response received");
+                }
+            }
+            catch (Exception e)
+            {
+                this.wr("processUrlFind: Error: exception caught processing request");
+                this.wrErr(e);
+            }
+            return null;
+        }
+
         /**
         * Name: processRef 
         * Desc: Processes a class var or func var or arg reference string. 
@@ -3329,6 +3381,11 @@ namespace com.middlemind.JsonPL
         * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
         */
         public JsonObjSysBase processRef(JsonObjSysBase objRef, JsonObjSysBase func)
+        {
+            return processRef(objRef, func, null);
+        }
+
+        public JsonObjSysBase processRef(JsonObjSysBase objRef, JsonObjSysBase func, string url)
         {
             string path = null;
             string[] vls = null;
@@ -3357,6 +3414,45 @@ namespace com.middlemind.JsonPL
             if (this.VERBOSE)
             {
                 this.wr("processRef: Initial Path: " + path);
+            }
+
+            //check for URL
+            int urlStart = path.IndexOf("->(");
+            bool hasUrl = false;
+
+            if (this.VERBOSE)
+            {
+                this.wr("processRef: Url Start Index: " + urlStart);
+            }
+
+            string[] nvs = null;
+            string nurl = null;
+            string npath = null;
+            if (urlStart != -1)
+            {
+                nvs = path.Split("->(");
+                npath = nvs[0].Trim();
+                nurl = nvs[1].Substring(0, nvs[1].Length - 1).Trim();
+
+                if (this.VERBOSE)
+                {
+                    this.wr("processRef: New Path: " + npath);
+                    this.wr("processRef: New URL: " + nurl);
+                }
+
+                hasUrl = true;
+                url = nurl;
+                path = npath;
+            }
+
+            if (url != null && !Utils.IsStringEmpty(url))
+            {
+                hasUrl = true;
+            }
+
+            if (this.VERBOSE)
+            {
+                this.wr("processRef: Has URL: " + hasUrl);
             }
 
             if (path.ToCharArray()[0] == '[')
@@ -3398,7 +3494,7 @@ namespace com.middlemind.JsonPL
                     this.wrObj(tmp);
                 }
 
-                tmp = this.cloneJsonObj(this.processRef(tmp, func));
+                tmp = this.cloneJsonObj(this.processRef(tmp, func, url));
                 if (path.Length >= i)
                 {
                     tmp.val.v += path.Substring(i);
@@ -3573,7 +3669,7 @@ namespace com.middlemind.JsonPL
                         tmp.val.type = "string";
                         tmp.val.v = nc;
 
-                        tmp = this.cloneJsonObj(this.processRef(tmp, func));
+                        tmp = this.cloneJsonObj(this.processRef(tmp, func, url));
                         if (tmp != null && tmp.val.type.Equals("string"))
                         {
                             name = this.toStr(tmp.val.v + "");
@@ -3590,7 +3686,22 @@ namespace com.middlemind.JsonPL
                         //class find name            
                         if (isVars)
                         {
-                            fnd = this.findVar(name, prog);
+                            if (hasUrl)
+                            {
+                                try
+                                {
+                                    fnd = this.processUrlFind(url + HttpUtility.UrlEncode("#.vars." + name));
+                                }
+                                catch (Exception e)
+                                {
+                                    this.wrErr(e);
+                                    fnd = null;
+                                }
+                            }
+                            else
+                            {
+                                fnd = this.findVar(name, prog);
+                            }
                         }
                         else
                         {
@@ -3604,11 +3715,41 @@ namespace com.middlemind.JsonPL
                         //function find name
                         if (isVars)
                         {
-                            fnd = this.findVar(name, func);
+                            if (hasUrl)
+                            {
+                                try
+                                {
+                                    fnd = this.processUrlFind(url + HttpUtility.UrlEncode("$.vars." + name));
+                                }
+                                catch (Exception e)
+                                {
+                                    this.wrErr(e);
+                                    fnd = null;
+                                }
+                            }
+                            else
+                            {
+                                fnd = this.findVar(name, func);
+                            }
                         }
                         else
                         {
-                            fnd = this.findArg(name, func);
+                            if (hasUrl)
+                            {
+                                try
+                                {
+                                    fnd = this.processUrlFind(url + HttpUtility.UrlEncode("$.args." + name));
+                                }
+                                catch (Exception e)
+                                {
+                                    this.wrErr(e);
+                                    fnd = null;
+                                }
+                            }
+                            else
+                            {
+                                fnd = this.findArg(name, func);
+                            }
                         }
                     }
 
@@ -3640,7 +3781,7 @@ namespace com.middlemind.JsonPL
                         tmp.val.type = "string";
                         tmp.val.v = nc;
 
-                        tmp = this.cloneJsonObj(this.processRef(tmp, func));
+                        tmp = this.cloneJsonObj(this.processRef(tmp, func, url));
                         if (tmp != null && tmp.val.type.Equals("int"))
                         {
                             idx = this.toInt(tmp.val.v);
@@ -3836,7 +3977,7 @@ namespace com.middlemind.JsonPL
         {
             this.wr("processLinkedTreeMap: " + t.ToString());
             LoaderSysBase ldr = new LoaderSysBase();
-            JsonObjSysBase obj  = ldr.ParseJson(t.ToString(), "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+            JsonObjSysBase obj  = (JsonObjSysBase)ldr.ParseJson(t.ToString(), "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
             return obj;
         }
 

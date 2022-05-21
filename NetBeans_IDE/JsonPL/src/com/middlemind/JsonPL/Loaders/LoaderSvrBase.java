@@ -3,7 +3,7 @@ package com.middlemind.JsonPL.Loaders;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.middlemind.JsonPL.Exceptions.ExceptionLoader;
-import com.middlemind.JsonPL.JsonObjs.JsonObjSysBase;
+import com.middlemind.JsonPL.JsonObjs.JsonObjSvrBase;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -11,13 +11,13 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @author Victor G. Brusca, Middlemind Games 07/30/2021 8:35 AM EST
  */
-public class LoaderSysBase implements Loader {
+public class LoaderSvrBase implements Loader {
 
    /**
     * A string representing the name of this class. This is used to define the
     * class in JSON output files.
     */
-   public String obj_name = "LoaderSysBase";
+   public String obj_name = "LoaderSvrBase";
 
    /**
     * A method used to parse and load JSON data files.
@@ -30,13 +30,13 @@ public class LoaderSysBase implements Loader {
     * the JSON data load.
     */
    @Override
-   public JsonObjSysBase ParseJson(String json, String targetClass) throws ExceptionLoader {
+   public JsonObjSvrBase ParseJson(String json, String targetClass) throws ExceptionLoader {
       GsonBuilder builder = new GsonBuilder();
       builder.setPrettyPrinting();
 
       Gson gson = builder.create();
       try {
-         JsonObjSysBase jsonObj = (JsonObjSysBase) Class.forName(targetClass).getConstructor().newInstance();
+         JsonObjSvrBase jsonObj = (JsonObjSvrBase) Class.forName(targetClass).getConstructor().newInstance();
          jsonObj = gson.fromJson(json, jsonObj.getClass());
 
          //jsonObj.obj_name = targetClass;

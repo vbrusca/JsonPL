@@ -77,7 +77,7 @@ const requestListener = function (req, res) {
             var idx = null;
 
             ret.type = type;
-            ret.ref = val;
+            ret.path = val;
 
             console.log("Root: " + val);
 
@@ -184,9 +184,12 @@ const requestListener = function (req, res) {
                     if(isVar) {
                         //vars
                         idx = vals[3];
+                        console.log("AAA");
                         if(isString(idx) && !isNumber(idx)) {
+                            console.log("BBB");
                             fnd = findArrayItmByName(fnd, idx);
-                        } else if(isNumber(idx) && this.isInteger(idx)) {
+                        } else if(isNumber(idx) && isInteger(idx)) {
+                            console.log("CCC: " + idx + ", " + JSON.stringify(fnd));
                             fnd = findArrayItmByIdx(fnd, idx);
                         } else {
                             //return error: unsupported array index type only index or name is supported
@@ -291,7 +294,7 @@ const requestListener = function (req, res) {
  */
 findArrayItmByName = function(fnd, name) {
     var len = 0;
-    var data = fnd;
+    var data = fnd.val.v;
     var ret = null;
 
     if(data !== null) {
@@ -315,13 +318,13 @@ findArrayItmByName = function(fnd, name) {
  */
 findArrayItmByIdx = function(fnd, idx) {
     var len = 0;
-    var data = fnd;
+    var data = fnd.val.v;
     var ret = null;
 
     if(data !== null) {
         len = data.length;
         for(var i = 0; i < len; i++) {
-            if(i === idx) {
+            if(i === this.toInt(idx)) {
                 ret = data[i];
                 break;
             }

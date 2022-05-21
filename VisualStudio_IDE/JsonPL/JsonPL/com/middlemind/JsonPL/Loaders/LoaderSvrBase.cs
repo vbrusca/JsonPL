@@ -12,14 +12,14 @@ namespace com.middlemind.JsonPL.Loaders
     *
     * @author Victor G. Brusca, Middlemind Games 07/30/2021 8:35 AM EST
     */
-    public class LoaderSysBase : Loader
+    public class LoaderSvrBase : Loader
     {
 
         /**
         * A string representing the name of this class. This is used to define the
         * class in JSON output files.
         */
-        public string obj_name = "LoaderSysBase";
+        public string obj_name = "LoaderSvrBase";
 
         /**
         * A method used to parse and load JSON data files.
@@ -38,10 +38,10 @@ namespace com.middlemind.JsonPL.Loaders
             try
             {
                 type = Type.GetType(targetClass);
-                JsonObjSysBase jsonObj = (JsonObjSysBase)Activator.CreateInstance(type);
+                JsonObjSvrBase jsonObj = (JsonObjSvrBase)Activator.CreateInstance(type);
 
                 //jsonObj = JsonSerializer.Deserialize<JsonObjSysBase>(json, opts);
-                jsonObj = JsonConvert.DeserializeObject<JsonObjSysBase>(json);
+                jsonObj = JsonConvert.DeserializeObject<JsonObjSvrBase>(json);
                 //Logger.wrl("Json: " + json);
 
                 //jsonObj.obj_name = targetClass;

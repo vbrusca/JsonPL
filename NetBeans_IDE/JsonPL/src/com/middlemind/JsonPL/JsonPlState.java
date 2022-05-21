@@ -1,9 +1,16 @@
 package com.middlemind.JsonPL;
 
 import com.google.gson.internal.LinkedTreeMap;
+import com.middlemind.JsonPL.JsonObjs.JsonObjSvrBase;
 import com.middlemind.JsonPL.JsonObjs.JsonObjSysBase;
+import com.middlemind.JsonPL.Loaders.LoaderSvrBase;
 import com.middlemind.JsonPL.Loaders.LoaderSysBase;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -313,9 +320,9 @@ public class JsonPlState {
 
             this.wr("runProgram: Results: ");
             this.wrObj(ret);
-            
+
             long duration = System.currentTimeMillis() - start;
-            this.wr("runProgram: Execution time: " + duration/1000.0 + "s"); 
+            this.wr("runProgram: Execution time: " + duration / 1000.0 + "s");
             return ret;
         } else {
             this.wr("runProgram: Error: could not validate the class object.");
@@ -323,7 +330,6 @@ public class JsonPlState {
         }
     }
 
-    
     /////////////////////////SEARCH METHODS
     /*
      * Name: findArg 
@@ -407,7 +413,6 @@ public class JsonPlState {
         return null;
     }
 
-    
     /////////////////////////VALIDATION METHODS
     /*
      * Name: validateSysObjIf 
@@ -2278,11 +2283,11 @@ public class JsonPlState {
         }
 
         if (arg == null) {
-            return false;            
+            return false;
         } else if (arg instanceof Boolean) {
             return true;
         } else if (isBlStr) {
-            return true;            
+            return true;
         } else if (this.isInteger(arg) && (int) arg == 1 || (float) arg == 0) {
             return true;
         } else if (this.isFloat(arg) && (float) arg == 1.0 || (float) arg == 0.0) {
@@ -2609,6 +2614,56 @@ public class JsonPlState {
 
     /////////////////////////PROCESS METHODS
     /*
+     * Name: processUrlFind
+     * Desc: 
+     * Arg1: 
+     * Arg2: 
+     * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
+     */    
+    //URLEncoder.encode(entry.getKey(), "UTF-8")    
+    public JsonObjSysBase processUrlFind(String url) {
+        this.wr("processUrlFind: Received url: " + url);
+        try {
+            URL lurl = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) lurl.openConnection();
+            con.setRequestMethod("GET");            
+            //con.setRequestProperty("Content-Type", "application/json");
+            
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);            
+            con.setInstanceFollowRedirects(false);
+            
+            int status = con.getResponseCode();
+            if(status == 200) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer content = new StringBuffer();
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
+                in.close();
+                con.disconnect();
+                String responseText = content.toString();
+                
+                LoaderSvrBase ldr = new LoaderSvrBase();
+                JsonObjSvrBase obj = ldr.ParseJson(responseText, "com.middlemind.JsonPL.JsonObjs.JsonObjSvrBase");                
+                if (this.toBool(obj.error) == false) {
+                    return obj.result;
+                } else {
+                    this.wr("processUrlFind: Error: ref request had issues: " + obj.message + ", " + responseText);
+                    return null;
+                }                
+            } else {
+                this.wr("processUrlFind: Error: bad status code received: " + status);
+            }
+        } catch(Exception e) {
+            this.wr("processUrlFind: Error: exception caught processing request");
+            this.wrErr(e);            
+        }
+        return null;
+    }
+
+    /*
      * Name: processRef 
      * Desc: Processes a class var or func var or arg reference string. 
      * Arg1: objRef(string ref encoding) 
@@ -2617,6 +2672,10 @@ public class JsonPlState {
      */
     @SuppressWarnings("IndexOfReplaceableByContains")
     public JsonObjSysBase processRef(JsonObjSysBase objRef, JsonObjSysBase func) {
+        return processRef(objRef, func, null);
+    } 
+    
+    public JsonObjSysBase processRef(JsonObjSysBase objRef, JsonObjSysBase func, String url) {
         String path = null;
         String[] vls = null;
         JsonObjSysBase fnd = null;
@@ -2641,6 +2700,40 @@ public class JsonPlState {
             this.wr("processRef: Initial Path: " + path);
         }
 
+        //check for URL
+        int urlStart = path.indexOf("->(");
+        boolean hasUrl = false;
+
+        if (this.VERBOSE) {
+           this.wr("processRef: Url Start Index: " + urlStart);
+        }
+
+        String[] nvs = null;
+        String nurl = null;
+        String npath = null;   
+        if(urlStart != -1) {
+           nvs = path.split("->\\(");
+           npath = nvs[0].trim();
+           nurl = nvs[1].substring(0, nvs[1].length() - 1).trim();
+
+           if (this.VERBOSE) {
+              this.wr("processRef: New Path: " + npath);
+              this.wr("processRef: New URL: " + nurl);         
+           }
+
+           hasUrl = true;
+           url = nurl;
+           path = npath;
+        }
+
+        if(url != null && !Utils.IsStringEmpty(url)) {
+           hasUrl = true;
+        }
+
+        if (this.VERBOSE) {
+           this.wr("processRef: Has URL: " + hasUrl);
+        }         
+        
         if (path.charAt(0) == '[') {
             int cnt = 0;
             int i = 0;
@@ -2673,7 +2766,7 @@ public class JsonPlState {
                 this.wrObj(tmp);
             }
 
-            tmp = this.cloneJsonObj(this.processRef(tmp, func));
+            tmp = this.cloneJsonObj(this.processRef(tmp, func, url));
             if (path.length() >= i) {
                 tmp.val.v += path.substring(i);
             }
@@ -2803,7 +2896,7 @@ public class JsonPlState {
                     tmp.val.type = "string";
                     tmp.val.v = nc;
 
-                    tmp = this.cloneJsonObj(this.processRef(tmp, func));
+                    tmp = this.cloneJsonObj(this.processRef(tmp, func, url));
                     if (tmp != null && tmp.val.type.equals("string")) {
                         name = this.toStr(tmp.val.v);
                     } else {
@@ -2815,7 +2908,16 @@ public class JsonPlState {
                 if (!isFunc) {
                     //class find name            
                     if (isVars) {
-                        fnd = this.findVar(name, prog);
+                        if(hasUrl) {
+                            try {
+                                fnd = this.processUrlFind(url + URLEncoder.encode("#.vars." + name, "UTF-8"));
+                            } catch(Exception e) {
+                                this.wrErr(e);
+                                fnd = null;
+                            }
+                        } else {                        
+                            fnd = this.findVar(name, prog);
+                        }
                     } else {
                         this.wr("processRef: Error: could not find, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc);
                         return null;
@@ -2824,9 +2926,27 @@ public class JsonPlState {
                 } else {
                     //function find name
                     if (isVars) {
-                        fnd = this.findVar(name, func);
+                        if(hasUrl) {
+                            try {
+                                fnd = this.processUrlFind(url + URLEncoder.encode("$.vars." + name, "UTF-8"));
+                            } catch(Exception e) {
+                                this.wrErr(e);
+                                fnd = null;
+                            }                                
+                        } else {                        
+                            fnd = this.findVar(name, func);
+                        }
                     } else {
-                        fnd = this.findArg(name, func);
+                        if(hasUrl) {
+                            try {
+                                fnd = this.processUrlFind(url + URLEncoder.encode("$.args." + name, "UTF-8"));
+                            } catch(Exception e) {
+                                this.wrErr(e);
+                                fnd = null;
+                            }                                
+                        } else {                        
+                            fnd = this.findArg(name, func);
+                        }
                     }
                 }
 
@@ -2852,7 +2972,7 @@ public class JsonPlState {
                     tmp.val.type = "string";
                     tmp.val.v = nc;
 
-                    tmp = this.cloneJsonObj(this.processRef(tmp, func));
+                    tmp = this.cloneJsonObj(this.processRef(tmp, func, url));
                     if (tmp != null && tmp.val.type.equals("int")) {
                         idx = this.toInt(tmp.val.v);
                         lidx = this.toStr(tmp.val.v);
@@ -2994,20 +3114,20 @@ public class JsonPlState {
         nval = nval.replace("{", "");
         nval = nval.replace("}", "");
         String[] nvals = nval.split(",");
-        
+
         for (int j = 0; j < nvals.length; j++) {
             String lnval = nvals[j].trim();
             String[] lnvals = lnval.split("\\=");
             lnvals[0] = lnvals[0].trim();
             lnvals[1] = lnvals[1].trim();
-            
+
             if (lnvals[0].equals("type")) {
                 ret.type = lnvals[1];
             } else if (lnvals[0].equals("v")) {
                 ret.v = lnvals[1];
             }
         }
-        
+
         return ret;
     }
 
@@ -3020,7 +3140,7 @@ public class JsonPlState {
         Object[] keys = lltmp.keySet().toArray();
         String sys = lltmp.get(keys[0]) + "";
         sys = sys.trim();
-        
+
         String name = null;
         String val = null;
         JsonObjSysBase nd = null;
@@ -3028,7 +3148,7 @@ public class JsonPlState {
         if (sys.equals("const")) {
             val = lltmp.get(keys[1]) + "";
             nd = new JsonObjSysBase("const");
-            
+
             try {
                 nd.val = ldr.ParseJson(val, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
             } catch (Exception e) {
@@ -3064,7 +3184,7 @@ public class JsonPlState {
             this.wr("processLinkedTreeMap: Error: unhandled object type: " + sys);
         }
 
-        if(!this.isObject(nd.val.v)) {
+        if (!this.isObject(nd.val.v)) {
             nd.val.v = this.toStr(nd.val.v);
         }
 
@@ -3072,7 +3192,7 @@ public class JsonPlState {
             //this.wr("processLinkedTreeMap: Returning:");
             //this.wrObj(nd);
         }
-        
+
         return nd;
     }
 
@@ -3082,9 +3202,7 @@ public class JsonPlState {
      * Arg1: v(the value to convert)
      * Returns: (the array value of v)
      */
-    
     //TODO: move all arraylist to List<JsonObjSysBase>
-    
     public List<JsonObjSysBase> toArray(Object v) {
         if (this.isArray(v)) {
             ArrayList jar = (ArrayList) v;
@@ -3099,7 +3217,7 @@ public class JsonPlState {
             return al;
         } else {
             List<JsonObjSysBase> ret = new ArrayList<JsonObjSysBase>();
-            ret.add((JsonObjSysBase)v);
+            ret.add((JsonObjSysBase) v);
             return ret;
         }
     }
@@ -3205,7 +3323,6 @@ public class JsonPlState {
         //this.wrObj(left);
         //this.wr("right:");
         //this.wrObj(right);
-        
         if (left.val.type.equals(right.val.type)) {
             JsonObjSysBase ret = new JsonObjSysBase("val");
             ret.type = "bool";
@@ -3443,7 +3560,6 @@ public class JsonPlState {
 
                 //this.wr("processIfForLines:---------------------------");
                 //this.wrObj(ret);
-                
                 if (ret == null) {
                     this.wr("processIfForLines: Error: processing line returned null: " + j);
                     return null;
@@ -3612,7 +3728,6 @@ public class JsonPlState {
 
         //this.wr("processFor: BBB: " + incAmt + ", " + lenAmt + ", " + startAmt);
         //this.wrObj(stop);
-        
         for (i = startAmt; i < lenAmt; i += incAmt) {
             ret3 = this.processIfForLines(objFor.lines, func);
             if (ret3 == null) {
@@ -3675,7 +3790,6 @@ public class JsonPlState {
 
         //this.wr("-----------------111:");
         //this.wrObj(left);  
-        
         left = this.processRef(left, func);
         if (left == null) {
             this.wr("processAsgn: Error: error processing left");
@@ -3684,7 +3798,6 @@ public class JsonPlState {
 
         //this.wr("-----------------2222:");
         //this.wrObj(this.program.vars);  
-        
         if (this.isSysObjConst(right)) {
             //do nothing      
         } else if (this.isSysObjRef(right)) {
@@ -3733,10 +3846,8 @@ public class JsonPlState {
         //this.wrObj(left);
         //this.wr("-----left before 000:");
         //this.wrObj(this.program.vars);   
-        
         //this.wr("-----right before:");
         //this.wrObj(right);
-        
         if (left.val.type.equals(right.val.type)) {
             if (leftIsBasic && rightIsBasic) {
                 //both are basic, dereference if need be, and copy value
@@ -3746,7 +3857,6 @@ public class JsonPlState {
                 //this.wrObj(left);
                 //this.wr("-----left after AAA:");
                 //this.wrObj(this.program.vars);
-                
                 this.lastAsgnValue = this.cloneJsonObj(left);
                 this.lastAsgnReturn = ret;
                 return ret;
@@ -3758,7 +3868,6 @@ public class JsonPlState {
                 //this.wrObj(left);
                 //this.wr("-----left after AAA:");
                 //this.wrObj(this.program.vars);
-                
                 this.lastAsgnValue = this.cloneJsonObj(left);
                 this.lastAsgnReturn = ret;
                 return ret;
@@ -3776,7 +3885,6 @@ public class JsonPlState {
                 //this.wrObj(left);
                 //this.wr("-----left after AAA:");
                 //this.wrObj(this.program.vars); 
-                
                 this.lastAsgnValue = this.cloneJsonObj(left);
                 this.lastAsgnReturn = ret;
                 return ret;
@@ -4494,10 +4602,10 @@ public class JsonPlState {
         nsrc = nsrc.replace("\\u0026", "&");
         nsrc = nsrc.replace("\\u003d", "=");
         nsrc = nsrc.replace("\\u003e", ">");
-        
+
         nsrc = nsrc.replace("\\\\u0026", "&");
         nsrc = nsrc.replace("\\\\u003d", "=");
-        nsrc = nsrc.replace("\\\\u003e", ">");        
+        nsrc = nsrc.replace("\\\\u003e", ">");
 
         for (int i = 0; i < keys.length; i++) {
             String fnd = "@(repl::" + keys[i] + ")";
