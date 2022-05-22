@@ -2566,9 +2566,6 @@ jsonPlState.prototype.isString = function (arg) {
  * Arg1: arg(some value)
  * Returns: (true | false)
  */
-
-//TODO: sync
-
 jsonPlState.prototype.isNumber = function (arg) {
    var tmp = this.toInt(arg);
    if (arg === null) {
@@ -2943,7 +2940,7 @@ jsonPlState.prototype.processUrlFind = function(url) {
          if(this.VERBOSE) {
             this.wr("processUrlSet: Notice: found response: " + obj.message + ", " + xhr.responseText);            
          }
-                  
+
          return obj.result;
       } else {
          this.wr("processUrlFind: Error: ref request had issues: " + obj.message + ", " + xhr.responseText);
@@ -3027,6 +3024,7 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
    //check for URL
    var urlStart = path.indexOf("->(");
    var hasUrl = false;
+   var forceLocal = false;
 
    if (this.VERBOSE) {
       this.wr("processRef: Url Start Index: " + urlStart);
@@ -3063,6 +3061,12 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
       this.wr("processRef: Has URL: " + hasUrl);
    }   
 
+   if (path.charAt(0) === '<') {
+      path = path.replaceAll("<", "[");
+      path = path.replaceAll(">", "]");
+      forceLocal = true;
+   }
+
    if (path.charAt(0) === '[') {
       var cnt = 0;
       var i = 0;
@@ -3095,12 +3099,17 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
          this.wrObj(tmp);
       }
 
-      tmp = this.cloneJsonObj(this.processRef(tmp, func, url));
-      if (path.length >= i) {
-         tmp.val.v += path.substring(i);
+      if(!forceLocal) {
+         tmp = this.cloneJsonObj(this.processRef(tmp, func, url));
+      } else {
+         tmp = this.cloneJsonObj(this.processRef(tmp, func, null));         
       }
 
       if (tmp !== null) {
+         if (path.length >= i) {
+            tmp.val.v += path.substring(i);
+         }
+
          path = this.toStr(tmp.val.v);
          if(path.indexOf("[") === -1 && path.indexOf("#.") === -1 && path.indexOf("$.") === -1) {
             if (this.VERBOSE) {
@@ -4020,18 +4029,30 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
    //this.wrObj(left);
 
    var hasUrl = this.isRefStringUrl(left.val.v);
+   var hasUrlAttr = this.validateProperties(objAsgn, ["url"]);
    var vals = null;
    var url = null;
    var path = null;
 
-   if(hasUrl) {
+   if(hasUrl && !hasUrlAttr) {
+      //if inherent url is detected
       vals = this.getPathAndUrlFromRef(left.val.v);
+   } else if(hasUrlAttr) {
+      //allow url attribute to override inherent url
+      if(this.VERBOSE) {
+         this.wr("processAsgn: URL Attribute override found.");
+      }
+
+      hasUrl = true;
+      vals = [objAsgn.url, "unknown_ref_path"];
+   } else {
+      hasUrl = false;
    }
 
    left = this.processRef(left, func);
 
    if(this.VERBOSE) {
-      this.wr("processAsgn: HasUrl: " + hasUrl);      
+      this.wr("processAsgn: HasUrl: " + hasUrl + ", HasUrlAttr:" + hasUrlAttr);
    }
 
    if(hasUrl) {
@@ -4460,6 +4481,9 @@ jsonPlState.prototype.processFunc = function (objFunc) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
  */
+
+//TODO: sync
+
 jsonPlState.prototype.processCall = function (objCall, func) {
    var name = null;
    var args = null;
@@ -4603,22 +4627,28 @@ jsonPlState.prototype.processCall = function (objCall, func) {
             funcDef.ret_def = this.cloneJsonObj(funcDef.ret);
             ret = this.processFunc(funcDef);
 
-            if (ret !== null && (ret.val.type !== funcDef.ret_def.type)) {
-               this.wr("processCall: Error: function return type mismatch, return type " + ret.val.type + " expected " + funcDef.ret_def.type);
-               return null;
-            }
-
             //restore args and ret
             funcDef.vars = funcDef.vars_def;
             funcDef.args = funcDef.args_def;
-            funcDef.ret = funcDef.ret_def;            
+            funcDef.ret = funcDef.ret_def;
 
-            if (this.VERBOSE) {
-               this.wr("processCall: Returning:");     
-               this.wrObj(this.getConst(ret.val.type, ret.val.v));
+            if(ret !== null) {
+               if ((ret.val.type !== funcDef.ret_def.type)) {
+                  this.wr("processCall: Error: function return type mismatch, return type " + ret.val.type + " expected " + funcDef.ret_def.type);
+                  return null;
+               } else {
+                  var lret = this.getConst(ret.val.type, ret.val.v);
+                  if (this.VERBOSE) {
+                     this.wr("processCall: Returning:");     
+                     this.wrObj(lret);
+                  }
+      
+                  return lret;              
+               }
+            } else {
+               this.wr("processCall: Error: function returned a null value");
+               return null;
             }
-
-            return this.getConst(ret.val.type, ret.val.v);
          }
       } else {
          this.wr("processCall: Error: function argument length mismatch, func arg def: " + funcArgs.length + ", call arg: " + args.length);
