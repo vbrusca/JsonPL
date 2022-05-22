@@ -164,9 +164,6 @@ jsonPlState.prototype.getRef = function (type, val) {
  * Arg1: path(some string with a URL variable reference)
  * Returns: ret(an [] with the url, path as members)
  */
-
-//TODO: sync
-
 jsonPlState.prototype.getPathAndUrlFromRef = function(path) {
    //this.wr("getPathAndUrlFromRef: Receiving: " + path);
    if(this.isRefStringUrl(path)) {
@@ -1678,6 +1675,9 @@ jsonPlState.prototype.validateSysObjArg = function (obj) {
  *   "v": "some valid value"
  * }
  */
+
+//TODO: sync
+
 jsonPlState.prototype.validateSysObjVal = function (obj) {
    //this.wr("validateSysObjVal: Receiving: ");
    //this.wrObj(obj);   
@@ -1756,6 +1756,8 @@ jsonPlState.prototype.validateSysObjVal = function (obj) {
                skipArVer = true;
             }
 
+            //TODO: sync
+
             //array data types
             if (obj.type === "int[]") {
                if (!this.isArray(obj.v)) {
@@ -1764,7 +1766,7 @@ jsonPlState.prototype.validateSysObjVal = function (obj) {
                } else {
                   for (var i = 0; i < arrayLenActual; i++) {
                      var ltmp = tmpA[i];
-                     if (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "int")) {
+                     if (!this.isArrayType(ltmp.val.type) && (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "int"))) {
                         this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'int' but found '" + ltmp.val.type + "'");
                         return false;
                      }
@@ -1777,7 +1779,7 @@ jsonPlState.prototype.validateSysObjVal = function (obj) {
                } else {
                   for (var i = 0; i < arrayLenActual; i++) {
                      var ltmp = tmpA[i];
-                     if (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "float")) {
+                     if (!this.isArrayType(ltmp.val.type) && (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "float"))) {
                         this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'float' but found '" + ltmp.val.type + "'");
                         return false;
                      }
@@ -1790,7 +1792,7 @@ jsonPlState.prototype.validateSysObjVal = function (obj) {
                } else {
                   for (var i = 0; i < arrayLenActual; i++) {
                      var ltmp = tmpA[i];
-                     if (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "string")) {
+                     if (!this.isArrayType(ltmp.val.type) && (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "string"))) {
                         this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'string' but found '" + ltmp.val.type + "'");
                         return false;
                      }
@@ -1803,7 +1805,7 @@ jsonPlState.prototype.validateSysObjVal = function (obj) {
                } else {
                   for (var i = 0; i < arrayLenActual; i++) {
                      var ltmp = tmpA[i];
-                     if (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "bool")) { 
+                     if (!this.isArrayType(ltmp.val.type) && (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "bool"))) { 
                         this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'bool' but found '" + ltmp.val.type + "'");
                         return false;
                      }
