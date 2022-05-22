@@ -134,17 +134,22 @@ namespace com.middlemind.JsonPL.JsonObjs
         /**
         * 
         */
-        public Object active;
+        public object active;
 
         /**
         * 
         */
-        public Object len;
+        public object len;
 
         /**
         * 
         */
-        public Object strict;
+        public object strict;
+
+        /**
+         * 
+         */
+        public string url;
 
         /**
         * 

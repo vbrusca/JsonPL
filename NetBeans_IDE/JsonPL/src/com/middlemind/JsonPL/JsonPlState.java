@@ -123,7 +123,6 @@ public class JsonPlState {
     /*
     *
     */    
-    //TODO:  sync    
     public String lastProcessUrlFindPath = null;
     
     /*
@@ -256,9 +255,6 @@ public class JsonPlState {
     * Arg1: path(some string with a URL variable reference)
     * Returns: ret(an [] with the url, path as members)
     */
-    
-    //TODO: sync
-    
     public String[] getPathAndUrlFromRef(String path) {
         //this.wr("getPathAndUrlFromRef: Receiving: " + path);
         if(this.isRefStringUrl(path)) {
@@ -2124,7 +2120,7 @@ public class JsonPlState {
     
     //TODO: sync
     
-    public boolean isRefStringUrl(String s) {
+    public boolean isRefStringUrl(Object s) {
        String ns = this.toStr(s);
        if (ns.indexOf("->(") != -1) {
           return true;
@@ -2253,7 +2249,6 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
      */
-    //TODO: sync
     public boolean isNumber(Object arg) {
         if (arg == null) {
             return false;
@@ -2274,7 +2269,6 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
      */
-    //TODO: sync
     public boolean isInteger(Object arg) {
         boolean isIntStr = false;
         try {
@@ -2301,7 +2295,6 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
      */
-    //TODO: sync
     public boolean isFloat(Object arg) {
         boolean isFltStr = false;
         try {
@@ -2328,7 +2321,6 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
      */
-    //TODO: sync
     public boolean isBool(Object arg) {
         boolean isBlStr = false;
         try {
@@ -2668,6 +2660,7 @@ public class JsonPlState {
         }
     }
 
+    
     /////////////////////////PROCESS METHODS
     /*
      * Name: processUrlFind
@@ -2679,7 +2672,6 @@ public class JsonPlState {
     
     //TODO: sync
     
-    //URLEncoder.encode(entry.getKey(), "UTF-8")    
     public JsonObjSysBase processUrlFind(String url) {
         if(this.VERBOSE) {
            this.wr("processUrlFind: Received url: " + url);
@@ -2688,7 +2680,7 @@ public class JsonPlState {
         try {
             URL lurl = new URL(url);
             HttpURLConnection con = (HttpURLConnection) lurl.openConnection();
-            con.setRequestMethod("GET");            
+            con.setRequestMethod("GET");
             //con.setRequestProperty("Content-Type", "application/json");
             
             con.setConnectTimeout(5000);
@@ -2711,7 +2703,7 @@ public class JsonPlState {
                 JsonObjSvrBase obj = ldr.ParseJson(responseText, "com.middlemind.JsonPL.JsonObjs.JsonObjSvrBase");                
                 if (this.toBool(obj.error) == false) {
                     if(this.VERBOSE) {
-                       this.wr("processUrlSet: Notice: found response: " + obj.message + ", " + responseText);            
+                       this.wr("processUrlFind: Notice: found response: " + obj.message + ", " + responseText);            
                     }
                     
                     return obj.result;
@@ -2740,7 +2732,7 @@ public class JsonPlState {
     
     public JsonObjSysBase processUrlSet(String url) {    
         if(this.VERBOSE) {
-           this.wr("processUrlFind: Received url: " + url);
+           this.wr("processUrlSet: Received url: " + url);
         }
         
         try {
@@ -2774,14 +2766,14 @@ public class JsonPlState {
                     
                     return obj.result;
                 } else {
-                    this.wr("processUrlFind: Error: ref request had issues: " + obj.message + ", " + responseText);
+                    this.wr("processUrlSet: Error: ref request had issues: " + obj.message + ", " + responseText);
                     return null;
                 }                
             } else {
-                this.wr("processUrlFind: Error: bad status code received: " + status);
+                this.wr("processUrlSet: Error: bad status code received: " + status);
             }
         } catch(Exception e) {
-            this.wr("processUrlFind: Error: exception caught processing request");
+            this.wr("processUrlSet: Error: exception caught processing request");
             this.wrErr(e);            
         }
         return null;    
@@ -3075,7 +3067,7 @@ public class JsonPlState {
                             try {
                                 if(this.lastProcessUrlFindPath == null) {
                                     this.lastProcessUrlFindPath = "$.vars." + name;
-                                }                                
+                                }
                                 fnd = this.processUrlFind(url + "?type=get&ref=" + URLEncoder.encode("$.vars." + name, "UTF-8"));
                             } catch(Exception e) {
                                 this.wrErr(e);
@@ -3363,7 +3355,6 @@ public class JsonPlState {
      * Arg1: v(the value to convert)
      * Returns: (the array value of v)
      */
-    //TODO: move all arraylist to List<JsonObjSysBase>
     public List<JsonObjSysBase> toArray(Object v) {
         if (this.isArray(v)) {
             ArrayList jar = (ArrayList) v;
