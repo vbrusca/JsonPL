@@ -66,7 +66,7 @@ const requestListener = function (req, res) {
 
     if(typeof queryObj.type !== 'undefined' && typeof queryObj.ref !== 'undefined') {
         console.log("Request looks good!: " + queryObj['type'] + ", " + queryObj['ref']);
-        if(queryObj['type'] === "get") {
+        if(queryObj['type'] === "get" || queryObj['type'] === "set") {
             var type = queryObj['type'];
             var val = queryObj['ref'];
             var vals = val.split(".");
@@ -75,6 +75,11 @@ const requestListener = function (req, res) {
             var isArg = false;
             var name = null;
             var idx = null;
+            var isGet = false;
+
+            if(type === "get") {
+                isGet = true;
+            }
 
             ret.type = type;
             ret.path = val;
@@ -257,14 +262,37 @@ const requestListener = function (req, res) {
                 res.end(JSON.stringify(ret));                    
                 return;                
             } else {
-                //RETURN FOUND OBJECT
-                ret.error = "false";
-                ret.message = "notice: found a variable for the information provided";
-                ret.result = fnd;
-                //res.setHeader("Content-Type", "application/json");
-                //res.writeHead(200);
-                res.end(JSON.stringify(ret));
-                return;                
+                if(isGet) {
+                    //get
+                    //RETURN FOUND OBJECT
+                    ret.error = "false";
+                    ret.message = "notice: found a variable for the information provided";
+                    ret.result = fnd;
+                    //res.setHeader("Content-Type", "application/json");
+                    //res.writeHead(200);
+                    res.end(JSON.stringify(ret));
+                    return;
+                } else {
+                    //set
+                    var cat = queryObj['cat'];
+                    var obj = null;
+                    var lstr = null;
+                    if(cat === "basic") {
+                        fnd.val.v = queryObj['obj'];
+                        lstr = queryObj['obj'];
+                    } else {
+                        fnd.val.v = JSON.parse(queryObj['obj']);
+                        lstr = "an array sys obj"
+                    }
+                    
+                    ret.error = "false";
+                    ret.message = "notice: updated the variable, " + val + ", with the specified value, " + lstr;
+                    ret.result = {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}};
+                    //res.setHeader("Content-Type", "application/json");
+                    //res.writeHead(200);
+                    res.end(JSON.stringify(ret));
+                    return;                  
+                }                
             }
         } else {
             //return error: unsupported request type, + queryObj['type']

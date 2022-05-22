@@ -2940,6 +2940,10 @@ jsonPlState.prototype.processUrlFind = function(url) {
    if (xhr.status === 200) {
       var obj = JSON.parse(xhr.responseText);
       if(this.toBool(obj.error) === false) {
+         if(this.VERBOSE) {
+            this.wr("processUrlSet: Notice: found response: " + obj.message + ", " + xhr.responseText);            
+         }
+                  
          return obj.result;
       } else {
          this.wr("processUrlFind: Error: ref request had issues: " + obj.message + ", " + xhr.responseText);
@@ -2970,6 +2974,10 @@ jsonPlState.prototype.processUrlSet = function(url) {
    if (xhr.status === 200) {
       var obj = JSON.parse(xhr.responseText);
       if(this.toBool(obj.error) === false) {
+         if(this.VERBOSE) {
+            this.wr("processUrlSet: Notice: found response: " + obj.message + ", " + xhr.responseText);            
+         }
+
          return obj.result;
       } else {
          this.wr("processUrlSet: Error: ref request had issues: " + obj.message + ", " + xhr.responseText);
