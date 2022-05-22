@@ -147,6 +147,11 @@ public class JsonObjSysBase extends JsonObjBase {
    public Boolean strict;
 
    /**
+    * 
+    */
+   public String url;
+   
+   /**
     *
     * @return
     */
@@ -286,6 +291,11 @@ public class JsonObjSysBase extends JsonObjBase {
       ret.active = this.active;
       ret.len = this.len;
       ret.strict = this.strict;
+      
+      if (this.url != null) {
+         ret.url = new String(this.url.getBytes());
+      }      
+      
       return ret;
    }
 

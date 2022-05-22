@@ -2,6 +2,7 @@
     "sys":"class", "name":"test24",
     "call":{"sys":"call", "name":"main", "args":[]},
     "vars":[
+       {"sys":"var", "name":"ptr1", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1.1"}}
     ],
     "funcs":[
        {"sys":"func", "name":"main",
@@ -15,17 +16,42 @@
              {
                 "sys":"call", "name":"SYS::wr", "args":[
                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Ptr1 Before: "}},
-                   {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/?type=get&ref=)"}},
+                   {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/)"}},
                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
                 ]
              },
              {
+                "sys":"asgn",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/)"}},
+                "op":{"sys":"op", "type":"asgn", "v":"="},
+                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"200"}}
+             },
+             {
+                "sys":"asgn",
+                "url":"http://localhost:8000/",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/)"}},
+                "op":{"sys":"op", "type":"asgn", "v":"="},
+                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"200"}}
+             },
+             {
+                "sys":"asgn",
+                "url":"http://localhost:8000/",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.1->(http://localhost:8000/)"}},
+                "op":{"sys":"op", "type":"asgn", "v":"="},
+                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"200"}}
+             },
+             {
+                "sys":"asgn",
+                "url":"http://localhost:8000/",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"<#.vars.ptr1>->(http://localhost:8000/)"}},
+                "op":{"sys":"op", "type":"asgn", "v":"="},
+                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"200"}}
+             },                     
+             {
                 "sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}
              }
-
           ]
        }
-
     ],
     "ret":{"sys":"val", "type":"bool", "v":"false"}
 }

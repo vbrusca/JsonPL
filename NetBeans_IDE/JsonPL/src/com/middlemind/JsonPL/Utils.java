@@ -62,6 +62,34 @@ public class Utils {
 
         Logger.wr(jsonString);
     }
+    
+    /**
+     * A static method used to convert the specified object to a JSON string.
+     *
+     * @param obj The object to be converted and written in JSON format.
+     * @param name The name of the object that's being written in JSON format.
+     */
+    
+    //TODO: sync
+    
+    public static String JSONstringify(Object obj) {
+        GsonBuilder builder = new GsonBuilder();
+        //builder.setPrettyPrinting();
+        Gson gson = builder.create();
+        String jsonString = gson.toJson(obj);
+
+        //clean = chars
+        jsonString = jsonString.replaceAll("\\u0026", "&");
+        jsonString = jsonString.replaceAll("\\u003d", "=");
+        jsonString = jsonString.replaceAll("\\u003e", ">");
+
+        jsonString = jsonString.replaceAll("\\\\u0026", "&");
+        jsonString = jsonString.replaceAll("\\\\u003d", "=");
+        jsonString = jsonString.replaceAll("\\\\u003e", ">");
+
+        //Logger.wr(jsonString);
+        return jsonString;
+    }
 
     /**
      * A static method used to check if a string is empty or not.

@@ -69,7 +69,10 @@ const requestListener = function (req, res) {
         if(queryObj['type'] === "get" || queryObj['type'] === "set") {
             var type = queryObj['type'];
             var val = queryObj['ref'];
-            var vals = val.split(".");
+            var vals = [];
+            if(vals !== null) {
+                vals = toStr(val).split(".");
+            }
             var isClass = false;
             var isVar = false;
             var isArg = false;

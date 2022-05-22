@@ -32,97 +32,103 @@ public class JsonPlState {
 
     /*
     *
-     */
+    */
     public String version = "0.5.1";
 
     /*
     *
-     */
+    */
     public int lineNumCurrent = 0;
 
     /*
     *
-     */
+    */
     public int lineNumPrev = 0;
 
     /*
     *
-     */
+    */
     public int linNumNext = 0;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastForReturn = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastIfReturn = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastBexReturn = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastExpReturn = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastAsgnReturn = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastAsgnValue = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastProgramReturn = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase program = null;
 
     /*
     *
-     */
+    */
     public boolean LOGGING = true;
 
     /*
     *
-     */
+    */
     public String WR_PREFIX = "";
 
     /*
     * 
-     */
+    */
     public int objId = -1;
 
     /*
-   *
-     */
+    *
+    */
     public boolean VERBOSE = true;
 
     /*
     *
-     */
+    */
     public Hashtable<String, List<JsonObjSysBase>> system;
 
     /*
     *
-     */
+    */
     public SystemFunctionHandlerJpl systemFunctionHandler = null;
 
     /*
+    *
+    */    
+    //TODO:  sync    
+    public String lastProcessUrlFindPath = null;
+    
+    /*
     * Generic class constructor.
-     */
+    */
     public JsonPlState() {
         List<JsonObjSysBase> sfuncs = new ArrayList<>();
         system = new Hashtable<>();
@@ -136,7 +142,7 @@ public class JsonPlState {
     * Arg2: func(the {func} this system function is called from) 
     * Arg3: sep(an optional string separator) 
     * Returns: const(a {const} bool object) 
-     */
+    */
     public JsonObjSysBase sysWr(List<JsonObjSysBase> args, JsonObjSysBase func, String sep) throws Exception {
         int len = args.size();
         int i = 0;
@@ -244,6 +250,39 @@ public class JsonPlState {
         return ret;
     }
 
+    /*
+    * Name: getPathAndUrlFromRef
+    * Desc: A function to get the reference path string and the target URL from a URL variable reference.
+    * Arg1: path(some string with a URL variable reference)
+    * Returns: ret(an [] with the url, path as members)
+    */
+    
+    //TODO: sync
+    
+    public String[] getPathAndUrlFromRef(String path) {
+        //this.wr("getPathAndUrlFromRef: Receiving: " + path);
+        if(this.isRefStringUrl(path)) {
+           //check for URL
+           int urlStart = path.indexOf("->(");
+           boolean hasUrl = false;
+
+           String[] nvs = null;
+           String nurl = null;
+           String npath = null;   
+           if(urlStart != -1) {
+              nvs = path.split("->\\(");
+              npath = nvs[0].trim();
+              nurl = nvs[1].substring(0, nvs[1].length() - 1).trim();
+              hasUrl = true;
+              //this.wr("getPathAndUrlFromRef: Returning: " + nurl + ", " + npath);
+              return new String[] {nurl, npath};
+           }
+        }
+
+        //this.wr("getPathAndUrlFromRef: Returning: null");
+        return null;        
+    }
+    
     /*
      * Name: sysJob1 
      * Desc: A system level job method used to demonstrate JCL.
@@ -2077,6 +2116,23 @@ public class JsonPlState {
     }
 
     /*
+     * Name: isRefStringUrl
+     * Desc: Checks if the given argument is a URL reference string. 
+     * Arg1: s(some string with a valid reference value)
+     * Returns: ret(some bool, true or false)
+     */
+    
+    //TODO: sync
+    
+    public boolean isRefStringUrl(String s) {
+       String ns = this.toStr(s);
+       if (ns.indexOf("->(") != -1) {
+          return true;
+       }
+       return false;
+    }
+    
+    /*
      * Name: isRefStringArray
      * Desc: Checks if the given argument is an array item reference string. 
      * Arg1: s(some string with a valid array reference value)
@@ -2619,10 +2675,16 @@ public class JsonPlState {
      * Arg1: 
      * Arg2: 
      * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
-     */    
+     */
+    
+    //TODO: sync
+    
     //URLEncoder.encode(entry.getKey(), "UTF-8")    
     public JsonObjSysBase processUrlFind(String url) {
-        this.wr("processUrlFind: Received url: " + url);
+        if(this.VERBOSE) {
+           this.wr("processUrlFind: Received url: " + url);
+        }
+        
         try {
             URL lurl = new URL(url);
             HttpURLConnection con = (HttpURLConnection) lurl.openConnection();
@@ -2648,6 +2710,10 @@ public class JsonPlState {
                 LoaderSvrBase ldr = new LoaderSvrBase();
                 JsonObjSvrBase obj = ldr.ParseJson(responseText, "com.middlemind.JsonPL.JsonObjs.JsonObjSvrBase");                
                 if (this.toBool(obj.error) == false) {
+                    if(this.VERBOSE) {
+                       this.wr("processUrlSet: Notice: found response: " + obj.message + ", " + responseText);            
+                    }
+                    
                     return obj.result;
                 } else {
                     this.wr("processUrlFind: Error: ref request had issues: " + obj.message + ", " + responseText);
@@ -2663,6 +2729,64 @@ public class JsonPlState {
         return null;
     }
 
+    /*
+     * Name: processUrlSet
+     * Desc: A function used to set the value of a URL variable.
+     * Arg1: url(some complete URL with set message generated by JsonPL)
+     * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
+     */
+
+    //TODO: sync
+    
+    public JsonObjSysBase processUrlSet(String url) {    
+        if(this.VERBOSE) {
+           this.wr("processUrlFind: Received url: " + url);
+        }
+        
+        try {
+            URL lurl = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) lurl.openConnection();
+            con.setRequestMethod("GET");            
+            //con.setRequestProperty("Content-Type", "application/json");
+            
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);            
+            con.setInstanceFollowRedirects(false);
+            
+            int status = con.getResponseCode();
+            if(status == 200) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer content = new StringBuffer();
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
+                in.close();
+                con.disconnect();
+                String responseText = content.toString();
+                
+                LoaderSvrBase ldr = new LoaderSvrBase();
+                JsonObjSvrBase obj = ldr.ParseJson(responseText, "com.middlemind.JsonPL.JsonObjs.JsonObjSvrBase");                
+                if (this.toBool(obj.error) == false) {
+                    if(this.VERBOSE) {
+                       this.wr("processUrlSet: Notice: found response: " + obj.message + ", " + responseText);            
+                    }
+                    
+                    return obj.result;
+                } else {
+                    this.wr("processUrlFind: Error: ref request had issues: " + obj.message + ", " + responseText);
+                    return null;
+                }                
+            } else {
+                this.wr("processUrlFind: Error: bad status code received: " + status);
+            }
+        } catch(Exception e) {
+            this.wr("processUrlFind: Error: exception caught processing request");
+            this.wrErr(e);            
+        }
+        return null;    
+    }
+        
     /*
      * Name: processRef 
      * Desc: Processes a class var or func var or arg reference string. 
@@ -2703,6 +2827,7 @@ public class JsonPlState {
         //check for URL
         int urlStart = path.indexOf("->(");
         boolean hasUrl = false;
+        boolean forceLocal = false;
 
         if (this.VERBOSE) {
            this.wr("processRef: Url Start Index: " + urlStart);
@@ -2710,7 +2835,12 @@ public class JsonPlState {
 
         String[] nvs = null;
         String nurl = null;
-        String npath = null;   
+        String npath = null;
+        
+        if(url == null) {
+            this.lastProcessUrlFindPath = null;
+        }
+        
         if(urlStart != -1) {
            nvs = path.split("->\\(");
            npath = nvs[0].trim();
@@ -2733,6 +2863,13 @@ public class JsonPlState {
         if (this.VERBOSE) {
            this.wr("processRef: Has URL: " + hasUrl);
         }         
+        
+        //check for forced local de-reference for outer bracket only
+        if (path.charAt(0) == '<') {
+            path = path.replaceAll("<", "[");
+            path = path.replaceAll(">", "]");
+            forceLocal = true;
+        }        
         
         if (path.charAt(0) == '[') {
             int cnt = 0;
@@ -2766,7 +2903,12 @@ public class JsonPlState {
                 this.wrObj(tmp);
             }
 
-            tmp = this.cloneJsonObj(this.processRef(tmp, func, url));
+            if(!forceLocal) {
+                tmp = this.cloneJsonObj(this.processRef(tmp, func, url));
+            } else {
+                tmp = this.cloneJsonObj(this.processRef(tmp, func, null));         
+            }
+      
             if (path.length() >= i) {
                 tmp.val.v += path.substring(i);
             }
@@ -2910,7 +3052,10 @@ public class JsonPlState {
                     if (isVars) {
                         if(hasUrl) {
                             try {
-                                fnd = this.processUrlFind(url + URLEncoder.encode("#.vars." + name, "UTF-8"));
+                                if(this.lastProcessUrlFindPath == null) {
+                                    this.lastProcessUrlFindPath = "#.vars." + name;
+                                }                                
+                                fnd = this.processUrlFind(url + "?type=get&ref=" + URLEncoder.encode("#.vars." + name, "UTF-8"));
                             } catch(Exception e) {
                                 this.wrErr(e);
                                 fnd = null;
@@ -2928,7 +3073,10 @@ public class JsonPlState {
                     if (isVars) {
                         if(hasUrl) {
                             try {
-                                fnd = this.processUrlFind(url + URLEncoder.encode("$.vars." + name, "UTF-8"));
+                                if(this.lastProcessUrlFindPath == null) {
+                                    this.lastProcessUrlFindPath = "$.vars." + name;
+                                }                                
+                                fnd = this.processUrlFind(url + "?type=get&ref=" + URLEncoder.encode("$.vars." + name, "UTF-8"));
                             } catch(Exception e) {
                                 this.wrErr(e);
                                 fnd = null;
@@ -2939,7 +3087,10 @@ public class JsonPlState {
                     } else {
                         if(hasUrl) {
                             try {
-                                fnd = this.processUrlFind(url + URLEncoder.encode("$.args." + name, "UTF-8"));
+                                if(this.lastProcessUrlFindPath == null) {
+                                    this.lastProcessUrlFindPath = "$.args." + name;
+                                }                                
+                                fnd = this.processUrlFind(url + "?type=get&ref=" + URLEncoder.encode("$.args." + name, "UTF-8"));
                             } catch(Exception e) {
                                 this.wrErr(e);
                                 fnd = null;
@@ -2986,6 +3137,11 @@ public class JsonPlState {
                     if (this.isNumber(lidx)) {
                         idx = this.toInt(lidx);
                         fnd = (JsonObjSysBase) (this.toArray(fnd.val.v)).get(idx);
+
+                        if(hasUrl && this.lastProcessUrlFindPath != null) {
+                            this.lastProcessUrlFindPath += "." + idx;
+                        }                        
+
                         foundIndex = true;
                     } else {
                         List<JsonObjSysBase> ar = this.toArray(fnd.val.v);
@@ -2993,6 +3149,11 @@ public class JsonPlState {
                         String target = this.toStr(lidx);
                         for (int l = 0; l < len; l++) {
                             if (((JsonObjSysBase) ar.get(l)).name.equals(target)) {
+                                
+                                if(hasUrl && this.lastProcessUrlFindPath != null) {
+                                    this.lastProcessUrlFindPath += "." + target;
+                                }                                
+                                
                                 fnd = (JsonObjSysBase) ar.get(l);
                                 foundIndex = true;
                                 break;
@@ -3789,15 +3950,53 @@ public class JsonPlState {
         }
 
         //this.wr("-----------------111:");
-        //this.wrObj(left);  
+        //this.wrObj(left);
+        
+        boolean hasUrl = this.isRefStringUrl(this.toStr(left.val.v));
+        boolean hasUrlAttr = this.validateProperties(objAsgn, new String[] {"url"});
+        String[] vals = null;
+        String url = null;
+        String path = null;
+
+        if(hasUrl && !hasUrlAttr) {
+            //if inherent url is detected
+            vals = this.getPathAndUrlFromRef(this.toStr(left.val.v));
+        } else if(hasUrlAttr) {
+            //allow url attribute to override inherent url
+            if(this.VERBOSE) {
+                this.wr("processAsgn: URL Attribute override found.");
+            }
+
+            hasUrl = true;
+            vals = new String[] {objAsgn.url, "unknown_ref_path"};
+        } else {
+            hasUrl = false;
+        }        
+        
         left = this.processRef(left, func);
+        
+        if(this.VERBOSE) {
+            this.wr("processAsgn: HasUrl: " + hasUrl + ", HasUrlAttr:" + hasUrlAttr);
+        }
+
+        if(hasUrl) {
+            path = this.lastProcessUrlFindPath;
+            url = vals[0];
+
+            if(this.VERBOSE) {
+                this.wr("processAsgn: Path: " + path);
+                this.wr("processAsgn: Url: " + url);
+            }
+        }        
+        
         if (left == null) {
             this.wr("processAsgn: Error: error processing left");
             return null;
         }
 
         //this.wr("-----------------2222:");
-        //this.wrObj(this.program.vars);  
+        //this.wrObj(this.program.vars);
+        
         if (this.isSysObjConst(right)) {
             //do nothing      
         } else if (this.isSysObjRef(right)) {
@@ -3851,19 +4050,46 @@ public class JsonPlState {
         if (left.val.type.equals(right.val.type)) {
             if (leftIsBasic && rightIsBasic) {
                 //both are basic, dereference if need be, and copy value
-                left.val.v = right.val.v;
-
+                if(hasUrl) {
+                    try {
+                        this.processUrlSet(url + "?type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(this.toStr(right.val.v), "UTF-8"));
+                    }catch(Exception e) {
+                        this.wrErr(e);
+                        this.wr("processAsgn: Error: could not update the remote variable");
+                        ret.val.v = "false";
+                        this.lastAsgnValue = this.cloneJsonObj(left);
+                        this.lastAsgnReturn = ret;
+                        return ret;                        
+                    }
+                } else {
+                    left.val.v = right.val.v;
+                }
+                
                 //this.wr("-----left after:");
                 //this.wrObj(left);
                 //this.wr("-----left after AAA:");
                 //this.wrObj(this.program.vars);
+                
                 this.lastAsgnValue = this.cloneJsonObj(left);
                 this.lastAsgnReturn = ret;
                 return ret;
             } else if (leftIsArray && rightIsArray && rightIsRef) {
                 //both are array refs, copy reference
-                leftOrig.val.v = rightOrig.val.v;
-
+                if(hasUrl) {
+                    try {
+                        this.processUrlSet(url + "?type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(this.toStr(rightOrig.val.v), "UTF-8"));
+                    }catch(Exception e) {
+                        this.wrErr(e);
+                        this.wr("processAsgn: Error: could not update the remote variable");
+                        ret.val.v = "false";
+                        this.lastAsgnValue = this.cloneJsonObj(left);
+                        this.lastAsgnReturn = ret;
+                        return ret;                        
+                    }
+                } else {
+                    leftOrig.val.v = rightOrig.val.v;
+                }                
+                
                 //this.wr("-----left after:");
                 //this.wrObj(left);
                 //this.wr("-----left after AAA:");
@@ -3879,12 +4105,27 @@ public class JsonPlState {
                 for (int i = 0; i < tmpB.size(); i++) {
                     tmpA.add(tmpB.get(i));
                 }
-                left.val.v = tmpA;
+                
+                if(hasUrl) {
+                    try {
+                        this.processUrlSet(url + "?type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=array&obj=" + URLEncoder.encode(Utils.JSONstringify(tmpA), "UTF-8"));
+                    }catch(Exception e) {
+                        this.wrErr(e);
+                        this.wr("processAsgn: Error: could not update the remote variable");
+                        ret.val.v = "false";
+                        this.lastAsgnValue = this.cloneJsonObj(left);
+                        this.lastAsgnReturn = ret;
+                        return ret;                        
+                    }
+                } else {         
+                    left.val.v = tmpA;
+                }
 
                 //this.wr("-----left after:");
                 //this.wrObj(left);
                 //this.wr("-----left after AAA:");
-                //this.wrObj(this.program.vars); 
+                //this.wrObj(this.program.vars);
+                
                 this.lastAsgnValue = this.cloneJsonObj(left);
                 this.lastAsgnReturn = ret;
                 return ret;
@@ -4180,6 +4421,9 @@ public class JsonPlState {
      * Arg2: func(func obj, sys=func) 
      * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase processCall(JsonObjSysBase objCall, JsonObjSysBase func) {
         String name = null;
         List<JsonObjSysBase> args = null;
@@ -4367,26 +4611,36 @@ public class JsonPlState {
                     funcDef.args_def = this.cloneJsonObjList(funcDef.args);
                     funcDef.args = args;
 
+                    if (this.VERBOSE) {
+                        this.wr("processCall: Process Function: " + funcDef.name);                  
+                    }                    
+                    
                     //backup default ret
                     funcDef.ret_def = this.cloneJsonObj(funcDef.ret);
                     ret = this.processFunc(funcDef);
 
-                    if (ret != null && !ret.val.type.equals(funcDef.ret_def.type)) {
-                        this.wr("processCall: Error: function return type mismatch, return type " + ret.val.type + " expected " + funcDef.ret_def.type);
-                        return null;
-                    }
-
                     //restore args and ret
                     funcDef.vars = funcDef.vars_def;
                     funcDef.args = funcDef.args_def;
-                    funcDef.ret = funcDef.ret_def;
+                    funcDef.ret = funcDef.ret_def;                    
 
-                    if (this.VERBOSE) {
-                        this.wr("processCall: Returning:");
-                        this.wrObj(this.getConst(ret.val.type, ret.val.v));
+                    if(ret != null) {
+                        if (!(ret.val.type.equals(funcDef.ret_def.type))) {
+                            this.wr("processCall: Error: function return type mismatch, return type " + ret.val.type + " expected " + funcDef.ret_def.type);
+                            return null;
+                        } else {
+                            JsonObjSysBase lret = this.getConst(ret.val.type, ret.val.v);
+                            if (this.VERBOSE) {
+                                this.wr("processCall: Returning:");     
+                                this.wrObj(lret);
+                            }
+
+                            return lret;              
+                        }
+                    } else {
+                       this.wr("processCall: Error: function returned a null value");
+                       return null;
                     }
-
-                    return this.getConst(ret.val.type, ret.val.v);
                 }
             } else {
                 this.wr("processCall: Error: function argument length mismatch, func arg def: " + funcArgs.size() + ", call arg: " + args.size());
