@@ -1259,6 +1259,9 @@ jsonPlState.prototype.validateSysObjFunc = function (obj) {
  *   "right": {ref | const | exp | bex | call}
  * }
  */
+
+//TODO: sync
+
 jsonPlState.prototype.validateSysObjAsgn = function (obj) {
    if (this.isSysObjAsgn(obj) && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
       var tobj = null;
@@ -1287,7 +1290,7 @@ jsonPlState.prototype.validateSysObjAsgn = function (obj) {
             } else if (tobj.type !== 'asgn') {
                this.wr("validateSysObjAsgn: Error: could not validate obj as op type");
                return false;
-            } else if (tobj.v !== '=') {
+            } else if (tobj.v !== "=" && tobj.v !== "+=") {
                this.wr("validateSysObjAsgn: Error: could not validate obj as op code");
                return false;
             }
@@ -4207,12 +4210,33 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
    if (left.val.type === right.val.type) {
       if (leftIsBasic && rightIsBasic) {
          //both are basic, dereference if need be, and copy value
+         var nval = null;
+         if(objAsgn.op.v === "+=") {
+            if(left.type === "int") {
+               nval = this.toInt(left.val.v) + this.toInt(right.val.v);
+            } else if(left.type === "float") {
+               nval = this.toFloat(left.val.v) + this.toFloat(right.val.v);
+            } else if(left.type === "bool") {
+               var ll = this.toBool(left.val.v);
+               var lr = this.toBool(right.val.v);
+               if(ll || lr) {
+                  nval = true;
+               } else {
+                  nval = false;
+               }
+            } else if(left.type === "string") {               
+               nval = this.toStr(left.val.v) + this.toStr(right.val.v)
+            }
+         } else {
+            nval = right.val.v;
+         }
+
          if(hasUrl) {
             //url, path, obj
             //?type=set&ref=   &cat=   &obj=
-            this.processUrlSet(url + "?type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(this.toStr(right.val.v)));
+            this.processUrlSet(url + "?type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(this.toStr(nval)));
          } else {
-            left.val.v = right.val.v;
+            left.val.v = nval;
          }
 
          //this.wr("-----left after:");
@@ -4225,6 +4249,13 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
          return ret;
       } else if (leftIsArray && rightIsArray && rightIsRef) {
          //both are array refs, dereference if need be, and copy reference
+         if(objAsgn.op.v === "+=") {
+            this.wr("processAsgn: Error: append operator not supported in this case: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+            ret.val.v = "false";
+            this.lastAsgnValue = this.cloneJsonObj(left);
+            this.lastAsgnReturn = ret;
+         }
+         
          if(hasUrl) {
             //url, path, obj
             this.processUrlSet(url + "?type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(this.toStr(rightOrig.val.v)));
@@ -4242,8 +4273,13 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
          return ret;
       } else if (leftIsArray && rightIsArray && !rightIsRef) {
          //left is array ref, right is array const, copy value
-         //left.val.v = [];
-         var tmpA = []; //this.toArray(left.val.v);
+         var tmpA = null
+         if(objAsgn.op.v === "+=") {
+            tmpA = this.toArray(left.val.v);
+         } else {
+            tmpA = [];
+         }
+
          var tmpB = this.toArray(right.val.v);
          for (var i = 0; i < tmpB.size(); i++) {
             tmpA.push(tmpB[i]);
@@ -4265,7 +4301,7 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
          this.lastAsgnReturn = ret;
          return ret;
       } else {
-         this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+         this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef + ", op val: " + objAsgn.op.v);
          ret.val.v = "false";
          this.lastAsgnValue = this.cloneJsonObj(left);
          this.lastAsgnReturn = ret;
