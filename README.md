@@ -1,6 +1,6 @@
 # JsonPL Version 0.5.1 - The Json Programming Language
 
-JsonPL is good for the following:
+JsonPL is a new programming language I created to explore web based distributed programming, 4th level programming languages, and JSON as a core part of a programming language's syntax and grammar. JsonPL is good for the following:
 
 1. Learning about programming languages: Because JSON is a structured object notation we don't have to worry about lexers, tokeners, etc., we can work directly with the loaded object structure simplifying the logic one has to learn to understand what the code is doing.
 2. Cross platform code examples: There are interpreters written in 3 languages currently, with a fourth on the way. This gives you a great source of cross-platform coding examples and how to overcome inherent differences in programming languages to maintain a ubiquitous code base.
@@ -13,11 +13,11 @@ Recent Updates:
 1. Finished support for the use of arrays. You can now create arrays of one data type, strict = true, and arrays of multiple data types, strict = false. You cannot create arrays of arrays at this point.
 2. Added support for de-referencing values passed from function calls.
 3. Added support for a for-each loop that takes a reference to an array as an argument to define the start and stop values.
-4. Synced up the Javascript, Java, and C# versions to support all 25 test programs.
-5. Ability to create new variables with system calls to mlc, malloc, and amlc, array malloc.
-6. Ability to delete variables with system calls to cln, clean.
-7. Added ability to use a server to host variable values into the languages referencing string encoding. An example can be found in test program 24 in the Javascript, Java, and C# interpreter's cfg directory. Requires the Node JS server, public_html/svr/EXEC4SVR.JS running on the URL specified in test program 24.
-8. Added support for URL function calls, not you can call function in native JsonPL, normal function, in the language of the interpreter, system function, or a web based function call, url function.
+4. Synced up the Javascript, Java, and C# versions to support all 26 test programs.
+5. **Ability to create new variables with system calls to mlc, malloc, and amlc, array malloc.
+6. **Ability to delete variables with system calls to cln, clean.
+7. **Added ability to use a server to host variable values into the languages referencing string encoding. An example can be found in test program 24 in the Javascript, Java, and C# interpreter's cfg directory. Requires the Node JS server, public_html/svr/EXEC4SVR.JS running on the URL specified in test program 24.
+8. **Added support for URL function calls, not you can call function in native JsonPL, normal function, in the language of the interpreter, system function, or a web based function call, url function. test program 25.
 
 Up Next: 
 1. A C version of the base 0.5.1 interpreter. The C version of the 0.5.1 interpreter is coming along. A lot of the base code to handle strings, lists, memory management, etc. is done and ready for testing.
@@ -25,6 +25,7 @@ Up Next:
 3. A Python version of the 0.5.1 interpreter.
 4. Adding an "imports" attribute to the class object, type of array, that stores loaded classes, @imports.class_name.vars.var_name, @imports.class_name.funcs.func_name.
 5. Step through execution and proper line number tracking.
+6. An IDE to demonstrate how concise the language can be when an IDE is present to automate creating the JSON encoding.
 
 ## URL Function Call:
 Now you can use URLs to handle function calls opening up a web layer of callable functions to the language. This addition makes the language highly distributed.
@@ -45,6 +46,19 @@ The example Node JS server is configured to handle the calls but just sends back
 <pre>
 {"type":"unknown","ref":"unknown","error":"false","result":{"sys":"const","val":{"sys":"val","type":"bool","v":"true"}},"message":"no functions exist pretending to send back a true value"}
 </pre>
+
+## Force Local De-Referencing:
+You can use a one-time, external only, local de-referencing. This can be used in conjuction with URL referencing to use a local variable to define the path sent to the specified URL.
+<pre>
+{
+   "sys":"call", "name":"SYS::wr", "args":[
+      {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Ptr1 Before: "}},
+      {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"<#.vars.ptr1>->(http://localhost:8000/)"}},
+      {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                       
+   ]
+}
+</pre>
+In the previous example the entire string, <#.vars.ptr1>, is replaced with the value contained in the specified string variable, ptr1. This can be a reference path the is valid on the specified server, http://localhost:8000/. Without this distinction all reference replacement occurs on the specified server so no local values can be used.
 
 ## URL Referencing:
 Now you can specify a URL that points to a server that handles the specific JSON based requests from Json PL.
