@@ -32,7 +32,7 @@ An example server can be run from the CLI using Node JS, details below, and used
 {
    "sys":"call", "name":"SYS::wr", "args":[
       {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Ptr1 Before: "}},
-      {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/?type=get&ref=)"}},
+      {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/)"}},
       {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
    ]
 }
@@ -54,6 +54,8 @@ How to start the server from the CLI with Node JS installed and enabled:
 node EXEC4SVR.JS
 Server is running on http://localhost:8000
 </pre>
+
+The assignment object, {asgn}, will automatically detect that the left object reference is a URL reference and will call the same server to set the remote variable's value. Alternatively, you can use a 'url' attribute to specify a different destination server than the source server.
 
 ## Main Sections:
 
