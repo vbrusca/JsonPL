@@ -16,6 +16,7 @@ Recent Updates:
 5. Ability to create new variables with system calls to mlc, malloc, and amlc, array malloc.
 6. Ability to delete variables with system calls to cln, clean.
 7. Added ability to use a server to host variable values into the languages referencing string encoding. An example can be found in test program 24 in the Javascript, Java, and C# interpreter's cfg directory. Requires the Node JS server, public_html/svr/EXEC4SVR.JS running on the URL specified in test program 24.
+8. Added support for URL function calls, not you can call function in native JsonPL, normal function, in the language of the interpreter, system function, or a web based function call, url function.
 
 Up Next: 
 1. A C version of the base 0.5.1 interpreter. The C version of the 0.5.1 interpreter is coming along. A lot of the base code to handle strings, lists, memory management, etc. is done and ready for testing.
@@ -23,7 +24,21 @@ Up Next:
 3. A Python version of the 0.5.1 interpreter.
 4. Adding an "imports" attribute to the class object, type of array, that stores loaded classes, @imports.class_name.vars.var_name, @imports.class_name.funcs.func_name.
 5. Step through execution and proper line number tracking.
-6. Use of URLs with the asgn, left ref attribute, support setting the value of remote variables.
+
+## URL Function Call:
+Now you can use URLs to handle function calls opening up a web layer of callable functions to the language. This addition makes the language highly distributed.
+<pre>
+{
+   "sys":"call", "name":"test->(http://localhost:8000/)", "args":[
+      {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Test Function Call: "}}                
+   ]
+}
+</pre>
+
+The example Node JS server is configured to handle the calls but just sends back a generic response for any attempted function call.
+<pre>
+{"type":"unknown","ref":"unknown","error":"false","result":{"sys":"const","val":{"sys":"val","type":"bool","v":"true"}},"message":"no functions exist pretending to send back a true value"}
+</pre>
 
 ## URL Referencing:
 Now you can specify a URL that points to a server that handles the specific JSON based requests from Json PL.
