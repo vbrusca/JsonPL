@@ -4130,6 +4130,9 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
    }
 
    left = this.processRef(left, func);
+   this.wr("-----------------111:");
+   this.wrObj(left);
+
 
    if(this.VERBOSE) {
       this.wr("processAsgn: HasUrl: " + hasUrl + ", HasUrlAttr:" + hasUrlAttr);
@@ -4212,20 +4215,27 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
          //both are basic, dereference if need be, and copy value
          var nval = null;
          if(objAsgn.op.v === "+=") {
-            if(left.type === "int") {
+            this.wr("Left val type: " + left.val.type + "," + left.val.type + ", " + left.val.v + ", " + right.val.v);
+
+            if(left.val.type === "int") {
                nval = this.toInt(left.val.v) + this.toInt(right.val.v);
-            } else if(left.type === "float") {
+            } else if(left.val.type === "float") {
                nval = this.toFloat(left.val.v) + this.toFloat(right.val.v);
-            } else if(left.type === "bool") {
+            } else if(left.val.type === "bool") {
                var ll = this.toBool(left.val.v);
                var lr = this.toBool(right.val.v);
                if(ll || lr) {
-                  nval = true;
+                  nval = "true";
                } else {
-                  nval = false;
+                  nval = "false";
                }
-            } else if(left.type === "string") {               
+            } else if(left.val.type === "string") {               
                nval = this.toStr(left.val.v) + this.toStr(right.val.v)
+            } else {
+               this.wr("processAsgn: Error: append operator not supported in this case: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+               ret.val.v = "false";
+               this.lastAsgnValue = this.cloneJsonObj(left);
+               this.lastAsgnReturn = ret;
             }
          } else {
             nval = right.val.v;
