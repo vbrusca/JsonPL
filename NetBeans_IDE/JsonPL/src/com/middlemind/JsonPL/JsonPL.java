@@ -64,7 +64,7 @@ public class JsonPL {
          String json = null;
 
          if (args.length == 2) {
-            target = root + "test24" + ".json";
+            target = root + "test25" + ".json";
          }
 
          Logger.wrl("JsonPL: running program: " + target);

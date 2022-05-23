@@ -1,0 +1,27 @@
+{
+    "sys":"class", "name":"test25",
+    "call":{"sys":"call", "name":"main", "args":[]},
+    "vars":[
+    ],
+    "funcs":[
+       {"sys":"func", "name":"main",
+          "args":[ 
+          ],
+          "vars":[
+             {"sys":"var", "name":"nidx", "val":{"sys":"val", "type":"int", "v":"2"}}
+          ],
+          "ret":{"sys":"val", "type":"bool", "v":"false"},
+          "lines":[
+             {
+                "sys":"call", "name":"test->(http://localhost:8000/)", "args":[
+                   {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Test Function Call: "}}                
+                ]
+             },
+             {
+                "sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}
+             }
+          ]
+       }
+    ],
+    "ret":{"sys":"val", "type":"bool", "v":"false"}
+}

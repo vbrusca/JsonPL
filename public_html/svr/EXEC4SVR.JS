@@ -37,16 +37,37 @@ const data = {
 
 //EXAMPLE:
 /*
-{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/?type=get&ref=)"}}
+{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/)"}}
+
 http://localhost:8000/?type=get&ref=#.vars.ar1.[$.vars.nidx]
 */
 
 /*
-{"type":"get", "ref":"#.vars.ar1.[$.vars.nidx]", "error":"false", "result":{fnd object}, "message":"details here"}
+get, set response
+{"type":"get", "path":"#.vars.ar1.[$.vars.nidx]", "error":"false", "result":{fnd object}, "message":"details here"}
+
+http://localhost:8000/?type=call&name=urlFunc1&args=
+(where args = [], an array of function argument objects)
 */
 
 const requestListener = function (req, res) {
     //console.log("=======S");
+
+    let data = '';
+    req.on('data', chunk => {
+        data += chunk;
+    });
+
+    req.on('end', () => {
+        if(data !== null && data !== "") {
+            console.log("Found data: " + data);
+        } else {
+            console.log("No data found!");
+        }
+        res.end();
+    });
+
+
     var queryObj = url.parse(req.url, true).query;    
     //console.log(queryObj);
     var ret = {};
@@ -64,9 +85,16 @@ const requestListener = function (req, res) {
     res.writeHead(200);
 
 
-    if(typeof queryObj.type !== 'undefined' && typeof queryObj.ref !== 'undefined') {
+    if(typeof queryObj.type !== "undefined") {
         console.log("Request looks good!: " + queryObj['type'] + ", " + queryObj['ref']);
-        if(queryObj['type'] === "get" || queryObj['type'] === "set") {
+        if(queryObj['type'] === "call") {
+            ret.error = "false";
+            ret.result = {"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}};
+            ret.message = "no functions exist pretending to send back a true value";
+            res.end(JSON.stringify(ret));
+            return;
+
+        } else if((queryObj['type'] === "get" || queryObj['type'] === "set") && (typeof queryObj.ref !== "undefined")) {
             var type = queryObj['type'];
             var val = queryObj['ref'];
             var vals = [];
