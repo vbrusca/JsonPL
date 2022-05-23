@@ -1203,7 +1203,7 @@ namespace com.middlemind.JsonPL
                             this.wr("validateSysObjAsgn: Error: could not validate obj as op type");
                             return false;
                         }
-                        else if (!tobj.v.Equals("="))
+                        else if (!tobj.v.Equals("=") && !tobj.v.Equals("+="))
                         {
                             this.wr("validateSysObjAsgn: Error: could not validate obj as op code");
                             return false;
@@ -5250,11 +5250,55 @@ namespace com.middlemind.JsonPL
                 if (leftIsBasic && rightIsBasic)
                 {
                     //both are basic, dereference if need be, and copy value
+                    string nval = null;
+                    if (objAsgn.op.v.Equals("+="))
+                    {
+                        this.wr("Left val type: " + left.val.type + "," + left.val.type + ", " + left.val.v + ", " + right.val.v);
+
+                        if (left.val.type.Equals("int"))
+                        {
+                            nval = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
+                        }
+                        else if (left.val.type.Equals("float"))
+                        {
+                            nval = this.toStr(this.toFloat(left.val.v) + this.toFloat(right.val.v));
+                        }
+                        else if (left.val.type.Equals("bool"))
+                        {
+                            bool ll = this.toBool(left.val.v);
+                            bool lr = this.toBool(right.val.v);
+                            if (ll || lr)
+                            {
+                                nval = "true";
+                            }
+                            else
+                            {
+                                nval = "false";
+                            }
+                        }
+                        else if (left.val.type.Equals("string"))
+                        {
+                            nval = this.toStr(left.val.v) + this.toStr(right.val.v);
+                        }
+                        else
+                        {
+                            this.wr("processAsgn: Error: append operator not supported in this case: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+                            ret.val.v = "false";
+                            this.lastAsgnValue = this.cloneJsonObj(left);
+                            this.lastAsgnReturn = ret;
+                            return ret;
+                        }
+                    }
+                    else
+                    {
+                        nval = this.toStr(right.val.v);
+                    }
+
                     if (hasUrl)
                     {
                         try
                         {
-                            this.processUrlSet(url + "?type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(this.toStr(right.val.v)));
+                            this.processUrlSet(url + "?type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(nval));
                         }
                         catch (Exception e)
                         {
@@ -5283,6 +5327,15 @@ namespace com.middlemind.JsonPL
                 else if (leftIsArray && rightIsArray && rightIsRef)
                 {
                     //both are array refs, copy reference
+                    if (objAsgn.op.v.Equals("+="))
+                    {
+                        this.wr("processAsgn: Error: append operator not supported in this case: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+                        ret.val.v = "false";
+                        this.lastAsgnValue = this.cloneJsonObj(left);
+                        this.lastAsgnReturn = ret;
+                        return ret;
+                    }
+
                     if (hasUrl)
                     {
                         try
@@ -5316,8 +5369,16 @@ namespace com.middlemind.JsonPL
                 else if (leftIsArray && rightIsArray && !rightIsRef)
                 {
                     //left is array ref, right is array const, copy value
-                    //left.val.v = new List<JsonObjSysBase>();
-                    List<JsonObjSysBase> tmpA = new List<JsonObjSysBase>(); //this.toArray(left.val.v);
+                    List<JsonObjSysBase> tmpA = null;
+                    if (objAsgn.op.v.Equals("+="))
+                    {
+                        tmpA = this.toArray(left.val.v);
+                    }
+                    else
+                    {
+                        tmpA = new List<JsonObjSysBase>();
+                    }
+
                     List<JsonObjSysBase> tmpB = this.toArray(right.val.v);
                     for (int i = 0; i < tmpB.Count; i++)
                     {

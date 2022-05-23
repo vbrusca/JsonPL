@@ -936,6 +936,9 @@ public class JsonPlState {
      *   "right": {ref | const | exp | bex | call}
      * }
      */
+    
+    //TODO: sync
+    
     public boolean validateSysObjAsgn(JsonObjSysBase obj) {
         if (this.isSysObjAsgn(obj) && this.validateProperties(obj, new String[]{"sys", "left", "op", "right"})) {
             JsonObjSysBase tobj = null;
@@ -964,7 +967,7 @@ public class JsonPlState {
                     } else if (!tobj.type.equals("asgn")) {
                         this.wr("validateSysObjAsgn: Error: could not validate obj as op type");
                         return false;
-                    } else if (!tobj.v.equals("=")) {
+                    } else if (!tobj.v.equals("=") && !tobj.v.equals("+=")) {
                         this.wr("validateSysObjAsgn: Error: could not validate obj as op code");
                         return false;
                     }
@@ -3991,6 +3994,9 @@ public class JsonPlState {
      * Arg2: func(func obj, sys=func) 
      * Returns: {null | (const obj, sys=const)}
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase processAsgn(JsonObjSysBase objAsgn, JsonObjSysBase func) {
         JsonObjSysBase left = null;
         JsonObjSysBase op = null;
@@ -4031,6 +4037,7 @@ public class JsonPlState {
 
         //this.wr("-----------------111:");
         //this.wrObj(left);
+        
         boolean hasUrl = this.isRefStringUrl(left.val.v);
         boolean hasUrlAttr = this.validateProperties(objAsgn, new String[]{"url"});
         String[] vals = null;
@@ -4075,6 +4082,7 @@ public class JsonPlState {
 
         //this.wr("-----------------2222:");
         //this.wrObj(this.program.vars);
+        
         if (this.isSysObjConst(right)) {
             //do nothing      
         } else if (this.isSysObjRef(right)) {
@@ -4128,9 +4136,38 @@ public class JsonPlState {
         if (left.val.type.equals(right.val.type)) {
             if (leftIsBasic && rightIsBasic) {
                 //both are basic, dereference if need be, and copy value
+                String nval = null;
+                if(objAsgn.op.v.equals("+=")) {
+                   this.wr("Left val type: " + left.val.type + "," + left.val.type + ", " + left.val.v + ", " + right.val.v);
+
+                   if(left.val.type.equals("int")) {
+                      nval = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
+                   } else if(left.val.type.equals("float")) {
+                      nval = this.toStr(this.toFloat(left.val.v) + this.toFloat(right.val.v));
+                   } else if(left.val.type.equals("bool")) {
+                      boolean ll = this.toBool(left.val.v);
+                      boolean lr = this.toBool(right.val.v);
+                      if(ll || lr) {
+                         nval = "true";
+                      } else {
+                         nval = "false";
+                      }
+                   } else if(left.val.type.equals("string")) {               
+                      nval = this.toStr(left.val.v) + this.toStr(right.val.v);
+                   } else {
+                      this.wr("processAsgn: Error: append operator not supported in this case: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+                      ret.val.v = "false";
+                      this.lastAsgnValue = this.cloneJsonObj(left);
+                      this.lastAsgnReturn = ret;
+                      return ret;
+                   }
+                } else {
+                   nval = this.toStr(right.val.v);
+                }                
+                
                 if (hasUrl) {
                     try {
-                        this.processUrlSet(url + "?type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(this.toStr(right.val.v), "UTF-8"));
+                        this.processUrlSet(url + "?type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(nval, "UTF-8"));
                     } catch (Exception e) {
                         this.wrErr(e);
                         this.wr("processAsgn: Error: could not update the remote variable");
@@ -4140,7 +4177,7 @@ public class JsonPlState {
                         return ret;
                     }
                 } else {
-                    left.val.v = right.val.v;
+                    left.val.v = nval;
                 }
 
                 //this.wr("-----left after:");
@@ -4152,6 +4189,14 @@ public class JsonPlState {
                 return ret;
             } else if (leftIsArray && rightIsArray && rightIsRef) {
                 //both are array refs, copy reference
+                if(objAsgn.op.v.equals("+=")) {
+                   this.wr("processAsgn: Error: append operator not supported in this case: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+                   ret.val.v = "false";
+                   this.lastAsgnValue = this.cloneJsonObj(left);
+                   this.lastAsgnReturn = ret;
+                   return ret;
+                }                
+                
                 if (hasUrl) {
                     try {
                         this.processUrlSet(url + "?type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(this.toStr(rightOrig.val.v), "UTF-8"));
@@ -4177,7 +4222,14 @@ public class JsonPlState {
             } else if (leftIsArray && rightIsArray && !rightIsRef) {
                 //left is array ref, right is array const, copy value
                 //left.val.v = new ArrayList();
-                List<JsonObjSysBase> tmpA = new ArrayList<JsonObjSysBase>(); //this.toArray(left.val.v);
+                
+                List<JsonObjSysBase> tmpA = null;
+                if(objAsgn.op.v.equals("+=")) {
+                   tmpA = this.toArray(left.val.v);
+                } else {
+                   tmpA = new ArrayList<JsonObjSysBase>();
+                }
+                
                 List<JsonObjSysBase> tmpB = this.toArray(right.val.v);
                 for (int i = 0; i < tmpB.size(); i++) {
                     tmpA.add(tmpB.get(i));

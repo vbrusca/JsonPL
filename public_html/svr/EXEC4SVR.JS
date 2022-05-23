@@ -60,9 +60,9 @@ const requestListener = function (req, res) {
 
     req.on('end', () => {
         if(data !== null && data !== "") {
-            console.log("Found data: " + data);
+            console.log("Found POST data: " + data);
         } else {
-            console.log("No data found!");
+            console.log("No POST data found! Checking GET params instead...");
         }
         res.end();
     });
