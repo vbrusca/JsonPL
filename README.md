@@ -48,7 +48,7 @@ The example Node JS server is configured to handle the calls but just sends back
 </pre>
 
 ## Force Local De-Referencing:
-You can use a one-time, external only, local de-referencing. This can be used in conjuction with URL referencing to use a local variable to define the path sent to the specified URL.
+You can now use a one-time, outter-most only, local de-referencing. This can be used in conjuction with URL referencing to use a local variable to define the path sent to the specified URL.
 <pre>
 {
    "sys":"call", "name":"SYS::wr", "args":[
@@ -58,7 +58,7 @@ You can use a one-time, external only, local de-referencing. This can be used in
    ]
 }
 </pre>
-In the previous example the entire string, <#.vars.ptr1>, is replaced with the value contained in the specified string variable, ptr1. This can be a reference path the is valid on the specified server, http://localhost:8000/. Without this distinction all reference replacement occurs on the specified server so no local values can be used.
+In the previous example the entire string, <#.vars.ptr1>, is replaced with the value contained in the specified local string variable, ptr1. This can be a reference path that is valid on the specified server, http://localhost:8000/. Without this distinction all reference replacement occurs on the specified server so no local values can be used.
 
 ## URL Referencing:
 Now you can specify a URL that points to a server that handles the specific JSON based requests from Json PL.
