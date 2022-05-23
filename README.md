@@ -6,7 +6,8 @@ JsonPL is good for the following:
 2. Cross platform code examples: There are interpreters written in 3 languages currently, with a fourth on the way. This gives you a great source of cross-platform coding examples and how to overcome inherent differences in programming languages to maintain a ubiquitous code base.
 3. Fun to play around with. Try connecting it to AJAX calls and using it as a job control language. Add your own functionality.
 4. Run on any interpreter: Because the code is in JSON object notation the same code can be run on any properly working interpreter so long as the same system level functions are defined in the interpreter or added system method callback event handler. The function signatures also must be the same, these are stored in the class object's system attribute under the key functions.
-5. Create highly distributed programs using the replacement preprocessor and URL based variable referencing.
+5. Create highly distributed programs using the replacement preprocessor and URL based variable referencing, URL based function calls.
+6. Designed as a library as well as simple CLI, browser based interpreter. Add a scripting/programming language to JS, Java, or C# based projects with JsonPL.
 
 Recent Updates:
 1. Finished support for the use of arrays. You can now create arrays of one data type, strict = true, and arrays of multiple data types, strict = false. You cannot create arrays of arrays at this point.
@@ -27,6 +28,11 @@ Up Next:
 
 ## URL Function Call:
 Now you can use URLs to handle function calls opening up a web layer of callable functions to the language. This addition makes the language highly distributed.
+Levels of function calling:
+1. Normal: JsonPL defined function.
+2. System: Function defined in the native language of the interpreter.
+3. URL: Function defined on the specified server.
+
 <pre>
 {
    "sys":"call", "name":"test->(http://localhost:8000/)", "args":[
