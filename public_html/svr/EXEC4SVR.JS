@@ -285,7 +285,7 @@ const requestListener = function (req, res) {
                         lstr = queryObj['obj'];
                     } else {
                         fnd.val.v = JSON.parse(queryObj['obj']);
-                        lstr = "an array sys obj"
+                        lstr = "an array sys obj: " + queryObj['obj'];
                     }
                     
                     ret.error = "false";

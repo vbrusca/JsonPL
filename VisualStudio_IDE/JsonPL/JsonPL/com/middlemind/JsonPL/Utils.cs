@@ -42,6 +42,7 @@ namespace com.middlemind.JsonPL
             {
                 NullValueHandling = NullValueHandling.Ignore
             });
+
             //clean = chars
             jsonString = jsonString.Replace("\\u0026", "&");
             jsonString = jsonString.Replace("\\u003d", "=");
@@ -52,6 +53,34 @@ namespace com.middlemind.JsonPL
             jsonString = jsonString.Replace("\\\\u003e", ">");
 
             Logger.wrl(jsonString);
+        }
+
+        /**
+         * A static method used to convert the specified object to a JSON string.
+         *
+         * @param obj The object to be converted and written in JSON format.
+         * @param name The name of the object that's being written in JSON format.
+         */
+
+        //TODO: sync
+
+        public static String JSONstringify(Object obj)
+        {
+            string jsonString = JsonConvert.SerializeObject(obj, Formatting.Indented, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
+
+            //clean = chars
+            jsonString = jsonString.Replace("\\u0026", "&");
+            jsonString = jsonString.Replace("\\u003d", "=");
+            jsonString = jsonString.Replace("\\u003e", ">");
+
+            jsonString = jsonString.Replace("\\\\u0026", "&");
+            jsonString = jsonString.Replace("\\\\u003d", "=");
+            jsonString = jsonString.Replace("\\\\u003e", ">");
+
+            return jsonString;
         }
 
         /**

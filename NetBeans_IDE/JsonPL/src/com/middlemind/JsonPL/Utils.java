@@ -60,7 +60,7 @@ public class Utils {
         jsonString = jsonString.replaceAll("\\\\u003d", "=");
         jsonString = jsonString.replaceAll("\\\\u003e", ">");
 
-        Logger.wr(jsonString);
+        Logger.wrl(jsonString);
     }
     
     /**
@@ -68,10 +68,7 @@ public class Utils {
      *
      * @param obj The object to be converted and written in JSON format.
      * @param name The name of the object that's being written in JSON format.
-     */
-    
-    //TODO: sync
-    
+     */    
     public static String JSONstringify(Object obj) {
         GsonBuilder builder = new GsonBuilder();
         //builder.setPrettyPrinting();
@@ -87,7 +84,6 @@ public class Utils {
         jsonString = jsonString.replaceAll("\\\\u003d", "=");
         jsonString = jsonString.replaceAll("\\\\u003e", ">");
 
-        //Logger.wr(jsonString);
         return jsonString;
     }
 

@@ -1882,10 +1882,7 @@ namespace com.middlemind.JsonPL
                                 for (int i = 0; i < arrayLenActual; i++)
                                 {
                                     JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
-                                    //this.wr("-----" + i);
-                                    //this.wrObj(ltmp);                                    
-
-                                    if (!this.isSysObjVar(ltmp) || (!skipArVer && !ltmp.val.type.Equals("int")))
+                                    if (!this.isArrayType(ltmp.val.type) && (!this.isSysObjVar(ltmp) || (!skipArVer && !ltmp.val.type.Equals("int"))))
                                     {
                                         this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'int' but found '" + ltmp.val.type + "'");
                                         return false;
@@ -1905,7 +1902,7 @@ namespace com.middlemind.JsonPL
                                 for (int i = 0; i < arrayLenActual; i++)
                                 {
                                     JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
-                                    if (!this.isSysObjVar(ltmp) || (!skipArVer && !ltmp.val.type.Equals("float")))
+                                    if (!this.isArrayType(ltmp.val.type) && (!this.isSysObjVar(ltmp) || (!skipArVer && !ltmp.val.type.Equals("float"))))
                                     {
                                         this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'float' but found '" + ltmp.val.type + "'");
                                         return false;
@@ -1925,7 +1922,7 @@ namespace com.middlemind.JsonPL
                                 for (int i = 0; i < arrayLenActual; i++)
                                 {
                                     JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
-                                    if (!this.isSysObjVar(ltmp) || (!skipArVer && !ltmp.val.type.Equals("string")))
+                                    if (!this.isArrayType(ltmp.val.type) && (!this.isSysObjVar(ltmp) || (!skipArVer && !ltmp.val.type.Equals("string"))))
                                     {
                                         this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'string' but found '" + ltmp.val.type + "'");
                                         return false;
@@ -1945,7 +1942,7 @@ namespace com.middlemind.JsonPL
                                 for (int i = 0; i < arrayLenActual; i++)
                                 {
                                     JsonObjSysBase ltmp = (JsonObjSysBase)tmpA[i];
-                                    if (!this.isSysObjVar(ltmp) || (!skipArVer && !ltmp.val.type.Equals("bool")))
+                                    if (!this.isArrayType(ltmp.val.type) && (!this.isSysObjVar(ltmp) || (!skipArVer && !ltmp.val.type.Equals("bool"))))
                                     {
                                         this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'bool' but found '" + ltmp.val.type + "'");
                                         return false;
@@ -3421,7 +3418,7 @@ namespace com.middlemind.JsonPL
                     {
                         if (this.VERBOSE)
                         {
-                            this.wr("processUrlSet: Notice: found response: " + obj.message + ", " + responseText);
+                            this.wr("processUrlFind: Notice: found response: " + obj.message + ", " + responseText);
                         }
 
                         return obj.result;
@@ -4133,18 +4130,6 @@ namespace com.middlemind.JsonPL
         public string toStr(object v)
         {
             return (v + "");
-            /*
-            string ret = (v + "");
-            if (ret == "True")
-            {
-                ret = "1";
-            }
-            else if (ret == "False")
-            {
-                return "0";
-            }
-            return ret;
-            */
         }
 
         /**
@@ -4152,7 +4137,6 @@ namespace com.middlemind.JsonPL
          */
         public JsonObjSysBase processLinkedTreeMap(JObject t)
         {
-            this.wr("processLinkedTreeMap: " + t.ToString());
             LoaderSysBase ldr = new LoaderSysBase();
             JsonObjSysBase obj  = (JsonObjSysBase)ldr.ParseJson(t.ToString(), "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
             return obj;
@@ -5022,9 +5006,54 @@ namespace com.middlemind.JsonPL
             }
 
             //this.wr("-----------------111:");
-            //this.wrObj(left);     
+            //this.wrObj(left);
+
+            bool hasUrl = this.isRefStringUrl(left.val.v);
+            bool hasUrlAttr = this.validateProperties(objAsgn, new string[] { "url" });
+            string[] vals = null;
+            string url = null;
+            string path = null;
+
+            if (hasUrl && !hasUrlAttr)
+            {
+                //if inherent url is detected
+                vals = this.getPathAndUrlFromRef(this.toStr(left.val.v));
+            }
+            else if (hasUrlAttr)
+            {
+                //allow url attribute to override inherent url
+                if (this.VERBOSE)
+                {
+                    this.wr("processAsgn: URL Attribute override found.");
+                }
+
+                hasUrl = true;
+                vals = new string[] { objAsgn.url, "unknown_ref_path" };
+            }
+            else
+            {
+                hasUrl = false;
+            }
 
             left = this.processRef(left, func);
+
+            if (this.VERBOSE)
+            {
+                this.wr("processAsgn: HasUrl: " + hasUrl + ", HasUrlAttr:" + hasUrlAttr);
+            }
+
+            if (hasUrl)
+            {
+                path = this.lastProcessUrlFindPath;
+                url = vals[0];
+
+                if (this.VERBOSE)
+                {
+                    this.wr("processAsgn: Path: " + path);
+                    this.wr("processAsgn: Url: " + url);
+                }
+            }
+
             if (left == null)
             {
                 this.wr("processAsgn: Error: error processing left");
@@ -5109,7 +5138,26 @@ namespace com.middlemind.JsonPL
                 if (leftIsBasic && rightIsBasic)
                 {
                     //both are basic, dereference if need be, and copy value
-                    left.val.v = right.val.v;
+                    if (hasUrl)
+                    {
+                        try
+                        {
+                            this.processUrlSet(url + "?type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(this.toStr(right.val.v)));
+                        }
+                        catch (Exception e)
+                        {
+                            this.wrErr(e);
+                            this.wr("processAsgn: Error: could not update the remote variable");
+                            ret.val.v = "false";
+                            this.lastAsgnValue = this.cloneJsonObj(left);
+                            this.lastAsgnReturn = ret;
+                            return ret;
+                        }
+                    }
+                    else
+                    {
+                        left.val.v = right.val.v;
+                    }
 
                     //this.wr("-----left after:");
                     //this.wrObj(left);
@@ -5123,7 +5171,26 @@ namespace com.middlemind.JsonPL
                 else if (leftIsArray && rightIsArray && rightIsRef)
                 {
                     //both are array refs, copy reference
-                    leftOrig.val.v = rightOrig.val.v;
+                    if (hasUrl)
+                    {
+                        try
+                        {
+                            this.processUrlSet(url + "?type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(this.toStr(rightOrig.val.v)));
+                        }
+                        catch (Exception e)
+                        {
+                            this.wrErr(e);
+                            this.wr("processAsgn: Error: could not update the remote variable");
+                            ret.val.v = "false";
+                            this.lastAsgnValue = this.cloneJsonObj(left);
+                            this.lastAsgnReturn = ret;
+                            return ret;
+                        }
+                    }
+                    else
+                    {
+                        leftOrig.val.v = rightOrig.val.v;
+                    }
 
                     //this.wr("-----left after:");
                     //this.wrObj(left);
@@ -5144,7 +5211,28 @@ namespace com.middlemind.JsonPL
                     {
                         tmpA.Add(tmpB[i]);
                     }
-                    left.val.v = tmpA;
+
+                    if (hasUrl)
+                    {
+                        try
+                        {
+                            this.processUrlSet(url + "?type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(Utils.JSONstringify(tmpA)));
+                        }
+                        catch (Exception e)
+                        {
+                            this.wrErr(e);
+                            this.wr("processAsgn: Error: could not update the remote variable");
+                            ret.val.v = "false";
+                            this.lastAsgnValue = this.cloneJsonObj(left);
+                            this.lastAsgnReturn = ret;
+                            return ret;
+                        }
+                    }
+                    else
+                    {
+                        left.val.v = tmpA;
+                    }
+
 
                     //this.wr("-----left after:");
                     //this.wrObj(left);
