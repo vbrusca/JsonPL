@@ -912,8 +912,11 @@ jsonPlState.prototype.validateSysObjIf = function (obj) {
  * Arg1: obj(the object to inspect)
  * Returns: ret(some bool, true or false)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.isForEach = function (obj) {
-   return (this.isSysObjFor(obj) && !this.isFullFor(obj));
+   return (this.isSysObjFor(obj) && !this.isFullFor(obj) && this.validateProperties(obj, ["each"]));
 }
 
 /**
@@ -1958,6 +1961,22 @@ jsonPlState.prototype.wrObj = function (jsonObj) {
 };
 
 /**
+ * Name: wrObjAbr
+ * Desc: Writes a JSON object to standard output if LOGGING is on.
+ *       Sets the WR_PREFIX to each object written.
+ *       Prints object using NON pretty JSON.stringify call. 
+ * Arg1: jsonObj(jsonObj to write)
+ */
+
+//TODO: sync
+
+jsonPlState.prototype.wrObjAbr = function (jsonObj) {
+   if (this.LOGGING === true) {
+      this.wr(JSON.stringify(jsonObj));
+   }
+};
+
+/**
  * Name: wrObjList
  * Desc: Writes a JSON object list to write to standard output if LOGGING is on. 
  *       Sets the WR_PREFIX to each object written. 
@@ -2034,15 +2053,36 @@ jsonPlState.prototype.sysLen = function (args, func) {
  * Arg2: func(the associated {func} object if any)
  * Returns: ret(a {ref} object)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.sysType = function (args, func) {
-   var s = args[0];
+   var s = null;
+   var ret = null;
+   var v = null;
+
+   ret = this.getConst("string", "");
+
+   if(args === null) {
+      this.wr("sysType: Error: args cannot be null");
+      return ret;
+   } else if(func === null) {
+      this.wr("sysType: Error: func cannot be null");
+      return ret;
+   }
+   
+   s = args[0];
 
    //this.wr("sysType: AAA: ");
    //this.wrObj(s);
 
-   var ret = this.getConst("string", "");
-   s = this.getRef("string", s.val.v);
-   var v = this.processRef(s, func);
+   if(s !== null && this.isObject(s) && this.isSysObj(s)) {      
+      s = this.getRef("string", s.val.v);
+      v = this.processRef(s, func);
+   } else {
+      this.wr("sysType: Error: reference argument cannt be null");
+      return ret;     
+   }
 
    //this.wr("sysType: CCC: ");
    //this.wrObj(v);   
@@ -2405,10 +2445,13 @@ jsonPlState.prototype.sysClean = function (args, func) {
  * Arg1: arg(a JSON object)
  * Returns: (true | false)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.isObject = function (arg) {
    if (arg === null) {
       return false;
-   } else if (typeof arg === "object") {
+   } else if (typeof arg === "object" && this.isArray(arg) === false) {
       return true;
    } else {
       return false;
@@ -2490,10 +2533,13 @@ jsonPlState.prototype.isRefStringArray = function (s) {
  * Arg1: s(some string with a valid reference value)
  * Returns: ret(some bool, true or false)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.isRefStringDec = function (s) {
    if (this.isRefString(s)) {
       var ns = this.toStr(s);
-      if (ns.indexOf("[") === -1 && ns.indexOf("]") === -1) {
+      if (ns.indexOf("[") === -1 && ns.indexOf("]") === -1 && ns.indexOf("<") === -1 && ns.indexOf(">") === -1) {
          return true;
       }
    }
@@ -2596,11 +2642,14 @@ jsonPlState.prototype.isNumber = function (arg) {
  * Arg1: arg(some value)
  * Returns: (true | false)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.isInteger = function (arg) {
    var tmp = this.toInt(arg);
    if (arg === null) {
       return false;
-   } else if (this.isNumber(tmp) && Number.isInteger(tmp) === true) {
+   } else if (this.isNumber(tmp) && Number.isInteger(tmp) === true && !this.isFloat(arg)) {
       return true;
    } else {
       return false;
@@ -2613,10 +2662,14 @@ jsonPlState.prototype.isInteger = function (arg) {
  * Arg1: arg(some value)
  * Returns: (true | false)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.isFloat = function (arg) {
+   var tmp = this.toStr(arg);
    if (arg === null) {
       return false;
-   } else if (this.isNumber(arg)) {
+   } else if (this.isNumber(arg) && Number.isInteger(arg) === false && tmp.indexOf(".") !== -1) {
       return true;
    } else {
       return false;
@@ -2921,8 +2974,11 @@ jsonPlState.prototype.isSysObj = function (obj) {
  * Arg1: obj(sys obj to check)
  * Returns: (true | false)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.getSysObjType = function (obj) {
-   if (this.isSysObj(obj) === true) {
+   if (this.isObject(obj) === true && this.isSysObj(obj) === true) {
       return obj.sys;
    } else {
       return null;

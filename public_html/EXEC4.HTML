@@ -321,9 +321,671 @@
             };
          
             /////////////////////////TEST SECTION
+            var bres = false;            
+            var testObj = null;
             var jpl = new jsonPlState();
             jpl.program = JSON.parse(JSON.stringify(code));
+
+            testObj = {
+               "sys": "for",
+               "start": {"sys": "const", "val": {"sys": "val","type": "int","v": "0"}},
+               "stop": {"sys": "const", "val": {"sys": "val","type": "int","v": "10"}},
+               "inc": {"sys": "const", "val": {"sys": "val","type": "int","v": "1"}},
+               "lines": [
+               ]
+            };
+
+            //TODO: toBool, toBoolInt
             
+            jpl.wr("====================== TEST -2.60: Unit Tests: getPathAndUrlFromRef ======================");
+            bres = jpl.getPathAndUrlFromRef("#.vars.tmp1");
+            jpl.wr("\"#.vars.tmp1\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("$.args.tmp2");
+            jpl.wr("\"$.args.tmp2\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("#.vars.tmp1.1");
+            jpl.wr("\"#.vars.tmp1.1\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("$.args.tmp2.tmp");
+            jpl.wr("\"$.args.tmp2.tmp\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("$.vars.tmp3.4");
+            jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("test");
+            jpl.wr("\"test\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("<#.vars.tmp1>");
+            jpl.wr("\"<#.vars.tmp1>\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("$.vars.[$.vars.tmp3]");
+            jpl.wr("\"$.vars.[$.vars.tmp3]\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("$.vars.tmp1.[$.vars.tmp3]");
+            jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("#.vars.tmp1->(http://localhost:8000/)");
+            jpl.wr("\"#.vars.tmp1->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("$.args.tmp2->(http://localhost:8000/)");
+            jpl.wr("\"$.args.tmp2->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("#.vars.tmp1.1->(http://localhost:8000/)");
+            jpl.wr("\"#.vars.tmp1.1->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("$.args.tmp2.tmp->(http://localhost:8000/)");
+            jpl.wr("\"$.args.tmp2.tmp->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("$.vars.tmp3.4->(http://localhost:8000/)");
+            jpl.wr("\"$.vars.tmp3.4->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("test->(http://localhost:8000/)");
+            jpl.wr("\"test->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("<#.vars.tmp1>->(http://localhost:8000/)");
+            jpl.wr("\"<#.vars.tmp1>->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("$.vars.[$.vars.tmp3]->(http://localhost:8000/)");
+            jpl.wr("\"$.vars.[$.vars.tmp3]->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.getPathAndUrlFromRef("$.vars.tmp1.[$.vars.tmp3]->(http://localhost:8000/)");
+            jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]->(http://localhost:8000/)\" is " + bres);            
+
+            jpl.wr("====================== TEST -2.50: Unit Tests: getSysObjType ======================");
+            bres = jpl.getSysObjType({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ');
+            jpl.wrObjAbr(bres);
+
+            bres = jpl.getSysObjType(testObj);
+            jpl.wrObjAbr(testObj);
+            jpl.wr(' is ');
+            jpl.wrObjAbr(bres);
+
+            testObj = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
+            bres = jpl.getSysObjType(testObj);
+            jpl.wrObjAbr(testObj);
+            jpl.wr(' is ');
+            jpl.wrObjAbr(bres);
+
+            bres = jpl.getSysObjType("SYS:getLastAsgnValue");
+            jpl.wr("\"SYS:getLastAsgnValue\" is ");
+            jpl.wrObjAbr(bres);
+
+            jpl.wr("====================== TEST -2.40: Unit Tests: sysType ======================");
+            bres = jpl.sysType({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ');
+            jpl.wrObjAbr(bres);
+
+            bres = jpl.sysType(testObj);
+            jpl.wrObjAbr(testObj);
+            jpl.wr(' is ');
+            jpl.wrObjAbr(bres);
+
+            testObj = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
+            bres = jpl.sysType(testObj);
+            jpl.wrObjAbr(testObj);
+            jpl.wr(' is ');
+            jpl.wrObjAbr(bres);
+
+            bres = jpl.sysType("SYS:getLastAsgnValue");
+            jpl.wr("\"SYS:getLastAsgnValue\" is ");
+            jpl.wrObjAbr(bres);
+
+            jpl.wr("====================== TEST -2.30: Unit Tests: isFullFor ======================");
+            bres = jpl.isFullFor({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ');
+            jpl.wrObjAbr(bres);
+
+            bres = jpl.isFullFor(testObj);
+            jpl.wrObjAbr(testObj);
+            jpl.wr(' is ');
+            jpl.wrObjAbr(bres);
+
+            bres = jpl.isFullFor("SYS:getLastAsgnValue");
+            jpl.wr("\"SYS:getLastAsgnValue\" is ");
+            jpl.wrObjAbr(bres);
+
+            jpl.wr("====================== TEST -2.20: Unit Tests: isForEach ======================");
+            bres = jpl.isForEach({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ' + bres);
+
+            bres = jpl.isForEach({"sys": "for", "each2": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            jpl.wr('{"sys": "for", "each2": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ' + bres);
+
+            bres = jpl.isForEach("SYS:getLastAsgnValue");
+            jpl.wr("\"SYS:getLastAsgnValue\" is " + bres);
+
+            jpl.wr("====================== TEST -2.10: Unit Tests: isFuncSys ======================");
+            bres = jpl.isFuncSys("getMax");
+            jpl.wr("\"getMax\" is " + bres);
+
+            bres = jpl.isFuncSys("getMin");
+            jpl.wr("\"getMin\" is " + bres);
+
+            bres = jpl.isFuncSys("SYS::wr");
+            jpl.wr("\"SYS::wr\" is " + bres);
+
+            bres = jpl.isFuncSys("SYS:getLastAsgnValue");
+            jpl.wr("\"SYS:getLastAsgnValue\" is " + bres);
+
+            bres = jpl.isFuncSys("$.vars.tmp3.4");
+            jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+            bres = jpl.isFuncSys("test");
+            jpl.wr("\"test\" is " + bres);
+
+            jpl.wr("====================== TEST -2.00: Unit Tests: isRefStringUrl ======================");
+            bres = jpl.isRefStringUrl("#.vars.tmp1");
+            jpl.wr("\"#.vars.tmp1\" is " + bres);
+
+            bres = jpl.isRefStringUrl("$.args.tmp2");
+            jpl.wr("\"$.args.tmp2\" is " + bres);
+
+            bres = jpl.isRefStringUrl("#.vars.tmp1.1");
+            jpl.wr("\"#.vars.tmp1.1\" is " + bres);
+
+            bres = jpl.isRefStringUrl("$.args.tmp2.tmp");
+            jpl.wr("\"$.args.tmp2.tmp\" is " + bres);
+
+            bres = jpl.isRefStringUrl("$.vars.tmp3.4");
+            jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+            bres = jpl.isRefStringUrl("test");
+            jpl.wr("\"test\" is " + bres);
+
+            bres = jpl.isRefStringUrl("<#.vars.tmp1>");
+            jpl.wr("\"<#.vars.tmp1>\" is " + bres);
+
+            bres = jpl.isRefStringUrl("$.vars.[$.vars.tmp3]");
+            jpl.wr("\"$.vars.[$.vars.tmp3]\" is " + bres);
+
+            bres = jpl.isRefStringUrl("$.vars.tmp1.[$.vars.tmp3]");
+            jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]\" is " + bres);
+
+            bres = jpl.isRefStringUrl("#.vars.tmp1->(http://localhost:8000/)");
+            jpl.wr("\"#.vars.tmp1->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.isRefStringUrl("$.args.tmp2->(http://localhost:8000/)");
+            jpl.wr("\"$.args.tmp2->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.isRefStringUrl("#.vars.tmp1.1->(http://localhost:8000/)");
+            jpl.wr("\"#.vars.tmp1.1->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.isRefStringUrl("$.args.tmp2.tmp->(http://localhost:8000/)");
+            jpl.wr("\"$.args.tmp2.tmp->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.isRefStringUrl("$.vars.tmp3.4->(http://localhost:8000/)");
+            jpl.wr("\"$.vars.tmp3.4->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.isRefStringUrl("test->(http://localhost:8000/)");
+            jpl.wr("\"test->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.isRefStringUrl("<#.vars.tmp1>->(http://localhost:8000/)");
+            jpl.wr("\"<#.vars.tmp1>->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.isRefStringUrl("$.vars.[$.vars.tmp3]->(http://localhost:8000/)");
+            jpl.wr("\"$.vars.[$.vars.tmp3]->(http://localhost:8000/)\" is " + bres);
+
+            bres = jpl.isRefStringUrl("$.vars.tmp1.[$.vars.tmp3]->(http://localhost:8000/)");
+            jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]->(http://localhost:8000/)\" is " + bres);
+
+            jpl.wr("====================== TEST -1.90: Unit Tests: isRefStringArrayDec ======================");
+            bres = jpl.isRefStringArrayDec("#.vars.tmp1");
+            jpl.wr("\"#.vars.tmp1\" is " + bres);
+
+            bres = jpl.isRefStringArrayDec("$.args.tmp2");
+            jpl.wr("\"$.args.tmp2\" is " + bres);
+
+            bres = jpl.isRefStringArrayDec("#.vars.tmp1.1");
+            jpl.wr("\"#.vars.tmp1.1\" is " + bres);
+
+            bres = jpl.isRefStringArrayDec("$.args.tmp2.tmp");
+            jpl.wr("\"$.args.tmp2.tmp\" is " + bres);
+
+            bres = jpl.isRefStringArrayDec("$.vars.tmp3.4");
+            jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+            bres = jpl.isRefStringArrayDec("test");
+            jpl.wr("\"test\" is " + bres);
+
+            bres = jpl.isRefStringArrayDec("<#.vars.tmp1>");
+            jpl.wr("\"<#.vars.tmp1>\" is " + bres);
+
+            bres = jpl.isRefStringArrayDec("$.vars.[$.vars.tmp3]");
+            jpl.wr("\"$.vars.[$.vars.tmp3]\" is " + bres);
+
+            bres = jpl.isRefStringArrayDec("$.vars.tmp1.[$.vars.tmp3]");
+            jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]\" is " + bres);            
+
+            jpl.wr("====================== TEST -1.80: Unit Tests: isRefStringArray ======================");
+            bres = jpl.isRefStringArray("#.vars.tmp1");
+            jpl.wr("\"#.vars.tmp1\" is " + bres);
+
+            bres = jpl.isRefStringArray("$.args.tmp2");
+            jpl.wr("\"$.args.tmp2\" is " + bres);
+
+            bres = jpl.isRefStringArray("$.vars.tmp3");
+            jpl.wr("\"$.vars.tmp3\" is " + bres);
+
+            bres = jpl.isRefStringArray("#.vars.tmp1.1");
+            jpl.wr("\"#.vars.tmp1.1\" is " + bres);
+
+            bres = jpl.isRefStringArray("$.args.tmp2.tmp");
+            jpl.wr("\"$.args.tmp2.tmp\" is " + bres);
+
+            bres = jpl.isRefStringArray("$.vars.tmp3.4");
+            jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+            bres = jpl.isRefStringArray("test");
+            jpl.wr("\"test\" is " + bres);
+
+            bres = jpl.isRefStringArray("<#.vars.tmp1>");
+            jpl.wr("\"<#.vars.tmp1>\" is " + bres);
+
+            bres = jpl.isRefStringArray("$.vars.[$.vars.tmp3]");
+            jpl.wr("\"$.vars.[$.vars.tmp3]\" is " + bres);
+            
+            bres = jpl.isRefStringArray("$.vars.tmp1.[$.vars.tmp3]");
+            jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]\" is " + bres);            
+
+            jpl.wr("====================== TEST -1.71: Unit Tests: isRefStringDec ======================");
+            bres = jpl.isRefStringDec("#.vars.tmp1");
+            jpl.wr("\"#.vars.tmp1\" is " + bres);
+
+            bres = jpl.isRefStringDec("$.args.tmp2");
+            jpl.wr("\"$.args.tmp2\" is " + bres);
+
+            bres = jpl.isRefStringDec("$.vars.tmp3");
+            jpl.wr("\"$.vars.tmp3\" is " + bres);
+
+            bres = jpl.isRefStringDec("#.vars.tmp1.1");
+            jpl.wr("\"#.vars.tmp1.1\" is " + bres);
+
+            bres = jpl.isRefStringDec("$.args.tmp2.tmp");
+            jpl.wr("\"$.args.tmp2.tmp\" is " + bres);
+
+            bres = jpl.isRefStringDec("$.vars.tmp3.4");
+            jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+            bres = jpl.isRefStringDec("test");
+            jpl.wr("\"test\" is " + bres);
+
+            bres = jpl.isRefStringDec("<#.vars.tmp1>");
+            jpl.wr("\"<#.vars.tmp1>\" is " + bres);
+
+            bres = jpl.isRefStringDec("$.vars.[$.vars.tmp3]");
+            jpl.wr("\"$.vars.[$.vars.tmp3]\" is " + bres);
+
+            bres = jpl.isRefStringDec("$.vars.tmp1.[$.vars.tmp3]");
+            jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]\" is " + bres);            
+
+            jpl.wr("====================== TEST -1.70: Unit Tests: isRefString ======================");
+            bres = jpl.isRefString("#.vars.tmp1");
+            jpl.wr("\"#.vars.tmp1\" is " + bres);
+
+            bres = jpl.isRefString("$.args.tmp2");
+            jpl.wr("\"$.args.tmp2\" is " + bres);
+
+            bres = jpl.isRefString("$.vars.tmp3");
+            jpl.wr("\"$.vars.tmp3\" is " + bres);
+
+            bres = jpl.isRefString("#.vars.tmp1.1");
+            jpl.wr("\"#.vars.tmp1.1\" is " + bres);
+
+            bres = jpl.isRefString("$.args.tmp2.tmp");
+            jpl.wr("\"$.args.tmp2.tmp\" is " + bres);
+
+            bres = jpl.isRefString("$.vars.tmp3.4");
+            jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+            bres = jpl.isRefString("test");
+            jpl.wr("\"test\" is " + bres);
+
+            bres = jpl.isRefString("<#.vars.tmp1>");
+            jpl.wr("\"<#.vars.tmp1>\" is " + bres);
+
+            bres = jpl.isRefString("$.vars.[$.vars.tmp3]");
+            jpl.wr("\"$.vars.[$.vars.tmp3]\" is " + bres);
+            
+            bres = jpl.isRefString("$.vars.tmp1.[$.vars.tmp3]");
+            jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]\" is " + bres);            
+
+            jpl.wr("====================== TEST -1.60: Unit Tests: isBaseType ======================");
+            bres = jpl.isBaseType("int[]");
+            jpl.wr("int[] is " + bres);
+
+            bres = jpl.isBaseType("float[]");
+            jpl.wr("float[] is " + bres);
+
+            bres = jpl.isBaseType("bool[]");
+            jpl.wr("bool[] is " + bres);
+
+            bres = jpl.isBaseType("string[]");
+            jpl.wr("string[] is " + bres);
+
+            bres = jpl.isBaseType("int");
+            jpl.wr("int is " + bres);
+
+            bres = jpl.isBaseType("float");
+            jpl.wr("float is " + bres);
+
+            bres = jpl.isBaseType("bool");
+            jpl.wr("bool is " + bres);
+
+            bres = jpl.isBaseType("string");
+            jpl.wr("string is " + bres);
+
+            jpl.wr("====================== TEST -1.60: Unit Tests: isArrayType ======================");
+            bres = jpl.isArrayType("int[]");
+            jpl.wr("int[] is " + bres);
+
+            bres = jpl.isArrayType("float[]");
+            jpl.wr("float[] is " + bres);
+
+            bres = jpl.isArrayType("bool[]");
+            jpl.wr("bool[] is " + bres);
+
+            bres = jpl.isArrayType("string[]");
+            jpl.wr("string[] is " + bres);
+
+            bres = jpl.isArrayType("int");
+            jpl.wr("int is " + bres);
+
+            bres = jpl.isArrayType("float");
+            jpl.wr("float is " + bres);
+
+            bres = jpl.isArrayType("bool");
+            jpl.wr("bool is " + bres);
+
+            bres = jpl.isArrayType("string");
+            jpl.wr("string is " + bres);            
+
+            jpl.wr("====================== TEST -1.50: Unit Tests: isObject ======================");
+            bres = jpl.isObject("1");
+            jpl.wr("\"1\" is " + bres);
+
+            bres = jpl.isObject(1);
+            jpl.wr("1 is " + bres);            
+
+            bres = jpl.isObject(-1);
+            jpl.wr("-1 is " + bres);
+
+            bres = jpl.isObject(1.25);
+            jpl.wr("1.25 is " + bres);
+
+            bres = jpl.isObject(1.0);
+            jpl.wr("1.0 is " + bres);
+
+            bres = jpl.isObject(1.00);
+            jpl.wr("1.00 is " + bres);
+
+            bres = jpl.isObject("1.0");
+            jpl.wr("\"1.0\" is " + bres);            
+
+            bres = jpl.isObject([]);
+            jpl.wr("[] is " + bres);
+
+            bres = jpl.isObject({});
+            jpl.wr("{} is " + bres);
+
+            bres = jpl.isObject(true);
+            jpl.wr("true is " + bres);
+
+            bres = jpl.isObject(false);
+            jpl.wr("false is " + bres);            
+
+            bres = jpl.isObject("test");
+            jpl.wr("\"test\" is " + bres);
+
+            jpl.wr("====================== TEST -1.50: Unit Tests: isArray ======================");
+            bres = jpl.isArray("1");
+            jpl.wr("\"1\" is " + bres);
+
+            bres = jpl.isArray(1);
+            jpl.wr("1 is " + bres);            
+
+            bres = jpl.isArray(-1);
+            jpl.wr("-1 is " + bres);
+
+            bres = jpl.isArray(1.25);
+            jpl.wr("1.25 is " + bres);
+
+            bres = jpl.isArray(1.0);
+            jpl.wr("1.0 is " + bres);
+
+            bres = jpl.isArray(1.00);
+            jpl.wr("1.00 is " + bres);
+
+            bres = jpl.isArray("1.0");
+            jpl.wr("\"1.0\" is " + bres);            
+
+            bres = jpl.isArray([]);
+            jpl.wr("[] is " + bres);
+
+            bres = jpl.isArray({});
+            jpl.wr("{} is " + bres);
+
+            bres = jpl.isArray(true);
+            jpl.wr("true is " + bres);
+
+            bres = jpl.isArray(false);
+            jpl.wr("false is " + bres);            
+
+            bres = jpl.isArray("test");
+            jpl.wr("\"test\" is " + bres);
+
+            jpl.wr("====================== TEST -1.40: Unit Tests: isString ======================");
+            bres = jpl.isString("1");
+            jpl.wr("\"1\" is " + bres);
+
+            bres = jpl.isString(1);
+            jpl.wr("1 is " + bres);            
+
+            bres = jpl.isString(-1);
+            jpl.wr("-1 is " + bres);
+
+            bres = jpl.isString(1.25);
+            jpl.wr("1.25 is " + bres);
+
+            bres = jpl.isString(1.0);
+            jpl.wr("1.0 is " + bres);
+
+            bres = jpl.isString(1.00);
+            jpl.wr("1.00 is " + bres);
+
+            bres = jpl.isString("1.0");
+            jpl.wr("\"1.0\" is " + bres);            
+
+            bres = jpl.isString([]);
+            jpl.wr("[] is " + bres);
+
+            bres = jpl.isString({});
+            jpl.wr("{} is " + bres);
+
+            bres = jpl.isString(true);
+            jpl.wr("true is " + bres);
+
+            bres = jpl.isString(false);
+            jpl.wr("false is " + bres);            
+
+            bres = jpl.isString("test");
+            jpl.wr("\"test\" is " + bres);
+
+            jpl.wr("====================== TEST -1.30: Unit Tests: isNumber ======================");
+            bres = jpl.isNumber("1");
+            jpl.wr("\"1\" is " + bres);
+
+            bres = jpl.isNumber(1);
+            jpl.wr("1 is " + bres);            
+
+            bres = jpl.isNumber(-1);
+            jpl.wr("-1 is " + bres);
+
+            bres = jpl.isNumber(1.25);
+            jpl.wr("1.25 is " + bres);
+
+            bres = jpl.isNumber(1.0);
+            jpl.wr("1.0 is " + bres);
+
+            bres = jpl.isNumber(1.00);
+            jpl.wr("1.00 is " + bres);
+
+            bres = jpl.isNumber("1.0");
+            jpl.wr("\"1.0\" is " + bres);            
+
+            bres = jpl.isNumber([]);
+            jpl.wr("[] is " + bres);
+
+            bres = jpl.isNumber({});
+            jpl.wr("{} is " + bres);
+
+            bres = jpl.isNumber(true);
+            jpl.wr("true is " + bres);
+
+            bres = jpl.isNumber(false);
+            jpl.wr("false is " + bres);            
+
+            bres = jpl.isNumber("test");
+            jpl.wr("\"test\" is " + bres);
+
+            jpl.wr("====================== TEST -1.20: Unit Tests: isFloat ======================");
+            bres = jpl.isFloat("1");
+            jpl.wr("\"1\" is " + bres);
+
+            bres = jpl.isFloat(1);
+            jpl.wr("1 is " + bres);            
+
+            bres = jpl.isFloat(-1);
+            jpl.wr("-1 is " + bres);
+
+            bres = jpl.isFloat(1.25);
+            jpl.wr("1.25 is " + bres);
+
+            bres = jpl.isFloat(1.0);
+            jpl.wr("1.0 is " + bres);
+
+            bres = jpl.isFloat(1.00);
+            jpl.wr("1.00 is " + bres);
+
+            bres = jpl.isFloat("1.0");
+            jpl.wr("\"1.0\" is " + bres);            
+
+            bres = jpl.isFloat([]);
+            jpl.wr("[] is " + bres);
+
+            bres = jpl.isFloat({});
+            jpl.wr("{} is " + bres);
+
+            bres = jpl.isFloat(true);
+            jpl.wr("true is " + bres);
+
+            bres = jpl.isFloat(false);
+            jpl.wr("false is " + bres);            
+
+            bres = jpl.isFloat("test");
+            jpl.wr("\"test\" is " + bres);
+
+            jpl.wr("====================== TEST -1.10: Unit Tests: isInteger ======================");
+            bres = jpl.isInteger("1");
+            jpl.wr("\"1\" is " + bres);
+
+            bres = jpl.isInteger(1);
+            jpl.wr("1 is " + bres);            
+
+            bres = jpl.isInteger(-1);
+            jpl.wr("-1 is " + bres);
+
+            bres = jpl.isInteger(1.25);
+            jpl.wr("1.25 is " + bres);
+
+            bres = jpl.isInteger(1.0);
+            jpl.wr("1.0 is " + bres);
+
+            bres = jpl.isInteger(1.00);
+            jpl.wr("1.00 is " + bres);
+
+            bres = jpl.isInteger("1.0");
+            jpl.wr("\"1.0\" is " + bres);
+
+            bres = jpl.isInteger([]);
+            jpl.wr("[] is " + bres);
+
+            bres = jpl.isInteger({});
+            jpl.wr("{} is " + bres);
+
+            bres = jpl.isInteger(true);
+            jpl.wr("true is " + bres);
+
+            bres = jpl.isInteger(false);
+            jpl.wr("false is " + bres);            
+
+            bres = jpl.isInteger("test");
+            jpl.wr("\"test\" is " + bres);
+
+            jpl.wr("====================== TEST -1.00: Unit Tests: isBool ======================");       
+            bres = jpl.isBool(true);
+            jpl.wr("true is " + bres);
+
+            bres = jpl.isBool("true");
+            jpl.wr("\"true\" is " + bres);
+
+            bres = jpl.isBool(1);
+            jpl.wr("1 is " + bres);
+
+            bres = jpl.isBool(1.0);
+            jpl.wr("1.0 is " + bres);
+
+            bres = jpl.isBool("1");
+            jpl.wr("\"1\" is " + bres);
+
+            bres = jpl.isBool("1.0");
+            jpl.wr("\"1.0\" is " + bres);
+
+            bres = jpl.isBool("yes");
+            jpl.wr("\"yes\" is " + bres);
+
+            bres = jpl.isBool(false);            
+            jpl.wr("false is " + bres);
+
+            bres = jpl.isBool("false");
+            jpl.wr("\"false\" is " + bres);
+
+            bres = jpl.isBool(0);
+            jpl.wr("0 is " + bres);
+
+            bres = jpl.isBool(0.0);
+            jpl.wr("0.0 is " + bres);
+
+            bres = jpl.isBool("0");
+            jpl.wr("\"0\" is " + bres);
+
+            bres = jpl.isBool("0.0");
+            jpl.wr("\"0.0\" is " + bres);
+
+            bres = jpl.isBool("no");
+            jpl.wr("\"no\" is " + bres);
+
+            bres = jpl.isBool("2");
+            jpl.wr("\"2\" is " + bres);            
+
+            bres = jpl.isBool("test");
+            jpl.wr("\"test\" is " + bres);            
+
+            bres = jpl.isBool(2);
+            jpl.wr("2 is " + bres);            
+
+            bres = jpl.isBool(1.25);
+            jpl.wr("1.25 is " + bres);
+
+            bres = jpl.isBool([]);
+            jpl.wr("[] is " + bres);
+
+            bres = jpl.isBool({});
+            jpl.wr("{} is " + bres);
+
+            /////////////////////////////////////////////////////////////////////////////
+
             if(!jpl.validateSysObjClass(jpl.program)) {
                jpl.wr("runProgram: Error: could not validate the class object.");
                return;
@@ -331,7 +993,6 @@
 
             var res = null;
             var tmp = null;
-
 
             /////////////////////////////////////////////////////////////////////////////
             tmp = {"sys": "ref", "val":{"sys": "val", "type": "int", "v": "#.vars.[$.vars.name1]"}};
