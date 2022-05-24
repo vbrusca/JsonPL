@@ -335,7 +335,68 @@
                ]
             };
 
-            //TODO: toBool, toBoolInt
+            //TODO: toBoolInt
+
+            jpl.wr("====================== TEST -2.70: Unit Tests: toBool ======================");       
+            bres = jpl.toBool(true);
+            jpl.wr("true is " + bres);
+
+            bres = jpl.toBool("true");
+            jpl.wr("\"true\" is " + bres);
+
+            bres = jpl.toBool(1);
+            jpl.wr("1 is " + bres);
+
+            bres = jpl.toBool(1.0);
+            jpl.wr("1.0 is " + bres);
+
+            bres = jpl.toBool("1");
+            jpl.wr("\"1\" is " + bres);
+
+            bres = jpl.toBool("1.0");
+            jpl.wr("\"1.0\" is " + bres);
+
+            bres = jpl.toBool("yes");
+            jpl.wr("\"yes\" is " + bres);
+
+            bres = jpl.toBool(false);            
+            jpl.wr("false is " + bres);
+
+            bres = jpl.toBool("false");
+            jpl.wr("\"false\" is " + bres);
+
+            bres = jpl.toBool(0);
+            jpl.wr("0 is " + bres);
+
+            bres = jpl.toBool(0.0);
+            jpl.wr("0.0 is " + bres);
+
+            bres = jpl.toBool("0");
+            jpl.wr("\"0\" is " + bres);
+
+            bres = jpl.toBool("0.0");
+            jpl.wr("\"0.0\" is " + bres);
+
+            bres = jpl.toBool("no");
+            jpl.wr("\"no\" is " + bres);
+
+            bres = jpl.toBool("2");
+            jpl.wr("\"2\" is " + bres);            
+
+            bres = jpl.toBool("test");
+            jpl.wr("\"test\" is " + bres);            
+
+            bres = jpl.toBool(2);
+            jpl.wr("2 is " + bres);            
+
+            bres = jpl.toBool(1.25);
+            jpl.wr("1.25 is " + bres);
+
+            bres = jpl.toBool([]);
+            jpl.wr("[] is " + bres);
+
+            bres = jpl.toBool({});
+            jpl.wr("{} is " + bres);            
             
             jpl.wr("====================== TEST -2.60: Unit Tests: getPathAndUrlFromRef ======================");
             bres = jpl.getPathAndUrlFromRef("#.vars.tmp1");

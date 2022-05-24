@@ -2683,6 +2683,8 @@ jsonPlState.prototype.isFloat = function (arg) {
  * Returns: (true | false)
  */
 jsonPlState.prototype.isBool = function (arg) {
+   var vb = this.toStr(arg);
+   vb = vb.toLowerCase();   
    if (arg === null) {
       return false;
    } else if (typeof arg === 'boolean' || arg instanceof Boolean) {
@@ -2691,7 +2693,7 @@ jsonPlState.prototype.isBool = function (arg) {
       return true;
    } else if (this.isFloat(arg) && arg === 1.0 || arg === 0.0) {
       return true;
-   } else if (this.isString(arg) && (arg === "yes" || arg === "no" || arg === "true" || arg === "false" || arg === "1" || arg === "0" || arg === "1.0" || arg === "0.0")) {
+   } else if (this.isString(arg) && (vb === "yes" || vb === "no" || vb === "true" || vb === "false" || vb === "1" || vb === "0" || vb === "1.0" || vb === "0.0")) {
       return true;
    } else {
       return false;
@@ -3578,21 +3580,42 @@ jsonPlState.prototype.toArray = function (v) {
 /**
  * Name: toBool
  * Desc: Converts the value v to a boolean representation.
- * Arg1: v(the value to convert)
+ * Arg1: arg(the value to convert)
  * Returns: (the bool value of v)
  */
-jsonPlState.prototype.toBool = function (v) {
-   var vb = v + "";
+
+//TODO: sync
+
+jsonPlState.prototype.toBool = function (arg) {
+   var vb = this.toStr(arg);
    vb = vb.toLowerCase();
-   if (vb === "true") {
+   if (arg === null) {
+      return false;
+
+   } else if (typeof arg === 'boolean' || arg instanceof Boolean) {
+      return arg;
+
+   } else if (this.isInteger(arg) && arg === 1) {
       return true;
-   } else if (vb === "1") {
+
+   } else if (this.isInteger(arg) && arg === 0) {
+      return false;
+
+   } else if (this.isFloat(arg) && arg === 1.0) {
       return true;
-   } else if (vb === "yes") {
+
+   } else if (this.isFloat(arg) && arg === 0.0) {
+      return false;
+
+   } else if (this.isString(arg) && (vb === "yes" || vb === "true" || vb === "1" || vb === "1.0")) {
       return true;
+
+   } else if (this.isString(arg) && (vb === "no" || vb === "false" || vb === "0" || vb === "0.0")) {      
+      return false;
+   
    } else {
       return false;
-   }
+   }   
 };
 
 /**
