@@ -335,7 +335,126 @@
                ]
             };
 
-            //TODO: toBoolInt
+            //TODO: toStr, toFloat
+            jpl.wr("====================== TEST -2.90: Unit Tests: toStr ======================");
+            bres = jpl.toStr(1);
+            jpl.wr("1 is " + bres);
+
+            bres = jpl.toStr(1.24);
+            jpl.wr("1.24 is " + bres);            
+
+            bres = jpl.toStr(-1);
+            jpl.wr("-1 is " + bres);
+
+            bres = jpl.toStr([1,2,3]);
+            jpl.wr("[1,2,3] is " + bres);
+
+            bres = jpl.toStr({"test":"test"});
+            jpl.wr("{\"test\":\"test\"} is " + bres);
+
+            bres = jpl.toStr("testing123");
+            jpl.wr("testing123 is " + bres);
+
+            bres = jpl.toStr(false);
+            jpl.wr("false is " + bres);
+
+            jpl.wr("====================== TEST -2.80: Unit Tests: toInt ======================");
+            bres = jpl.toInt("1");
+            jpl.wr("\"1\" is " + bres);
+
+            bres = jpl.toInt(1);
+            jpl.wr("1 is " + bres);            
+
+            bres = jpl.toInt(-1);
+            jpl.wr("-1 is " + bres);
+
+            bres = jpl.toInt(1.25);
+            jpl.wr("1.25 is " + bres);
+
+            bres = jpl.toInt(1.0);
+            jpl.wr("1.0 is " + bres);
+
+            bres = jpl.toInt(1.00);
+            jpl.wr("1.00 is " + bres);
+
+            bres = jpl.toInt("1.0");
+            jpl.wr("\"1.0\" is " + bres);
+
+            bres = jpl.toInt([]);
+            jpl.wr("[] is " + bres);
+
+            bres = jpl.toInt({});
+            jpl.wr("{} is " + bres);
+
+            bres = jpl.toInt(true);
+            jpl.wr("true is " + bres);
+
+            bres = jpl.toInt(false);
+            jpl.wr("false is " + bres);            
+
+            bres = jpl.toInt("test");
+            jpl.wr("\"test\" is " + bres);
+
+            jpl.wr("====================== TEST -2.70: Unit Tests: toBoolInt ======================");       
+            bres = jpl.toBoolInt(true);
+            jpl.wr("true is " + bres);
+
+            bres = jpl.toBoolInt("true");
+            jpl.wr("\"true\" is " + bres);
+
+            bres = jpl.toBoolInt(1);
+            jpl.wr("1 is " + bres);
+
+            bres = jpl.toBoolInt(1.0);
+            jpl.wr("1.0 is " + bres);
+
+            bres = jpl.toBoolInt("1");
+            jpl.wr("\"1\" is " + bres);
+
+            bres = jpl.toBoolInt("1.0");
+            jpl.wr("\"1.0\" is " + bres);
+
+            bres = jpl.toBoolInt("yes");
+            jpl.wr("\"yes\" is " + bres);
+
+            bres = jpl.toBoolInt(false);            
+            jpl.wr("false is " + bres);
+
+            bres = jpl.toBoolInt("false");
+            jpl.wr("\"false\" is " + bres);
+
+            bres = jpl.toBoolInt(0);
+            jpl.wr("0 is " + bres);
+
+            bres = jpl.toBoolInt(0.0);
+            jpl.wr("0.0 is " + bres);
+
+            bres = jpl.toBoolInt("0");
+            jpl.wr("\"0\" is " + bres);
+
+            bres = jpl.toBoolInt("0.0");
+            jpl.wr("\"0.0\" is " + bres);
+
+            bres = jpl.toBoolInt("no");
+            jpl.wr("\"no\" is " + bres);
+
+            bres = jpl.toBoolInt("2");
+            jpl.wr("\"2\" is " + bres);            
+
+            bres = jpl.toBoolInt("test");
+            jpl.wr("\"test\" is " + bres);            
+
+            bres = jpl.toBoolInt(2);
+            jpl.wr("2 is " + bres);            
+
+            bres = jpl.toBoolInt(1.25);
+            jpl.wr("1.25 is " + bres);
+
+            bres = jpl.toBoolInt([]);
+            jpl.wr("[] is " + bres);
+
+            bres = jpl.toBoolInt({});
+            jpl.wr("{} is " + bres);             
 
             jpl.wr("====================== TEST -2.70: Unit Tests: toBool ======================");       
             bres = jpl.toBool(true);

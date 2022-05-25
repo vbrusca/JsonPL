@@ -3517,14 +3517,11 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
  * Arg1: v(the value to convert)
  * Returns: (0 | 1)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.toBoolInt = function (v) {
-   var vb = v + "";
-   vb = vb.toLowerCase();
-   if (vb === "true") {
-      return 1;
-   } else if (vb === "1") {
-      return 1;
-   } else if (vb === "yes") {
+   if(this.toBool(v)) {
       return 1;
    } else {
       return 0;
@@ -3557,8 +3554,17 @@ jsonPlState.prototype.toFloat = function (v) {
  * Arg1: v(the value to convert)
  * Returns: (the string value of v)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.toStr = function (v) {
-   return String(v + "");
+   if(this.isObject(v)) {
+      return JSON.stringify(v);
+   } else if(this.isArray(v)) {
+      return JSON.stringify(v);
+   } else {
+      return String(v + "");
+   }
 };
 
 /**
