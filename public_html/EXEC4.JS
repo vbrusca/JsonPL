@@ -43,7 +43,28 @@ function jsonPlState() {
  * Arg3: sep(an optional string separator) 
  * Returns: const(a {const} bool object) 
  */
+
+//TODO: sync
+
 jsonPlState.prototype.sysWr = function (args, func, sep) {
+   var ret = {};
+   ret.sys = "val";
+   ret.type = "bool";
+   ret.v = "false";
+
+   var ret2 = {};
+   ret2.sys = "const";
+   ret2.val = ret;
+   ret = ret2;
+
+   if(args === null) {
+      this.wr("sysWr: Error: args cannot be null");
+      return ret;
+   } else if(func === null) {
+      this.wr("sysWr: Error: func cannot be null");
+      return ret;
+   }
+
    var len = args.length;
    var i = 0;
    var s = "";
@@ -53,29 +74,25 @@ jsonPlState.prototype.sysWr = function (args, func, sep) {
    }
 
    for (; i < len; i++) {
-      if(this.isArray(args[i].val.v)) {
-         this.sysWr(this.toArray(args[i].val.v), func, ", ");
-      } else {
-         s += this.toStr(args[i].val.v);
-         if(sep !== null) {
-            if(i < len - 1) {
-               s += sep;
+      if(args[i] !== null && this.isSysObj(args[i]) && this.isSysObjVal(args[i].val)) {
+         if(this.isArray(args[i].val.v)) {
+            this.sysWr(this.toArray(args[i].val.v), func, ", ");
+         } else {
+            s += this.toStr(args[i].val.v);
+            if(sep !== null) {
+               if(i < len - 1) {
+                  s += sep;
+               }
             }
          }
+      } else {
+         this.wr("sysWr: Error: could not process argument " + i + ", unknown object type");
+         return ret;
       }
    }
+
    this.wr(s);
-
-   var ret = {};
-   ret.sys = "val";
-   ret.type = "bool";
-   ret.v = "true";
-
-   var ret2 = {};
-   ret2.sys = "const";
-   ret2.val = ret;
-   ret = ret2;
-
+   ret2.val.v = "true";
    return ret;
 };
 
@@ -84,8 +101,15 @@ jsonPlState.prototype.sysWr = function (args, func, sep) {
  * Desc: A system level method to access the last asgn value object.
  * Returns: const(a {const} bool object)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.sysGetLastAsgnValue = function (args, func) {
-   return this.lastAsgnValue;
+   if(this.lastAsgnValue !== null) {
+      return this.lastAsgnValue;
+   } else {
+      return this.getConstBool();
+   }
 };
 
 /**
@@ -93,8 +117,15 @@ jsonPlState.prototype.sysGetLastAsgnValue = function (args, func) {
  * Desc: A system level method to access the last exp return object.
  * Returns: const(a {const} bool object)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.sysGetLastExpReturn = function (args, func) {
-   return this.lastExpReturn;
+   if(this.lastExpReturn !== null) {
+      return this.lastExpReturn;
+   } else {
+      return this.getConstBool();
+   }
 };
 
 /**
@@ -2016,15 +2047,34 @@ jsonPlState.prototype.wrVal = function (v) {
  * Arg2: func(the associated {func} object if any)
  * Returns: ret(a {const} object)
  */
+
+//TODO: sysLen
+
 jsonPlState.prototype.sysLen = function (args, func) {
-   var s = args[0];
+   var s = null;
+   var ret = null;
+   var v = null;
+
+   ret = this.getConst("int", "0");
+   if(args === null) {
+      this.wr("sysLen: Error: args cannot be null");
+      return ret;
+   } else if(func === null) {
+      this.wr("sysLen: Error: func cannot be null");
+      return ret;
+   }
+   s = args[0];
 
    //this.wr("sysType: AAA: ");
    //this.wrObj(s);
 
-   var ret = this.getConst("int", "0");
-   s = this.getRef("string", s.val.v);
-   var v = this.processRef(s, func);
+   if(s !== null && this.isObject(s) && this.isSysObj(s)) {      
+      s = this.getRef("string", s.val.v);
+      v = this.processRef(s, func);
+   } else {
+      this.wr("sysLen: Error: reference argument cannt be null");
+      return ret;     
+   }
 
    //this.wr("sysType: CCC: ");
    //this.wrObj(v);   
@@ -2140,10 +2190,16 @@ jsonPlState.prototype.sysGetArrayIdxRefStr = function (args, func) {
  * Arg2: func(the {func} object associated with this function call)
  * Returns: ret(a {const} object)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.sysGetArrayIdxRef = function (args, func) {
    var ret = this.sysGetRef(args, func);
-   var idx = this.toStr(args[3].val.v);
-   ret.val.v += "." + idx;
+   var idx = null;
+   if(ret.val.v !== "") {
+      idx = this.toStr(args[3].val.v);
+      ret.val.v += "." + idx;
+   }
    //this.wrVal(ret.val);
    return ret;
 };
@@ -2156,11 +2212,35 @@ jsonPlState.prototype.sysGetArrayIdxRef = function (args, func) {
  * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
  * Returns: ret(a {ref} object)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.sysGetRef = function (args, func) {
+   var ret = this.getRef("string", "");
+
+   if(args === null) {
+      this.wr("sysGetRef: Error: args cannot be null");
+      return ret;
+   } else if(func === null) {
+      this.wr("sysGetRef: Error: func cannot be null");
+      return ret;
+   }
+
+   if(this.isArray(args)) {
+      for(var i = 0; i < args.length; i++) {
+         if(!this.isSysObj(args[i]) || !this.isSysObjVal(args[i].val)) {
+            this.wr("sysGetRef: Error: arg " + i + " is not a known object type");
+            return ret;
+         }
+      }
+   } else {
+      this.wr("sysGetRef: Error: arg is not an array object");
+      return ret;      
+   }
+
    var name = this.toStr(args[0].val.v);
    var isVar = this.toBool(args[1].val.v);
-   var funcName = this.toStr(args[2].val.v);
-   var ret = this.getRef("string", "");
+   var funcName = this.toStr(args[2].val.v);   
 
    //this.wr("sysGetRef: AAA");
    if (name !== null && name !== "") {
@@ -2206,12 +2286,36 @@ jsonPlState.prototype.sysGetRef = function (args, func) {
  * Arg4: val(a {const} or {ref} used as the value for the new variable)
  * Returns: ret(a {ref} object)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.sysMalloc = function (args, func) {
+   var ret = this.getConst("string", "");
+
+   if(args === null) {
+      this.wr("sysMalloc: Error: args cannot be null");
+      return ret;
+   } else if(func === null) {
+      this.wr("sysMalloc: Error: func cannot be null");
+      return ret;
+   }
+
+   if(this.isArray(args)) {
+      for(var i = 0; i < args.length; i++) {
+         if(!this.isSysObj(args[i]) || !this.isSysObjVal(args[i].val)) {
+            this.wr("sysMalloc: Error: arg " + i + " is not a known object type");
+            return ret;
+         }
+      }
+   } else {
+      this.wr("sysMalloc: Error: arg is not an array object");
+      return ret;      
+   }
+
    var isClassVar = this.toBool(args[0].val.v);
    var name = this.toStr(args[1].val.v);
    var type = this.toStr(args[2].val.v);
    var val = this.toStr(args[3].val.v);
-   var ret = this.getConst("string", "");
    var prog = this.program;
 
    if(this.isArrayType(type)) {
@@ -2274,14 +2378,38 @@ jsonPlState.prototype.sysMalloc = function (args, func) {
  * Arg4: len(a {const} or {ref} with an integer representing the array length)
  * Returns: ret(a {ref} object)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.sysMallocArray = function (args, func) {
+   var ret = this.getConst("string", "");
+
+   if(args === null) {
+      this.wr("sysMallocArray: Error: args cannot be null");
+      return ret;
+   } else if(func === null) {
+      this.wr("sysMallocArray: Error: func cannot be null");
+      return ret;
+   }
+
+   if(this.isArray(args)) {
+      for(var i = 0; i < args.length; i++) {
+         if(!this.isSysObj(args[i]) || !this.isSysObjVal(args[i].val)) {
+            this.wr("sysMallocArray: Error: arg " + i + " is not a known object type");
+            return ret;
+         }
+      }
+   } else {
+      this.wr("sysMallocArray: Error: arg is not an array object");
+      return ret;      
+   }
+
    var tt = null;
    var isClassVar = this.toBool(args[0].val.v);
    var name = this.toStr(args[1].val.v);
    var type = this.toStr(args[2].val.v);
    var len = this.toInt(args[3].val.v);
    var strict = this.toBool(args[4].val.v);   
-   var ret = this.getConst("string", "");
    var prog = this.program;
 
    if(!this.isArrayType(type)) {
@@ -2376,14 +2504,40 @@ jsonPlState.prototype.sysMallocArray = function (args, func) {
  * Arg2: name(a {const} or {ref} string indicating the name of the var to delete)
  * Returns: ret(a {const} object with a bool value indicating the operation was successful)
  */
+
+//TODO: sync
+
 jsonPlState.prototype.sysClean = function (args, func) {
    //this.wr("sysClean: Info: Receiving ");
    //this.wrObj(args[0]);
    //this.wrObj(args[1]);
-   
+   var ret = this.getConst("bool", "false");
+
+   if(args === null) {
+      this.wr("sysClean: Error: args cannot be null");
+      return ret;
+   } else if(func === null) {
+      this.wr("sysClean: Error: func cannot be null");
+      return ret;
+   }
+
+   if(this.isArray(args)) {
+      if(!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+         this.wr("sysClean: Error: arg 0 is not a known object type");
+         return ret;
+      }
+
+      if(!this.isSysObj(args[1]) || !this.isSysObjVal(args[1].val)) {
+         this.wr("sysClean: Error: arg 1 is not a known object type");
+         return ret;
+      }
+   } else {
+      this.wr("sysClean: Error: arg is not an array object");
+      return ret;      
+   }
+
    var isClassVar = this.toBool(args[0].val.v);
    var name = this.toStr(args[1].val.v);
-   var ret = this.getConst("bool", "false");
    var res = null;
    var prog = this.program;
    var refDec = null;   
