@@ -5092,6 +5092,9 @@ jsonPlState.prototype.processCall = function (objCall, func) {
  * Arg2: func(func obj, sys=func)
  * Returns: {null | (const obj, sys=const)}
  */
+
+//TODO: sync
+
 jsonPlState.prototype.processExp = function (objExp, func) {
    var left = null;
    var op = null;
@@ -5209,6 +5212,30 @@ jsonPlState.prototype.processExp = function (objExp, func) {
                ret.v = this.toBoolInt(left.val.v) / this.toBoolInt(right.val.v);
             }
          }
+      } else if (op.v === "%") {
+         if (left.val.type === "int") {
+            if (parseInt(right.val.v) === 0) {
+               this.wr("processExp: Error: divide by zero error");
+               return null;
+            } else {
+               ret.v = parseInt(left.val.v) % parseInt(right.val.v);
+            }
+         } else if (left.val.type === "float") {
+            if (parseFloat(right.val.v) === 0) {
+               this.wr("processExp: Error: divide by zero error");
+               return null;
+            } else {
+               ret.v = parseFloat(left.val.v) % parseFloat(right.val.v);
+            }
+         } else if (left.val.type === "bool") {
+            if (this.toBoolInt(right.val.v) === 0) {
+               this.wr("processExp: Error: divide by zero error");
+               return null;
+            } else {
+               ret.v = this.toBoolInt(left.val.v) % this.toBoolInt(right.val.v);
+            }
+         }
+
       } else if (op.v === "*") {
          if (left.val.type === "int") {
             ret.v = parseInt(left.val.v) * parseInt(right.val.v);
@@ -5229,6 +5256,19 @@ jsonPlState.prototype.processExp = function (objExp, func) {
       } else if (left.val.type === "bool") {
          ret.v = this.toBool(ret.v) + "";
       }
+
+      ret = ret2;
+      this.lastExpReturn = ret;
+      return ret;
+   } else if(left.val.type === right.val.type && left.val.type === "string" && op.v === "+") {
+      var ret = {};
+      ret.sys = "val";
+      ret.type = left.val.type;
+      ret.v = this.toStr(left.val.v) + this.toStr(right.val.v);
+
+      var ret2 = {};
+      ret2.sys = "const";
+      ret2.val = ret;
 
       ret = ret2;
       this.lastExpReturn = ret;
