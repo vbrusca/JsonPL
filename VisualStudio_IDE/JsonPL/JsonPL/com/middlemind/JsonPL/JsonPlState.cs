@@ -3430,6 +3430,7 @@ namespace com.middlemind.JsonPL
             try
             {
                 var request = WebRequest.Create(url);
+                request.Proxy = null;
                 request.Method = "GET";
                 //request.ContentType = "application/json";
 
@@ -3500,6 +3501,7 @@ namespace com.middlemind.JsonPL
             try
             {
                 var request = WebRequest.Create(url);
+                request.Proxy = null;
                 request.Method = "GET";
                 //request.ContentType = "application/json";
 
@@ -3570,6 +3572,7 @@ namespace com.middlemind.JsonPL
             try
             {
                 var request = WebRequest.Create(url);
+                request.Proxy = null;
                 request.Method = "GET";
                 //request.ContentType = "application/json";
 
