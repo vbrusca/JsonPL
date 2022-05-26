@@ -1,12 +1,12 @@
 <html>
    <head>
-      <title>JsonPL Test 24</title>
+      <title>JsonPL Test 26</title>
       <script type="text/javascript" src="../exec4.js"></script>
       <script type="text/javascript">
          var code = {
             "sys":"class", "name":"test26",
             "call":{"sys":"call", "name":"main", "args":[]},
-            "vars":[
+            "vars":[              
             ],
             "funcs":[
                {"sys":"func", "name":"main",
@@ -18,15 +18,15 @@
                   "lines":[
                      {
                         "sys":"asgn",
-                        "url":"http://localhost:8000/",
-                        "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.1->(http://localhost:8000/)"}},
+                        "url":"http://localhost:8000/?jsonpl=true",
+                        "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.1->(http://localhost:8000/?jsonpl=true)"}},
                         "op":{"sys":"op", "type":"asgn", "v":"+="},
                         "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"200"}}
                      },
                      {
                         "sys":"asgn",
-                        "url":"http://localhost:8000/",
-                        "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"$.vars.ptr1->(http://localhost:8000/)"}},
+                        "url":"http://localhost:8000/?jsonpl=true",
+                        "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"$.vars.ptr1->(http://localhost:8000/?jsonpl=true)"}},
                         "op":{"sys":"op", "type":"asgn", "v":"+="},
                         "right":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"hello world!"}}
                      },                     
@@ -44,7 +44,7 @@
           * Desc: A function to init the test page.
           */
          function init() {
-            var desc = "A test to demonstrate allocating a new array variable and getting its value.";
+            var desc = "A test to demonstrate append assignment using URL references and assignment.";
             var txtArea = document.getElementById('message');
          
             jsonPlState.prototype.wr = function(s) {

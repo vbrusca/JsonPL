@@ -3541,7 +3541,7 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
                   if(this.lastProcessUrlFindPath === null) {
                      this.lastProcessUrlFindPath = "#.vars." + name;
                   }
-                  fnd = this.processUrlFind(url + "?type=get&ref=" + encodeURIComponent("#.vars." + name));
+                  fnd = this.processUrlFind(url + "&type=get&ref=" + encodeURIComponent("#.vars." + name));
                } else {
                   fnd = this.findVar(name, prog);
                }
@@ -3557,7 +3557,7 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
                   if(this.lastProcessUrlFindPath === null) {
                      this.lastProcessUrlFindPath = "$.vars." + name;
                   }                  
-                  fnd = this.processUrlFind(url + "?type=get&ref=" + encodeURIComponent("$.vars." + name));
+                  fnd = this.processUrlFind(url + "&type=get&ref=" + encodeURIComponent("$.vars." + name));
                } else {               
                   fnd = this.findVar(name, func);
                }
@@ -3566,7 +3566,7 @@ jsonPlState.prototype.processRef = function (objRef, func, url=null) {
                   if(this.lastProcessUrlFindPath === null) {
                      this.lastProcessUrlFindPath = "$.args." + name;
                   }
-                  fnd = this.processUrlFind(url + "?type=get&ref=" + encodeURIComponent("$.args." + name));
+                  fnd = this.processUrlFind(url + "&type=get&ref=" + encodeURIComponent("$.args." + name));
                } else {               
                   fnd = this.findArg(name, func);
                }
@@ -4344,12 +4344,12 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
 
    //this.wr("-----------------111:");
    //this.wrObj(left);
-
    var hasUrl = this.isRefStringUrl(left.val.v);
    var hasUrlAttr = this.validateProperties(objAsgn, ["url"]);
    var vals = null;
    var url = null;
    var path = null;
+   var origRefVal = null;
 
    if(hasUrl && !hasUrlAttr) {
       //if inherent url is detected
@@ -4366,6 +4366,7 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
       hasUrl = false;
    }
 
+   origRefVal = left.val.v;
    left = this.processRef(left, func);
    //this.wr("-----------------111:");
    //this.wrObj(left);
@@ -4387,6 +4388,16 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
    if (left === null) {
       this.wr("processAsgn: Error: error processing left");
       return null;
+   }
+
+   var hasPubs = false;
+   if(this.validateProperties(left, ["pubs"]) && this.isArray(left.pubs)) {
+      hasPubs = true;
+      path = origRefVal;
+   }
+
+   if(this.VERBOSE) {
+      this.wr("processAsgn: has publications: " + hasPubs + ", Found: " + this.toStr(left.pubs) + ", Path: " + origRefVal);
    }
 
    //this.wr("-----------------2222:");
@@ -4481,9 +4492,19 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
          if(hasUrl) {
             //url, path, obj
             //?type=set&ref=   &cat=   &obj=
-            this.processUrlSet(url + "?type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(nval));
+            this.processUrlSet(url + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(nval));
          } else {
             left.val.v = nval;
+         }
+
+         if(hasPubs) {
+            for(var k = 0; k < left.pubs.length; k++) {
+               var nurl = null;
+               if(this.isString(left.pubs[k])) {
+                  nurl = left.pubs[k];
+                  this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(nval));                  
+               }
+            }
          }
 
          //this.wr("-----left after:");
@@ -4506,9 +4527,19 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
          
          if(hasUrl) {
             //url, path, obj
-            this.processUrlSet(url + "?type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(this.toStr(rightOrig.val.v)));
+            this.processUrlSet(url + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(this.toStr(rightOrig.val.v)));
          } else {
             leftOrig.val.v = rightOrig.val.v;
+         }
+
+         if(hasPubs) {
+            for(var k = 0; k < left.pubs.length; k++) {
+               var nurl = null;
+               if(this.isString(left.pubs[k])) {
+                  nurl = left.pubs[k];
+                  this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(rightOrig.val.v));                  
+               }
+            }
          }
 
          //this.wr("-----left after:");
@@ -4538,6 +4569,16 @@ jsonPlState.prototype.processAsgn = function (objAsgn, func) {
             this.processUrlSet(url + encodeURIComponent(path) + "&cat=array&obj=" + encodeURIComponent(JSON.stringify(tmpA)));            
          } else {         
             left.val.v = tmpA;
+         }
+
+         if(hasPubs) {
+            for(var k = 0; k < left.pubs.length; k++) {
+               var nurl = null;
+               if(this.isString(left.pubs[k])) {
+                  nurl = left.pubs[k];
+                  this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(JSON.stringify(tmpA)));                  
+               }
+            }
          }
 
          //this.wr("-----left after:");
@@ -5018,7 +5059,7 @@ jsonPlState.prototype.processCall = function (objCall, func) {
          } else if(hasUrl) {
             //call URL function
             //?type=call&name=urlFunc1&args=
-            ret = this.processUrlCall(url + "?type=call&name=" + encodeURIComponent(name) + "&args=" + encodeURIComponent(JSON.stringify(args)));
+            ret = this.processUrlCall(url + "&type=call&name=" + encodeURIComponent(name) + "&args=" + encodeURIComponent(JSON.stringify(args)));
             if(ret !== null) {
                var lret = this.getConst(ret.val.type, ret.val.v);
                if (this.VERBOSE) {

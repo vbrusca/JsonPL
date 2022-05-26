@@ -1,27 +1,38 @@
 <html>
    <head>
-      <title>JsonPL Test 25</title>
+      <title>JsonPL Test 27</title>
       <script type="text/javascript" src="../exec4.js"></script>
       <script type="text/javascript">
          var code = {
-            "sys":"class", "name":"test25",
+            "sys":"class", "name":"test26",
             "call":{"sys":"call", "name":"main", "args":[]},
             "vars":[
+               {
+                  "sys":"var", "name":"f1",
+                  "val": {
+                     "sys":"val",
+                     "type":"string",
+                     "v":"undefined string value!"
+                  },
+                  pubs: [
+                     "http://localhost:8000/?jsonpl=true"
+                  ]
+               }               
             ],
             "funcs":[
                {"sys":"func", "name":"main",
                   "args":[ 
                   ],
                   "vars":[
-                     {"sys":"var", "name":"nidx", "val":{"sys":"val", "type":"int", "v":"2"}}
                   ],
                   "ret":{"sys":"val", "type":"bool", "v":"false"},
                   "lines":[
                      {
-                        "sys":"call", "name":"test->(http://localhost:8000/?jsonpl=true)", "args":[
-                           {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Test Function Call: "}}                
-                        ]
-                     },
+                        "sys":"asgn",
+                        "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.f1"}},
+                        "op":{"sys":"op", "type":"asgn", "v":"="},
+                        "right":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"hello world!"}}
+                     },                 
                      {
                         "sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}
                      }
@@ -36,7 +47,7 @@
           * Desc: A function to init the test page.
           */
          function init() {
-            var desc = "A test to demonstrate calling a URL function.";
+            var desc = "A test to demonstrate variable pub.";
             var txtArea = document.getElementById('message');
          
             jsonPlState.prototype.wr = function(s) {
@@ -48,7 +59,7 @@
             
             jsonPlState.prototype.wrObj = function(s) {
                if (this.LOGGING === true) {
-                  console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));                  
+                  console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
                   txtArea.value += (this.WR_PREFIX + JSON.stringify(s, null, 2) + "\n");
                }
             };

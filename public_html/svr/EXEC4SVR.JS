@@ -20,7 +20,15 @@ const data = {
                       {"sys":"var", "name":"item4", "val":{"sys":"val", "type":"int", "v":"-56"}}
                    ]
                 }         
-            }            
+            },
+            {
+                "sys":"var", "name":"f1",
+                "val": {
+                   "sys":"val",
+                   "type":"string",
+                   "v":"undefined string value!"
+                }
+            }                      
         ]
     },
     "func": {
