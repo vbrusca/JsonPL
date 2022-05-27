@@ -1,7 +1,11 @@
 const http = require("http");
 const url = require('url');
+const jsonPlState = require("../EXEC4.JS");
 const host = 'localhost';
 const port = 8000;
+
+require('../EXEC4.JS');
+const jpl = new jsonPlState();
 
 const data = {
     "clss":{
