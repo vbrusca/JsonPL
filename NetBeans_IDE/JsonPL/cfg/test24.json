@@ -16,20 +16,20 @@
              {
                 "sys":"call", "name":"SYS::wr", "args":[
                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Ptr1 Before: "}},
-                   {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/)"}},
+                   {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/?jsonpl=true)"}},
                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":""}}                            
                 ]
              },
              {
                 "sys":"asgn",
-                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/)"}},
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/?jsonpl=true)"}},
                 "op":{"sys":"op", "type":"asgn", "v":"="},
                 "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"200"}}
              },
              {
                 "sys":"asgn",
-                "url":"http://localhost:8000/",
-                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/)"}},
+                "url":"http://localhost:8000/?jsonpl=true",
+                "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.nidx]->(http://localhost:8000/?jsonpl=true)"}},
                 "op":{"sys":"op", "type":"asgn", "v":"="},
                 "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"200"}}
              },

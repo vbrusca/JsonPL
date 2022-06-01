@@ -35,6 +35,7 @@ class jsonPlState {
 
       this.lastProcessUrlFindPath = null;
    }
+
    /**
     * Name: sysWr
     * Desc: A system level write function.
@@ -43,7 +44,9 @@ class jsonPlState {
     * Arg3: sep(an optional string separator)
     * Returns: const(a {const} bool object)
     */
+
    //TODO: sync
+   
    sysWr(args, func, sep) {
       var ret = {};
       ret.sys = "val";
@@ -93,12 +96,15 @@ class jsonPlState {
       ret2.val.v = "true";
       return ret;
    }
+
    /**
     * Name: sysGetLastAsgnValue
     * Desc: A system level method to access the last asgn value object.
     * Returns: const(a {const} bool object)
     */
+   
    //TODO: sync
+   
    sysGetLastAsgnValue(args, func) {
       if (this.lastAsgnValue !== null) {
          return this.lastAsgnValue;
@@ -106,12 +112,15 @@ class jsonPlState {
          return this.getConstBool();
       }
    }
+   
    /**
     * Name: sysGetLastAsgnValue
     * Desc: A system level method to access the last exp return object.
     * Returns: const(a {const} bool object)
     */
+
    //TODO: sync
+   
    sysGetLastExpReturn(args, func) {
       if (this.lastExpReturn !== null) {
          return this.lastExpReturn;
@@ -119,6 +128,7 @@ class jsonPlState {
          return this.getConstBool();
       }
    }
+   
    /**
     * Name: getConstBool
     * Desc: A method to quickly access a constant bool value object.
@@ -137,6 +147,7 @@ class jsonPlState {
 
       return ret;
    }
+
    /**
     * Name: getConst
     * Desc: A method to quickly access a constant value object.
@@ -157,6 +168,7 @@ class jsonPlState {
 
       return ret;
    }
+
    /**
     * Name: getRef
     * Desc: A method to quickly access a ref object.
@@ -177,6 +189,7 @@ class jsonPlState {
 
       return ret;
    }
+
    /**
     * Name: getPathAndUrlFromRef
     * Desc: A function to get the reference path string and the target URL from a URL variable reference.
@@ -184,7 +197,6 @@ class jsonPlState {
     * Returns: ret(an [] with the url, path as members)
     */
    getPathAndUrlFromRef(path) {
-      //this.wr("getPathAndUrlFromRef: Receiving: " + path);
       if (this.isRefStringUrl(path)) {
          //check for URL
          var urlStart = path.indexOf("->(");
@@ -198,14 +210,13 @@ class jsonPlState {
             npath = nvs[0].trim();
             nurl = nvs[1].substring(0, nvs[1].length - 1).trim();
             hasUrl = true;
-            //this.wr("getPathAndUrlFromRef: Returning: " + nurl + ", " + npath);
             return [nurl, npath];
          }
       }
 
-      //this.wr("getPathAndUrlFromRef: Returning: null");
       return null;
    }
+
    /**
     * Name: sysJob1
     * Desc: A system level job method used to demonstrate JCL.
@@ -219,6 +230,7 @@ class jsonPlState {
       ret.val.v = "true";
       return ret;
    }
+
    /**
     * Name: sysJob2
     * Desc: A system level job method used to demonstrate JCL.
@@ -232,6 +244,7 @@ class jsonPlState {
       ret.val.v = "true";
       return ret;
    }
+
    /**
     * Name: sysJob3
     * Desc: A system level job method used to demonstrate JCL.
@@ -245,11 +258,15 @@ class jsonPlState {
       ret.val.v = "true";
       return ret;
    }
+
    /**
     * Name: runProgram
     * Desc: Executes the current program and returns the result.
     * Returns: ret(some {const}, {ref} object)
     */
+
+   //TODO: sync
+
    runProgram() {
       if (this.validateSysObjClass(this.program)) {
          var start = Date.now();
@@ -259,8 +276,15 @@ class jsonPlState {
          if (!this.isObject(callObj.name)) {
             callFuncName = this.toStr(callObj.name);
          } else {
-            this.wr("runProgram: Error: cannot process call name objects at the class level.");
-            return null;
+            if (this.isSysObjConst(callObj.name)) {
+               callFuncName = this.toStr((callObj.name).val.v);
+            } else if (this.isSysObjRef(callObj.name)) {
+               this.wr("runProgram: Error: cannot process call name {ref} objects at the class level.");
+               return null;
+            } else {
+               this.wr("runProgram: Error: cannot process unknown call name objects at the class level.");
+               return null;
+            }
          }
 
          this.wr("runProgram: Call: " + callFuncName);
@@ -281,6 +305,7 @@ class jsonPlState {
          return null;
       }
    }
+
    /////////////////////////SEARCH METHODS
    /**
     * Name: findArg
@@ -301,6 +326,7 @@ class jsonPlState {
       }
       return null;
    }
+
    /**
     * Name: findVar
     * Desc: Search the provided object for a variable with the given name.
@@ -320,6 +346,7 @@ class jsonPlState {
       }
       return null;
    }
+
    /**
     * Name: findFunc
     * Desc: Search the current program for a func with the given name.
@@ -339,6 +366,7 @@ class jsonPlState {
       }
       return null;
    }
+
    /**
     * Name: findSysFunc
     * Desc: Search the current program's system functions for a func with the given name.
@@ -360,6 +388,7 @@ class jsonPlState {
       }
       return null;
    }
+
    /////////////////////////VALIDATION METHODS
    /**
     * Name: validateSysObjIf
@@ -494,16 +523,20 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: isForEach
     * Desc: Determines if the given argument, obj, is a for each loop
     * Arg1: obj(the object to inspect)
     * Returns: ret(some bool, true or false)
     */
+   
    //TODO: sync
+   
    isForEach(obj) {
       return (this.isSysObjFor(obj) && !this.isFullFor(obj) && this.validateProperties(obj, ["each"]));
    }
+   
    /**
     * Name: isFullFor
     * Desc: Determines if the given argument, obj, is a full for loop
@@ -520,6 +553,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjFor
     * Desc: Validates if the given object is a valid for object.
@@ -686,6 +720,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjClass
     * Desc: Validates if the given object is a valid class object.
@@ -731,6 +766,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjFuncLine
     * Desc: Validates if the given object is a valid function line object.
@@ -782,6 +818,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjFunc
     * Desc: Validates if the given object is a valid func object.
@@ -829,6 +866,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjAsgn
     * Desc: Validates if the given object is a valid asgn object.
@@ -842,7 +880,9 @@ class jsonPlState {
     *   "right": {ref | const | exp | bex | call}
     * }
     */
+
    //TODO: sync
+   
    validateSysObjAsgn(obj) {
       if (this.isSysObjAsgn(obj) && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
          var tobj = null;
@@ -924,6 +964,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjBex
     * Desc: Validates if the given object is a valid bex object.
@@ -1019,6 +1060,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjExp
     * Desc: Validates if the given object is a valid exp object.
@@ -1114,6 +1156,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjCall
     * Desc: Validates if the given object is a valid call object.
@@ -1156,6 +1199,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjOp
     * Desc: Validates if the given object is a valid {op} object.
@@ -1177,6 +1221,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
        * Name: validateSysObjConst
        * Desc: Validates if the given object is a valid const object.
@@ -1197,6 +1242,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjVar
     * Desc: Validates if the given object is a valid var object.
@@ -1218,6 +1264,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjArg
     * Desc: Validates if the given object is a valid arg object.
@@ -1239,6 +1286,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjVal
     * Desc: Validates if the given object is a valid val object.
@@ -1251,7 +1299,9 @@ class jsonPlState {
     *   "v": "some valid value"
     * }
     */
+   
    //TODO: sync
+   
    validateSysObjVal(obj) {
       //this.wr("validateSysObjVal: Receiving: ");
       //this.wrObj(obj);   
@@ -1392,6 +1442,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjRef
     * Desc: Validates if the given object is a valid ref object.
@@ -1412,6 +1463,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateSysObjReturn
     * Desc: Validates if the given object is a valid return object.
@@ -1432,6 +1484,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: validateProperties
     * Desc: Validates if the given object has each of the array elements specified in req.
@@ -1452,6 +1505,7 @@ class jsonPlState {
       }
       return true;
    }
+
    /////////////////////////UTILITY METHODS
    /**
     * Name: wrErr
@@ -1463,6 +1517,7 @@ class jsonPlState {
          console.log(e);
       }
    }
+
    /**
     * Name: wr
     * Desc: Writes a string to standard output if LOGGING is on.
@@ -1474,6 +1529,7 @@ class jsonPlState {
          console.log(this.WR_PREFIX + s);
       }
    }
+
    /**
     * Name: getVersion
     * Desc: A method to access the version of this JsonPL interpreter.
@@ -1483,6 +1539,7 @@ class jsonPlState {
       this.wr(this.version);
       return this.version;
    }
+   
    /**
     * Name: cloneJsonObj
     * Desc: A method to clone the given JSON object argument.
@@ -1492,6 +1549,7 @@ class jsonPlState {
    cloneJsonObj(jsonObj) {
       return JSON.parse(JSON.stringify(jsonObj));
    }
+   
    /**
     * Name: cloneJsonObjList
     * Desc: A method to clone the given JSON object list argument.
@@ -1501,6 +1559,7 @@ class jsonPlState {
    cloneJsonObjList(jsonObj) {
       return JSON.parse(JSON.stringify(jsonObj));
    }
+
    /**
     * Name: wrObj
     * Desc: Writes a JSON object to standard output if LOGGING is on.
@@ -1514,6 +1573,7 @@ class jsonPlState {
          this.wr("");
       }
    }
+
    /**
     * Name: wrObjAbr
     * Desc: Writes a JSON object to standard output if LOGGING is on.
@@ -1521,7 +1581,9 @@ class jsonPlState {
     *       Prints object using NON pretty JSON.stringify call.
     * Arg1: jsonObj(jsonObj to write)
     */
+   
    //TODO: sync
+   
    wrObjAbr(jsonObj) {
       if (this.LOGGING === true) {
          this.wr(JSON.stringify(jsonObj));
@@ -1586,8 +1648,6 @@ class jsonPlState {
       }
       s = args[0];
 
-      //this.wr("sysType: AAA: ");
-      //this.wrObj(s);
       if (s !== null && this.isObject(s) && this.isSysObj(s)) {
          s = this.getRef("string", s.val.v);
          v = this.processRef(s, func);
@@ -1596,14 +1656,10 @@ class jsonPlState {
          return ret;
       }
 
-      //this.wr("sysType: CCC: ");
-      //this.wrObj(v);   
       if (v !== null) {
          v = v.val;
       }
 
-      //this.wr("sysType: DDD: ");
-      //this.wrObj(v);
       if (v !== null && this.isSysObj(v)) {
          if (this.isSysObjValArray(v)) {
             ret = this.getConst("int", this.toStr(v.len));
@@ -1621,14 +1677,15 @@ class jsonPlState {
     * Arg2: func(the associated {func} object if any)
     * Returns: ret(a {ref} object)
     */
+
    //TODO: sync
+   
    sysType(args, func) {
       var s = null;
       var ret = null;
       var v = null;
 
       ret = this.getConst("string", "");
-
       if (args === null) {
          this.wr("sysType: Error: args cannot be null");
          return ret;
@@ -1636,11 +1693,8 @@ class jsonPlState {
          this.wr("sysType: Error: func cannot be null");
          return ret;
       }
-
       s = args[0];
 
-      //this.wr("sysType: AAA: ");
-      //this.wrObj(s);
       if (s !== null && this.isObject(s) && this.isSysObj(s)) {
          s = this.getRef("string", s.val.v);
          v = this.processRef(s, func);
@@ -1649,22 +1703,18 @@ class jsonPlState {
          return ret;
       }
 
-      //this.wr("sysType: CCC: ");
-      //this.wrObj(v);   
       if (v !== null) {
          v = v.val;
       }
 
-      //this.wr("sysType: DDD: ");
-      //this.wrObj(v);
       if (v !== null && this.isSysObj(v)) {
          ret = this.getConst("string", this.toStr(v.type));
       }
 
-      //this.wr("sysType: EEE: ");
       //this.wrVal(ret.val);
       return ret;
    }
+
    /**
     * Name: sysGetRefStr
     * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
@@ -1679,6 +1729,7 @@ class jsonPlState {
       //this.wrVal(ret.val);
       return ret;
    }
+
    /**
     * Name: sysGetArrayIdxRefStr
     * Desc: Returns a string object with a reference to the specified array item.
@@ -1693,6 +1744,7 @@ class jsonPlState {
       //this.wrVal(ret.val);
       return ret;
    }
+
    /**
     * Name: sysGetArrayIdxRef
     * Desc: Returns a {ref}} to the specified array item.
@@ -1700,7 +1752,9 @@ class jsonPlState {
     * Arg2: func(the {func} object associated with this function call)
     * Returns: ret(a {const} object)
     */
+
    //TODO: sync
+   
    sysGetArrayIdxRef(args, func) {
       var ret = this.sysGetRef(args, func);
       var idx = null;
@@ -1711,6 +1765,7 @@ class jsonPlState {
       //this.wrVal(ret.val);
       return ret;
    }
+
    /**
     * Name: sysGetRef
     * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
@@ -1719,7 +1774,10 @@ class jsonPlState {
     * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
     * Returns: ret(a {ref} object)
     */
+
    //TODO: sync
+   //CONTINUE HERE
+   
    sysGetRef(args, func) {
       var ret = this.getRef("string", "");
 
@@ -1747,18 +1805,14 @@ class jsonPlState {
       var isVar = this.toBool(args[1].val.v);
       var funcName = this.toStr(args[2].val.v);
 
-      //this.wr("sysGetRef: AAA");
       if (name !== null && name !== "") {
          if (funcName === null || funcName === "") {
-            //this.wr("sysGetRef: BBB");
             //lookup class variable
             var v = this.findVar(name, this.program);
             if (v !== null) {
                ret = this.getRef(v.val.type, "#.vars." + v.name);
             }
-            //this.wr("sysGetRef: CCC");
          } else {
-            //this.wr("sysGetRef: DDD");
             var lfunc = this.findFunc(funcName);
             if (lfunc !== null) {
                if (isVar) {
@@ -1775,12 +1829,12 @@ class jsonPlState {
                   }
                }
             }
-            //this.wr("sysGetRef: EEE");
          }
       }
       //this.wrVal(ret.val);
       return ret;
    }
+
    /**
     * Name: sysMalloc
     * Desc: Returns a {ref} object with a reference to the newly created, non-array, variable {val} or {arg} object specified.
@@ -1790,7 +1844,9 @@ class jsonPlState {
     * Arg4: val(a {const} or {ref} used as the value for the new variable)
     * Returns: ret(a {ref} object)
     */
+   
    //TODO: sync
+   
    sysMalloc(args, func) {
       var ret = this.getConst("string", "");
 
@@ -1846,8 +1902,6 @@ class jsonPlState {
          vtmp.val.type = type;
          vtmp.val.v = val;
 
-         //this.wr("sysMalloc: Adding variable: ");
-         //this.wrObj(vtmp);
          if (isClassVar === true) {
             prog.vars.push(vtmp);
             ret.val.v = "#.vars." + name;
@@ -1855,7 +1909,6 @@ class jsonPlState {
             func.vars.push(vtmp);
             ret.val.v = "$.vars." + name;
          }
-
       } else {
          if (isClassVar === true) {
             ret.val.v = "#.vars." + name;
@@ -1865,10 +1918,10 @@ class jsonPlState {
          this.wr("sysMalloc: Warning: IsClassVar: " + isClassVar + ", Name: " + name + " already exists.");
       }
 
-      //this.wr("sysMalloc: Returning: ");
       //this.wrObj(ret);   
       return ret;
    }
+
    /**
     * Name: sysMallocArray
     * Desc: Returns a {ref} object with a reference to the newly created, non-array, variable {val} or {arg} object specified.
@@ -1878,7 +1931,9 @@ class jsonPlState {
     * Arg4: len(a {const} or {ref} with an integer representing the array length)
     * Returns: ret(a {ref} object)
     */
+
    //TODO: sync
+
    sysMallocArray(args, func) {
       var ret = this.getConst("string", "");
 
@@ -1968,8 +2023,6 @@ class jsonPlState {
             return ret;
          }
 
-         //this.wr("sysMallocArray: Adding variable: " + prog.vars.length);
-         //this.wrObj(vtmp);
          if (isClassVar === true) {
             prog.vars.push(vtmp);
             ret.val.v = "#.vars." + name;
@@ -1977,8 +2030,6 @@ class jsonPlState {
             func.vars.push(vtmp);
             ret.val.v = "$.vars." + name;
          }
-
-         //this.wr("sysMallocArray: Done Adding variable: " + prog.vars.length);
       } else {
          if (isClassVar === true) {
             ret.val.v = "#.vars." + name;
@@ -1988,10 +2039,10 @@ class jsonPlState {
          this.wr("sysMallocArray: Warning: IsClassVar: " + isClassVar + ", Name: " + name + " already exists.");
       }
 
-      //this.wr("sysMallocArray: Returning: ");
       //this.wrObj(ret);   
       return ret;
    }
+
    /**
     * Name: sysClean
     * Desc: Removes the variable specified from the class or function vars..
@@ -1999,11 +2050,10 @@ class jsonPlState {
     * Arg2: name(a {const} or {ref} string indicating the name of the var to delete)
     * Returns: ret(a {const} object with a bool value indicating the operation was successful)
     */
+
    //TODO: sync
+   
    sysClean(args, func) {
-      //this.wr("sysClean: Info: Receiving ");
-      //this.wrObj(args[0]);
-      //this.wrObj(args[1]);
       var ret = this.getConst("bool", "false");
 
       if (args === null) {
@@ -2050,7 +2100,6 @@ class jsonPlState {
          }
       }
 
-      //this.wr("sysClean: LookingFor: " + isClassVar + ", " + name);
       var obj = null;
       if (isClassVar === true) {
          obj = prog;
@@ -2059,11 +2108,8 @@ class jsonPlState {
       }
       res = this.findVar(name, obj);
 
-      //this.wr("sysClean: Found: " + isClassVar + ", " + name);
-      //this.wrObj(res);
       if (res !== null) {
          if (obj !== null) {
-            //this.wr("sysClean: Info: Starting var array length: " + obj.vars.length);
             for (var i = 0; i < obj.vars.length; i++) {
                if (obj.vars[i].name === name) {
                   //this.wr("sysClean: Info: Removing var with name: " + name);
@@ -2081,6 +2127,7 @@ class jsonPlState {
          return ret;
       }
    }
+
    /////////////////////////GENERIC OBJECT ID METHODS
    /**
     * Name: isObject
@@ -2088,7 +2135,9 @@ class jsonPlState {
     * Arg1: arg(a JSON object)
     * Returns: (true | false)
     */
+
    //TODO: sync
+   
    isObject(arg) {
       if (arg === null) {
          return false;
@@ -2098,6 +2147,24 @@ class jsonPlState {
          return false;
       }
    }
+
+   /**
+    * Name: isRefStringClass
+    * Desc: Checks if the given argument is a class reference string.
+    * Arg1: s(some string with a valid reference value)
+    * Returns: ret(some bool, true or false)
+    */
+
+   //TODO: sync
+
+   isRefStringClass(s) {
+      var ns = this.toStr(s);
+      if (ns.indexOf("@.") === 0) {
+         return true;
+      }
+      return false;
+   }
+
    /**
     * Name: isRefString
     * Desc: Checks if the given argument is a reference string.
@@ -2111,6 +2178,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: isRefStringUrl
     * Desc: Checks if the given argument is a URL reference string.
@@ -2124,13 +2192,16 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: isFuncSys
     * Desc: Checks if the given argument is a system function.
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
+   
    //TODO: sync
+   
    isFuncSys(s) {
       var ns = this.toStr(s);
       if (ns.indexOf("SYS::") !== -1) {
@@ -2138,6 +2209,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: isRefStringArray
     * Desc: Checks if the given argument is an array item reference string.
@@ -2161,13 +2233,16 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: isRefStringDec
-    * Desc: Checks if the given argument is a decoded, no [], reference string.
+    * Desc: Checks if the given argument is a decoded, no [] or <>, reference string.
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
+   
    //TODO: sync
+   
    isRefStringDec(s) {
       if (this.isRefString(s)) {
          var ns = this.toStr(s);
@@ -2177,6 +2252,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: isRefStringArrayDec
     * Desc: Checks if the given argument is a decoded, no [], array item reference string.
@@ -2189,6 +2265,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: isArrayType
     * Desc: Checks if the given argument is an array type string.
@@ -2203,6 +2280,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isBaseType
     * Desc: Checks if the given argument is a base type string.
@@ -2217,6 +2295,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isArray
     * Desc: Checks if the given argument is an array.
@@ -2230,6 +2309,7 @@ class jsonPlState {
          return Array.isArray(arg);
       }
    }
+
    /**
     * Name: isString
     * Desc: Checks if the given argument is a string.
@@ -2245,6 +2325,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isNumber
     * Desc: Checks if the given argument is a number.
@@ -2261,13 +2342,16 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isInteger
     * Desc: Checks if the given argument is an integer.
     * Arg1: arg(some value)
     * Returns: (true | false)
     */
+   
    //TODO: sync
+   
    isInteger(arg) {
       var tmp = this.toInt(arg);
       if (arg === null) {
@@ -2278,13 +2362,16 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isFloat
     * Desc: Checks if the given argument is a float.
     * Arg1: arg(some value)
     * Returns: (true | false)
     */
+   
    //TODO: sync
+   
    isFloat(arg) {
       var tmp = this.toStr(arg);
       if (arg === null) {
@@ -2318,6 +2405,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /////////////////////////OBJECT ID METHODS
    /**
     * Name: isSysObjIf
@@ -2332,6 +2420,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjRef
     * Desc: Checks if the given object is a ref object.
@@ -2345,6 +2434,7 @@ class jsonPlState {
          return false;
       }
    }
+   
    /**
     * Name: isSysObjBex
     * Desc: Checks if the given object is a bex object.
@@ -2358,6 +2448,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjExp
     * Desc: Checks if the given object is an exp object.
@@ -2371,6 +2462,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjVal
     * Desc: Checks if the given object is a val object.
@@ -2384,6 +2476,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjArg
     * Desc: Checks if the given object is an {arg} object.
@@ -2397,6 +2490,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjValArray
     * Desc: Checks if the given object is a val object array.
@@ -2410,6 +2504,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjAsgn
     * Desc: Checks if the given object is an asgn object.
@@ -2423,6 +2518,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjConst
     * Desc: Checks if the given object is a const object.
@@ -2436,6 +2532,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjVar
     * Desc: Checks if the given object is a var object.
@@ -2449,6 +2546,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjCall
     * Desc: Checks if the given object is a call object.
@@ -2462,6 +2560,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjClass
     * Desc: Checks if the given object is a {class} object.
@@ -2475,6 +2574,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjFuncLine
     * Desc: Checks if the given object is a functio line object.
@@ -2504,6 +2604,7 @@ class jsonPlState {
       }
       return false;
    }
+
    /**
     * Name: isSysObjFunc
     * Desc: Checks if the given object is a func object.
@@ -2517,6 +2618,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjFor
     * Desc: Checks if the given object is a for object.
@@ -2530,6 +2632,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjOp
     * Desc: Checks if the given object is an op object.
@@ -2543,6 +2646,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObjReturn
     * Desc: Checks if the given object is a return object.
@@ -2556,6 +2660,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isSysObj
     * Desc: Checks if the given object is a object.
@@ -2569,13 +2674,16 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: getSysObjType
     * Desc: Gets the value of the sys attribute of the given object.
     * Arg1: obj(sys obj to check)
     * Returns: (true | false)
     */
+   
    //TODO: sync
+   
    getSysObjType(obj) {
       if (this.isObject(obj) === true && this.isSysObj(obj) === true) {
          return obj.sys;
@@ -2583,6 +2691,7 @@ class jsonPlState {
          return null;
       }
    }
+
    /////////////////////////PROCESS METHODS
    /**
     * Name: processUrlFind
@@ -2590,7 +2699,9 @@ class jsonPlState {
     * Arg1: url(some complete URL with get message generated by JsonPL)
     * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
     */
+
    //TODO: sync
+   
    processUrlFind(url, async=false) {
       if (this.VERBOSE) {
          this.wr("processUrlFind: Received url: " + url);
@@ -2626,13 +2737,16 @@ class jsonPlState {
       }
       return null;
    }
+
    /**
     * Name: processUrlSet
     * Desc: A function used to set the value of a URL variable.
     * Arg1: url(some complete URL with set message generated by JsonPL)
     * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
     */
+
    //TODO: sync
+   
    processUrlSet(url, async=false) {
       if (this.VERBOSE) {
          this.wr("processUrlSet: Received url: " + url);
@@ -2668,13 +2782,16 @@ class jsonPlState {
       }
       return null;
    }
+
    /**
     * Name: processUrlCall
     * Desc: A function used to call a URL function.
     * Arg1: url(some complete URL with set message generated by JsonPL)
     * Returns: {null | (const obj, sys=var) | (ref obj, sys=arg)}
     */
+   
    //TODO: sync
+   
    processUrlCall(url, async=false) {
       if (this.VERBOSE) {
          this.wr("processUrlCall: Received url: " + url);
@@ -2710,6 +2827,7 @@ class jsonPlState {
       }
       return null;
    }
+
    /**
     * Name: processRef
     * Desc: Processes a class var or func var or arg reference string.
@@ -2717,7 +2835,7 @@ class jsonPlState {
     * Arg2: func(func obj, sys=func)
     * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
     */
-   processRef(objRef, func, url = null) {
+   processRef(objRef, func, url=null) {
       var path = null;
       var vls = null;
       var fnd = null;
@@ -3096,13 +3214,16 @@ class jsonPlState {
       }
       return fnd;
    }
+
    /**
     * Name: toBoolInt
     * Desc: Converts the boolean value v to an integer representation.
     * Arg1: v(the value to convert)
     * Returns: (0 | 1)
     */
+   
    //TODO: sync
+   
    toBoolInt(v) {
       if (this.toBool(v)) {
          return 1;
@@ -3110,6 +3231,7 @@ class jsonPlState {
          return 0;
       }
    }
+
    /**
     * Name: toInt
     * Desc: Converts the value v to an integer representation.
@@ -3119,6 +3241,7 @@ class jsonPlState {
    toInt(v) {
       return parseInt(v);
    }
+
    /**
     * Name: toFloat
     * Desc: Converts the value v to a float representation.
@@ -3128,13 +3251,16 @@ class jsonPlState {
    toFloat(v) {
       return parseFloat(v);
    }
+
    /**
     * Name: toStr
     * Desc: Converts the value v to a string representation.
     * Arg1: v(the value to convert)
     * Returns: (the string value of v)
     */
+   
    //TODO: sync
+   
    toStr(v) {
       if (this.isObject(v)) {
          return JSON.stringify(v);
@@ -3144,6 +3270,7 @@ class jsonPlState {
          return String(v + "");
       }
    }
+
    /**
     * Name: toArray
     * Desc: Converts the value v to an array representation.
@@ -3159,13 +3286,16 @@ class jsonPlState {
          return ret;
       }
    }
+
    /**
     * Name: toBool
     * Desc: Converts the value v to a boolean representation.
     * Arg1: arg(the value to convert)
     * Returns: (the bool value of v)
     */
+   
    //TODO: sync
+   
    toBool(arg) {
       var vb = this.toStr(arg);
       vb = vb.toLowerCase();
@@ -3197,6 +3327,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: processIf
     * Desc: Processes an if statement. Returns the value of the Boolean if statement expression.
@@ -3474,6 +3605,7 @@ class jsonPlState {
          return null;
       }
    }
+
    /**
     * Name: processIfForLines
     * Desc: Processes an array of if statement or for loop lines.
@@ -3540,6 +3672,7 @@ class jsonPlState {
          return ret;
       }
    }
+
    /**
     * Name: processFor
     * Desc: Processes a for loop. Returns the last loop iteration value.
@@ -3590,7 +3723,7 @@ class jsonPlState {
          }
 
          stop = objFor.stop;
-         if (this.isSysObjConst(stop)) { //Check this line
+         if (this.isSysObjConst(stop)) {
             //do nothing
          } else if (this.isSysObjRef(stop)) {
             stop = this.processRef(stop, func);
@@ -3700,6 +3833,7 @@ class jsonPlState {
       }
       return ret;
    }
+
    /**
     * Name: processAsgn
     * Desc: Processes an assigment. Returns true value.
@@ -3707,7 +3841,9 @@ class jsonPlState {
     * Arg2: func(func obj, sys=func)
     * Returns: {null | (const obj, sys=const)}
     */
+
    //TODO: sync
+   
    processAsgn(objAsgn, func) {
       var left = null;
       var op = null;
@@ -3746,8 +3882,6 @@ class jsonPlState {
          rightIsRef = true;
       }
 
-      //this.wr("-----------------111:");
-      //this.wrObj(left);
       var hasUrl = this.isRefStringUrl(left.val.v);
       var hasUrlAttr = this.validateProperties(objAsgn, ["url"]);
       var vals = null;
@@ -3770,10 +3904,9 @@ class jsonPlState {
          hasUrl = false;
       }
 
-      origRefVal = left.val.v;
+      origRefVal = this.toStr(left.val.v);
       left = this.processRef(left, func);
-      //this.wr("-----------------111:");
-      //this.wrObj(left);
+
       if (this.VERBOSE) {
          this.wr("processAsgn: HasUrl: " + hasUrl + ", HasUrlAttr:" + hasUrlAttr);
       }
@@ -3803,8 +3936,6 @@ class jsonPlState {
          this.wr("processAsgn: has publications: " + hasPubs + ", Found: " + this.toStr(left.pubs) + ", Path: " + origRefVal);
       }
 
-      //this.wr("-----------------2222:");
-      //this.wrObj(this.program.vars);
       if (this.isSysObjConst(right)) {
          //do nothing, all set      
       } else if (this.isSysObjRef(right)) {
@@ -3851,12 +3982,6 @@ class jsonPlState {
       ret2.val = ret;
       ret = ret2;
 
-      //this.wr("-----left before:");
-      //this.wrObj(left);
-      //this.wr("-----left before 000:");
-      //this.wrObj(this.program.vars);   
-      //this.wr("-----right before:");
-      //this.wrObj(right);
       if (left.val.type === right.val.type) {
          if (leftIsBasic && rightIsBasic) {
             //both are basic, dereference if need be, and copy value
@@ -3907,10 +4032,6 @@ class jsonPlState {
                }
             }
 
-            //this.wr("-----left after:");
-            //this.wrObj(left);
-            //this.wr("-----left after AAA:");
-            //this.wrObj(this.program.vars);
             this.lastAsgnValue = this.cloneJsonObj(left);
             this.lastAsgnReturn = ret;
             return ret;
@@ -3941,10 +4062,6 @@ class jsonPlState {
                }
             }
 
-            //this.wr("-----left after:");
-            //this.wrObj(left);
-            //this.wr("-----left after AAA:");
-            //this.wrObj(this.program.vars);
             this.lastAsgnValue = this.cloneJsonObj(left);
             this.lastAsgnReturn = ret;
             return ret;
@@ -3974,15 +4091,11 @@ class jsonPlState {
                   var nurl = null;
                   if (this.isString(left.pubs[k])) {
                      nurl = left.pubs[k];
-                     this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(JSON.stringify(tmpA)), true);
+                     this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=array&obj=" + encodeURIComponent(JSON.stringify(tmpA)), true);
                   }
                }
             }
 
-            //this.wr("-----left after:");
-            //this.wrObj(left);
-            //this.wr("-----left after AAA:");
-            //this.wrObj(this.program.vars);
             this.lastAsgnValue = this.cloneJsonObj(left);
             this.lastAsgnReturn = ret;
             return ret;
@@ -4280,6 +4393,7 @@ class jsonPlState {
     */
 
    //TODO: sync
+   //CONTINUE HERE
    
    processCall(objCall, func) {
       var name = null;
@@ -4520,6 +4634,7 @@ class jsonPlState {
          return null;
       }
    }
+
    /**
     * Name: processExp
     * Desc: Processes an expression. Returns the value of the expression.
@@ -4527,7 +4642,9 @@ class jsonPlState {
     * Arg2: func(func obj, sys=func)
     * Returns: {null | (const obj, sys=const)}
     */
+   
    //TODO: sync
+   
    processExp(objExp, func) {
       var left = null;
       var op = null;
@@ -4709,12 +4826,16 @@ class jsonPlState {
          return null;
       }
    }
+
    /**
     * Name: hasReplDirectives
     * Desc: A function to determine if the given string has any replacement directives defined.
     * Arg1: src(the JSON text to check)
     * Returns: {true | false}
     */
+
+   //TODO: sync
+
    hasReplDirectives(src) {
       if (src === null) {
          this.wr("hasReplDirectives: Error: argument src cannot be null.");
@@ -4727,6 +4848,7 @@ class jsonPlState {
          return true;
       }
    }
+
    /**
     * Name: processReplDirectives
     * Desc: A function to process replacement directive in a string using provided key, value pairs.

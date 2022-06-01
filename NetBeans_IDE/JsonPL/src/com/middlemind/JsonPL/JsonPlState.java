@@ -24,110 +24,111 @@ import java.util.List;
  */
 
  /*
- * The main object used to track the programming language state.
+ * Name: JsonPlState
+ * Desc: A class that handles interpreting JsonPL code.
  * @author Victor G. Brusca, Middlemind Games 03/27/2022 11:17 AM EDT
  */
-@SuppressWarnings("UnusedAssignment")
+@SuppressWarnings({"UnusedAssignment", "IndexOfReplaceableByContains"})
 public class JsonPlState {
 
     /*
     *
-     */
+    */
     public String version = "0.5.1";
 
     /*
     *
-     */
+    */
     public int lineNumCurrent = 0;
 
     /*
     *
-     */
+    */
     public int lineNumPrev = 0;
 
     /*
     *
-     */
+    */
     public int linNumNext = 0;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastForReturn = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastIfReturn = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastBexReturn = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastExpReturn = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastAsgnReturn = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastAsgnValue = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase lastProgramReturn = null;
 
     /*
     *
-     */
+    */
     public JsonObjSysBase program = null;
 
     /*
     *
-     */
+    */
     public boolean LOGGING = true;
 
     /*
     *
-     */
+    */
     public String WR_PREFIX = "";
 
     /*
     * 
-     */
+    */
     public int objId = -1;
 
     /*
     *
-     */
+    */
     public boolean VERBOSE = true;
 
     /*
     *
-     */
+    */
     public Hashtable<String, List<JsonObjSysBase>> system;
 
     /*
     *
-     */
+    */
     public SystemFunctionHandlerJpl systemFunctionHandler = null;
 
     /*
     *
-     */
+    */
     public String lastProcessUrlFindPath = null;
 
     /*
     * Generic class constructor.
-     */
+    */
     public JsonPlState() {
         List<JsonObjSysBase> sfuncs = new ArrayList<>();
         system = new Hashtable<>();
@@ -141,8 +142,27 @@ public class JsonPlState {
     * Arg2: func(the {func} this system function is called from) 
     * Arg3: sep(an optional string separator) 
     * Returns: const(a {const} bool object) 
-     */
+    */
+    
+    //TODO: sync    
+    
     public JsonObjSysBase sysWr(List<JsonObjSysBase> args, JsonObjSysBase func, String sep) throws Exception {
+        JsonObjSysBase ret = new JsonObjSysBase("val");
+        ret.type = "bool";
+        ret.v = "false";
+
+        JsonObjSysBase ret2 = new JsonObjSysBase("const");
+        ret2.val = ret;
+        ret = ret2;
+        
+        if (args == null) {
+            this.wr("sysWr: Error: args cannot be null");
+            return ret;
+        } else if (func == null) {
+            this.wr("sysWr: Error: func cannot be null");
+            return ret;
+        }        
+        
         int len = args.size();
         int i = 0;
         String s = "";
@@ -163,16 +183,9 @@ public class JsonPlState {
                 }
             }
         }
+        
         this.wr(s);
-
-        JsonObjSysBase ret = new JsonObjSysBase("val");
-        ret.type = "bool";
-        ret.v = "true";
-
-        JsonObjSysBase ret2 = new JsonObjSysBase("const");
-        ret2.val = ret;
-        ret = ret2;
-
+        ret2.val.v = "true";        
         return ret;
     }
 
@@ -181,8 +194,15 @@ public class JsonPlState {
      * Desc: A system level method to access the last asgn value object. 
      * Returns: const(a {const} bool object)
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase sysGetLastAsgnValue(List<JsonObjSysBase> args, JsonObjSysBase func) {
-        return this.lastAsgnValue;
+        if (this.lastAsgnValue != null) {
+            return this.lastAsgnValue;
+        } else {
+            return this.getConstBool();
+        }
     }
 
     /*
@@ -190,8 +210,15 @@ public class JsonPlState {
      * Desc: A system level method to access the last exp return object. 
      * Returns: const(a {const} bool object)
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase sysGetLastExpReturn(List<JsonObjSysBase> args, JsonObjSysBase func) {
-        return this.lastExpReturn;
+        if (this.lastExpReturn != null) {
+            return this.lastExpReturn;
+        } else {
+            return this.getConstBool();
+        }
     }
 
     /*
@@ -256,7 +283,6 @@ public class JsonPlState {
     * Returns: ret(an [] with the url, path as members)
      */
     public String[] getPathAndUrlFromRef(String path) {
-        //this.wr("getPathAndUrlFromRef: Receiving: " + path);
         if (this.isRefStringUrl(path)) {
             //check for URL
             int urlStart = path.indexOf("->(");
@@ -270,12 +296,10 @@ public class JsonPlState {
                 npath = nvs[0].trim();
                 nurl = nvs[1].substring(0, nvs[1].length() - 1).trim();
                 hasUrl = true;
-                //this.wr("getPathAndUrlFromRef: Returning: " + nurl + ", " + npath);
                 return new String[]{nurl, npath};
             }
         }
 
-        //this.wr("getPathAndUrlFromRef: Returning: null");
         return null;
     }
 
@@ -326,6 +350,9 @@ public class JsonPlState {
      * Desc: Executes the current program and returns the result. 
      * Returns: ret(some {const}, {ref} object)
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase runProgram() {
         if (this.validateSysObjClass(this.program)) {
             long start = System.currentTimeMillis();
@@ -589,8 +616,11 @@ public class JsonPlState {
      * Arg1: obj(the object to inspect)
      * Returns: ret(some bool, true or false)
      */
+    
+    //TODO: sync
+    
     public boolean isForEach(JsonObjSysBase obj) {
-        return (this.isSysObjFor(obj) && !this.isFullFor(obj));
+        return (this.isSysObjFor(obj) && !this.isFullFor(obj) && this.validateProperties(obj, new String[] {"each"}));
     }
 
     /*
@@ -1426,14 +1456,7 @@ public class JsonPlState {
                         return false;
                     }
                 } else {
-                    //this.wr("===========================");
-                    //this.wrObjList((ArrayList)obj.v);
-
                     List<JsonObjSysBase> tmpA = this.toArray(obj.v);
-
-                    //this.wr("===========================");                 
-                    //this.wrObjList(tmpA);
-                    //this.wr("===========================");
                     int arrayLenActual = tmpA.size();
                     if (arrayLenActual != arrayLen) {
                         this.wr("validateSysObjVal: Error: array length mismatch: " + obj.v + ", type: " + obj.type);
@@ -1445,6 +1468,7 @@ public class JsonPlState {
                         skipArVer = true;
                     }
 
+                    //TODO: sync
                     //array data types
                     if (obj.type.equals("int[]")) {
                         if (!this.isArray(obj.v)) {
@@ -1655,6 +1679,22 @@ public class JsonPlState {
     }
 
     /*
+    * Name: wrObjAbr
+    * Desc: Writes a JSON object to standard output if LOGGING is on.
+    *       Sets the WR_PREFIX to each object written.
+    *       Prints object using NON pretty JSON.stringify call.
+    * Arg1: jsonObj(jsonObj to write)
+    */
+   
+   //TODO: sync
+   
+    public void wrObjAbr(JsonObjSysBase jsonObj) {
+      if (this.LOGGING == true) {
+         Utils.PrintObject(jsonObj, "wrObjAbr", false);
+      }
+   }    
+    
+    /*
      * Name: wrObjList
      * Desc: Writes a JSON object list to write to standard output if LOGGING is on. 
      *       Sets the WR_PREFIX to each object written. 
@@ -1694,23 +1734,36 @@ public class JsonPlState {
      * Arg2: func(the associated {func} object if any)
      * Returns: ret(a {const} object)
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase sysLen(List<JsonObjSysBase> args, JsonObjSysBase func) {
-        JsonObjSysBase s = args.get(0);
+        JsonObjSysBase s = null;
+        JsonObjSysBase ret = null;
+        JsonObjSysBase v = null;
+        
+        ret = this.getConst("int", "0");
+        if (args == null) {
+            this.wr("sysLen: Error: args cannot be null");
+            return ret;
+        } else if (func == null) {
+            this.wr("sysLen: Error: func cannot be null");
+            return ret;
+        }        
+        s = args.get(0);
 
-        //this.wr("sysType: AAA: ");
-        //this.wrObj(s);
-        JsonObjSysBase ret = this.getConst("int", "0");
-        s = this.getRef("string", s.val.v);
-        JsonObjSysBase v = this.processRef(s, func);
-
-        //this.wr("sysType: CCC: ");
-        //this.wrObj(v);   
+        if (s != null && this.isObject(s) && this.isSysObj(s)) {
+            s = this.getRef("string", s.val.v);
+            v = this.processRef(s, func);
+        } else {
+            this.wr("sysLen: Error: reference argument cannt be null");
+            return ret;
+        }
+        
         if (v != null) {
             v = v.val;
         }
 
-        //this.wr("sysType: DDD: ");
-        //this.wrObj(v);
         if (v != null && this.isSysObj(v)) {
             if (this.isSysObjValArray(v)) {
                 ret = this.getConst("int", this.toStr(v.len));
@@ -1728,28 +1781,40 @@ public class JsonPlState {
      * Arg2: func(the associated {func} object if any)
      * Returns: ret(a {ref} object)
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase sysType(List<JsonObjSysBase> args, JsonObjSysBase func) {
-        JsonObjSysBase s = args.get(0);
+        JsonObjSysBase s = null;
+        JsonObjSysBase ret = null;
+        JsonObjSysBase v = null;
 
-        //this.wr("sysType: AAA: ");
-        //this.wrObj(s);
-        JsonObjSysBase ret = this.getConst("string", "");
-        s = this.getRef("string", s.val.v);
-        JsonObjSysBase v = this.processRef(s, func);
+        ret = this.getConst("string", "");        
+        if (args == null) {
+            this.wr("sysType: Error: args cannot be null");
+            return ret;
+        } else if (func == null) {
+            this.wr("sysType: Error: func cannot be null");
+            return ret;
+        }        
+        s = args.get(0);
 
-        //this.wr("sysType: CCC: ");
-        //this.wrObj(v);   
+        if (s != null && this.isObject(s) && this.isSysObj(s)) {
+            s = this.getRef("string", s.val.v);
+            v = this.processRef(s, func);
+        } else {
+            this.wr("sysType: Error: reference argument cannt be null");
+            return ret;
+        }        
+        
         if (v != null) {
             v = v.val;
         }
 
-        //this.wr("sysType: DDD: ");
-        //this.wrObj(v);
         if (v != null && this.isSysObj(v)) {
             ret = this.getConst("string", this.toStr(v.type));
         }
 
-        //this.wr("sysType: EEE: ");        
         //this.wrVal(ret.val);
         return ret;
     }
@@ -1790,11 +1855,17 @@ public class JsonPlState {
     * Arg1: args(a list of {arg} objects)
     * Arg2: func(the {func} object associated with this function call)
     * Returns: ret(a {const} object)
-     */
+    */
+    
+    //TODO: sync
+    
     public JsonObjSysBase sysGetArrayIdxRef(List<JsonObjSysBase> args, JsonObjSysBase func) {
         JsonObjSysBase ret = this.sysGetRef(args, func);
-        String idx = this.toStr(args.get(3).val.v);
-        ret.val.v += "." + idx;
+        String idx = null;
+        if(ret.val.v != "") {
+            idx = this.toStr(args.get(3).val.v);
+            ret.val.v += "." + idx;
+        }
         //this.wrVal(ret.val);
         return ret;
     }
@@ -1807,24 +1878,45 @@ public class JsonPlState {
      * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
      * Returns: ret(a {ref} object)
      */
+    
+    //TODO: sync
+    //CONTINUE HERE
+    
     public JsonObjSysBase sysGetRef(List<JsonObjSysBase> args, JsonObjSysBase func) {
+        JsonObjSysBase ret = this.getRef("string", "");
+
+        if (args == null) {
+            this.wr("sysGetRef: Error: args cannot be null");
+            return ret;
+        } else if (func == null) {
+            this.wr("sysGetRef: Error: func cannot be null");
+            return ret;
+        }
+
+        if (this.isArray(args)) {
+            for (var i = 0; i < args.size(); i++) {
+                if (!this.isSysObj(args.get(i)) || !this.isSysObjVal(args.get(i).val)) {
+                    this.wr("sysGetRef: Error: arg " + i + " is not a known object type");
+                    return ret;
+                }
+            }
+        } else {
+            this.wr("sysGetRef: Error: arg is not an array object");
+            return ret;
+        }
+      
         String name = this.toStr(args.get(0).val.v);
         boolean isVar = this.toBool(args.get(1).val.v);
         String funcName = this.toStr(args.get(2).val.v);
-        JsonObjSysBase ret = this.getRef("string", "");
 
-        //this.wr("sysGetRef: AAA");
         if (name != null && !name.equals("")) {
             if (funcName == null || funcName.equals("")) {
-                //this.wr("sysGetRef: BBB");
                 //lookup class variable
                 JsonObjSysBase v = this.findVar(name, this.program);
                 if (v != null) {
                     ret = this.getRef(v.val.type, "#.vars." + v.name);
                 }
-                //this.wr("sysGetRef: CCC");
             } else {
-                //this.wr("sysGetRef: DDD");
                 JsonObjSysBase lfunc = this.findFunc(funcName);
                 if (lfunc != null) {
                     if (isVar) {
@@ -1841,7 +1933,6 @@ public class JsonPlState {
                         }
                     }
                 }
-                //this.wr("sysGetRef: EEE");
             }
         }
         //this.wrVal(ret.val);
@@ -1857,12 +1948,36 @@ public class JsonPlState {
      * Arg4: val(a {const} or {ref} used as the value for the new variable)
      * Returns: ret(a {ref} object)
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase sysMalloc(List<JsonObjSysBase> args, JsonObjSysBase func) {
+        JsonObjSysBase ret = this.getRef("string", "");
+
+        if (args == null) {
+            this.wr("sysMalloc: Error: args cannot be null");
+            return ret;
+        } else if (func == null) {
+            this.wr("sysMalloc: Error: func cannot be null");
+            return ret;
+        }
+
+        if (this.isArray(args)) {
+            for (var i = 0; i < args.size(); i++) {
+                if (!this.isSysObj(args.get(i)) || !this.isSysObjVal(args.get(i).val)) {
+                    this.wr("sysMalloc: Error: arg " + i + " is not a known object type");
+                    return ret;
+                }
+            }
+        } else {
+            this.wr("sysMalloc: Error: arg is not an array object");
+            return ret;
+        }
+
         boolean isClassVar = this.toBool(args.get(0).val.v);
         String name = this.toStr(args.get(1).val.v);
         String type = this.toStr(args.get(2).val.v);
         String val = this.toStr(args.get(3).val.v);
-        JsonObjSysBase ret = this.getConst("string", "");
         JsonObjSysBase prog = this.program;
 
         if (this.isArrayType(type)) {
@@ -1889,8 +2004,6 @@ public class JsonPlState {
             vtmp.val.type = type;
             vtmp.val.v = val;
 
-            //this.wr("sysMalloc: Adding variable: ");
-            //this.wrObj(vtmp);
             if (isClassVar == true) {
                 prog.vars.add(vtmp);
                 ret.val.v = "#.vars." + name;
@@ -1898,7 +2011,6 @@ public class JsonPlState {
                 func.vars.add(vtmp);
                 ret.val.v = "$.vars." + name;
             }
-
         } else {
             if (isClassVar == true) {
                 ret.val.v = "#.vars." + name;
@@ -1908,7 +2020,6 @@ public class JsonPlState {
             this.wr("sysMalloc: Warning: IsClassVar: " + isClassVar + ", Name: " + name + " already exists.");
         }
 
-        //this.wr("sysMalloc: Returning: ");
         //this.wrObj(ret);   
         return ret;
     }
@@ -1922,14 +2033,38 @@ public class JsonPlState {
      * Arg4: len(a {const} or {ref} with an integer representing the array length)
      * Returns: ret(a {ref} object)
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase sysMallocArray(List<JsonObjSysBase> args, JsonObjSysBase func) {
+        JsonObjSysBase ret = this.getRef("string", "");
+
+        if (args == null) {
+            this.wr("sysMallocArray: Error: args cannot be null");
+            return ret;
+        } else if (func == null) {
+            this.wr("sysMallocArray: Error: func cannot be null");
+            return ret;
+        }
+
+        if (this.isArray(args)) {
+            for (var i = 0; i < args.size(); i++) {
+                if (!this.isSysObj(args.get(i)) || !this.isSysObjVal(args.get(i).val)) {
+                    this.wr("sysMallocArray: Error: arg " + i + " is not a known object type");
+                    return ret;
+                }
+            }
+        } else {
+            this.wr("sysMallocArray: Error: arg is not an array object");
+            return ret;
+        }
+        
         JsonObjSysBase tt = null;
         boolean isClassVar = this.toBool(args.get(0).val.v);
         String name = this.toStr(args.get(1).val.v);
         String type = this.toStr(args.get(2).val.v);
         int len = this.toInt(args.get(3).val.v);
         boolean strict = this.toBool(args.get(4).val.v);
-        JsonObjSysBase ret = this.getConst("string", "");
         JsonObjSysBase prog = this.program;
 
         if (!this.isArrayType(type)) {
@@ -1986,8 +2121,6 @@ public class JsonPlState {
                 return ret;
             }
 
-            //this.wr("sysMallocArray: Adding variable: " + prog.vars.length);
-            //this.wrObj(vtmp);
             if (isClassVar == true) {
                 prog.vars.add(vtmp);
                 ret.val.v = "#.vars." + name;
@@ -1995,8 +2128,6 @@ public class JsonPlState {
                 func.vars.add(vtmp);
                 ret.val.v = "$.vars." + name;
             }
-
-            //this.wr("sysMallocArray: Done Adding variable: " + prog.vars.length);
         } else {
             if (isClassVar == true) {
                 ret.val.v = "#.vars." + name;
@@ -2006,7 +2137,6 @@ public class JsonPlState {
             this.wr("sysMallocArray: Warning: IsClassVar: " + isClassVar + ", Name: " + name + " already exists.");
         }
 
-        //this.wr("sysMallocArray: Returning: ");
         //this.wrObj(ret);   
         return ret;
     }
@@ -2018,14 +2148,37 @@ public class JsonPlState {
      * Arg2: name(a {const} or {ref} string indicating the name of the var to delete)
      * Returns: ret(a {const} object with a bool value indicating the operation was successful)
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase sysClean(List<JsonObjSysBase> args, JsonObjSysBase func) {
-        //this.wr("sysClean: Info: Receiving ");
-        //this.wrObj(args[0]);
-        //this.wrObj(args[1]);
+        JsonObjSysBase ret = this.getConst("bool", "false");
 
+        if (args == null) {
+            this.wr("sysClean: Error: args cannot be null");
+            return ret;
+        } else if (func == null) {
+            this.wr("sysClean: Error: func cannot be null");
+            return ret;
+        }
+
+        if (this.isArray(args)) {
+            if (!this.isSysObj(args.get(0)) || !this.isSysObjVal(args.get(0).val)) {
+                this.wr("sysClean: Error: arg 0 is not a known object type");
+                return ret;
+            }
+
+            if (!this.isSysObj(args.get(1)) || !this.isSysObjVal(args.get(1).val)) {
+                this.wr("sysClean: Error: arg 1 is not a known object type");
+                return ret;
+            }
+        } else {
+            this.wr("sysClean: Error: arg is not an array object");
+            return ret;
+        }
+      
         boolean isClassVar = this.toBool(args.get(0).val.v);
         String name = this.toStr(args.get(1).val.v);
-        JsonObjSysBase ret = this.getConst("bool", "false");
         JsonObjSysBase res = null;
         JsonObjSysBase prog = this.program;
         JsonObjSysBase refDec = null;
@@ -2045,7 +2198,6 @@ public class JsonPlState {
             }
         }
 
-        //this.wr("sysClean: LookingFor: " + isClassVar + ", " + name);
         JsonObjSysBase obj = null;
         if (isClassVar == true) {
             obj = prog;
@@ -2054,11 +2206,8 @@ public class JsonPlState {
         }
         res = this.findVar(name, obj);
 
-        //this.wr("sysClean: Found: " + isClassVar + ", " + name);
-        //this.wrObj(res);
         if (res != null) {
             if (obj != null) {
-                //this.wr("sysClean: Info: Starting var array length: " + obj.vars.length);
                 boolean found = false;
                 int i = 0;
                 for (; i < obj.vars.size(); i++) {
@@ -2090,16 +2239,36 @@ public class JsonPlState {
      * Arg1: arg(a JSON object) 
      * Returns: ret(some bool, true or false)
      */
+    
+    //TODO: sync
+    
     public boolean isObject(Object arg) {
         if (arg == null) {
             return false;
-        } else if (arg instanceof JsonObjSysBase) {
+        } else if (arg instanceof JsonObjSysBase && this.isArray(arg) == false) {
             return true;
         } else {
             return false;
         }
     }
 
+    /*
+     * Name: isRefStringClass
+     * Desc: Checks if the given argument is a class reference string. 
+     * Arg1: s(some string with a valid reference value)
+     * Returns: ret(some bool, true or false)
+     */
+    
+    //TODO: sync
+    
+    public boolean isRefStringClass(Object s) {
+        String ns = this.toStr(s);
+        if (ns.indexOf("@.") == 0) {
+            return true;
+        }
+        return false;
+    }    
+    
     /*
      * Name: isRefString
      * Desc: Checks if the given argument is a reference string. 
@@ -2134,7 +2303,9 @@ public class JsonPlState {
      * Arg1: s(some string with a valid reference value)
      * Returns: ret(some bool, true or false)
      */
+    
     //TODO: sync    
+    
     public boolean isFuncSys(Object s) {
         String ns = this.toStr(s);
         if (ns.indexOf("SYS::") != -1) {
@@ -2173,10 +2344,13 @@ public class JsonPlState {
      * Arg1: s(some string with a valid reference value)
      * Returns: ret(some bool, true or false)
      */
+    
+    //TODO: sync
+    
     public boolean isRefStringDec(Object s) {
         if (this.isRefString(s)) {
             String ns = this.toStr(s);
-            if (ns.indexOf("[") == -1 && ns.indexOf("]") == -1) {
+            if (ns.indexOf("[") == -1 && ns.indexOf("]") == -1 && ns.indexOf("<") == -1 && ns.indexOf(">") == -1) {
                 return true;
             }
         }
@@ -2264,6 +2438,9 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
      */
+    
+    //TODO: sync
+    
     public boolean isNumber(Object arg) {
         if (arg == null) {
             return false;
@@ -2284,6 +2461,9 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
      */
+    
+    //TODO: sync
+    
     public boolean isInteger(Object arg) {
         boolean isIntStr = false;
         try {
@@ -2310,6 +2490,9 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
      */
+    
+    //TODO: sync
+    
     public boolean isFloat(Object arg) {
         boolean isFltStr = false;
         try {
@@ -2336,6 +2519,9 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
      */
+    
+    //TODO: sync    
+    
     public boolean isBool(Object arg) {
         boolean isBlStr = false;
         try {
@@ -2667,8 +2853,11 @@ public class JsonPlState {
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
+    
+    //TODO: sync
+    
     public String getSysObjType(JsonObjSysBase obj) {
-        if (this.isSysObj(obj)) {
+        if (this.isObject(obj) == true && this.isSysObj(obj) == true) {
             return obj.sys;
         } else {
             return null;
@@ -2683,8 +2872,25 @@ public class JsonPlState {
      * Arg2: 
      * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
      */
+    
     //TODO: sync
+    
     public JsonObjSysBase processUrlFind(String url) {
+        return processUrlFind(url, false);
+    }
+    
+    public JsonObjSysBase processUrlFind(String url, boolean async) {
+        if(async) {
+            ProcessUrlFindRunner urlRun = new ProcessUrlFindRunner(this, url);
+            Thread t = new Thread(urlRun);
+            t.start();
+            return null;
+        } else {
+            return processUrlFindExec(url, false);
+        }
+    }
+    
+    public JsonObjSysBase processUrlFindExec(String url, boolean async) {
         if (this.VERBOSE) {
             this.wr("processUrlFind: Received url: " + url);
         }
@@ -2699,7 +2905,7 @@ public class JsonPlState {
         }
 
         try {
-            URL lurl = new URL(url);
+            URL lurl = new URL(url);            
             HttpURLConnection con = (HttpURLConnection) lurl.openConnection();
             con.setRequestMethod("GET");
             //con.setRequestProperty("Content-Type", "application/json");
@@ -2748,8 +2954,25 @@ public class JsonPlState {
      * Arg1: url(some complete URL with set message generated by JsonPL)
      * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
      */
+    
     //TODO: sync
+    
     public JsonObjSysBase processUrlSet(String url) {
+        return processUrlFind(url, false);
+    }
+    
+    public JsonObjSysBase processUrlSet(String url, boolean async) {
+        if(async) {
+            ProcessUrlSetRunner urlRun = new ProcessUrlSetRunner(this, url);
+            Thread t = new Thread(urlRun);
+            t.start();
+            return null;
+        } else {
+            return processUrlSetExec(url, false);
+        }
+    }
+    
+    public JsonObjSysBase processUrlSetExec(String url, boolean async) {
         if (this.VERBOSE) {
             this.wr("processUrlSet: Received url: " + url);
         }
@@ -2813,8 +3036,25 @@ public class JsonPlState {
      * Arg1: url(some complete URL with set message generated by JsonPL)
      * Returns: {null | (const obj, sys=var) | (ref obj, sys=arg)}
      */
+    
     //TODO: sync
+    
     public JsonObjSysBase processUrlCall(String url) {
+        return processUrlFind(url, false);
+    }
+    
+    public JsonObjSysBase processUrlCall(String url, boolean async) {
+        if(async) {
+            ProcessUrlCallRunner urlRun = new ProcessUrlCallRunner(this, url);
+            Thread t = new Thread(urlRun);
+            t.start();
+            return null;
+        } else {
+            return processUrlCallExec(url, false);
+        }
+    }    
+    
+    public JsonObjSysBase processUrlCallExec(String url, boolean async) {
         if (this.VERBOSE) {
             this.wr("processUrlCall: Received url: " + url);
         }
@@ -2879,7 +3119,9 @@ public class JsonPlState {
      * Arg2: func(func obj, sys=func)
      * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
      */
-    @SuppressWarnings("IndexOfReplaceableByContains")
+    
+    //TODO: sync
+    
     public JsonObjSysBase processRef(JsonObjSysBase objRef, JsonObjSysBase func) {
         return processRef(objRef, func, null);
     }
@@ -3140,7 +3382,7 @@ public class JsonPlState {
                                 if (this.lastProcessUrlFindPath == null) {
                                     this.lastProcessUrlFindPath = "#.vars." + name;
                                 }
-                                fnd = this.processUrlFind(url + "?type=get&ref=" + URLEncoder.encode("#.vars." + name, "UTF-8"));
+                                fnd = this.processUrlFind(url + "&type=get&ref=" + URLEncoder.encode("#.vars." + name, "UTF-8"));
                             } catch (Exception e) {
                                 this.wrErr(e);
                                 fnd = null;
@@ -3161,7 +3403,7 @@ public class JsonPlState {
                                 if (this.lastProcessUrlFindPath == null) {
                                     this.lastProcessUrlFindPath = "$.vars." + name;
                                 }
-                                fnd = this.processUrlFind(url + "?type=get&ref=" + URLEncoder.encode("$.vars." + name, "UTF-8"));
+                                fnd = this.processUrlFind(url + "&type=get&ref=" + URLEncoder.encode("$.vars." + name, "UTF-8"));
                             } catch (Exception e) {
                                 this.wrErr(e);
                                 fnd = null;
@@ -3175,7 +3417,7 @@ public class JsonPlState {
                                 if (this.lastProcessUrlFindPath == null) {
                                     this.lastProcessUrlFindPath = "$.args." + name;
                                 }
-                                fnd = this.processUrlFind(url + "?type=get&ref=" + URLEncoder.encode("$.args." + name, "UTF-8"));
+                                fnd = this.processUrlFind(url + "&type=get&ref=" + URLEncoder.encode("$.args." + name, "UTF-8"));
                             } catch (Exception e) {
                                 this.wrErr(e);
                                 fnd = null;
@@ -3301,14 +3543,11 @@ public class JsonPlState {
      * Arg1: v(the value to convert)
      * Returns: (0 | 1)
      */
+    
+    //TODO: sync
+    
     public int toBoolInt(Object v) {
-        String vb = v + "";
-        vb = vb.toLowerCase();
-        if (vb.equals("true")) {
-            return 1;
-        } else if (vb.equals("1")) {
-            return 1;
-        } else if (vb.equals("yes")) {
+        if (this.toBool(v)) {
             return 1;
         } else {
             return 0;
@@ -3345,13 +3584,28 @@ public class JsonPlState {
      * Arg1: v(the value to convert)
      * Returns: (the string value of v)
      */
+    
+    //TODO: sync
+    
     public String toStr(Object v) {
-        return (v + "");
+        if (this.isObject(v)) {
+            return Utils.JSONstringify(v);
+        } else if (this.isArray(v)) {
+            return Utils.JSONstringify(v);
+        } else {
+            return (v + "");
+        }
     }
 
     /*
-     *
+     * Name: processLinkedTreeMapVal
+     * Desc: Process the fields that are sometimes basic data types and sometimes JsonObjSysBase instances.
+     * Arg1: t(The string representation of the JSON object not parsed by default)
+     * Returns: (a new JsonObjSysBase instance)
      */
+    
+    //TODO: sync    
+    
     public JsonObjSysBase processLinkedTreeMapVal(String t) {
         JsonObjSysBase ret = new JsonObjSysBase("val");
         String nval = this.toStr(t);
@@ -3377,8 +3631,14 @@ public class JsonPlState {
     }
 
     /*
-     *
+     * Name: processLinkedTreeMap
+     * Desc: Process the fields that are sometimes basic data types and sometimes JsonObjSysBase instances.
+     * Arg1: t(The unprocessed JSON parse object)
+     * Returns: (a new JsonObjSysBase instance)
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase processLinkedTreeMap(LinkedTreeMap t) {
         LoaderSysBase ldr = new LoaderSysBase();
         LinkedTreeMap lltmp = (LinkedTreeMap) t;
@@ -3432,12 +3692,6 @@ public class JsonPlState {
         if (!this.isObject(nd.val.v)) {
             nd.val.v = this.toStr(nd.val.v);
         }
-
-        if (this.VERBOSE) {
-            //this.wr("processLinkedTreeMap: Returning:");
-            //this.wrObj(nd);
-        }
-
         return nd;
     }
 
@@ -3472,18 +3726,36 @@ public class JsonPlState {
      * Arg1: v(the value to convert)
      * Returns: (the bool value of v)
      */
-    public boolean toBool(Object v) {
-        String vb = v + "";
+    public boolean toBool(Object arg) {
+        String vb = this.toStr(arg);
         vb = vb.toLowerCase();
-        if (vb.equals("true")) {
+        if (arg == null) {
+            return false;
+
+        } else if (arg instanceof Boolean) {
+            return (boolean)arg;
+
+        } else if (this.isInteger(arg) && (int)arg == 1) {
             return true;
-        } else if (vb.equals("1")) {
+
+        } else if (this.isInteger(arg) && (int)arg == 0) {
+            return false;
+
+        } else if (this.isFloat(arg) && (float)arg == 1.0) {
             return true;
-        } else if (vb.equals("yes")) {
+
+        } else if (this.isFloat(arg) && (float)arg == 0.0) {
+            return false;
+
+        } else if (this.isString(arg) && (vb.equals("yes") || vb.equals("true") || vb.equals("1") || vb.equals("1.0"))) {
             return true;
+
+        } else if (this.isString(arg) && (vb.equals("no") || vb.equals("false") || vb.equals("0") || vb.equals("0.0"))) {
+            return false;
+
         } else {
             return false;
-        }
+        }        
     }
 
     /*
@@ -4034,15 +4306,13 @@ public class JsonPlState {
         if (this.isSysObjRef(right)) {
             rightIsRef = true;
         }
-
-        //this.wr("-----------------111:");
-        //this.wrObj(left);
         
         boolean hasUrl = this.isRefStringUrl(left.val.v);
         boolean hasUrlAttr = this.validateProperties(objAsgn, new String[]{"url"});
         String[] vals = null;
         String url = null;
         String path = null;
+        String origRefVal = null;
 
         if (hasUrl && !hasUrlAttr) {
             //if inherent url is detected
@@ -4059,6 +4329,7 @@ public class JsonPlState {
             hasUrl = false;
         }
 
+        origRefVal = this.toStr(left.val.v);
         left = this.processRef(left, func);
 
         if (this.VERBOSE) {
@@ -4079,9 +4350,16 @@ public class JsonPlState {
             this.wr("processAsgn: Error: error processing left");
             return null;
         }
+        
+        boolean hasPubs = false;
+        if (this.validateProperties(left, new String[] {"pubs"}) && this.isArray(left.pubs)) {
+            hasPubs = true;
+            path = origRefVal;
+        }
 
-        //this.wr("-----------------2222:");
-        //this.wrObj(this.program.vars);
+        if (this.VERBOSE) {
+            this.wr("processAsgn: has publications: " + hasPubs + ", Found: " + this.toStr(left.pubs) + ", Path: " + origRefVal);
+        }
         
         if (this.isSysObjConst(right)) {
             //do nothing      
@@ -4127,12 +4405,6 @@ public class JsonPlState {
         ret2.val = ret;
         ret = ret2;
 
-        //this.wr("-----left before:");
-        //this.wrObj(left);
-        //this.wr("-----left before 000:");
-        //this.wrObj(this.program.vars);   
-        //this.wr("-----right before:");
-        //this.wrObj(right);
         if (left.val.type.equals(right.val.type)) {
             if (leftIsBasic && rightIsBasic) {
                 //both are basic, dereference if need be, and copy value
@@ -4167,7 +4439,7 @@ public class JsonPlState {
                 
                 if (hasUrl) {
                     try {
-                        this.processUrlSet(url + "?type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(nval, "UTF-8"));
+                        this.processUrlSet(url + "&type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(nval, "UTF-8"));
                     } catch (Exception e) {
                         this.wrErr(e);
                         this.wr("processAsgn: Error: could not update the remote variable");
@@ -4180,10 +4452,21 @@ public class JsonPlState {
                     left.val.v = nval;
                 }
 
-                //this.wr("-----left after:");
-                //this.wrObj(left);
-                //this.wr("-----left after AAA:");
-                //this.wrObj(this.program.vars);
+                if (hasPubs) {
+                    for (int k = 0; k < left.pubs.size(); k++) {
+                        String nurl = null;
+                        if (this.isString(left.pubs.get(k))) {
+                            nurl = left.pubs.get(k);
+                            try {
+                                this.processUrlSet(nurl + "&type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(nval, "UTF-8"), true);
+                            } catch (Exception e) {
+                                this.wrErr(e);
+                                this.wr("processAsgn: Error: could not update the remote variable");
+                            }
+                        }
+                    }
+                }
+                
                 this.lastAsgnValue = this.cloneJsonObj(left);
                 this.lastAsgnReturn = ret;
                 return ret;
@@ -4212,17 +4495,26 @@ public class JsonPlState {
                     leftOrig.val.v = rightOrig.val.v;
                 }
 
-                //this.wr("-----left after:");
-                //this.wrObj(left);
-                //this.wr("-----left after AAA:");
-                //this.wrObj(this.program.vars);
+                if (hasPubs) {
+                    for (int k = 0; k < left.pubs.size(); k++) {
+                        String nurl = null;
+                        if (this.isString(left.pubs.get(k))) {
+                            nurl = left.pubs.get(k);
+                            try {
+                                this.processUrlSet(nurl + "&type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(this.toStr(rightOrig.val.v), "UTF-8"), true);
+                            } catch (Exception e) {
+                                this.wrErr(e);
+                                this.wr("processAsgn: Error: could not update the remote variable");
+                            }
+                        }
+                    }
+                }                
+                
                 this.lastAsgnValue = this.cloneJsonObj(left);
                 this.lastAsgnReturn = ret;
                 return ret;
             } else if (leftIsArray && rightIsArray && !rightIsRef) {
-                //left is array ref, right is array const, copy value
-                //left.val.v = new ArrayList();
-                
+                //left is array ref, right is array const, copy value                
                 List<JsonObjSysBase> tmpA = null;
                 if(objAsgn.op.v.equals("+=")) {
                    tmpA = this.toArray(left.val.v);
@@ -4250,10 +4542,21 @@ public class JsonPlState {
                     left.val.v = tmpA;
                 }
 
-                //this.wr("-----left after:");
-                //this.wrObj(left);
-                //this.wr("-----left after AAA:");
-                //this.wrObj(this.program.vars);
+                if (hasPubs) {
+                    for (int k = 0; k < left.pubs.size(); k++) {
+                        String nurl = null;
+                        if (this.isString(left.pubs.get(k))) {
+                            nurl = left.pubs.get(k);
+                            try {
+                                this.processUrlSet(nurl + "&type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=array&obj=" + URLEncoder.encode(Utils.JSONstringify(tmpA), "UTF-8"), true);
+                            } catch (Exception e) {
+                                this.wrErr(e);
+                                this.wr("processAsgn: Error: could not update the remote variable");
+                            }
+                        }
+                    }
+                }                
+                                
                 this.lastAsgnValue = this.cloneJsonObj(left);
                 this.lastAsgnReturn = ret;
                 return ret;
@@ -4551,6 +4854,7 @@ public class JsonPlState {
      */
     
     //TODO: sync
+   //CONTINUE HERE    
     
     public JsonObjSysBase processCall(JsonObjSysBase objCall, JsonObjSysBase func) {
         String name = null;
@@ -4778,7 +5082,7 @@ public class JsonPlState {
                     //call URL function
                     //?type=call&name=urlFunc1&args=
                     try {
-                        ret = this.processUrlCall(url + "?type=call&name=" + URLEncoder.encode(name, "UTF-8") + "&args=" + URLEncoder.encode(Utils.JSONstringify(args), "UTF-8"));
+                        ret = this.processUrlCall(url + "&type=call&name=" + URLEncoder.encode(name, "UTF-8") + "&args=" + URLEncoder.encode(Utils.JSONstringify(args), "UTF-8"));
                     } catch (Exception e) {
                         ret = null;
                     }
@@ -4856,6 +5160,9 @@ public class JsonPlState {
      * Arg2: func(func obj, sys=func)
      * Returns: {null | (const obj, sys=const)}
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase processExp(JsonObjSysBase objExp, JsonObjSysBase func) {
         JsonObjSysBase left = null;
         JsonObjSysBase op = null;
@@ -4971,6 +5278,29 @@ public class JsonPlState {
                         ret.v = (this.toBoolInt(left.val.v + "") / this.toBoolInt(right.val.v + "")) + "";
                     }
                 }
+            } else if (op.v.equals("%")) {
+                if (left.val.type.equals("int")) {
+                    if (Integer.parseInt(right.val.v + "") == 0) {
+                        this.wr("processExp: Error: divide by zero error");
+                        return null;
+                    } else {
+                        ret.v = (Integer.parseInt(left.val.v + "") % Integer.parseInt(right.val.v + "")) + "";
+                    }
+                } else if (left.val.type.equals("float")) {
+                    if (Float.parseFloat(right.val.v + "") == 0) {
+                        this.wr("processExp: Error: divide by zero error");
+                        return null;
+                    } else {
+                        ret.v = (Float.parseFloat(left.val.v + "") % Float.parseFloat(right.val.v + "")) + "";
+                    }
+                } else if (left.val.type.equals("bool")) {
+                    if (this.toBoolInt(right.val.v + "") == 0) {
+                        this.wr("processExp: Error: divide by zero error");
+                        return null;
+                    } else {
+                        ret.v = (this.toBoolInt(left.val.v + "") % this.toBoolInt(right.val.v + "")) + "";
+                    }
+                }                
             } else if (op.v.equals("*")) {
                 if (left.val.type.equals("int")) {
                     ret.v = (Integer.parseInt(left.val.v + "") * Integer.parseInt(right.val.v + "")) + "";
@@ -4995,6 +5325,19 @@ public class JsonPlState {
             ret = ret2;
             this.lastExpReturn = ret;
             return ret;
+        } else if (left.val.type.equals(right.val.type) && left.val.type.equals("string") && op.v.equals("+")) {
+            JsonObjSysBase ret = new JsonObjSysBase();
+            ret.sys = "val";
+            ret.type = left.val.type;
+            ret.v = this.toStr(left.val.v) + this.toStr(right.val.v);
+
+            JsonObjSysBase ret2 = new JsonObjSysBase();
+            ret2.sys = "const";
+            ret2.val = ret;
+
+            ret = ret2;
+            this.lastExpReturn = ret;
+            return ret;            
         } else {
             this.wr("processExp: Error: type mismatch: " + left.val.type + " - " + right.val.type);
             return null;
@@ -5007,6 +5350,9 @@ public class JsonPlState {
      * Arg1: src(the JSON text to check)
      * Returns: {true | false}
      */
+    
+    //TODO: sync
+    
     public boolean hasReplDirectives(String src) {
         if (src == null) {
             this.wr("hasReplDirectives: Error: argument src cannot be null.");

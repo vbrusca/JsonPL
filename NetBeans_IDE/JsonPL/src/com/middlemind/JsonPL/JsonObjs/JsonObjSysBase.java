@@ -152,6 +152,11 @@ public class JsonObjSysBase extends JsonObjBase {
    public String url;
    
    /**
+    * 
+    */
+   public List<String> pubs;
+   
+   /**
     *
     * @return
     */

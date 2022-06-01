@@ -4,9 +4,6 @@ const jsonPlState = require("../EXEC4.JS");
 const host = 'localhost';
 const port = 8000;
 
-require('../EXEC4.JS');
-const jpl = new jsonPlState();
-
 const data = {
     "clss":{
         "vars": [
@@ -84,7 +81,6 @@ const requestListener = function (req, res) {
     //console.log(queryObj);
     var ret = {};
     ret.type = "unknown";
-    ret.ref = "unknown";
     ret.error = "true";
     ret.result = {};
     ret.message = "";

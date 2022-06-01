@@ -22,7 +22,8 @@ using System.Web;
 namespace com.middlemind.JsonPL
 {
     /**
-    *
+    * Name: JsonPlState
+    * Desc: A class that handles interpreting JsonPL code.
     * @author Victor G. Brusca, Middlemind Games 03/27/2022 11:17 AM EDT
     */
     public class JsonPlState
@@ -139,8 +140,30 @@ namespace com.middlemind.JsonPL
         * Arg2: func(the {func} this system function is called from) 
         * Returns: const(a {const} bool object) 
         */
+
+        //TODO: synced
+
         public JsonObjSysBase sysWr(List<JsonObjSysBase> args, JsonObjSysBase func, string sep)
         {
+            JsonObjSysBase ret = new JsonObjSysBase("val");
+            ret.type = "bool";
+            ret.v = "false";
+
+            JsonObjSysBase ret2 = new JsonObjSysBase("const");
+            ret2.val = ret;
+            ret = ret2;
+
+            if (args == null)
+            {
+                this.wr("sysWr: Error: args cannot be null");
+                return ret;
+            }
+            else if (func == null)
+            {
+                this.wr("sysWr: Error: func cannot be null");
+                return ret;
+            }
+
             int len = args.Count;
             int i = 0;
             string s = "";
@@ -168,16 +191,9 @@ namespace com.middlemind.JsonPL
                     }
                 }
             }
+
             this.wr(s);
-
-            JsonObjSysBase ret = new JsonObjSysBase("val");
-            ret.type = "bool";
-            ret.v = "true";
-
-            JsonObjSysBase ret2 = new JsonObjSysBase("const");
-            ret2.val = ret;
-            ret = ret2;
-
+            ret2.val.v = "true";
             return ret;
         }
 
@@ -186,9 +202,19 @@ namespace com.middlemind.JsonPL
         * Desc: A system level method to access the last asgn value object.
         * Returns: {(const obj, sys=const)}
         */
+
+        //TODO: synced
+
         public JsonObjSysBase sysGetLastAsgnValue(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
-            return this.lastAsgnValue;
+            if (this.lastAsgnValue != null)
+            {
+                return this.lastAsgnValue;
+            }
+            else
+            {
+                return this.getConstBool();
+            }
         }
 
         /**
@@ -196,9 +222,20 @@ namespace com.middlemind.JsonPL
         * Desc: A system level method to access the last exp return object.
         * Returns: {(const obj, sys=const)}
         */
+
+        //TODO: synced
+        //CONTINUE HERE
+
         public JsonObjSysBase sysGetLastExpReturn(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
-            return this.lastExpReturn;
+            if (this.lastExpReturn != null)
+            {
+                return this.lastExpReturn;
+            }
+            else
+            {
+                return this.getConstBool();
+            }
         }
 
         /**

@@ -44,10 +44,31 @@ public class Utils {
      * @param obj The object to be converted and written in JSON format.
      * @param name The name of the object that's being written in JSON format.
      */
+    
+    //TODO: sync
+    
     public static void PrintObject(Object obj, String name) {
+        PrintObject(obj, name, true);
+    }    
+    
+    /**
+     * A static method used to write the specified object, in JSON format, to
+     * standard output.
+     *
+     * @param obj The object to be converted and written in JSON format.
+     * @param name The name of the object that's being written in JSON format.
+     */
+    
+    //TODO: sync
+    
+    public static void PrintObject(Object obj, String name, boolean printPretty) {
         //Logger.wrl("Utils: PrintObject: Name: '" + name + "'");
         GsonBuilder builder = new GsonBuilder();
-        builder.setPrettyPrinting();
+        
+        if(printPretty) {
+            builder.setPrettyPrinting();
+        }
+        
         Gson gson = builder.create();
         String jsonString = gson.toJson(obj);
 

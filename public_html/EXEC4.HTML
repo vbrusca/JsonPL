@@ -646,257 +646,256 @@
             jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]->(http://localhost:8000/)\" is " + bres);            
 
             jpl.wr("====================== TEST -2.50: Unit Tests: getSysObjType ======================");
-            bres = jpl.getSysObjType({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            tmp = {"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []};
+            bres = jpl.getSysObjType(tmp);
             jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ');
             jpl.wrObjAbr(bres);
 
             bres = jpl.getSysObjType(testObj);
             jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            testObj = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
-            bres = jpl.getSysObjType(testObj);
+            tmp = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
+            bres = jpl.getSysObjType(tmp);
             jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
-            jpl.wrObjAbr(bres);
-
-            bres = jpl.getSysObjType("SYS:getLastAsgnValue");
-            jpl.wr("\"SYS:getLastAsgnValue\" is ");
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
             jpl.wr("====================== TEST -2.49: Unit Tests: sysGetArrayIdxRef ======================");
-            bres = jpl.sysGetArrayIdxRef(1);
+            bres = jpl.sysGetArrayIdxRef(jpl.toArray(1), null);
             jpl.wr("1 is " + bres);
 
-            bres = jpl.sysGetArrayIdxRef(1.24);
+            bres = jpl.sysGetArrayIdxRef(jpl.toArray(1.24), null);
             jpl.wr("1.24 is " + bres);            
 
-            bres = jpl.sysGetArrayIdxRef(-1);
+            bres = jpl.sysGetArrayIdxRef(jpl.toArray(-1), null);
             jpl.wr("-1 is " + bres);
 
-            bres = jpl.sysGetArrayIdxRef([1,2,3]);
+            bres = jpl.sysGetArrayIdxRef(jpl.toArray([1,2,3]), null);
             jpl.wr("[1,2,3] is " + bres);
 
-            bres = jpl.sysGetArrayIdxRef({"test":"test"});
+            bres = jpl.sysGetArrayIdxRef(jpl.toArray("{\"test\":\"test\"}"), null);
             jpl.wr("{\"test\":\"test\"} is " + bres);
 
-            bres = jpl.sysGetArrayIdxRef("testing123");
+            bres = jpl.sysGetArrayIdxRef(jpl.toArray("testing123"), null);
             jpl.wr("testing123 is " + bres);
 
-            bres = jpl.sysGetArrayIdxRef(false);
+            bres = jpl.sysGetArrayIdxRef(jpl.toArray(false), null);
             jpl.wr("false is " + bres);
 
             jpl.wr("====================== TEST -2.48: Unit Tests: sysGetArrayIdxRefStr ======================");
-            bres = jpl.sysGetArrayIdxRefStr(1);
+            bres = jpl.sysGetArrayIdxRefStr(jpl.toArray(1), null);
             jpl.wr("1 is " + bres);
 
-            bres = jpl.sysGetArrayIdxRefStr(1.24);
+            bres = jpl.sysGetArrayIdxRefStr(jpl.toArray(1.24), null);
             jpl.wr("1.24 is " + bres);            
 
-            bres = jpl.sysGetArrayIdxRefStr(-1);
+            bres = jpl.sysGetArrayIdxRefStr(jpl.toArray(-1), null);
             jpl.wr("-1 is " + bres);
 
-            bres = jpl.sysGetArrayIdxRefStr([1,2,3]);
+            bres = jpl.sysGetArrayIdxRefStr(jpl.toArray([1,2,3]), null);
             jpl.wr("[1,2,3] is " + bres);
 
-            bres = jpl.sysGetArrayIdxRefStr({"test":"test"});
+            bres = jpl.sysGetArrayIdxRefStr(jpl.toArray("{\"test\":\"test\"}"), null);
             jpl.wr("{\"test\":\"test\"} is " + bres);
 
-            bres = jpl.sysGetArrayIdxRefStr("testing123");
+            bres = jpl.sysGetArrayIdxRefStr(jpl.toArray("testing123"), null);
             jpl.wr("testing123 is " + bres);
 
-            bres = jpl.sysGetArrayIdxRefStr(false);
+            bres = jpl.sysGetArrayIdxRefStr(jpl.toArray(false), null);
             jpl.wr("false is " + bres);
 
-
             jpl.wr("====================== TEST -2.47: Unit Tests: sysGetRef ======================");
-            bres = jpl.sysGetRef(1);
+            bres = jpl.sysGetRef(jpl.toArray(1), null);
             jpl.wr("1 is " + bres);
 
-            bres = jpl.sysGetRef(1.24);
+            bres = jpl.sysGetRef(jpl.toArray(1.24), null);
             jpl.wr("1.24 is " + bres);            
 
-            bres = jpl.sysGetRef(-1);
+            bres = jpl.sysGetRef(jpl.toArray(-1), null);
             jpl.wr("-1 is " + bres);
 
-            bres = jpl.sysGetRef([1,2,3]);
+            bres = jpl.sysGetRef(jpl.toArray([1,2,3]), null);
             jpl.wr("[1,2,3] is " + bres);
 
-            bres = jpl.sysGetRef({"test":"test"});
+            bres = jpl.sysGetRef(jpl.toArray("{\"test\":\"test\"}"), null);
             jpl.wr("{\"test\":\"test\"} is " + bres);
 
-            bres = jpl.sysGetRef("testing123");
+            bres = jpl.sysGetRef(jpl.toArray("testing123"), null);
             jpl.wr("testing123 is " + bres);
 
-            bres = jpl.sysGetRef(false);
+            bres = jpl.sysGetRef(jpl.toArray(false), null);
             jpl.wr("false is " + bres);
 
             jpl.wr("====================== TEST -2.46: Unit Tests: sysGetRefStr ======================");
-            bres = jpl.sysGetRefStr(1);
+            bres = jpl.sysGetRefStr(jpl.toArray(1), null);
             jpl.wr("1 is " + bres);
 
-            bres = jpl.sysGetRefStr(1.24);
+            bres = jpl.sysGetRefStr(jpl.toArray(1.24), null);
             jpl.wr("1.24 is " + bres);            
 
-            bres = jpl.sysGetRefStr(-1);
+            bres = jpl.sysGetRefStr(jpl.toArray(-1), null);
             jpl.wr("-1 is " + bres);
 
-            bres = jpl.sysGetRefStr([1,2,3]);
+            bres = jpl.sysGetRefStr(jpl.toArray([1,2,3]), null);
             jpl.wr("[1,2,3] is " + bres);
 
-            bres = jpl.sysGetRefStr({"test":"test"});
+            bres = jpl.sysGetRefStr(jpl.toArray("{\"test\":\"test\"}"), null);
             jpl.wr("{\"test\":\"test\"} is " + bres);
 
-            bres = jpl.sysGetRefStr("testing123");
+            bres = jpl.sysGetRefStr(jpl.toArray("testing123"), null);
             jpl.wr("testing123 is " + bres);
 
-            bres = jpl.sysGetRefStr(false);
+            bres = jpl.sysGetRefStr(jpl.toArray(false), null);
             jpl.wr("false is " + bres);
 
             jpl.wr("====================== TEST -2.45: Unit Tests: sysMallocArray ======================");
-            bres = jpl.sysMallocArray({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            tmp = {"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []};
+            bres = jpl.sysMallocArray(jpl.toArray(tmp), null);
             jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ');
             jpl.wrObjAbr(bres);
 
-            bres = jpl.sysMallocArray(testObj);
+            bres = jpl.sysMallocArray(jpl.toArray(testObj), null);
             jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            testObj = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
-            bres = jpl.sysMallocArray(testObj);
-            jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            tmp = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
+            bres = jpl.sysMallocArray(jpl.toArray(tmp), null);
+            jpl.wrObjAbr(tmp);
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            bres = jpl.sysMallocArray("SYS:getLastAsgnValue");
+            bres = jpl.sysMallocArray(jpl.toArray("SYS:getLastAsgnValue"), null);
             jpl.wr("\"SYS:getLastAsgnValue\" is ");
             jpl.wrObjAbr(bres);            
 
             jpl.wr("====================== TEST -2.44: Unit Tests: sysMalloc ======================");
-            bres = jpl.sysMalloc({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            tmp = {"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []};
+            bres = jpl.sysMalloc(jpl.toArray(tmp), null);
             jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ');
             jpl.wrObjAbr(bres);
 
-            bres = jpl.sysMalloc(testObj);
+            bres = jpl.sysMalloc(jpl.toArray(testObj), null);
             jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            testObj = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
-            bres = jpl.sysMalloc(testObj);
-            jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            tmp = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
+            bres = jpl.sysMalloc(jpl.toArray(tmp), null);
+            jpl.wrObjAbr(tmp);
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            bres = jpl.sysMalloc("SYS:getLastAsgnValue");
+            bres = jpl.sysMalloc(jpl.toArray("SYS:getLastAsgnValue"), null);
             jpl.wr("\"SYS:getLastAsgnValue\" is ");
             jpl.wrObjAbr(bres);
 
-            jpl.wr("====================== TEST -2.43: Unit Tests: sysWr ======================");
-            bres = jpl.sysClean({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            jpl.wr("====================== TEST -2.43: Unit Tests: sysClean ======================");
+            tmp = {"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []};
+            bres = jpl.sysClean(jpl.toArray(tmp), null);
             jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ');
             jpl.wrObjAbr(bres);
 
-            bres = jpl.sysClean(testObj);
+            bres = jpl.sysClean(jpl.toArray(testObj), null);
             jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            testObj = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
-            bres = jpl.sysClean(testObj);
-            jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            tmp = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
+            bres = jpl.sysClean(jpl.toArray(tmp), null);
+            jpl.wrObjAbr(tmp);
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            bres = jpl.sysClean("SYS:getLastAsgnValue");
+            bres = jpl.sysClean(jpl.toArray("SYS:getLastAsgnValue"), null);
             jpl.wr("\"SYS:getLastAsgnValue\" is ");
             jpl.wrObjAbr(bres);
 
             jpl.wr("====================== TEST -2.42: Unit Tests: sysWr ======================");
-            bres = jpl.sysWr({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            tmp = {"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []};
+            bres = jpl.sysWr(jpl.toArray(tmp), null, null);
             jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ');
             jpl.wrObjAbr(bres);
 
-            bres = jpl.sysWr(testObj);
+            bres = jpl.sysWr(jpl.toArray(testObj), null, null);
             jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            testObj = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
-            bres = jpl.sysWr(testObj);
-            jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            tmp = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
+            bres = jpl.sysWr(jpl.toArray(tmp), null, null);
+            jpl.wrObjAbr(tmp);
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            bres = jpl.sysWr("SYS:getLastAsgnValue");
+            bres = jpl.sysWr(jpl.toArray("SYS:getLastAsgnValue"), null, null);
             jpl.wr("\"SYS:getLastAsgnValue\" is ");
             jpl.wrObjAbr(bres);
 
             jpl.wr("====================== TEST -2.41: Unit Tests: sysLen ======================");
-            bres = jpl.sysWr({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            tmp = {"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []};
+            bres = jpl.sysLen(jpl.toArray(tmp), null);
             jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ');
             jpl.wrObjAbr(bres);
 
-            bres = jpl.sysWr(testObj);
+            bres = jpl.sysLen(jpl.toArray(testObj), null);
             jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            testObj = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
-            bres = jpl.sysWr(testObj);
-            jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            tmp = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
+            bres = jpl.sysLen(jpl.toArray(tmp), null);
+            jpl.wrObjAbr(tmp);
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            bres = jpl.sysWr("SYS:getLastAsgnValue");
+            bres = jpl.sysLen(jpl.toArray("SYS:getLastAsgnValue"), null);
             jpl.wr("\"SYS:getLastAsgnValue\" is ");
             jpl.wrObjAbr(bres);
 
             jpl.wr("====================== TEST -2.40: Unit Tests: sysType ======================");
-            bres = jpl.sysType({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            tmp = {"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []};
+            bres = jpl.sysType(jpl.toArray(tmp), null);
             jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ');
             jpl.wrObjAbr(bres);
 
-            bres = jpl.sysType(testObj);
+            bres = jpl.sysType(jpl.toArray(testObj), null);
             jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            testObj = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
-            bres = jpl.sysType(testObj);
-            jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
+            tmp = {"sys":"const", "val":{"sys":"val", "type":"int", "v":"567"}};
+            bres = jpl.sysType(jpl.toArray(tmp), null);
+            jpl.wrObjAbr(tmp);
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
-            bres = jpl.sysType("SYS:getLastAsgnValue");
+            bres = jpl.sysType(jpl.toArray("SYS:getLastAsgnValue"), null);
             jpl.wr("\"SYS:getLastAsgnValue\" is ");
             jpl.wrObjAbr(bres);
 
             jpl.wr("====================== TEST -2.30: Unit Tests: isFullFor ======================");
-            bres = jpl.isFullFor({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            tmp = {"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []};
+            bres = jpl.isFullFor(tmp);
             jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ');
             jpl.wrObjAbr(bres);
 
             bres = jpl.isFullFor(testObj);
             jpl.wrObjAbr(testObj);
-            jpl.wr(' is ');
-            jpl.wrObjAbr(bres);
-
-            bres = jpl.isFullFor("SYS:getLastAsgnValue");
-            jpl.wr("\"SYS:getLastAsgnValue\" is ");
+            jpl.wr(" is ");
             jpl.wrObjAbr(bres);
 
             jpl.wr("====================== TEST -2.20: Unit Tests: isForEach ======================");
-            bres = jpl.isForEach({"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
+            tmp = {"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []};
+            bres = jpl.isForEach(tmp);
             jpl.wr('{"sys": "for", "each": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ' + bres);
 
-            bres = jpl.isForEach({"sys": "for", "each2": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []});
-            jpl.wr('{"sys": "for", "each2": {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmp1"}},"lines": []} is ' + bres);
-
-            bres = jpl.isForEach("SYS:getLastAsgnValue");
-            jpl.wr("\"SYS:getLastAsgnValue\" is " + bres);
+            bres = jpl.isForEach(testObj);
+            jpl.wrObjAbr(testObj);
+            jpl.wr(" is ");
+            jpl.wrObjAbr(bres);
 
             jpl.wr("====================== TEST -2.10: Unit Tests: isFuncSys ======================");
             bres = jpl.isFuncSys("getMax");
@@ -1903,7 +1902,7 @@
             
             
             /////////////////////////TESTS: REFERENCE ARRAY
-            var jpl = new jsonPlState();
+            jpl = new jsonPlState();
             jpl.program = JSON.parse(JSON.stringify(code));
             
             if(!jpl.validateSysObjClass(jpl.program)) {
