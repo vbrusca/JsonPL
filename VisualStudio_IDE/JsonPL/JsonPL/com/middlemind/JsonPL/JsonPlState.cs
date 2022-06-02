@@ -11,6 +11,7 @@ using com.middlemind.JsonPL.Loaders;
 using System.Net;
 using System.IO;
 using System.Web;
+using System.Threading;
 
 /**
 * JSON Programming Language
@@ -224,7 +225,6 @@ namespace com.middlemind.JsonPL
         */
 
         //TODO: synced
-        //CONTINUE HERE
 
         public JsonObjSysBase sysGetLastExpReturn(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
@@ -305,7 +305,6 @@ namespace com.middlemind.JsonPL
 
         public string[] getPathAndUrlFromRef(string path)
         {
-            //this.wr("getPathAndUrlFromRef: Receiving: " + path);
             if (this.isRefStringUrl(path))
             {
                 //check for URL
@@ -321,12 +320,10 @@ namespace com.middlemind.JsonPL
                     npath = nvs[0].Trim();
                     nurl = nvs[1].Substring(0, nvs[1].Length - 2).Trim();
                     hasUrl = true;
-                    //this.wr("getPathAndUrlFromRef: Returning: " + nurl + ", " + npath);
                     return new string[] { nurl, npath };
                 }
             }
 
-            //this.wr("getPathAndUrlFromRef: Returning: null");
             return null;
         }
 
@@ -380,6 +377,9 @@ namespace com.middlemind.JsonPL
         * Desc: Executes the current program and returns the result. 
         * Returns: ret(some {const}, {ref} object)
         */
+
+        //TODO: synced
+
         public JsonObjSysBase runProgram()
         {
             if (this.validateSysObjClass(this.program))
@@ -727,9 +727,12 @@ namespace com.middlemind.JsonPL
          * Arg1: obj(the object to inspect)
          * Returns: ret(some bool, true or false)
          */
+
+        //TODO: synced
+
         public bool isForEach(JsonObjSysBase obj)
         {
-            return (this.isSysObjFor(obj) && !this.isFullFor(obj));
+            return (this.isSysObjFor(obj) && !this.isFullFor(obj) && this.validateProperties(obj, new string[] { "each" }));
         }
 
         /**
@@ -746,7 +749,7 @@ namespace com.middlemind.JsonPL
             }
             else if (this.isSysObjFor(obj) == true)
             {
-                if (this.validateProperties(obj, new String[] { "sys", "start", "stop", "inc", "lines" }) == true)
+                if (this.validateProperties(obj, new string[] { "sys", "start", "stop", "inc", "lines" }) == true)
                 {
                     return true;
                 }
@@ -1197,6 +1200,9 @@ namespace com.middlemind.JsonPL
         *   "right": {ref | const | exp | bex | call}
         * }
         */
+
+        //TODO: synced
+
         public bool validateSysObjAsgn(JsonObjSysBase obj)
         {
             if (this.isSysObjAsgn(obj) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right" }))
@@ -1783,6 +1789,9 @@ namespace com.middlemind.JsonPL
         *   "v": "some valid value"
         * }
         */
+
+        //TODO: synced
+
         public bool validateSysObjVal(JsonObjSysBase obj)
         {
             //this.wr("validateSysObjVal: Receiving: ");
@@ -1884,15 +1893,7 @@ namespace com.middlemind.JsonPL
                     }
                     else
                     {
-                        //this.wr("===========================");
-                        //this.wrObjList((List<JsonObjSysBase>)obj.v);
-
                         List<JsonObjSysBase> tmpA = this.toArray(obj.v);
-
-                        //this.wr("===========================");                 
-                        //this.wrObjList(tmpA);
-                        //this.wr("===========================");    
-
                         int arrayLenActual = tmpA.Count;
                         if (arrayLenActual != arrayLen)
                         {
@@ -1906,6 +1907,7 @@ namespace com.middlemind.JsonPL
                             skipArVer = true;
                         }
 
+                        //TODO: synced
                         //array data types
                         if (obj.type.Equals("int[]"))
                         {
@@ -2167,6 +2169,25 @@ namespace com.middlemind.JsonPL
         }
 
         /**
+        * Name: wrObjAbr
+        * Desc: Writes a JSON object to standard output if LOGGING is on.
+        *       Sets the WR_PREFIX to each object written.
+        *       Prints object using NON pretty JSON.stringify call.
+        * Arg1: jsonObj(jsonObj to write)
+        */
+
+        //TODO: synced
+
+        public void wrObjAbr(JsonObjSysBase jsonObj)
+        {
+            if (this.LOGGING == true)
+            {
+                Utils.PrintObject(jsonObj, "wrObjAbr", false);
+            }
+        }
+
+
+        /**
         * Name: wrObjList
         * Desc: Writes a JSON object list to write to standard output if LOGGING is on. 
         *       Sets the WR_PREFIX to each object written. 
@@ -2214,27 +2235,43 @@ namespace com.middlemind.JsonPL
          * Arg2: func(the associated {func} object if any)
          * Returns: ret(a {const} object)
          */
+
+        //TODO: synced
+
         public JsonObjSysBase sysLen(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
-            JsonObjSysBase s = args[0];
+            JsonObjSysBase s = null;
+            JsonObjSysBase ret = null;
+            JsonObjSysBase v = null;
 
-            //this.wr("sysType: AAA: ");
-            //this.wrObj(s);
+            ret = this.getConst("int", "0");
+            if (args == null)
+            {
+                this.wr("sysLen: Error: args cannot be null");
+                return ret;
+            }
+            else if (func == null)
+            {
+                this.wr("sysLen: Error: func cannot be null");
+                return ret;
+            }
+            s = args[0];
 
-            JsonObjSysBase ret = this.getConst("int", "0");
-            s = this.getRef("string", s.val.v);
-            JsonObjSysBase v = this.processRef(s, func);
-
-            //this.wr("sysType: CCC: ");
-            //this.wrObj(v);   
+            if (s != null && this.isObject(s) && this.isSysObj(s))
+            {
+                s = this.getRef("string", s.val.v);
+                v = this.processRef(s, func);
+            }
+            else
+            {
+                this.wr("sysLen: Error: reference argument cannt be null");
+                return ret;
+            }
 
             if (v != null)
             {
                 v = v.val;
             }
-
-            //this.wr("sysType: DDD: ");
-            //this.wrObj(v);
 
             if (v != null && this.isSysObj(v))
             {
@@ -2255,34 +2292,49 @@ namespace com.middlemind.JsonPL
          * Arg2: func(the associated {func} object if any)
          * Returns: ret(a {ref} object)
          */
+
+        //TODO: synced
+
         public JsonObjSysBase sysType(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
-            JsonObjSysBase s = args[0];
+            JsonObjSysBase s = null;
+            JsonObjSysBase ret = null;
+            JsonObjSysBase v = null;
 
-            //this.wr("sysType: AAA: ");
-            //this.wrObj(s);
+            ret = this.getConst("string", "");
+            if (args == null)
+            {
+                this.wr("sysLen: Error: args cannot be null");
+                return ret;
+            }
+            else if (func == null)
+            {
+                this.wr("sysLen: Error: func cannot be null");
+                return ret;
+            }
+            s = args[0];
 
-            JsonObjSysBase ret = this.getConst("string", "");
-            s = this.getRef("string", s.val.v);
-            JsonObjSysBase v = this.processRef(s, func);
-
-            //this.wr("sysType: CCC: ");
-            //this.wrObj(v);   
+            if (s != null && this.isObject(s) && this.isSysObj(s))
+            {
+                s = this.getRef("string", s.val.v);
+                v = this.processRef(s, func);
+            }
+            else
+            {
+                this.wr("sysLen: Error: reference argument cannt be null");
+                return ret;
+            }
 
             if (v != null)
             {
                 v = v.val;
             }
 
-            //this.wr("sysType: DDD: ");
-            //this.wrObj(v);
-
             if (v != null && this.isSysObj(v))
             {
                 ret = this.getConst("string", this.toStr(v.type));
             }
 
-            //this.wr("sysType: EEE: ");
             //this.wrVal(ret.val);
             return ret;
         }
@@ -2326,11 +2378,18 @@ namespace com.middlemind.JsonPL
         * Arg2: func(the {func} object associated with this function call)
         * Returns: ret(a {const} object)
         */
+
+        //TODO: synced
+
         public JsonObjSysBase sysGetArrayIdxRef(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             JsonObjSysBase ret = this.sysGetRef(args, func);
-            string idx = this.toStr(args[3].val.v);
-            ret.val.v += "." + idx;
+            string idx = null;
+            if (this.toStr(ret.val.v).Equals("") == false)
+            {
+                idx = this.toStr(args[3].val.v);
+                ret.val.v += "." + idx;
+            }
             //this.wrVal(ret.val);
             return ret;
         }
@@ -2343,30 +2402,58 @@ namespace com.middlemind.JsonPL
          * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
          * Returns: ret(a {ref} object)
          */
+
+        //TODO: synced
+
         public JsonObjSysBase sysGetRef(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
+            JsonObjSysBase ret = this.getRef("string", "");
+
+            if (args == null)
+            {
+                this.wr("sysGetRef: Error: args cannot be null");
+                return ret;
+            }
+            else if (func == null)
+            {
+                this.wr("sysGetRef: Error: func cannot be null");
+                return ret;
+            }
+
+            if (this.isArray(args))
+            {
+                for (var i = 0; i < args.Count; i++)
+                {
+                    if (!this.isSysObj(args[i]) || !this.isSysObjVal(args[i].val))
+                    {
+                        this.wr("sysGetRef: Error: arg " + i + " is not a known object type");
+                        return ret;
+                    }
+                }
+            }
+            else
+            {
+                this.wr("sysGetRef: Error: arg is not an array object");
+                return ret;
+            }
+
             string name = this.toStr(args[0].val.v);
             bool isVar = this.toBool(args[1].val.v);
             string funcName = this.toStr(args[2].val.v);
-            JsonObjSysBase ret = this.getRef("string", "");
 
-            //this.wr("sysGetRef: AAA");
             if (name != null && !name.Equals(""))
             {
                 if (funcName == null || funcName.Equals(""))
                 {
-                    //this.wr("sysGetRef: BBB");
                     //lookup class variable
                     JsonObjSysBase v = this.findVar(name, this.program);
                     if (v != null)
                     {
                         ret = this.getRef(v.val.type, "#.vars." + v.name);
                     }
-                    //this.wr("sysGetRef: CCC");
                 }
                 else
                 {
-                    //this.wr("sysGetRef: DDD");
                     JsonObjSysBase lfunc = this.findFunc(funcName);
                     if (lfunc != null)
                     {
@@ -2389,7 +2476,6 @@ namespace com.middlemind.JsonPL
                             }
                         }
                     }
-                    //this.wr("sysGetRef: EEE");
                 }
             }
             //this.wrVal(ret.val);
@@ -2405,13 +2491,45 @@ namespace com.middlemind.JsonPL
          * Arg4: val(a {const} or {ref} used as the value for the new variable)
          * Returns: ret(a {ref} object)
          */
+
+        //TODO: synced
+
         public JsonObjSysBase sysMalloc(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
+            JsonObjSysBase ret = this.getRef("string", "");
+
+            if (args == null)
+            {
+                this.wr("sysMalloc: Error: args cannot be null");
+                return ret;
+            }
+            else if (func == null)
+            {
+                this.wr("sysMalloc: Error: func cannot be null");
+                return ret;
+            }
+
+            if (this.isArray(args))
+            {
+                for (var i = 0; i < args.Count; i++)
+                {
+                    if (!this.isSysObj(args[i]) || !this.isSysObjVal(args[i].val))
+                    {
+                        this.wr("sysMalloc: Error: arg " + i + " is not a known object type");
+                        return ret;
+                    }
+                }
+            }
+            else
+            {
+                this.wr("sysMalloc: Error: arg is not an array object");
+                return ret;
+            }
+
             bool isClassVar = this.toBool(args[0].val.v);
             string name = this.toStr(args[1].val.v);
             string type = this.toStr(args[2].val.v);
             string val = this.toStr(args[3].val.v);
-            JsonObjSysBase ret = this.getConst("string", "");
             JsonObjSysBase prog = this.program;
 
             if (this.isArrayType(type))
@@ -2444,9 +2562,6 @@ namespace com.middlemind.JsonPL
                 vtmp.val.type = type;
                 vtmp.val.v = val;
 
-                //this.wr("sysMalloc: Adding variable: ");
-                //this.wrObj(vtmp);
-
                 if (isClassVar == true)
                 {
                     prog.vars.Add(vtmp);
@@ -2457,7 +2572,6 @@ namespace com.middlemind.JsonPL
                     func.vars.Add(vtmp);
                     ret.val.v = "$.vars." + name;
                 }
-
             }
             else
             {
@@ -2472,7 +2586,6 @@ namespace com.middlemind.JsonPL
                 this.wr("sysMalloc: Warning: IsClassVar: " + isClassVar + ", Name: " + name + " already exists.");
             }
 
-            //this.wr("sysMalloc: Returning: ");
             //this.wrObj(ret);   
             return ret;
         }
@@ -2486,15 +2599,47 @@ namespace com.middlemind.JsonPL
          * Arg4: len(a {const} or {ref} with an integer representing the array length)
          * Returns: ret(a {ref} object)
          */
+
+        //TODO: sync
+
         public JsonObjSysBase sysMallocArray(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
+            JsonObjSysBase ret = this.getRef("string", "");
+
+            if (args == null)
+            {
+                this.wr("sysMalloc: Error: args cannot be null");
+                return ret;
+            }
+            else if (func == null)
+            {
+                this.wr("sysMalloc: Error: func cannot be null");
+                return ret;
+            }
+
+            if (this.isArray(args))
+            {
+                for (var i = 0; i < args.Count; i++)
+                {
+                    if (!this.isSysObj(args[i]) || !this.isSysObjVal(args[i].val))
+                    {
+                        this.wr("sysMalloc: Error: arg " + i + " is not a known object type");
+                        return ret;
+                    }
+                }
+            }
+            else
+            {
+                this.wr("sysMalloc: Error: arg is not an array object");
+                return ret;
+            }
+
             JsonObjSysBase tt = null;
             bool isClassVar = this.toBool(args[0].val.v);
             string name = this.toStr(args[1].val.v);
             string type = this.toStr(args[2].val.v);
             int len = this.toInt(args[3].val.v);
             bool strict = this.toBool(args[4].val.v);
-            JsonObjSysBase ret = this.getConst("string", "");
             JsonObjSysBase prog = this.program;
 
             if (!this.isArrayType(type))
@@ -2566,9 +2711,6 @@ namespace com.middlemind.JsonPL
                     return ret;
                 }
 
-                //this.wr("sysMallocArray: Adding variable: " + prog.vars.length);
-                //this.wrObj(vtmp);
-
                 if (isClassVar == true)
                 {
                     prog.vars.Add(vtmp);
@@ -2579,9 +2721,6 @@ namespace com.middlemind.JsonPL
                     func.vars.Add(vtmp);
                     ret.val.v = "$.vars." + name;
                 }
-
-                //this.wr("sysMallocArray: Done Adding variable: " + prog.vars.length);
-
             }
             else
             {
@@ -2596,7 +2735,6 @@ namespace com.middlemind.JsonPL
                 this.wr("sysMallocArray: Warning: IsClassVar: " + isClassVar + ", Name: " + name + " already exists.");
             }
 
-            //this.wr("sysMallocArray: Returning: ");
             //this.wrObj(ret);   
             return ret;
         }
@@ -2608,15 +2746,47 @@ namespace com.middlemind.JsonPL
          * Arg2: name(a {const} or {ref} string indicating the name of the var to delete)
          * Returns: ret(a {const} object with a bool value indicating the operation was successful)
          */
+
+        //TODO: synced
+
         public JsonObjSysBase sysClean(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
-            //this.wr("sysClean: Info: Receiving ");
-            //this.wrObj(args[0]);
-            //this.wrObj(args[1]);
+            JsonObjSysBase ret = this.getConst("bool", "false");
+
+            if (args == null)
+            {
+                this.wr("sysClean: Error: args cannot be null");
+                return ret;
+            }
+            else if (func == null)
+            {
+                this.wr("sysClean: Error: func cannot be null");
+                return ret;
+            }
+
+            if (this.isArray(args))
+            {
+                if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val))
+                {
+                    this.wr("sysClean: Error: arg 0 is not a known object type");
+                    return ret;
+                }
+
+                if (!this.isSysObj(args[1]) || !this.isSysObjVal(args[1].val))
+                {
+                    this.wr("sysClean: Error: arg 1 is not a known object type");
+                    return ret;
+                }
+            }
+            else
+            {
+                this.wr("sysClean: Error: arg is not an array object");
+                return ret;
+            }
+
 
             bool isClassVar = this.toBool(args[0].val.v);
-            string name = this.toStr(args[1].val.v);
-            JsonObjSysBase ret = this.getConst("bool", "false");
+            string name = this.toStr(args[1].val.v);            
             JsonObjSysBase res = null;
             JsonObjSysBase prog = this.program;
             JsonObjSysBase refDec = null;
@@ -2641,8 +2811,6 @@ namespace com.middlemind.JsonPL
                 }
             }
 
-            //this.wr("sysClean: LookingFor: " + isClassVar + ", " + name);
-
             JsonObjSysBase obj = null;
             if (isClassVar == true)
             {
@@ -2654,14 +2822,10 @@ namespace com.middlemind.JsonPL
             }
             res = this.findVar(name, obj);
 
-            //this.wr("sysClean: Found: " + isClassVar + ", " + name);
-            //this.wrObj(res);
-
             if (res != null)
             {
                 if (obj != null)
                 {
-                    //this.wr("sysClean: Info: Starting var array length: " + obj.vars.length);
                     bool found = false;
                     int i = 0;
                     for (; i < obj.vars.Count; i++)
@@ -2699,13 +2863,16 @@ namespace com.middlemind.JsonPL
         * Arg1: arg(a JSON object) 
         * Returns: ret(some bool, true or false)
         */
+
+        //TODO: synced
+
         public bool isObject(object arg)
         {
             if (arg == null)
             {
                 return false;
             }
-            else if (arg is JsonObjSysBase)
+            else if (arg is JsonObjSysBase && this.isArray(arg) == false)
             {
                 return true;
             }
@@ -2716,15 +2883,37 @@ namespace com.middlemind.JsonPL
         }
 
         /**
+         * Name: isRefStringClass
+         * Desc: Checks if the given argument is a class reference string. 
+         * Arg1: s(some string with a valid reference value)
+         * Returns: ret(some bool, true or false)
+         */
+
+        //TODO: synced
+
+        public bool isRefStringClass(object s)
+        {
+            string ns = this.toStr(s);
+            if (ns.IndexOf("@.") == 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /**
          * Name: isRefString
          * Desc: Checks if the given argument is a reference string. 
          * Arg1: s(some string with a valid reference value)
          * Returns: ret(some bool, true or false)
          */
+
+        //TODO: synced
+
         public bool isRefString(object s)
         {
             string ns = this.toStr(s);
-            if (ns.IndexOf("$.") == 0 || ns.IndexOf("#.") == 0)
+            if (ns.IndexOf("$.") == 0 || ns.IndexOf("#.") == 0 || ns.IndexOf("[$.") == 0 || ns.IndexOf("[#.") == 0 || ns.IndexOf("<$.") == 0 || ns.IndexOf("<#.") == 0)
             {
                 return true;
             }
@@ -2755,7 +2944,7 @@ namespace com.middlemind.JsonPL
          * Returns: ret(some bool, true or false)
          */
 
-        //TODO: sync
+        //TODO: synced
         
         public bool isFuncSys(object s)
         {
@@ -2803,12 +2992,15 @@ namespace com.middlemind.JsonPL
          * Arg1: s(some string with a valid reference value)
          * Returns: ret(some bool, true or false)
          */
+
+        //TODO: synced
+
         public bool isRefStringDec(object s)
         {
             if (this.isRefString(s))
             {
                 string ns = this.toStr(s);
-                if (ns.IndexOf("[") == -1 && ns.IndexOf("]") == -1)
+                if (ns.IndexOf("[") == -1 && ns.IndexOf("]") == -1 && ns.IndexOf("<") == -1 && ns.IndexOf(">") == -1)
                 {
                     return true;
                 }
@@ -2919,6 +3111,9 @@ namespace com.middlemind.JsonPL
          * Arg1: arg(some value)
          * Returns: (true | false)
          */
+
+        //TODO: synced
+
         public bool isNumber(object arg)
         {
             if (arg == null)
@@ -2949,6 +3144,9 @@ namespace com.middlemind.JsonPL
          * Arg1: arg(some value)
          * Returns: (true | false)
          */
+
+        //TODO: synced
+
         public bool isInteger(object arg)
         {
             int ti = -1;
@@ -2978,18 +3176,13 @@ namespace com.middlemind.JsonPL
          * Arg1: arg(some value)
          * Returns: (true | false)
          */
+
+        //TODO: synced
+
         public bool isFloat(object arg)
         {
-            bool isFltStr = false;
-            try
-            {
-                float.Parse(this.toStr(arg));
-                isFltStr = true;
-            }
-            catch (Exception e)
-            {
-                isFltStr = false;
-            }
+            float ti = -1;
+            bool isFltStr = float.TryParse(this.toStr(arg), out ti);
 
             if (arg == null)
             {
@@ -3014,18 +3207,14 @@ namespace com.middlemind.JsonPL
          * Arg1: arg(some value)
          * Returns: (true | false)
          */
+
+        //TODO: synced
+
         public bool isBool(object arg)
         {
-            bool isBlStr = false;
-            try
-            {
-                Boolean.Parse(this.toStr(arg));
-                isBlStr = true;
-            }
-            catch (Exception e)
-            {
-                isBlStr = false;
-            }
+            bool ti = false;
+            bool isBlStr = bool.TryParse(this.toStr(arg), out ti);
+            string vb = this.toStr(arg).ToLower();
 
             if (arg == null)
             {
@@ -3047,7 +3236,7 @@ namespace com.middlemind.JsonPL
             {
                 return true;
             }
-            else if (this.isString(arg) && (((string)arg).Equals("yes") || ((string)arg).Equals("no") || ((string)arg).Equals("true") || ((string)arg).Equals("false") || ((string)arg).Equals("1") || ((string)arg).Equals("0") || ((string)arg).Equals("1.0") || ((string)arg).Equals("0.0")))
+            else if (this.isString(arg) && (vb.Equals("yes") || vb.Equals("no") || vb.Equals("true") || vb.Equals("false") || vb.Equals("1") || vb.Equals("0") || vb.Equals("1.0") || vb.Equals("0.0")))
             {
                 return true;
             }
@@ -3424,9 +3613,12 @@ namespace com.middlemind.JsonPL
         * Arg1: obj(sys obj to check)
         * Returns: (true | false)
          */
+
+        //TODO: synced
+
         public string getSysObjType(JsonObjSysBase obj)
         {
-            if (this.isSysObj(obj))
+            if (this.isObject(obj) == true && this.isSysObj(obj) == true)
             {
                 return obj.sys;
             }
@@ -3435,7 +3627,6 @@ namespace com.middlemind.JsonPL
                 return null;
             }
         }
-
 
         /////////////////////////PROCESS METHODS
         /*
@@ -3446,7 +3637,31 @@ namespace com.middlemind.JsonPL
          * Arg2: 
          * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
          */
-        public JsonObjSysBase processUrlFind(string url)
+
+        //TODO: synced
+
+        public JsonObjSysBase processUrlFind(String url)
+        {
+            return processUrlFind(url, false);
+        }
+
+        public JsonObjSysBase processUrlFind(string url, bool async)
+        {
+            if(async)
+            {
+                ProcessUrlFindRunner urlRun = new ProcessUrlFindRunner(this, url);
+                ThreadStart ts = new ThreadStart(urlRun.run);
+                Thread t = new Thread(ts);
+                t.Start();
+                return null;
+            } 
+            else
+            {
+                return processUrlFindExec(url, async);
+            }
+        }
+
+        public JsonObjSysBase processUrlFindExec(string url, bool async)
         {
             if (this.VERBOSE)
             {
@@ -3517,7 +3732,31 @@ namespace com.middlemind.JsonPL
          * Arg1: url(some complete URL with set message generated by JsonPL)
          * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
          */
+
+        //TODO: synced
+
         public JsonObjSysBase processUrlSet(string url)
+        {
+            return processUrlSet(url, false);
+        }
+
+        public JsonObjSysBase processUrlSet(string url, bool async)
+        {
+            if (async)
+            {
+                ProcessUrlSetRunner urlRun = new ProcessUrlSetRunner(this, url);
+                ThreadStart ts = new ThreadStart(urlRun.run);
+                Thread t = new Thread(ts);
+                t.Start();
+                return null;
+            }
+            else
+            {
+                return processUrlSetExec(url, async);
+            }
+        }
+
+        public JsonObjSysBase processUrlSetExec(string url, bool async)
         {
             if (this.VERBOSE)
             {
@@ -3588,7 +3827,31 @@ namespace com.middlemind.JsonPL
          * Arg1: url(some complete URL with set message generated by JsonPL)
          * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
          */
+
+        //TODO: sync
+
         public JsonObjSysBase processUrlCall(string url)
+        {
+            return processUrlCall(url, false);
+        }
+
+        public JsonObjSysBase processUrlCall(string url, bool async)
+        {
+            if (async)
+            {
+                ProcessUrlCallRunner urlRun = new ProcessUrlCallRunner(this, url);
+                ThreadStart ts = new ThreadStart(urlRun.run);
+                Thread t = new Thread(ts);
+                t.Start();
+                return null;
+            }
+            else
+            {
+                return processUrlCallExec(url, async);
+            }
+        }
+
+        public JsonObjSysBase processUrlCallExec(string url, bool async)
         {
             if (this.VERBOSE)
             {
@@ -3660,6 +3923,9 @@ namespace com.middlemind.JsonPL
         * Arg2: func(func obj, sys=func)
         * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
         */
+
+        //TODO: synced
+
         public JsonObjSysBase processRef(JsonObjSysBase objRef, JsonObjSysBase func)
         {
             return processRef(objRef, func, null);
@@ -3997,7 +4263,7 @@ namespace com.middlemind.JsonPL
                                     {
                                         this.lastProcessUrlFindPath = "#.vars." + name;
                                     }
-                                    fnd = this.processUrlFind(url + "?type=get&ref=" + HttpUtility.UrlEncode("#.vars." + name));
+                                    fnd = this.processUrlFind(url + "&type=get&ref=" + HttpUtility.UrlEncode("#.vars." + name));
                                 }
                                 catch (Exception e)
                                 {
@@ -4030,7 +4296,7 @@ namespace com.middlemind.JsonPL
                                     {
                                         this.lastProcessUrlFindPath = "$.vars." + name;
                                     }
-                                    fnd = this.processUrlFind(url + "?type=get&ref=" + HttpUtility.UrlEncode("$.vars." + name));
+                                    fnd = this.processUrlFind(url + "&type=get&ref=" + HttpUtility.UrlEncode("$.vars." + name));
                                 }
                                 catch (Exception e)
                                 {
@@ -4053,7 +4319,7 @@ namespace com.middlemind.JsonPL
                                     {
                                         this.lastProcessUrlFindPath = "$.args." + name;
                                     }
-                                    fnd = this.processUrlFind(url + "?type=get&ref=" + HttpUtility.UrlEncode("$.args." + name));
+                                    fnd = this.processUrlFind(url + "&type=get&ref=" + HttpUtility.UrlEncode("$.args." + name));
                                 }
                                 catch (Exception e)
                                 {
@@ -4185,7 +4451,7 @@ namespace com.middlemind.JsonPL
                     for (int z = 0; z < al.Count; z++)
                     {
                         JsonObjSysBase nd = al[z];
-                        String nds = this.toStr(nd.val.v);
+                        string nds = this.toStr(nd.val.v);
                         if (nds.IndexOf("$") == -1 && nds.IndexOf("#") == -1)
                         {
                             if (nd.val.type.Equals("int"))
@@ -4224,19 +4490,12 @@ namespace com.middlemind.JsonPL
         * Arg1: v(the value to convert)
         * Returns: (0 | 1)
         */
+
+        //TODO: synced
+
         public int toBoolInt(object v)
         {
-            string vb = v + "";
-            vb = vb.ToLower();
-            if (vb.Equals("true"))
-            {
-                return 1;
-            }
-            else if (vb.Equals("1"))
-            {
-                return 1;
-            }
-            else if (vb.Equals("yes"))
+            if (this.toBool(v))
             {
                 return 1;
             }
@@ -4279,14 +4538,34 @@ namespace com.middlemind.JsonPL
         * Arg1: v(the value to convert)
         * Returns: (the string value of v)
         */
+
+        //TODO: synced
+
         public string toStr(object v)
         {
-            return (v + "");
+            if (this.isObject(v))
+            {
+                return Utils.JSONstringify(v);
+            }
+            else if (this.isArray(v))
+            {
+                return Utils.JSONstringify(v);
+            }
+            else
+            {
+                return (v + "");
+            }
         }
 
         /**
-         *
+         * Name: processLinkedTreeMapVal
+         * Desc: Process the fields that are sometimes basic data types and sometimes JsonObjSysBase instances.
+         * Arg1: t(The string representation of the JSON object not parsed by default)
+         * Returns: (a new JsonObjSysBase instance)
          */
+
+        //TODO: sync
+
         public JsonObjSysBase processLinkedTreeMap(JObject t)
         {
             LoaderSysBase ldr = new LoaderSysBase();
@@ -4335,21 +4614,50 @@ namespace com.middlemind.JsonPL
         * Arg1: v(the value to convert)
         * Returns: (the bool value of v)
         */
-        public bool toBool(object v)
+
+        //TODO: synced
+
+        public bool toBool(object arg)
         {
-            string vb = v + "";
+            string vb = this.toStr(arg);
             vb = vb.ToLower();
-            if (vb.Equals("true"))
+            if (arg == null)
             {
-                return true;
+                return false;
+
             }
-            else if (vb.Equals("1"))
+            else if (arg is bool) {
+                return (bool)arg;
+
+            } else if (this.isInteger(arg) && (int)arg == 1)
             {
                 return true;
+
             }
-            else if (vb.Equals("yes"))
+            else if (this.isInteger(arg) && (int)arg == 0)
+            {
+                return false;
+
+            }
+            else if (this.isFloat(arg) && (float)arg == 1.0)
             {
                 return true;
+
+            }
+            else if (this.isFloat(arg) && (float)arg == 0.0)
+            {
+                return false;
+
+            }
+            else if (this.isString(arg) && (vb.Equals("yes") || vb.Equals("true") || vb.Equals("1") || vb.Equals("1.0")))
+            {
+                return true;
+
+            }
+            else if (this.isString(arg) && (vb.Equals("no") || vb.Equals("false") || vb.Equals("0") || vb.Equals("0.0")))
+            {
+                return false;
+
             }
             else
             {
@@ -4464,10 +4772,8 @@ namespace com.middlemind.JsonPL
 
             //this.wr("left:");
             //this.wrObj(left);
-
             //this.wr("right:");
             //this.wrObj(right);
-
 
             if (left.val.type.Equals(right.val.type))
             {
@@ -5113,6 +5419,9 @@ namespace com.middlemind.JsonPL
          * Arg2: func(func obj, sys=func) 
          * Returns: {null | (const obj, sys=const)}
          */
+
+        //TODO: synced
+
         public JsonObjSysBase processAsgn(JsonObjSysBase objAsgn, JsonObjSysBase func)
         {
             JsonObjSysBase left = null;
@@ -5157,14 +5466,12 @@ namespace com.middlemind.JsonPL
                 rightIsRef = true;
             }
 
-            //this.wr("-----------------111:");
-            //this.wrObj(left);
-
             bool hasUrl = this.isRefStringUrl(left.val.v);
             bool hasUrlAttr = this.validateProperties(objAsgn, new string[] { "url" });
             string[] vals = null;
             string url = null;
             string path = null;
+            string origRefVal = null;
 
             if (hasUrl && !hasUrlAttr)
             {
@@ -5187,6 +5494,7 @@ namespace com.middlemind.JsonPL
                 hasUrl = false;
             }
 
+            origRefVal = this.toStr(left.val.v);
             left = this.processRef(left, func);
 
             if (this.VERBOSE)
@@ -5212,8 +5520,17 @@ namespace com.middlemind.JsonPL
                 return null;
             }
 
-            //this.wr("-----------------2222:");
-            //this.wrObj(this.program.vars); 
+            bool hasPubs = false;
+            if (this.validateProperties(left, new string[] { "pubs" }) && this.isArray(left.pubs))
+            {
+                hasPubs = true;
+                path = origRefVal;
+            }
+
+            if (this.VERBOSE)
+            {
+                this.wr("processAsgn: has publications: " + hasPubs + ", Found: " + this.toStr(left.pubs) + ", Path: " + origRefVal);
+            }
 
             if (this.isSysObjConst(right))
             {
@@ -5277,14 +5594,6 @@ namespace com.middlemind.JsonPL
             ret2.val = ret;
             ret = ret2;
 
-            //this.wr("-----left before:");
-            //this.wrObj(left);
-            //this.wr("-----left before 000:");
-            //this.wrObj(this.program.vars);   
-
-            //this.wr("-----right before:");
-            //this.wrObj(right); 
-
             if (left.val.type.Equals(right.val.type))
             {
                 if (leftIsBasic && rightIsBasic)
@@ -5338,7 +5647,7 @@ namespace com.middlemind.JsonPL
                     {
                         try
                         {
-                            this.processUrlSet(url + "?type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(nval));
+                            this.processUrlSet(url + "&type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(nval));
                         }
                         catch (Exception e)
                         {
@@ -5355,10 +5664,26 @@ namespace com.middlemind.JsonPL
                         left.val.v = right.val.v;
                     }
 
-                    //this.wr("-----left after:");
-                    //this.wrObj(left);
-                    //this.wr("-----left after AAA:");
-                    //this.wrObj(this.program.vars);
+                    if (hasPubs)
+                    {
+                        for (int k = 0; k < left.pubs.Count; k++)
+                        {
+                            string nurl = null;
+                            if (this.isString(left.pubs[k]))
+                            {
+                                nurl = left.pubs[k];
+                                try
+                                {
+                                    this.processUrlSet(nurl + "&type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(nval), true);
+                                }
+                                catch (Exception e)
+                                {
+                                    this.wrErr(e);
+                                    this.wr("processAsgn: Error: could not update the remote variable");
+                                }
+                            }
+                        }
+                    }
 
                     this.lastAsgnValue = this.cloneJsonObj(left);
                     this.lastAsgnReturn = ret;
@@ -5380,7 +5705,7 @@ namespace com.middlemind.JsonPL
                     {
                         try
                         {
-                            this.processUrlSet(url + "?type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(this.toStr(rightOrig.val.v)));
+                            this.processUrlSet(url + "&type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(this.toStr(rightOrig.val.v)));
                         }
                         catch (Exception e)
                         {
@@ -5397,10 +5722,26 @@ namespace com.middlemind.JsonPL
                         leftOrig.val.v = rightOrig.val.v;
                     }
 
-                    //this.wr("-----left after:");
-                    //this.wrObj(left);
-                    //this.wr("-----left after AAA:");
-                    //this.wrObj(this.program.vars); 
+                    if (hasPubs)
+                    {
+                        for (int k = 0; k < left.pubs.Count; k++)
+                        {
+                            string nurl = null;
+                            if (this.isString(left.pubs[k]))
+                            {
+                                nurl = left.pubs[k];
+                                try
+                                {
+                                    this.processUrlSet(nurl + "&type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(this.toStr(rightOrig.val.v)), true);
+                                }
+                                catch (Exception e)
+                                {
+                                    this.wrErr(e);
+                                    this.wr("processAsgn: Error: could not update the remote variable");
+                                }
+                            }
+                        }
+                    }
 
                     this.lastAsgnValue = this.cloneJsonObj(left);
                     this.lastAsgnReturn = ret;
@@ -5429,7 +5770,7 @@ namespace com.middlemind.JsonPL
                     {
                         try
                         {
-                            this.processUrlSet(url + "?type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(Utils.JSONstringify(tmpA)));
+                            this.processUrlSet(url + "&type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=basic&obj=" + HttpUtility.UrlEncode(Utils.JSONstringify(tmpA)));
                         }
                         catch (Exception e)
                         {
@@ -5447,10 +5788,26 @@ namespace com.middlemind.JsonPL
                     }
 
 
-                    //this.wr("-----left after:");
-                    //this.wrObj(left);
-                    //this.wr("-----left after AAA:");
-                    //this.wrObj(this.program.vars);          
+                    if (hasPubs)
+                    {
+                        for (int k = 0; k < left.pubs.Count; k++)
+                        {
+                            string nurl = null;
+                            if (this.isString(left.pubs[k]))
+                            {
+                                nurl = left.pubs[k];
+                                try
+                                {
+                                    this.processUrlSet(nurl + "&type=set&ref=" + HttpUtility.UrlEncode(path) + "&cat=array&obj=" + HttpUtility.UrlEncode(Utils.JSONstringify(tmpA)), true);
+                                }
+                                catch (Exception e)
+                                {
+                                    this.wrErr(e);
+                                    this.wr("processAsgn: Error: could not update the remote variable");
+                                }
+                            }
+                        }
+                    }
 
                     this.lastAsgnValue = this.cloneJsonObj(left);
                     this.lastAsgnReturn = ret;
@@ -5911,6 +6268,9 @@ namespace com.middlemind.JsonPL
         * Arg2: func(func obj, sys=func)
         * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
          */
+
+        //TODO: synced
+
         public JsonObjSysBase processCall(JsonObjSysBase objCall, JsonObjSysBase func)
         {
             string name = null;
@@ -6235,7 +6595,7 @@ namespace com.middlemind.JsonPL
                         //?type=call&name=urlFunc1&args=
                         try
                         {
-                            ret = this.processUrlCall(url + "?type=call&name=" + HttpUtility.UrlEncode(name) + "&args=" + HttpUtility.UrlEncode(Utils.JSONstringify(args)));
+                            ret = this.processUrlCall(url + "&type=call&name=" + HttpUtility.UrlEncode(name) + "&args=" + HttpUtility.UrlEncode(Utils.JSONstringify(args)));
                         }
                         catch (Exception e)
                         {
@@ -6509,6 +6869,46 @@ namespace com.middlemind.JsonPL
                             ret.v = (this.toBoolInt(left.val.v + "") / this.toBoolInt(right.val.v + "")) + "";
                         }
                     }
+
+                }
+                else if (op.v.Equals("%"))
+                {
+                    if (left.val.type.Equals("int"))
+                    {
+                        if (int.Parse(right.val.v + "") == 0)
+                        {
+                            this.wr("processExp: Error: divide by zero error");
+                            return null;
+                        }
+                        else
+                        {
+                            ret.v = (int.Parse(left.val.v + "") % int.Parse(right.val.v + "")) + "";
+                        }
+                    }
+                    else if (left.val.type.Equals("float"))
+                    {
+                        if (float.Parse(right.val.v + "") == 0)
+                        {
+                            this.wr("processExp: Error: divide by zero error");
+                            return null;
+                        }
+                        else
+                        {
+                            ret.v = (float.Parse(left.val.v + "") % float.Parse(right.val.v + "")) + "";
+                        }
+                    }
+                    else if (left.val.type.Equals("bool"))
+                    {
+                        if (this.toBoolInt(right.val.v + "") == 0)
+                        {
+                            this.wr("processExp: Error: divide by zero error");
+                            return null;
+                        }
+                        else
+                        {
+                            ret.v = (this.toBoolInt(left.val.v + "") % this.toBoolInt(right.val.v + "")) + "";
+                        }
+                    }
                 }
                 else if (op.v.Equals("*"))
                 {
@@ -6548,6 +6948,21 @@ namespace com.middlemind.JsonPL
                 this.lastExpReturn = ret;
                 return ret;
             }
+            else if (left.val.type.Equals(right.val.type) && left.val.type.Equals("string") && op.v.Equals("+"))
+            {
+                JsonObjSysBase ret = new JsonObjSysBase();
+                ret.sys = "val";
+                ret.type = left.val.type;
+                ret.v = this.toStr(left.val.v) + this.toStr(right.val.v);
+
+                JsonObjSysBase ret2 = new JsonObjSysBase();
+                ret2.sys = "const";
+                ret2.val = ret;
+
+                ret = ret2;
+                this.lastExpReturn = ret;
+                return ret;
+            }
             else
             {
                 this.wr("processExp: Error: type mismatch: " + left.val.type + " - " + right.val.type);
@@ -6560,6 +6975,9 @@ namespace com.middlemind.JsonPL
          * has any replacement directives defined. Arg1: src(the JSON text to check)
          * Returns: {true | false}
          */
+
+        //TODO: synced
+
         public bool hasReplDirectives(string src)
         {
             if (src == null)
@@ -6568,7 +6986,7 @@ namespace com.middlemind.JsonPL
                 return false;
             }
 
-            if (src.IndexOf("@(repl::") == -1)
+            if (src.ToLower().IndexOf("@(repl::") == -1)
             {
                 return false;
             }

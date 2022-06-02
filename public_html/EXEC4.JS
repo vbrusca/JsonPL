@@ -1758,7 +1758,7 @@ class jsonPlState {
    sysGetArrayIdxRef(args, func) {
       var ret = this.sysGetRef(args, func);
       var idx = null;
-      if (ret.val.v !== "") {
+      if (this.toStr(ret.val.v) !== "") {
          idx = this.toStr(args[3].val.v);
          ret.val.v += "." + idx;
       }
@@ -2171,9 +2171,12 @@ class jsonPlState {
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
+
+   //TODO: sync
+
    isRefString(s) {
       var ns = this.toStr(s);
-      if (ns.indexOf("$.") === 0 || ns.indexOf("#.") === 0) {
+      if (ns.indexOf("$.") === 0 || ns.indexOf("#.") === 0 || ns.indexOf("[$.") == 0 || ns.indexOf("[#.") == 0 || ns.indexOf("<$.") == 0 || ns.indexOf("<#.") == 0) {
          return true;
       }
       return false;
@@ -4842,7 +4845,7 @@ class jsonPlState {
          return false;
       }
 
-      if (src.indexOf("@(repl::") === -1) {
+      if (src.toLowerCase().indexOf("@(repl::") === -1) {
          return false;
       } else {
          return true;

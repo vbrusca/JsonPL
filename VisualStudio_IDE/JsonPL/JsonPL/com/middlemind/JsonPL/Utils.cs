@@ -23,7 +23,7 @@ namespace com.middlemind.JsonPL
         * @param rootOutputDir The root directory of the destination output file.
         * @throws IOException  Throws an IOException during file IO.
         */
-        public static void WriteObject(Object obj, string name, string fileName, string rootOutputDir)
+        public static void WriteObject(object obj, string name, string fileName, string rootOutputDir)
         {
             //Logger.wrl("Utils: WriteObject: Name: " + name);
             string jsonString = JsonConvert.SerializeObject(obj);
@@ -31,17 +31,45 @@ namespace com.middlemind.JsonPL
         }
 
         /**
+         * A static method used to write the specified object, in JSON format, to
+         * standard output.
+         *
+         * @param obj The object to be converted and written in JSON format.
+         * @param name The name of the object that's being written in JSON format.
+         */
+
+        //TODO: sync
+
+        public static void PrintObject(object obj, string name)
+        {
+            PrintObject(obj, name, true);
+        }
+
+        /**
         * A static method used to write the specified object, in JSON format, to standard output.
         * @param obj       The object to be converted and written in JSON format.
         * @param name      The name of the object that's being written in JSON format.
         */
-        public static void PrintObject(Object obj, string name)
+
+        //TODO: synced
+
+        public static void PrintObject(object obj, string name, bool printPretty)
         {
             //Logger.wrl("Utils: PrintObject: Name: '" + name + "'");
-            string jsonString = JsonConvert.SerializeObject(obj, Formatting.Indented, new JsonSerializerSettings
+            string jsonString = null;
+            JsonSerializerSettings jsonSett = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore
-            });
+            };
+
+            if (printPretty)
+            {
+                jsonString = JsonConvert.SerializeObject(obj, Formatting.Indented, jsonSett);
+            } 
+            else
+            {
+                jsonString = JsonConvert.SerializeObject(obj, Formatting.None, jsonSett);
+            }
 
             //clean = chars
             jsonString = jsonString.Replace("\\u0026", "&");
@@ -64,7 +92,7 @@ namespace com.middlemind.JsonPL
 
         //TODO: sync
 
-        public static String JSONstringify(Object obj)
+        public static string JSONstringify(object obj)
         {
             string jsonString = JsonConvert.SerializeObject(obj, Formatting.Indented, new JsonSerializerSettings
             {
@@ -107,7 +135,7 @@ namespace com.middlemind.JsonPL
         * @param l The List to check.
         * @return A Boolean value indicating if the provided string is empty or not.
         */
-        public static bool IsListEmpty(List<Object> l)
+        public static bool IsListEmpty(List<object> l)
         {
             if (l == null)
             {

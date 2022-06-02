@@ -1614,7 +1614,8 @@ public class JsonPlState {
      */
     public void wrErr(Exception e) {
         if (this.LOGGING == true) {
-            e.printStackTrace();
+            this.wr(e.getMessage());
+            e.printStackTrace(System.out);
         }
     }
 
@@ -1862,7 +1863,7 @@ public class JsonPlState {
     public JsonObjSysBase sysGetArrayIdxRef(List<JsonObjSysBase> args, JsonObjSysBase func) {
         JsonObjSysBase ret = this.sysGetRef(args, func);
         String idx = null;
-        if(ret.val.v != "") {
+        if(this.toStr(ret.val.v).equals("") == false) {
             idx = this.toStr(args.get(3).val.v);
             ret.val.v += "." + idx;
         }
@@ -1880,7 +1881,6 @@ public class JsonPlState {
      */
     
     //TODO: sync
-    //CONTINUE HERE
     
     public JsonObjSysBase sysGetRef(List<JsonObjSysBase> args, JsonObjSysBase func) {
         JsonObjSysBase ret = this.getRef("string", "");
@@ -2275,9 +2275,12 @@ public class JsonPlState {
      * Arg1: s(some string with a valid reference value)
      * Returns: ret(some bool, true or false)
      */
+    
+    //TODO: sync
+    
     public boolean isRefString(Object s) {
         String ns = this.toStr(s);
-        if (ns.indexOf("$.") == 0 || ns.indexOf("#.") == 0) {
+        if (ns.indexOf("$.") == 0 || ns.indexOf("#.") == 0 || ns.indexOf("[$.") == 0 || ns.indexOf("[#.") == 0 || ns.indexOf("<$.") == 0 || ns.indexOf("<#.") == 0) {
             return true;
         }
         return false;
@@ -2530,7 +2533,8 @@ public class JsonPlState {
         } catch (Exception e) {
             isBlStr = false;
         }
-
+        String vb = this.toStr(arg).toLowerCase();
+        
         if (arg == null) {
             return false;
         } else if (arg instanceof Boolean) {
@@ -2541,7 +2545,7 @@ public class JsonPlState {
             return true;
         } else if (this.isFloat(arg) && (float) arg == 1.0 || (float) arg == 0.0) {
             return true;
-        } else if (this.isString(arg) && (((String) arg).equals("yes") || ((String) arg).equals("no") || ((String) arg).equals("true") || ((String) arg).equals("false") || ((String) arg).equals("1") || ((String) arg).equals("0") || ((String) arg).equals("1.0") || ((String) arg).equals("0.0"))) {
+        } else if (this.isString(arg) && (vb.equals("yes") || vb.equals("no") || vb.equals("true") || vb.equals("false") || vb.equals("1") || vb.equals("0") || vb.equals("1.0") || vb.equals("0.0"))) {
             return true;
         } else {
             return false;
@@ -3726,6 +3730,9 @@ public class JsonPlState {
      * Arg1: v(the value to convert)
      * Returns: (the bool value of v)
      */
+    
+    //TODO: sync
+    
     public boolean toBool(Object arg) {
         String vb = this.toStr(arg);
         vb = vb.toLowerCase();
@@ -3839,6 +3846,7 @@ public class JsonPlState {
         //this.wrObj(left);
         //this.wr("right:");
         //this.wrObj(right);
+                
         if (left.val.type.equals(right.val.type)) {
             JsonObjSysBase ret = new JsonObjSysBase("val");
             ret.type = "bool";
@@ -4076,6 +4084,7 @@ public class JsonPlState {
 
                 //this.wr("processIfForLines:---------------------------");
                 //this.wrObj(ret);
+                
                 if (ret == null) {
                     this.wr("processIfForLines: Error: processing line returned null: " + j);
                     return null;
@@ -4244,6 +4253,7 @@ public class JsonPlState {
 
         //this.wr("processFor: BBB: " + incAmt + ", " + lenAmt + ", " + startAmt);
         //this.wrObj(stop);
+        
         for (i = startAmt; i < lenAmt; i += incAmt) {
             ret3 = this.processIfForLines(objFor.lines, func);
             if (ret3 == null) {
@@ -4853,8 +4863,7 @@ public class JsonPlState {
      * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
      */
     
-    //TODO: sync
-   //CONTINUE HERE    
+    //TODO: sync   
     
     public JsonObjSysBase processCall(JsonObjSysBase objCall, JsonObjSysBase func) {
         String name = null;
@@ -5359,7 +5368,7 @@ public class JsonPlState {
             return false;
         }
 
-        if (src.indexOf("@(repl::") == -1) {
+        if (src.toLowerCase().indexOf("@(repl::") == -1) {
             return false;
         } else {
             return true;

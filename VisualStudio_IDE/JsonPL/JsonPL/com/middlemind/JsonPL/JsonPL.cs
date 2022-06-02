@@ -8,8 +8,8 @@ using System.Text;
 namespace com.middlemind.JsonPL
 {
     /**
-    * TODO
-    * 
+    * Name: JsonPL
+    * Desc: The static entry point for this implementation of the JsonPL interpreter.
     * @author Victor G. Brusca, Middlemind Games 03/27/2022 10:37 AM EDT
     */
     public class JsonPL
@@ -69,7 +69,7 @@ namespace com.middlemind.JsonPL
 
                 if (args.Length == 2)
                 {
-                    target = root + "test26" + ".json";
+                    target = root + "test27" + ".json";
                 }
 
                 Logger.wrl("JsonPL: running program: " + target);
@@ -137,7 +137,6 @@ namespace com.middlemind.JsonPL
                     jpl.wr(desc);
                     jpl.wr("====================== Program Results ======================");
                     jpl.runProgram();
-
                 }
                 catch (Exception e)
                 {
@@ -145,7 +144,6 @@ namespace com.middlemind.JsonPL
                     Logger.wrlErr(e.Message);
                     Logger.wrlErr(e.StackTrace);
                 }
-
             }
             else
             {
@@ -202,6 +200,1132 @@ namespace com.middlemind.JsonPL
                     }
                     jpl.system.Add("functions", JsonPL.sfuncs.funcs);
                     jpl.program = JsonPL.code;
+
+                    /////////////////////////////////////////////////////////////////////////////
+                    Object bres = false;
+                    JsonObjSysBase testObj = null;
+                    jpl = new JsonPlState();
+                    jpl.program = JsonPL.code;
+
+                    tmpJson = "{\"sys\": \"for\", \"start\": {\"sys\":\"const\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"0\"}}, \"stop\": {\"sys\": \"const\", \"val\": {\"sys\":\"val\", \"type\":\"int\", \"v\":\"10\"}}, \"inc\":{\"sys\":\"const\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"1\"}}, \"lines\":[]}";
+                    try
+                    {
+                        testObj = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    }
+                    catch (Exception e)
+                    {
+                        jpl.wrErr(e);
+                    }
+
+                    jpl.wr("====================== TEST -3.10: Unit Tests: toArray ======================");
+                    bres = jpl.toArray("1");
+                    jpl.wr("\"1\" is " + bres);
+
+                    bres = jpl.toArray(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.toArray(-1);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.toArray(1.25);
+                    jpl.wr("1.25 is " + bres);
+
+                    bres = jpl.toArray(1.0);
+                    jpl.wr("1.0 is " + bres);
+
+                    bres = jpl.toArray(1.00);
+                    jpl.wr("1.00 is " + bres);
+
+                    bres = jpl.toArray("1.0");
+                    jpl.wr("\"1.0\" is " + bres);
+
+                    bres = jpl.toArray(new List<JsonObjSysBase>());
+                    jpl.wr("[] is " + bres);
+
+                    bres = jpl.toArray(new object());
+                    jpl.wr("{} is " + bres);
+
+                    bres = jpl.toArray(true);
+                    jpl.wr("true is " + bres);
+
+                    bres = jpl.toArray(false);
+                    jpl.wr("false is " + bres);
+
+                    bres = jpl.toArray("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    jpl.wr("====================== TEST -3.00: Unit Tests: toFloat ======================");
+                    bres = jpl.toFloat("1");
+                    jpl.wr("\"1\" is " + bres);
+
+                    bres = jpl.toFloat(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.toFloat(-1);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.toFloat(1.25);
+                    jpl.wr("1.25 is " + bres);
+
+                    bres = jpl.toFloat(1.0);
+                    jpl.wr("1.0 is " + bres);
+
+                    bres = jpl.toFloat(1.00);
+                    jpl.wr("1.00 is " + bres);
+
+                    bres = jpl.toFloat("1.0");
+                    jpl.wr("\"1.0\" is " + bres);
+
+                    bres = jpl.toFloat(new List<JsonObjSysBase>());
+                    jpl.wr("[] is " + bres);
+
+                    bres = jpl.toFloat(new object());
+                    jpl.wr("{} is " + bres);
+
+                    bres = jpl.toFloat(true);
+                    jpl.wr("true is " + bres);
+
+                    bres = jpl.toFloat(false);
+                    jpl.wr("false is " + bres);
+
+                    bres = jpl.toFloat("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    jpl.wr("====================== TEST -2.90: Unit Tests: toStr ======================");
+                    bres = jpl.toStr(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.toStr(1.24);
+                    jpl.wr("1.24 is " + bres);
+
+                    bres = jpl.toStr(-1);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.toStr(new int[] { 1, 2, 3 });
+                    jpl.wr("[1,2,3] is " + bres);
+
+                    bres = jpl.toStr("{\"test\":\"test\"}");
+                    jpl.wr("{\"test\":\"test\"} is " + bres);
+
+                    bres = jpl.toStr("testing123");
+                    jpl.wr("testing123 is " + bres);
+
+                    bres = jpl.toStr(false);
+                    jpl.wr("false is " + bres);
+
+                    jpl.wr("====================== TEST -2.80: Unit Tests: toInt ======================");
+                    bres = jpl.toInt("1");
+                    jpl.wr("\"1\" is " + bres);
+
+                    bres = jpl.toInt(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.toInt(-1);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.toInt(1.25);
+                    jpl.wr("1.25 is " + bres);
+
+                    bres = jpl.toInt(1.0);
+                    jpl.wr("1.0 is " + bres);
+
+                    bres = jpl.toInt(1.00);
+                    jpl.wr("1.00 is " + bres);
+
+                    bres = jpl.toInt("1.0");
+                    jpl.wr("\"1.0\" is " + bres);
+
+                    bres = jpl.toInt(new List<JsonObjSysBase>());
+                    jpl.wr("[] is " + bres);
+
+                    bres = jpl.toInt(new object());
+                    jpl.wr("{} is " + bres);
+
+                    bres = jpl.toInt(true);
+                    jpl.wr("true is " + bres);
+
+                    bres = jpl.toInt(false);
+                    jpl.wr("false is " + bres);
+
+                    bres = jpl.toInt("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    jpl.wr("====================== TEST -2.70: Unit Tests: toBoolInt ======================");
+                    bres = jpl.toBoolInt(true);
+                    jpl.wr("true is " + bres);
+
+                    bres = jpl.toBoolInt("true");
+                    jpl.wr("\"true\" is " + bres);
+
+                    bres = jpl.toBoolInt(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.toBoolInt(1.0);
+                    jpl.wr("1.0 is " + bres);
+
+                    bres = jpl.toBoolInt("1");
+                    jpl.wr("\"1\" is " + bres);
+
+                    bres = jpl.toBoolInt("1.0");
+                    jpl.wr("\"1.0\" is " + bres);
+
+                    bres = jpl.toBoolInt("yes");
+                    jpl.wr("\"yes\" is " + bres);
+
+                    bres = jpl.toBoolInt(false);
+                    jpl.wr("false is " + bres);
+
+                    bres = jpl.toBoolInt("false");
+                    jpl.wr("\"false\" is " + bres);
+
+                    bres = jpl.toBoolInt(0);
+                    jpl.wr("0 is " + bres);
+
+                    bres = jpl.toBoolInt(0.0);
+                    jpl.wr("0.0 is " + bres);
+
+                    bres = jpl.toBoolInt("0");
+                    jpl.wr("\"0\" is " + bres);
+
+                    bres = jpl.toBoolInt("0.0");
+                    jpl.wr("\"0.0\" is " + bres);
+
+                    bres = jpl.toBoolInt("no");
+                    jpl.wr("\"no\" is " + bres);
+
+                    bres = jpl.toBoolInt("2");
+                    jpl.wr("\"2\" is " + bres);
+
+                    bres = jpl.toBoolInt("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    bres = jpl.toBoolInt(2);
+                    jpl.wr("2 is " + bres);
+
+                    bres = jpl.toBoolInt(1.25);
+                    jpl.wr("1.25 is " + bres);
+
+                    bres = jpl.toBoolInt(new List<JsonObjSysBase>());
+                    jpl.wr("[] is " + bres);
+
+                    bres = jpl.toBoolInt(new object());
+                    jpl.wr("{} is " + bres);
+
+                    jpl.wr("====================== TEST -2.70: Unit Tests: toBool ======================");
+                    bres = jpl.toBool(true);
+                    jpl.wr("true is " + bres);
+
+                    bres = jpl.toBool("true");
+                    jpl.wr("\"true\" is " + bres);
+
+                    bres = jpl.toBool(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.toBool(1.0);
+                    jpl.wr("1.0 is " + bres);
+
+                    bres = jpl.toBool("1");
+                    jpl.wr("\"1\" is " + bres);
+
+                    bres = jpl.toBool("1.0");
+                    jpl.wr("\"1.0\" is " + bres);
+
+                    bres = jpl.toBool("yes");
+                    jpl.wr("\"yes\" is " + bres);
+
+                    bres = jpl.toBool(false);
+                    jpl.wr("false is " + bres);
+
+                    bres = jpl.toBool("false");
+                    jpl.wr("\"false\" is " + bres);
+
+                    bres = jpl.toBool(0);
+                    jpl.wr("0 is " + bres);
+
+                    bres = jpl.toBool(0.0);
+                    jpl.wr("0.0 is " + bres);
+
+                    bres = jpl.toBool("0");
+                    jpl.wr("\"0\" is " + bres);
+
+                    bres = jpl.toBool("0.0");
+                    jpl.wr("\"0.0\" is " + bres);
+
+                    bres = jpl.toBool("no");
+                    jpl.wr("\"no\" is " + bres);
+
+                    bres = jpl.toBool("2");
+                    jpl.wr("\"2\" is " + bres);
+
+                    bres = jpl.toBool("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    bres = jpl.toBool(2);
+                    jpl.wr("2 is " + bres);
+
+                    bres = jpl.toBool(1.25);
+                    jpl.wr("1.25 is " + bres);
+
+                    bres = jpl.toBool(new List<JsonObjSysBase>());
+                    jpl.wr("[] is " + bres);
+
+                    bres = jpl.toBool(new object());
+                    jpl.wr("{} is " + bres);
+
+                    jpl.wr("====================== TEST -2.60: Unit Tests: getPathAndUrlFromRef ======================");
+                    bres = jpl.getPathAndUrlFromRef("#.vars.tmp1");
+                    jpl.wr("\"#.vars.tmp1\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("$.args.tmp2");
+                    jpl.wr("\"$.args.tmp2\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("#.vars.tmp1.1");
+                    jpl.wr("\"#.vars.tmp1.1\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("$.args.tmp2.tmp");
+                    jpl.wr("\"$.args.tmp2.tmp\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("$.vars.tmp3.4");
+                    jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("<#.vars.tmp1>");
+                    jpl.wr("\"<#.vars.tmp1>\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("$.vars.[$.vars.tmp3]");
+                    jpl.wr("\"$.vars.[$.vars.tmp3]\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("$.vars.tmp1.[$.vars.tmp3]");
+                    jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("#.vars.tmp1->(http://localhost:8000/)");
+                    jpl.wr("\"#.vars.tmp1->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("$.args.tmp2->(http://localhost:8000/)");
+                    jpl.wr("\"$.args.tmp2->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("#.vars.tmp1.1->(http://localhost:8000/)");
+                    jpl.wr("\"#.vars.tmp1.1->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("$.args.tmp2.tmp->(http://localhost:8000/)");
+                    jpl.wr("\"$.args.tmp2.tmp->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("$.vars.tmp3.4->(http://localhost:8000/)");
+                    jpl.wr("\"$.vars.tmp3.4->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("test->(http://localhost:8000/)");
+                    jpl.wr("\"test->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("<#.vars.tmp1>->(http://localhost:8000/)");
+                    jpl.wr("\"<#.vars.tmp1>->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("$.vars.[$.vars.tmp3]->(http://localhost:8000/)");
+                    jpl.wr("\"$.vars.[$.vars.tmp3]->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.getPathAndUrlFromRef("$.vars.tmp1.[$.vars.tmp3]->(http://localhost:8000/)");
+                    jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]->(http://localhost:8000/)\" is " + bres);
+
+                    jpl.wr("====================== TEST -2.50: Unit Tests: getSysObjType ======================");
+                    tmpJson = "{\"sys\": \"for\", \"each\": {\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}},\"lines\": []}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.getSysObjType(tmp);
+                    jpl.wr("{\"sys\": \"for\", \"each\": {\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}},\"lines\": []} is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.getSysObjType(testObj);
+                    jpl.wrObjAbr(testObj);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    tmpJson = "{\"sys\":\"const\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"567\"}}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.getSysObjType(tmp);
+                    jpl.wrObjAbr(testObj);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    jpl.wr("====================== TEST -2.49: Unit Tests: sysGetArrayIdxRef ======================");
+                    bres = jpl.sysGetArrayIdxRef(jpl.toArray(1), null);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.sysGetArrayIdxRef(jpl.toArray(1.24), null);
+                    jpl.wr("1.24 is " + bres);
+
+                    bres = jpl.sysGetArrayIdxRef(jpl.toArray(-1), null);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.sysGetArrayIdxRef(jpl.toArray(new int[] { 1, 2, 3 }), null);
+                    jpl.wr("[1,2,3] is " + bres);
+
+                    bres = jpl.sysGetArrayIdxRef(jpl.toArray("{\"test\":\"test\"}"), null);
+                    jpl.wr("{\"test\":\"test\"} is " + bres);
+
+                    bres = jpl.sysGetArrayIdxRef(jpl.toArray("testing123"), null);
+                    jpl.wr("testing123 is " + bres);
+
+                    bres = jpl.sysGetArrayIdxRef(jpl.toArray(false), null);
+                    jpl.wr("false is " + bres);
+
+                    jpl.wr("====================== TEST -2.48: Unit Tests: sysGetArrayIdxRefStr ======================");
+                    bres = jpl.sysGetArrayIdxRefStr(jpl.toArray(1), null);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.sysGetArrayIdxRefStr(jpl.toArray(1.24), null);
+                    jpl.wr("1.24 is " + bres);
+
+                    bres = jpl.sysGetArrayIdxRefStr(jpl.toArray(-1), null);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.sysGetArrayIdxRefStr(jpl.toArray(new int[] { 1, 2, 3 }), null);
+                    jpl.wr("[1,2,3] is " + bres);
+
+                    bres = jpl.sysGetArrayIdxRefStr(jpl.toArray("{\"test\":\"test\"}"), null);
+                    jpl.wr("{\"test\":\"test\"} is " + bres);
+
+                    bres = jpl.sysGetArrayIdxRefStr(jpl.toArray("testing123"), null);
+                    jpl.wr("testing123 is " + bres);
+
+                    bres = jpl.sysGetArrayIdxRefStr(jpl.toArray(false), null);
+                    jpl.wr("false is " + bres);
+
+                    jpl.wr("====================== TEST -2.47: Unit Tests: sysGetRef ======================");
+                    bres = jpl.sysGetRef(jpl.toArray(1), null);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.sysGetRef(jpl.toArray(1.24), null);
+                    jpl.wr("1.24 is " + bres);
+
+                    bres = jpl.sysGetRef(jpl.toArray(-1), null);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.sysGetRef(jpl.toArray(new int[] { 1, 2, 3 }), null);
+                    jpl.wr("[1,2,3] is " + bres);
+
+                    bres = jpl.sysGetRef(jpl.toArray("{\"test\":\"test\"}"), null);
+                    jpl.wr("{\"test\":\"test\"} is " + bres);
+
+                    bres = jpl.sysGetRef(jpl.toArray("testing123"), null);
+                    jpl.wr("testing123 is " + bres);
+
+                    bres = jpl.sysGetRef(jpl.toArray(false), null);
+                    jpl.wr("false is " + bres);
+
+                    jpl.wr("====================== TEST -2.46: Unit Tests: sysGetRefStr ======================");
+                    bres = jpl.sysGetRefStr(jpl.toArray(1), null);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.sysGetRefStr(jpl.toArray(1.24), null);
+                    jpl.wr("1.24 is " + bres);
+
+                    bres = jpl.sysGetRefStr(jpl.toArray(-1), null);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.sysGetRefStr(jpl.toArray(new int[] { 1, 2, 3 }), null);
+                    jpl.wr("[1,2,3] is " + bres);
+
+                    bres = jpl.sysGetRefStr(jpl.toArray("{\"test\":\"test\"}"), null);
+                    jpl.wr("{\"test\":\"test\"} is " + bres);
+
+                    bres = jpl.sysGetRefStr(jpl.toArray("testing123"), null);
+                    jpl.wr("testing123 is " + bres);
+
+                    bres = jpl.sysGetRefStr(jpl.toArray(false), null);
+                    jpl.wr("false is " + bres);
+
+                    jpl.wr("====================== TEST -2.45: Unit Tests: sysMallocArray ======================");
+                    tmpJson = "{\"sys\": \"for\", \"each\": {\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}},\"lines\": []}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.sysMallocArray(jpl.toArray(tmp), null);
+                    jpl.wr("{\"sys\":\"for\", \"each\":{\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}}, \"lines\":[]} is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.sysMallocArray(jpl.toArray(testObj), null);
+                    jpl.wrObjAbr(testObj);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    tmpJson = "{\"sys\":\"const\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"567\"}}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.sysMallocArray(jpl.toArray(tmp), null);
+                    jpl.wrObjAbr(tmp);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.sysMallocArray(jpl.toArray("SYS:getLastAsgnValue"), null);
+                    jpl.wr("\"SYS:getLastAsgnValue\" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    jpl.wr("====================== TEST -2.44: Unit Tests: sysMalloc ======================");
+                    tmpJson = "{\"sys\": \"for\", \"each\": {\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}},\"lines\": []}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.sysMalloc(jpl.toArray(tmp), null);
+                    jpl.wr("{\"sys\":\"for\", \"each\":{\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}}, \"lines\":[]} is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.sysMallocArray(jpl.toArray(testObj), null);
+                    jpl.wrObjAbr(testObj);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    tmpJson = "{\"sys\":\"const\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"567\"}}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.sysMalloc(jpl.toArray(tmp), null);
+                    jpl.wrObjAbr(tmp);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.sysMalloc(jpl.toArray("SYS:getLastAsgnValue"), null);
+                    jpl.wr("\"SYS:getLastAsgnValue\" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    jpl.wr("====================== TEST -2.43: Unit Tests: sysClean ======================");
+                    tmpJson = "{\"sys\": \"for\", \"each\": {\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}},\"lines\": []}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.sysClean(jpl.toArray(tmp), null);
+                    jpl.wr("{\"sys\":\"for\", \"each\":{\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}}, \"lines\":[]} is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.sysClean(jpl.toArray(testObj), null);
+                    jpl.wrObjAbr(testObj);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    tmpJson = "{\"sys\":\"const\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"567\"}}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.sysClean(jpl.toArray(tmp), null);
+                    jpl.wrObjAbr(tmp);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.sysClean(jpl.toArray("SYS:getLastAsgnValue"), null);
+                    jpl.wr("\"SYS:getLastAsgnValue\" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    jpl.wr("====================== TEST -2.42: Unit Tests: sysWr ======================");
+                    tmpJson = "{\"sys\": \"for\", \"each\": {\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}},\"lines\": []}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.sysWr(jpl.toArray(tmp), null, null);
+                    jpl.wr("{\"sys\":\"for\", \"each\":{\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}}, \"lines\":[]} is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.sysMallocArray(jpl.toArray(testObj), null);
+                    jpl.wrObjAbr(testObj);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    tmpJson = "{\"sys\":\"const\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"567\"}}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.sysWr(jpl.toArray(tmp), null, null);
+                    jpl.wrObjAbr(tmp);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.sysWr(jpl.toArray("SYS:getLastAsgnValue"), null, null);
+                    jpl.wr("\"SYS:getLastAsgnValue\" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    jpl.wr("====================== TEST -2.41: Unit Tests: sysLen ======================");
+                    tmpJson = "{\"sys\": \"for\", \"each\": {\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}},\"lines\": []}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.sysLen(jpl.toArray(tmp), null);
+                    jpl.wr("{\"sys\":\"for\", \"each\":{\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}}, \"lines\":[]} is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.sysMallocArray(jpl.toArray(testObj), null);
+                    jpl.wrObjAbr(testObj);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    tmpJson = "{\"sys\":\"const\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"567\"}}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.sysLen(jpl.toArray(tmp), null);
+                    jpl.wrObjAbr(tmp);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.sysLen(jpl.toArray("SYS:getLastAsgnValue"), null);
+                    jpl.wr("\"SYS:getLastAsgnValue\" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    jpl.wr("====================== TEST -2.40: Unit Tests: sysType ======================");
+                    tmpJson = "{\"sys\": \"for\", \"each\": {\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}},\"lines\": []}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.sysType(jpl.toArray(tmp), null);
+                    jpl.wr("{\"sys\":\"for\", \"each\":{\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}}, \"lines\":[]} is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.sysMallocArray(jpl.toArray(testObj), null);
+                    jpl.wrObjAbr(testObj);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    tmpJson = "{\"sys\":\"const\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"567\"}}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.sysType(jpl.toArray(tmp), null);
+                    jpl.wrObjAbr(tmp);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.sysType(jpl.toArray("SYS:getLastAsgnValue"), null);
+                    jpl.wr("\"SYS:getLastAsgnValue\" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    jpl.wr("====================== TEST -2.30: Unit Tests: isFullFor ======================");
+                    tmpJson = "{\"sys\": \"for\", \"each\": {\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}},\"lines\": []}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.isFullFor(tmp);
+                    jpl.wr("{\"sys\":\"for\", \"each\":{\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}}, \"lines\":[]} is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.isFullFor(testObj);
+                    jpl.wrObjAbr(testObj);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    jpl.wr("====================== TEST -2.20: Unit Tests: isForEach ======================");
+                    tmpJson = "{\"sys\": \"for\", \"each\": {\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}},\"lines\": []}";
+                    tmp = (JsonObjSysBase)ldr.ParseJson(tmpJson, "com.middlemind.JsonPL.JsonObjs.JsonObjSysBase");
+                    bres = jpl.isForEach(tmp);
+                    jpl.wr("{\"sys\":\"for\", \"each\":{\"sys\":\"ref\", \"val\":{\"sys\":\"val\", \"type\":\"int\", \"v\":\"#.vars.tmp1\"}}, \"lines\":[]} is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    bres = jpl.isForEach(testObj);
+                    jpl.wrObjAbr(testObj);
+                    jpl.wr(" is ");
+                    jpl.wrObjAbr((JsonObjSysBase)bres);
+
+                    jpl.wr("====================== TEST -2.10: Unit Tests: isFuncSys ======================");
+                    bres = jpl.isFuncSys("getMax");
+                    jpl.wr("\"getMax\" is " + bres);
+
+                    bres = jpl.isFuncSys("getMin");
+                    jpl.wr("\"getMin\" is " + bres);
+
+                    bres = jpl.isFuncSys("SYS::wr");
+                    jpl.wr("\"SYS::wr\" is " + bres);
+
+                    bres = jpl.isFuncSys("SYS:getLastAsgnValue");
+                    jpl.wr("\"SYS:getLastAsgnValue\" is " + bres);
+
+                    bres = jpl.isFuncSys("$.vars.tmp3.4");
+                    jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+                    bres = jpl.isFuncSys("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    jpl.wr("====================== TEST -2.00: Unit Tests: isRefStringUrl ======================");
+                    bres = jpl.isRefStringUrl("#.vars.tmp1");
+                    jpl.wr("\"#.vars.tmp1\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("$.args.tmp2");
+                    jpl.wr("\"$.args.tmp2\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("#.vars.tmp1.1");
+                    jpl.wr("\"#.vars.tmp1.1\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("$.args.tmp2.tmp");
+                    jpl.wr("\"$.args.tmp2.tmp\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("$.vars.tmp3.4");
+                    jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("<#.vars.tmp1>");
+                    jpl.wr("\"<#.vars.tmp1>\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("$.vars.[$.vars.tmp3]");
+                    jpl.wr("\"$.vars.[$.vars.tmp3]\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("$.vars.tmp1.[$.vars.tmp3]");
+                    jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("#.vars.tmp1->(http://localhost:8000/)");
+                    jpl.wr("\"#.vars.tmp1->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("$.args.tmp2->(http://localhost:8000/)");
+                    jpl.wr("\"$.args.tmp2->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("#.vars.tmp1.1->(http://localhost:8000/)");
+                    jpl.wr("\"#.vars.tmp1.1->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("$.args.tmp2.tmp->(http://localhost:8000/)");
+                    jpl.wr("\"$.args.tmp2.tmp->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("$.vars.tmp3.4->(http://localhost:8000/)");
+                    jpl.wr("\"$.vars.tmp3.4->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("test->(http://localhost:8000/)");
+                    jpl.wr("\"test->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("<#.vars.tmp1>->(http://localhost:8000/)");
+                    jpl.wr("\"<#.vars.tmp1>->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("$.vars.[$.vars.tmp3]->(http://localhost:8000/)");
+                    jpl.wr("\"$.vars.[$.vars.tmp3]->(http://localhost:8000/)\" is " + bres);
+
+                    bres = jpl.isRefStringUrl("$.vars.tmp1.[$.vars.tmp3]->(http://localhost:8000/)");
+                    jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]->(http://localhost:8000/)\" is " + bres);
+
+                    jpl.wr("====================== TEST -1.90: Unit Tests: isRefStringArrayDec ======================");
+                    bres = jpl.isRefStringArrayDec("#.vars.tmp1");
+                    jpl.wr("\"#.vars.tmp1\" is " + bres);
+
+                    bres = jpl.isRefStringArrayDec("$.args.tmp2");
+                    jpl.wr("\"$.args.tmp2\" is " + bres);
+
+                    bres = jpl.isRefStringArrayDec("#.vars.tmp1.1");
+                    jpl.wr("\"#.vars.tmp1.1\" is " + bres);
+
+                    bres = jpl.isRefStringArrayDec("$.args.tmp2.tmp");
+                    jpl.wr("\"$.args.tmp2.tmp\" is " + bres);
+
+                    bres = jpl.isRefStringArrayDec("$.vars.tmp3.4");
+                    jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+                    bres = jpl.isRefStringArrayDec("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    bres = jpl.isRefStringArrayDec("<#.vars.tmp1>");
+                    jpl.wr("\"<#.vars.tmp1>\" is " + bres);
+
+                    bres = jpl.isRefStringArrayDec("$.vars.[$.vars.tmp3]");
+                    jpl.wr("\"$.vars.[$.vars.tmp3]\" is " + bres);
+
+                    bres = jpl.isRefStringArrayDec("$.vars.tmp1.[$.vars.tmp3]");
+                    jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]\" is " + bres);
+
+                    jpl.wr("====================== TEST -1.80: Unit Tests: isRefStringArray ======================");
+                    bres = jpl.isRefStringArray("#.vars.tmp1");
+                    jpl.wr("\"#.vars.tmp1\" is " + bres);
+
+                    bres = jpl.isRefStringArray("$.args.tmp2");
+                    jpl.wr("\"$.args.tmp2\" is " + bres);
+
+                    bres = jpl.isRefStringArray("$.vars.tmp3");
+                    jpl.wr("\"$.vars.tmp3\" is " + bres);
+
+                    bres = jpl.isRefStringArray("#.vars.tmp1.1");
+                    jpl.wr("\"#.vars.tmp1.1\" is " + bres);
+
+                    bres = jpl.isRefStringArray("$.args.tmp2.tmp");
+                    jpl.wr("\"$.args.tmp2.tmp\" is " + bres);
+
+                    bres = jpl.isRefStringArray("$.vars.tmp3.4");
+                    jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+                    bres = jpl.isRefStringArray("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    bres = jpl.isRefStringArray("<#.vars.tmp1>");
+                    jpl.wr("\"<#.vars.tmp1>\" is " + bres);
+
+                    bres = jpl.isRefStringArray("$.vars.[$.vars.tmp3]");
+                    jpl.wr("\"$.vars.[$.vars.tmp3]\" is " + bres);
+
+                    bres = jpl.isRefStringArray("$.vars.tmp1.[$.vars.tmp3]");
+                    jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]\" is " + bres);
+
+                    jpl.wr("====================== TEST -1.71: Unit Tests: isRefStringDec ======================");
+                    bres = jpl.isRefStringDec("#.vars.tmp1");
+                    jpl.wr("\"#.vars.tmp1\" is " + bres);
+
+                    bres = jpl.isRefStringDec("$.args.tmp2");
+                    jpl.wr("\"$.args.tmp2\" is " + bres);
+
+                    bres = jpl.isRefStringDec("$.vars.tmp3");
+                    jpl.wr("\"$.vars.tmp3\" is " + bres);
+
+                    bres = jpl.isRefStringDec("#.vars.tmp1.1");
+                    jpl.wr("\"#.vars.tmp1.1\" is " + bres);
+
+                    bres = jpl.isRefStringDec("$.args.tmp2.tmp");
+                    jpl.wr("\"$.args.tmp2.tmp\" is " + bres);
+
+                    bres = jpl.isRefStringDec("$.vars.tmp3.4");
+                    jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+                    bres = jpl.isRefStringDec("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    bres = jpl.isRefStringDec("<#.vars.tmp1>");
+                    jpl.wr("\"<#.vars.tmp1>\" is " + bres);
+
+                    bres = jpl.isRefStringDec("$.vars.[$.vars.tmp3]");
+                    jpl.wr("\"$.vars.[$.vars.tmp3]\" is " + bres);
+
+                    bres = jpl.isRefStringDec("$.vars.tmp1.[$.vars.tmp3]");
+                    jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]\" is " + bres);
+
+                    jpl.wr("====================== TEST -1.70: Unit Tests: isRefString ======================");
+                    bres = jpl.isRefString("#.vars.tmp1");
+                    jpl.wr("\"#.vars.tmp1\" is " + bres);
+
+                    bres = jpl.isRefString("$.args.tmp2");
+                    jpl.wr("\"$.args.tmp2\" is " + bres);
+
+                    bres = jpl.isRefString("$.vars.tmp3");
+                    jpl.wr("\"$.vars.tmp3\" is " + bres);
+
+                    bres = jpl.isRefString("#.vars.tmp1.1");
+                    jpl.wr("\"#.vars.tmp1.1\" is " + bres);
+
+                    bres = jpl.isRefString("$.args.tmp2.tmp");
+                    jpl.wr("\"$.args.tmp2.tmp\" is " + bres);
+
+                    bres = jpl.isRefString("$.vars.tmp3.4");
+                    jpl.wr("\"$.vars.tmp3.4\" is " + bres);
+
+                    bres = jpl.isRefString("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    bres = jpl.isRefString("<#.vars.tmp1>");
+                    jpl.wr("\"<#.vars.tmp1>\" is " + bres);
+
+                    bres = jpl.isRefString("$.vars.[$.vars.tmp3]");
+                    jpl.wr("\"$.vars.[$.vars.tmp3]\" is " + bres);
+
+                    bres = jpl.isRefString("$.vars.tmp1.[$.vars.tmp3]");
+                    jpl.wr("\"$.vars.tmp1.[$.vars.tmp3]\" is " + bres);
+
+                    jpl.wr("====================== TEST -1.60: Unit Tests: isBaseType ======================");
+                    bres = jpl.isBaseType("int[]");
+                    jpl.wr("int[] is " + bres);
+
+                    bres = jpl.isBaseType("float[]");
+                    jpl.wr("float[] is " + bres);
+
+                    bres = jpl.isBaseType("bool[]");
+                    jpl.wr("bool[] is " + bres);
+
+                    bres = jpl.isBaseType("string[]");
+                    jpl.wr("string[] is " + bres);
+
+                    bres = jpl.isBaseType("int");
+                    jpl.wr("int is " + bres);
+
+                    bres = jpl.isBaseType("float");
+                    jpl.wr("float is " + bres);
+
+                    bres = jpl.isBaseType("bool");
+                    jpl.wr("bool is " + bres);
+
+                    bres = jpl.isBaseType("string");
+                    jpl.wr("string is " + bres);
+
+                    jpl.wr("====================== TEST -1.60: Unit Tests: isArrayType ======================");
+                    bres = jpl.isArrayType("int[]");
+                    jpl.wr("int[] is " + bres);
+
+                    bres = jpl.isArrayType("float[]");
+                    jpl.wr("float[] is " + bres);
+
+                    bres = jpl.isArrayType("bool[]");
+                    jpl.wr("bool[] is " + bres);
+
+                    bres = jpl.isArrayType("string[]");
+                    jpl.wr("string[] is " + bres);
+
+                    bres = jpl.isArrayType("int");
+                    jpl.wr("int is " + bres);
+
+                    bres = jpl.isArrayType("float");
+                    jpl.wr("float is " + bres);
+
+                    bres = jpl.isArrayType("bool");
+                    jpl.wr("bool is " + bres);
+
+                    bres = jpl.isArrayType("string");
+                    jpl.wr("string is " + bres);
+
+                    jpl.wr("====================== TEST -1.50: Unit Tests: isObject ======================");
+                    bres = jpl.isObject("1");
+                    jpl.wr("\"1\" is " + bres);
+
+                    bres = jpl.isObject(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.isObject(-1);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.isObject(1.25);
+                    jpl.wr("1.25 is " + bres);
+
+                    bres = jpl.isObject(1.0);
+                    jpl.wr("1.0 is " + bres);
+
+                    bres = jpl.isObject(1.00);
+                    jpl.wr("1.00 is " + bres);
+
+                    bres = jpl.isObject("1.0");
+                    jpl.wr("\"1.0\" is " + bres);
+
+                    bres = jpl.isObject(new List<JsonObjSysBase>());
+                    jpl.wr("[] is " + bres);
+
+                    bres = jpl.isObject(new object());
+                    jpl.wr("{} is " + bres);
+
+                    bres = jpl.isObject(true);
+                    jpl.wr("true is " + bres);
+
+                    bres = jpl.isObject(false);
+                    jpl.wr("false is " + bres);
+
+                    bres = jpl.isObject("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    jpl.wr("====================== TEST -1.50: Unit Tests: isArray ======================");
+                    bres = jpl.isArray("1");
+                    jpl.wr("\"1\" is " + bres);
+
+                    bres = jpl.isArray(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.isArray(-1);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.isArray(1.25);
+                    jpl.wr("1.25 is " + bres);
+
+                    bres = jpl.isArray(1.0);
+                    jpl.wr("1.0 is " + bres);
+
+                    bres = jpl.isArray(1.00);
+                    jpl.wr("1.00 is " + bres);
+
+                    bres = jpl.isArray("1.0");
+                    jpl.wr("\"1.0\" is " + bres);
+
+                    bres = jpl.isArray(new List<JsonObjSysBase>());
+                    jpl.wr("[] is " + bres);
+
+                    bres = jpl.isArray(new object());
+                    jpl.wr("{} is " + bres);
+
+                    bres = jpl.isArray(true);
+                    jpl.wr("true is " + bres);
+
+                    bres = jpl.isArray(false);
+                    jpl.wr("false is " + bres);
+
+                    bres = jpl.isArray("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    jpl.wr("====================== TEST -1.40: Unit Tests: isString ======================");
+                    bres = jpl.isString("1");
+                    jpl.wr("\"1\" is " + bres);
+
+                    bres = jpl.isString(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.isString(-1);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.isString(1.25);
+                    jpl.wr("1.25 is " + bres);
+
+                    bres = jpl.isString(1.0);
+                    jpl.wr("1.0 is " + bres);
+
+                    bres = jpl.isString(1.00);
+                    jpl.wr("1.00 is " + bres);
+
+                    bres = jpl.isString("1.0");
+                    jpl.wr("\"1.0\" is " + bres);
+
+                    bres = jpl.isString(new List<JsonObjSysBase>());
+                    jpl.wr("[] is " + bres);
+
+                    bres = jpl.isString(new object());
+                    jpl.wr("{} is " + bres);
+
+                    bres = jpl.isString(true);
+                    jpl.wr("true is " + bres);
+
+                    bres = jpl.isString(false);
+                    jpl.wr("false is " + bres);
+
+                    bres = jpl.isString("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    jpl.wr("====================== TEST -1.30: Unit Tests: isNumber ======================");
+                    bres = jpl.isNumber("1");
+                    jpl.wr("\"1\" is " + bres);
+
+                    bres = jpl.isNumber(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.isNumber(-1);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.isNumber(1.25);
+                    jpl.wr("1.25 is " + bres);
+
+                    bres = jpl.isNumber(1.0);
+                    jpl.wr("1.0 is " + bres);
+
+                    bres = jpl.isNumber(1.00);
+                    jpl.wr("1.00 is " + bres);
+
+                    bres = jpl.isNumber("1.0");
+                    jpl.wr("\"1.0\" is " + bres);
+
+                    bres = jpl.isNumber(new List<JsonObjSysBase>());
+                    jpl.wr("[] is " + bres);
+
+                    bres = jpl.isNumber(new object());
+                    jpl.wr("{} is " + bres);
+
+                    bres = jpl.isNumber(true);
+                    jpl.wr("true is " + bres);
+
+                    bres = jpl.isNumber(false);
+                    jpl.wr("false is " + bres);
+
+                    bres = jpl.isNumber("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    jpl.wr("====================== TEST -1.20: Unit Tests: isFloat ======================");
+                    bres = jpl.isFloat("1");
+                    jpl.wr("\"1\" is " + bres);
+
+                    bres = jpl.isFloat(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.isFloat(-1);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.isFloat(1.25);
+                    jpl.wr("1.25 is " + bres);
+
+                    bres = jpl.isFloat(1.0);
+                    jpl.wr("1.0 is " + bres);
+
+                    bres = jpl.isFloat(1.00);
+                    jpl.wr("1.00 is " + bres);
+
+                    bres = jpl.isFloat("1.0");
+                    jpl.wr("\"1.0\" is " + bres);
+
+                    bres = jpl.isFloat(new List<JsonObjSysBase>());
+                    jpl.wr("[] is " + bres);
+
+                    bres = jpl.isFloat(new object());
+                    jpl.wr("{} is " + bres);
+
+                    bres = jpl.isFloat(true);
+                    jpl.wr("true is " + bres);
+
+                    bres = jpl.isFloat(false);
+                    jpl.wr("false is " + bres);
+
+                    bres = jpl.isFloat("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    jpl.wr("====================== TEST -1.10: Unit Tests: isInteger ======================");
+                    bres = jpl.isInteger("1");
+                    jpl.wr("\"1\" is " + bres);
+
+                    bres = jpl.isInteger(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.isInteger(-1);
+                    jpl.wr("-1 is " + bres);
+
+                    bres = jpl.isInteger(1.25);
+                    jpl.wr("1.25 is " + bres);
+
+                    bres = jpl.isInteger(1.0);
+                    jpl.wr("1.0 is " + bres);
+
+                    bres = jpl.isInteger(1.00);
+                    jpl.wr("1.00 is " + bres);
+
+                    bres = jpl.isInteger("1.0");
+                    jpl.wr("\"1.0\" is " + bres);
+
+                    bres = jpl.isInteger(new List<JsonObjSysBase>());
+                    jpl.wr("[] is " + bres);
+
+                    bres = jpl.isInteger(new object());
+                    jpl.wr("{} is " + bres);
+
+                    bres = jpl.isInteger(true);
+                    jpl.wr("true is " + bres);
+
+                    bres = jpl.isInteger(false);
+                    jpl.wr("false is " + bres);
+
+                    bres = jpl.isInteger("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    jpl.wr("====================== TEST -1.00: Unit Tests: isBool ======================");
+                    bres = jpl.isBool(true);
+                    jpl.wr("true is " + bres);
+
+                    bres = jpl.isBool("true");
+                    jpl.wr("\"true\" is " + bres);
+
+                    bres = jpl.isBool(1);
+                    jpl.wr("1 is " + bres);
+
+                    bres = jpl.isBool(1.0);
+                    jpl.wr("1.0 is " + bres);
+
+                    bres = jpl.isBool("1");
+                    jpl.wr("\"1\" is " + bres);
+
+                    bres = jpl.isBool("1.0");
+                    jpl.wr("\"1.0\" is " + bres);
+
+                    bres = jpl.isBool("yes");
+                    jpl.wr("\"yes\" is " + bres);
+
+                    bres = jpl.isBool(false);
+                    jpl.wr("false is " + bres);
+
+                    bres = jpl.isBool("false");
+                    jpl.wr("\"false\" is " + bres);
+
+                    bres = jpl.isBool(0);
+                    jpl.wr("0 is " + bres);
+
+                    bres = jpl.isBool(0.0);
+                    jpl.wr("0.0 is " + bres);
+
+                    bres = jpl.isBool("0");
+                    jpl.wr("\"0\" is " + bres);
+
+                    bres = jpl.isBool("0.0");
+                    jpl.wr("\"0.0\" is " + bres);
+
+                    bres = jpl.isBool("no");
+                    jpl.wr("\"no\" is " + bres);
+
+                    bres = jpl.isBool("2");
+                    jpl.wr("\"2\" is " + bres);
+
+                    bres = jpl.isBool("test");
+                    jpl.wr("\"test\" is " + bres);
+
+                    bres = jpl.isBool(2);
+                    jpl.wr("2 is " + bres);
+
+                    bres = jpl.isBool(1.25);
+                    jpl.wr("1.25 is " + bres);
+
+                    bres = jpl.isBool(new List<JsonObjSysBase>());
+                    jpl.wr("[] is " + bres);
+
+                    bres = jpl.isBool(new object());
+                    jpl.wr("{} is " + bres);
+
+                    /////////////////////////////////////////////////////////////////////////////
+
                     if (!jpl.validateSysObjClass(jpl.program))
                     {
                         jpl.wr("runProgram: Error: could not validate the class object.");

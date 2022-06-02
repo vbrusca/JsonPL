@@ -152,6 +152,11 @@ namespace com.middlemind.JsonPL.JsonObjs
         public string url;
 
         /**
+         * 
+         */
+        public List<string> pubs;
+
+        /**
         * 
         * @return 
         */
