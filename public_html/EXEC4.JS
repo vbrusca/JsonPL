@@ -356,6 +356,29 @@ class jsonPlState {
    }
 
    /**
+    * Name: findFunc
+    * Desc: Search the current program for a class with the given name.
+    * Arg1: name(string to find)
+    * Returns: ret(null or {class} object)
+    */
+
+   //TODO: sync
+
+   findClass(name) {
+      var prog = this.program;
+      var str;
+      var subj;
+      for (var i = 0; i < prog.classes.length; i++) {
+         subj = prog.classes[i];
+         str = this.toStr(subj.name);
+         if (str !== null && str !== "" && str === name) {
+            return subj;
+         }
+      }
+      return null;
+   }
+
+   /**
     * Name: findSysFunc
     * Desc: Search the current program's system functions for a func with the given name.
     * Arg1: name(string to find)
@@ -4395,6 +4418,7 @@ class jsonPlState {
       var ret = null;
       var sysFunc = false;
       var urlFunc = false;
+      var classFunc = false;
 
       if (this.VERBOSE) {
          this.wr("processCall: Receiving:");
@@ -4449,10 +4473,19 @@ class jsonPlState {
 
       args = this.cloneJsonObjList(objCall.args);
 
+      //TODO: sync
+      var hasClass = false;
+      if(this.isRefStringClass(name) === true) {
+         //handle class
+         hasClass = true;
+         classFunc = true;
+      }
+
       if (!hasSys && !hasUrl) {
          //normal function
          urlFunc = false;
          sysFunc = false;
+         classFunc = false;
          funcDef = this.findFunc(name);
          if (funcDef !== null) {
             funcArgs = funcDef.args;
@@ -4464,6 +4497,7 @@ class jsonPlState {
          //system function
          urlFunc = false;
          sysFunc = true;
+         classFunc = false;         
          funcDef = this.findSysFunc(name);
          if (funcDef !== null) {
             funcArgs = funcDef.args;
@@ -4474,7 +4508,8 @@ class jsonPlState {
       } else if (!hasSys && hasUrl) {
          //url function
          urlFunc = true;
-         sysFunc = false;
+         sysFunc = false;         
+         classFunc = false;
          funcDef = null;
          funcArgs = [];
       } else {
@@ -4535,7 +4570,51 @@ class jsonPlState {
                }
             }
 
-            if (sysFunc) {
+            //TODO: sync
+            if(classFunc) {
+               //call class with function as default calling function
+               var pret = null;
+               try {
+                  var vls = name.split('.');
+                  if(vls.length >= 3) {
+                     var className = vls[1];
+                     var classFuncName = vls[2];
+                     var classDef = this.findClass(className);
+                     if(classDef !== null) {
+                        var ljpl = new jsonPlState();
+                        ljpl.program = this.cloneJsonObj(classDef);
+                        ljpl.call = {"sys":"call", "name":classFuncName, "args":args};
+                        pret = ljpl.runProgram();
+                     } else {
+                        this.wr("processCall: Error: classDef should be defined");
+                        return null;
+                     }
+                  } else {
+                     //error calss reference doesn't specify a function name
+                     return null;
+                  }
+               } catch (e) {
+                  this.wr("processCall: Error calling class function: ");
+                  this.wrErr(e);
+                  pret = null;
+               }
+
+               if (pret === null) {
+                  var ret = {};
+                  ret.sys = "val";
+                  ret.type = "bool";
+                  ret.v = err + "";
+
+                  var ret2 = {};
+                  ret2.sys = "const";
+                  ret2.val = ret;
+                  ret = ret2;
+                  return ret;
+               } else {
+                  return pret;
+               }               
+
+            } else if (sysFunc) {
                //call system function
                if (funcDef !== null) {
                   var err = true;
