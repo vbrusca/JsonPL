@@ -69,7 +69,7 @@ namespace com.middlemind.JsonPL
 
                 if (args.Length == 2)
                 {
-                    target = root + "test27" + ".json";
+                    target = root + "test28" + ".json";
                 }
 
                 Logger.wrl("JsonPL: running program: " + target);

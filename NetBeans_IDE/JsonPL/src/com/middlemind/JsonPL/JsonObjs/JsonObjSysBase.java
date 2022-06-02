@@ -158,6 +158,11 @@ public class JsonObjSysBase extends JsonObjBase {
    
    /**
     *
+    */
+   public List<JsonObjSysBase> classes;   
+   
+   /**
+    *
     * @return
     */
    public JsonObjSysBase Clone() {

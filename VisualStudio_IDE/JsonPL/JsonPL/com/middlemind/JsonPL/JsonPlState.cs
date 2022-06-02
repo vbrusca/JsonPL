@@ -492,6 +492,32 @@ namespace com.middlemind.JsonPL
         }
 
         /**
+         * Name: findFunc
+         * Desc: Search the current program for a class with the given name.
+         * Arg1: name(string to find)
+         * Returns: ret(null or {class} object)
+         */
+
+        //TODO: sync
+
+        public JsonObjSysBase findClass(String name)
+        {
+            JsonObjSysBase prog = this.program;
+            String str;
+            JsonObjSysBase subj;
+            for (int i = 0; i < prog.classes.Count; i++)
+            {
+                subj = prog.classes[i];
+                str = this.toStr(subj.name);
+                if (!Utils.IsStringEmpty(str) && str.Equals(name))
+                {
+                    return subj;
+                }
+            }
+            return null;
+        }
+
+        /**
         * Name: findSysFunc 
         * Desc: Search the current program's system functions for a func with the given name. 
         * Arg1: name(string to find) 
@@ -6178,6 +6204,7 @@ namespace com.middlemind.JsonPL
             JsonObjSysBase ret = null;
             bool sysFunc = false;
             bool urlFunc = false;
+            bool classFunc = false;
 
             if (this.VERBOSE)
             {
@@ -6250,11 +6277,27 @@ namespace com.middlemind.JsonPL
 
             args = this.cloneJsonObjList(objCall.args);
 
-            if (!hasSys && !hasUrl)
+            //TODO: sync
+            bool hasClass = false;
+            if (this.isRefStringClass(name) == true)
+            {
+                //handle class
+                hasClass = true;
+                classFunc = true;
+
+                if (this.VERBOSE)
+                {
+                    this.wr("processCall: Class Name: " + name);
+                    this.wr("processCall: hasClass: " + hasClass);
+                }
+            }
+
+            if (!hasSys && !hasUrl && !hasClass)
             {
                 //normal function
                 urlFunc = false;
                 sysFunc = false;
+                classFunc = false;
                 funcDef = this.findFunc(name);
                 if (funcDef != null)
                 {
@@ -6271,6 +6314,7 @@ namespace com.middlemind.JsonPL
                 //system function
                 urlFunc = false;
                 sysFunc = true;
+                classFunc = false;
                 funcDef = this.findSysFunc(name);
                 if (funcDef != null)
                 {
@@ -6282,11 +6326,21 @@ namespace com.middlemind.JsonPL
                     return null;
                 }
             }
-            else if (!hasSys && hasUrl)
+            else if (hasClass && !hasUrl)
+            {
+                //class function
+                urlFunc = false;
+                sysFunc = false;
+                classFunc = true;
+                funcDef = null;
+                funcArgs = new List<JsonObjSysBase>();
+            }
+            else if (hasUrl)
             {
                 //url function
                 urlFunc = true;
                 sysFunc = false;
+                classFunc = false;
                 funcDef = null;
                 funcArgs = new List<JsonObjSysBase>();
             }
@@ -6373,12 +6427,89 @@ namespace com.middlemind.JsonPL
                         }
                     }
 
-                    if (sysFunc)
+                    //TODO: sync
+                    bool err = false;
+                    if (classFunc)
+                    {
+                        //call class with function as default calling function
+                        JsonObjSysBase pret = null;
+                        try
+                        {
+                            string[] vls = name.Split(".");
+                            string className = null;
+                            string classFuncName = null;
+                            JsonObjSysBase classDef = null;
+
+                            if (vls.Length == 2)
+                            {
+                                className = vls[1];
+                            }
+                            else if (vls.Length == 3)
+                            {
+                                className = vls[1];
+                                classFuncName = vls[2];
+                            }
+                            else
+                            {
+                                this.wr("processCall: Error: class reference is malformed, " + name);
+                                return null;
+                            }
+
+                            classDef = this.findClass(className);
+                            if (classDef != null)
+                            {
+                                JsonPlState ljpl = new JsonPlState();
+                                ljpl.program = this.cloneJsonObj(classDef);
+
+                                if (classFuncName != null)
+                                {
+                                    ljpl.program.call = new JsonObjSysBase();
+                                    ljpl.program.sys = "call";
+                                    ljpl.program.name = classFuncName;
+                                    ljpl.program.args = args;
+                                }
+
+                                pret = ljpl.runProgram();
+                            }
+                            else
+                            {
+                                this.wr("processCall: Error: classDef should be defined");
+                                return null;
+                            }
+                            err = false;
+                        }
+                        catch (Exception e)
+                        {
+                            this.wr("processCall: Error calling class function: ");
+                            this.wrErr(e);
+                            pret = null;
+                            err = true;
+                        }
+
+                        if (pret == null)
+                        {
+                            JsonObjSysBase lret = new JsonObjSysBase();
+                            lret.sys = "val";
+                            lret.type = "bool";
+                            lret.v = err + "";
+
+                            JsonObjSysBase ret2 = new JsonObjSysBase();
+                            ret2.sys = "const";
+                            ret2.val = lret;
+                            lret = ret2;
+                            return lret;
+                        }
+                        else
+                        {
+                            return pret;
+                        }
+
+                    }
+                    else if (sysFunc)
                     {
                         //call system function
                         if (funcDef != null)
                         {
-                            bool err = false;
                             JsonObjSysBase lret = null;
                             try
                             {

@@ -19,7 +19,7 @@ namespace com.middlemind.JsonPL.JsonObjs
         /**
         *
         */
-        public Object name;
+        public object name;
 
         /**
         * 
@@ -155,6 +155,11 @@ namespace com.middlemind.JsonPL.JsonObjs
          * 
          */
         public List<string> pubs;
+
+        /**
+         *
+         */
+        public List<JsonObjSysBase> classes;
 
         /**
         * 

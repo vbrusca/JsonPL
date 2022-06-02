@@ -4583,6 +4583,7 @@ class jsonPlState {
             }
 
             //TODO: sync
+            var err = true;
             if(classFunc) {
                //call class with function as default calling function
                var pret = null;
@@ -4594,11 +4595,11 @@ class jsonPlState {
 
                   if(vls.length === 2) {                  
                      className = vls[1];
-                  } else if(vls.length >= 3) {
+                  } else if(vls.length === 3) {
                      className = vls[1];
                      classFuncName = vls[2];                     
                   } else {
-                     //error calss reference doesn't specify a function name
+                     this.wr("processCall: Error: class reference is malformed, " + name);
                      return null;
                   }
 
@@ -4608,7 +4609,7 @@ class jsonPlState {
                      ljpl.program = this.cloneJsonObj(classDef);
 
                      if(classFuncName !== null) {
-                        ljpl.call = {"sys":"call", "name":classFuncName, "args":args};
+                        ljpl.program.call = {"sys":"call", "name":classFuncName, "args":args};
                      }
 
                      pret = ljpl.runProgram();
@@ -4616,11 +4617,12 @@ class jsonPlState {
                      this.wr("processCall: Error: classDef should be defined");
                      return null;
                   }
-
+                  err = false;
                } catch (e) {
                   this.wr("processCall: Error calling class function: ");
                   this.wrErr(e);
                   pret = null;
+                  err = true;
                }
 
                if (pret === null) {
@@ -4641,7 +4643,6 @@ class jsonPlState {
             } else if (sysFunc) {
                //call system function
                if (funcDef !== null) {
-                  var err = true;
                   var lret = null;
                   try {
                      lret = this[funcDef.fname](args, func);

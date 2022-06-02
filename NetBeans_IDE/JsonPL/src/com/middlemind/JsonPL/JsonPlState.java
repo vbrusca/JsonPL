@@ -441,6 +441,29 @@ public class JsonPlState {
         return null;
     }
 
+   /*
+    * Name: findFunc
+    * Desc: Search the current program for a class with the given name.
+    * Arg1: name(string to find)
+    * Returns: ret(null or {class} object)
+    */
+
+    //TODO: sync
+    
+    public JsonObjSysBase findClass(String name) {
+        JsonObjSysBase prog = this.program;
+        String str;
+        JsonObjSysBase subj;
+        for (int i = 0; i < prog.classes.size(); i++) {
+            subj = prog.classes.get(i);
+            str = this.toStr(subj.name);
+            if (!Utils.IsStringEmpty(str) && str.equals(name)) {
+                return subj;
+            }
+        }
+        return null;
+    }    
+    
     /*
      * Name: findSysFunc 
      * Desc: Search the current program's system functions for a func with the given name. 
@@ -4768,7 +4791,8 @@ public class JsonPlState {
         JsonObjSysBase ret = null;
         boolean sysFunc = false;
         boolean urlFunc = false;
-
+        boolean classFunc = false;
+        
         if (this.VERBOSE) {
             this.wr("processCall: Receiving:");
             this.wrObj(objCall);
@@ -4822,10 +4846,24 @@ public class JsonPlState {
 
         args = this.cloneJsonObjList(objCall.args);
 
-        if (!hasSys && !hasUrl) {
+        //TODO: sync
+        boolean hasClass = false;
+        if(this.isRefStringClass(name) == true) {
+            //handle class
+            hasClass = true;
+            classFunc = true;
+
+            if (this.VERBOSE) {
+                this.wr("processCall: Class Name: " + name);
+                this.wr("processCall: hasClass: " + hasClass);
+            }
+        }        
+        
+        if (!hasSys && !hasUrl && !hasClass) {
             //normal function
             urlFunc = false;
             sysFunc = false;
+            classFunc = false;
             funcDef = this.findFunc(name);
             if (funcDef != null) {
                 funcArgs = funcDef.args;
@@ -4837,6 +4875,7 @@ public class JsonPlState {
             //system function
             urlFunc = false;
             sysFunc = true;
+            classFunc = false;
             funcDef = this.findSysFunc(name);
             if (funcDef != null) {
                 funcArgs = funcDef.args;
@@ -4844,10 +4883,18 @@ public class JsonPlState {
                 this.wr("processCall: Error: no system function found with name: " + name);
                 return null;
             }
-        } else if (!hasSys && hasUrl) {
+        } else if (hasClass && !hasUrl) {
+            //class function
+            urlFunc = false;
+            sysFunc = false;
+            classFunc = true;
+            funcDef = null;
+            funcArgs = new ArrayList<JsonObjSysBase>();
+        } else if (hasUrl) {
             //url function
             urlFunc = true;
             sysFunc = false;
+            classFunc = false;
             funcDef = null;
             funcArgs = new ArrayList<JsonObjSysBase>();
         } else {
@@ -4908,10 +4955,70 @@ public class JsonPlState {
                     }
                 }
 
-                if (sysFunc) {
+                //TODO: sync
+                boolean err = false;
+                if(classFunc) {
+                    //call class with function as default calling function
+                    JsonObjSysBase pret = null;
+                    try {
+                        String[] vls = name.split("\\.");
+                        String className = null;
+                        String classFuncName = null;
+                        JsonObjSysBase classDef = null;
+
+                        if(vls.length == 2) {                  
+                           className = vls[1];
+                        } else if(vls.length == 3) {
+                           className = vls[1];
+                           classFuncName = vls[2];                     
+                        } else {
+                           this.wr("processCall: Error: class reference is malformed, " + name);
+                           return null;
+                        }
+
+                        classDef = this.findClass(className);
+                        if(classDef != null) {
+                            JsonPlState ljpl = new JsonPlState();
+                            ljpl.program = this.cloneJsonObj(classDef);
+
+                            if(classFuncName != null) {
+                                ljpl.program.call = new JsonObjSysBase();
+                                ljpl.program.sys = "call";
+                                ljpl.program.name = classFuncName;
+                                ljpl.program.args = args;
+                            }
+
+                            pret = ljpl.runProgram();
+                        } else {
+                            this.wr("processCall: Error: classDef should be defined");
+                            return null;
+                        }
+                        err = false;
+                    } catch (Exception e) {
+                        this.wr("processCall: Error calling class function: ");
+                        this.wrErr(e);
+                        pret = null;
+                        err = true;
+                    }
+
+                    if (pret == null) {
+                        JsonObjSysBase lret = new JsonObjSysBase();
+                        lret.sys = "val";
+                        lret.type = "bool";
+                        lret.v = err + "";
+
+                        JsonObjSysBase ret2 = new JsonObjSysBase();
+                        ret2.sys = "const";
+                        ret2.val = lret;
+                        lret = ret2;
+                        return lret;
+                    } else {
+                        return pret;
+                    }               
+
+                } else if (sysFunc) {
                     //call system function
                     if (funcDef != null) {
-                        boolean err = false;
                         JsonObjSysBase lret = null;
                         try {
                             String lname = funcDef.fname;
