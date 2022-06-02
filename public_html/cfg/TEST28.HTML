@@ -1,0 +1,147 @@
+<html>
+   <head>
+      <title>JsonPL Test 28</title>
+      <script type="text/javascript" src="../exec4.js"></script>
+      <script type="text/javascript">
+         var code = {
+            "sys":"class", "name":"test28",
+            "call":{"sys":"call", "name":"main", "args":[]},
+            "vars":[
+               {
+                  "sys":"var", "name":"f1",
+                  "val": {
+                     "sys":"val",
+                     "type":"string",
+                     "v":"undefined string value!"
+                  },
+                  "pubs": [
+                     "http://localhost:8000/?jsonpl=true"
+                  ]
+               }               
+            ],
+            "funcs":[
+               {"sys":"func", "name":"main",
+                  "args":[ 
+                  ],
+                  "vars":[
+                  ],
+                  "ret":{"sys":"val", "type":"bool", "v":"false"},
+                  "lines":[
+                     {
+                        "sys":"asgn",
+                        "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.f1"}},
+                        "op":{"sys":"op", "type":"asgn", "v":"="},
+                        "right":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"hello world!"}}
+                     },
+                     {
+                        "sys":"call", "name":"@.test27", "args":[]
+                     },
+                     {
+                        "sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}
+                     }
+                  ],
+                  "pubs": [
+                     "http://localhost:8000/?jsonpl=true&func=true"
+                  ]
+               }
+            ],
+            "ret":{"sys":"val", "type":"bool", "v":"false"},
+            "classes": [
+               {"sys":"class", "name":"test27",
+                  "call":{"sys":"call", "name":"main", "args":[]},
+                  "vars":[
+                     {
+                        "sys":"var", "name":"f1",
+                        "val": {
+                           "sys":"val",
+                           "type":"string",
+                           "v":"undefined string value!"
+                        },
+                        "pubs": [
+                           "http://localhost:8000/?jsonpl=true"
+                        ]
+                     }               
+                  ],
+                  "funcs":[
+                     {"sys":"func", "name":"main",
+                        "args":[ 
+                        ],
+                        "vars":[
+                        ],
+                        "ret":{"sys":"val", "type":"bool", "v":"false"},
+                        "lines":[
+                           {
+                              "sys":"asgn",
+                              "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.f1"}},
+                              "op":{"sys":"op", "type":"asgn", "v":"="},
+                              "right":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"hello world!"}}
+                           },                 
+                           {
+                              "sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}
+                           }
+                        ],
+                        "pubs": [
+                           "http://localhost:8000/?jsonpl=true&func=true"
+                        ]
+                     }
+                  ],
+                  "ret":{"sys":"val", "type":"bool", "v":"false"}
+               }
+            ]
+         };            
+         
+         /**
+          * Name: init
+          * Desc: A function to init the test page.
+          */
+         function init() {
+            var desc = "A test to demonstrate using a class library and calling from a {call} object.";
+            var txtArea = document.getElementById('message');
+         
+            jsonPlState.prototype.wr = function(s) {
+               if (this.LOGGING === true) {
+                  console.log(this.WR_PREFIX + s);
+                  txtArea.value += (this.WR_PREFIX + s + "\n");
+               }
+            };
+            
+            jsonPlState.prototype.wrObj = function(s) {
+               if (this.LOGGING === true) {
+                  console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
+                  txtArea.value += (this.WR_PREFIX + JSON.stringify(s, null, 2) + "\n");
+               }
+            };
+
+            jsonPlState.prototype.wrVal = function(v) {
+               if (this.LOGGING === true) {
+                  if(this.isSysObjValArray(v)) {
+                     console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+                     txtArea.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len + "\n");
+                  } else {
+                     console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+                     txtArea.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v + "\n");
+                  }
+               }
+            };
+         
+            /////////////////////////PROGRAM SECTION
+            var jpl = new jsonPlState();
+            jpl.program = JSON.parse(JSON.stringify(code));
+            
+            if(!jpl.validateSysObjClass(jpl.program)) {
+               jpl.wr("runProgram: Error: could not validate the class object.");
+               return;
+            }
+
+            jpl.wr(desc);
+            jpl.wr("====================== Program Results ======================");
+            jpl.runProgram();             
+         }
+      </script>
+   </head>
+   <body style="padding: 4px;" onload="init()">
+      <span style="font-size:14px;">Test Output (See page source for more details):</span><br/>
+      <textarea cols="125" rows="25" id="message" style="font-size:12px;">
+      </textarea>
+   </body>
+</html>

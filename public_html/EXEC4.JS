@@ -4479,9 +4479,14 @@ class jsonPlState {
          //handle class
          hasClass = true;
          classFunc = true;
+
+         if (this.VERBOSE) {
+            this.wr("processCall: Class Name: " + name);
+            this.wr("processCall: hasClass: " + hasClass);
+         }
       }
 
-      if (!hasSys && !hasUrl) {
+      if (!hasSys && !hasUrl && !hasClass) {
          //normal function
          urlFunc = false;
          sysFunc = false;
@@ -4505,7 +4510,14 @@ class jsonPlState {
             this.wr("processCall: Error: no system function found with name: " + name);
             return null;
          }
-      } else if (!hasSys && hasUrl) {
+      } else if (hasClass && !hasUrl) {
+         //class function
+         urlFunc = false;
+         sysFunc = false;
+         classFunc = true;
+         funcDef = null;
+         funcArgs = [];
+      } else if (hasUrl) {
          //url function
          urlFunc = true;
          sysFunc = false;         
@@ -4576,23 +4588,35 @@ class jsonPlState {
                var pret = null;
                try {
                   var vls = name.split('.');
-                  if(vls.length >= 3) {
-                     var className = vls[1];
-                     var classFuncName = vls[2];
-                     var classDef = this.findClass(className);
-                     if(classDef !== null) {
-                        var ljpl = new jsonPlState();
-                        ljpl.program = this.cloneJsonObj(classDef);
-                        ljpl.call = {"sys":"call", "name":classFuncName, "args":args};
-                        pret = ljpl.runProgram();
-                     } else {
-                        this.wr("processCall: Error: classDef should be defined");
-                        return null;
-                     }
+                  var className = null;
+                  var classFuncName = null;
+                  var classDef = null;
+
+                  if(vls.length === 2) {                  
+                     className = vls[1];
+                  } else if(vls.length >= 3) {
+                     className = vls[1];
+                     classFuncName = vls[2];                     
                   } else {
                      //error calss reference doesn't specify a function name
                      return null;
                   }
+
+                  classDef = this.findClass(className);
+                  if(classDef !== null) {
+                     var ljpl = new jsonPlState();
+                     ljpl.program = this.cloneJsonObj(classDef);
+
+                     if(classFuncName !== null) {
+                        ljpl.call = {"sys":"call", "name":classFuncName, "args":args};
+                     }
+
+                     pret = ljpl.runProgram();
+                  } else {
+                     this.wr("processCall: Error: classDef should be defined");
+                     return null;
+                  }
+
                } catch (e) {
                   this.wr("processCall: Error calling class function: ");
                   this.wrErr(e);
