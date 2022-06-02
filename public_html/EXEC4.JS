@@ -2650,7 +2650,7 @@ class jsonPlState {
       if(async) {
          xhr.onload = function () {
             var that = this;
-            that.wr('DONE: ', xhr.status);
+            //that.wr('DONE: ', xhr.status);
             if (xhr.status === 200 || xhr.status === 0) {
                var obj = JSON.parse(xhr.responseText);
                if (this.toBool(obj.error) === false) {
@@ -2719,7 +2719,7 @@ class jsonPlState {
       if(async) {
          xhr.onload = function () {
             var that = this;            
-            that.wr('DONE: ', xhr.status);
+            //that.wr('DONE: ', xhr.status);
             if (xhr.status === 200 || xhr.status === 0) {
                var obj = JSON.parse(xhr.responseText);
                if (this.toBool(obj.error) === false) {
@@ -2788,7 +2788,7 @@ class jsonPlState {
       if(async) {
          xhr.onload = function () {
             var that = this;
-            that.wr('DONE: ', xhr.status);
+            //that.wr('DONE: ', xhr.status);
             if (xhr.status === 200 || xhr.status === 0) {
                var obj = JSON.parse(xhr.responseText);
                if (this.toBool(obj.error) === false) {
