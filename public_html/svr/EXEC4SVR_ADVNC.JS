@@ -76,9 +76,7 @@ const requestListener = function (req, res) {
         } else {
             console.log("No POST data found! Checking GET params instead...");
         }
-        res.end();
     });
-
 
     var queryObj = url.parse(req.url, true).query;    
     //console.log(queryObj);
@@ -137,7 +135,8 @@ const requestListener = function (req, res) {
                     //return error: unknown root expecting class, #, or func, $
                     ret.error = "true";
                     ret.message = "error: unknown root expecting class, #, or func, $";
-                    res.end(JSON.stringify(ret));                    
+                    res.end(JSON.stringify(ret));
+                    console.log("AAA-1");                
                     return;
                 }
             } else {
@@ -146,7 +145,8 @@ const requestListener = function (req, res) {
                 ret.message = "error: missing class or func in ref path";
                 //res.setHeader("Content-Type", "application/json");
                 //res.writeHead(200);
-                res.end(JSON.stringify(ret));                    
+                res.end(JSON.stringify(ret));
+                console.log("AAA-2");                  
                 return;                
             }
 
@@ -161,7 +161,8 @@ const requestListener = function (req, res) {
                         ret.message = "error: unsupported value type for class, only vars are supported here";
                         //res.setHeader("Content-Type", "application/json");
                         //res.writeHead(200);
-                        res.end(JSON.stringify(ret));                    
+                        res.end(JSON.stringify(ret));
+                        console.log("AAA-3");                 
                         return;                        
                     }
                 } else {
@@ -176,7 +177,8 @@ const requestListener = function (req, res) {
                         ret.message = "error: unsupported value type for func, only vars and args are supported here";
                         //res.setHeader("Content-Type", "application/json");
                         //res.writeHead(200);
-                        res.end(JSON.stringify(ret));                    
+                        res.end(JSON.stringify(ret));
+                        console.log("AAA-4");                 
                         return;                        
                     }                
                 }
@@ -186,7 +188,8 @@ const requestListener = function (req, res) {
                 ret.message = "error: missing type in ref path";
                 //res.setHeader("Content-Type", "application/json");
                 //res.writeHead(200);
-                res.end(JSON.stringify(ret));                    
+                res.end(JSON.stringify(ret));
+                console.log("AAA-5");                 
                 return;                
             }
 
@@ -202,7 +205,8 @@ const requestListener = function (req, res) {
                         ret.message = "error: unsupported value type for class search, only vars are supported here";
                         //res.setHeader("Content-Type", "application/json");
                         //res.writeHead(200);
-                        res.end(JSON.stringify(ret));                    
+                        res.end(JSON.stringify(ret));
+                        console.log("AAA-6");
                         return;                        
                     }
                 } else {
@@ -222,7 +226,8 @@ const requestListener = function (req, res) {
                 ret.message = "error: missing name in ref path";
                 //res.setHeader("Content-Type", "application/json");
                 //res.writeHead(200);
-                res.end(JSON.stringify(ret));                    
+                res.end(JSON.stringify(ret));
+                console.log("AAA-7");             
                 return;                
             }
 
@@ -244,7 +249,8 @@ const requestListener = function (req, res) {
                             ret.message = "error: unsupported array index type only index or name is supported";
                             //res.setHeader("Content-Type", "application/json");
                             //res.writeHead(200);
-                            res.end(JSON.stringify(ret));                    
+                            res.end(JSON.stringify(ret));
+                            console.log("AAA-8");
                             return;                            
                         }
                     } else {
@@ -253,7 +259,8 @@ const requestListener = function (req, res) {
                        ret.message = "error: unsupported value type for class array search, only vars are supported here";
                        //res.setHeader("Content-Type", "application/json");
                        //res.writeHead(200);
-                       res.end(JSON.stringify(ret));                    
+                       res.end(JSON.stringify(ret));
+                       console.log("AAA-9");                 
                        return;                       
                     }
                 } else {
@@ -272,7 +279,8 @@ const requestListener = function (req, res) {
                             ret.message = "error: unsupported array index type only index or name is supported";
                             //res.setHeader("Content-Type", "application/json");
                             //res.writeHead(200);
-                            res.end(JSON.stringify(ret));                    
+                            res.end(JSON.stringify(ret));
+                            console.log("AAA-10");                 
                             return;                            
                         }
                     } else {
@@ -288,7 +296,8 @@ const requestListener = function (req, res) {
                             ret.message = "error: unsupported array index type only index or name is supported";
                             //res.setHeader("Content-Type", "application/json");
                             //res.writeHead(200);
-                            res.end(JSON.stringify(ret));                    
+                            res.end(JSON.stringify(ret));
+                            console.log("AAA-11");                
                             return;
                         }                        
                     }
@@ -301,7 +310,8 @@ const requestListener = function (req, res) {
                 ret.message = "errror: could not find a value for the given path";
                 //res.setHeader("Content-Type", "application/json");
                 //res.writeHead(200);
-                res.end(JSON.stringify(ret));                    
+                res.end(JSON.stringify(ret));
+                console.log("AAA-12");              
                 return;                
             } else {
                 if(isGet) {
@@ -313,6 +323,7 @@ const requestListener = function (req, res) {
                     //res.setHeader("Content-Type", "application/json");
                     //res.writeHead(200);
                     res.end(JSON.stringify(ret));
+                    console.log("AAA-13");
                     return;
                 } else {
                     //set
@@ -333,6 +344,7 @@ const requestListener = function (req, res) {
                     //res.setHeader("Content-Type", "application/json");
                     //res.writeHead(200);
                     res.end(JSON.stringify(ret));
+                    console.log("AAA-14");
                     return;                  
                 }                
             }
@@ -342,7 +354,8 @@ const requestListener = function (req, res) {
             ret.message = "error: unsupported request type";
             //res.setHeader("Content-Type", "application/json");
             //res.writeHead(200);
-            res.end(JSON.stringify(ret));                    
+            res.end(JSON.stringify(ret));
+            console.log("AAA-15");             
             return;            
         }
     }
@@ -352,6 +365,7 @@ const requestListener = function (req, res) {
     //res.setHeader("Content-Type", "application/json");
     //res.writeHead(200);
     res.end(JSON.stringify(ret));
+    console.log("AAA-16");
     return;
 };
 

@@ -141,9 +141,6 @@ namespace com.middlemind.JsonPL
         * Arg2: func(the {func} this system function is called from) 
         * Returns: const(a {const} bool object) 
         */
-
-        //TODO: synced
-
         public JsonObjSysBase sysWr(List<JsonObjSysBase> args, JsonObjSysBase func, string sep)
         {
             JsonObjSysBase ret = new JsonObjSysBase("val");
@@ -203,9 +200,6 @@ namespace com.middlemind.JsonPL
         * Desc: A system level method to access the last asgn value object.
         * Returns: {(const obj, sys=const)}
         */
-
-        //TODO: synced
-
         public JsonObjSysBase sysGetLastAsgnValue(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             if (this.lastAsgnValue != null)
@@ -223,9 +217,6 @@ namespace com.middlemind.JsonPL
         * Desc: A system level method to access the last exp return object.
         * Returns: {(const obj, sys=const)}
         */
-
-        //TODO: synced
-
         public JsonObjSysBase sysGetLastExpReturn(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             if (this.lastExpReturn != null)
@@ -377,9 +368,6 @@ namespace com.middlemind.JsonPL
         * Desc: Executes the current program and returns the result. 
         * Returns: ret(some {const}, {ref} object)
         */
-
-        //TODO: synced
-
         public JsonObjSysBase runProgram()
         {
             if (this.validateSysObjClass(this.program))
@@ -727,9 +715,6 @@ namespace com.middlemind.JsonPL
          * Arg1: obj(the object to inspect)
          * Returns: ret(some bool, true or false)
          */
-
-        //TODO: synced
-
         public bool isForEach(JsonObjSysBase obj)
         {
             return (this.isSysObjFor(obj) && !this.isFullFor(obj) && this.validateProperties(obj, new string[] { "each" }));
@@ -1200,9 +1185,6 @@ namespace com.middlemind.JsonPL
         *   "right": {ref | const | exp | bex | call}
         * }
         */
-
-        //TODO: synced
-
         public bool validateSysObjAsgn(JsonObjSysBase obj)
         {
             if (this.isSysObjAsgn(obj) && this.validateProperties(obj, new string[] { "sys", "left", "op", "right" }))
@@ -1789,9 +1771,6 @@ namespace com.middlemind.JsonPL
         *   "v": "some valid value"
         * }
         */
-
-        //TODO: synced
-
         public bool validateSysObjVal(JsonObjSysBase obj)
         {
             //this.wr("validateSysObjVal: Receiving: ");
@@ -1907,7 +1886,6 @@ namespace com.middlemind.JsonPL
                             skipArVer = true;
                         }
 
-                        //TODO: synced
                         //array data types
                         if (obj.type.Equals("int[]"))
                         {
@@ -2175,9 +2153,6 @@ namespace com.middlemind.JsonPL
         *       Prints object using NON pretty JSON.stringify call.
         * Arg1: jsonObj(jsonObj to write)
         */
-
-        //TODO: synced
-
         public void wrObjAbr(JsonObjSysBase jsonObj)
         {
             if (this.LOGGING == true)
@@ -2235,9 +2210,6 @@ namespace com.middlemind.JsonPL
          * Arg2: func(the associated {func} object if any)
          * Returns: ret(a {const} object)
          */
-
-        //TODO: synced
-
         public JsonObjSysBase sysLen(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             JsonObjSysBase s = null;
@@ -2292,9 +2264,6 @@ namespace com.middlemind.JsonPL
          * Arg2: func(the associated {func} object if any)
          * Returns: ret(a {ref} object)
          */
-
-        //TODO: synced
-
         public JsonObjSysBase sysType(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             JsonObjSysBase s = null;
@@ -2378,9 +2347,6 @@ namespace com.middlemind.JsonPL
         * Arg2: func(the {func} object associated with this function call)
         * Returns: ret(a {const} object)
         */
-
-        //TODO: synced
-
         public JsonObjSysBase sysGetArrayIdxRef(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             JsonObjSysBase ret = this.sysGetRef(args, func);
@@ -2402,9 +2368,6 @@ namespace com.middlemind.JsonPL
          * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
          * Returns: ret(a {ref} object)
          */
-
-        //TODO: synced
-
         public JsonObjSysBase sysGetRef(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             JsonObjSysBase ret = this.getRef("string", "");
@@ -2491,9 +2454,6 @@ namespace com.middlemind.JsonPL
          * Arg4: val(a {const} or {ref} used as the value for the new variable)
          * Returns: ret(a {ref} object)
          */
-
-        //TODO: synced
-
         public JsonObjSysBase sysMalloc(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             JsonObjSysBase ret = this.getRef("string", "");
@@ -2599,9 +2559,6 @@ namespace com.middlemind.JsonPL
          * Arg4: len(a {const} or {ref} with an integer representing the array length)
          * Returns: ret(a {ref} object)
          */
-
-        //TODO: sync
-
         public JsonObjSysBase sysMallocArray(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             JsonObjSysBase ret = this.getRef("string", "");
@@ -2746,9 +2703,6 @@ namespace com.middlemind.JsonPL
          * Arg2: name(a {const} or {ref} string indicating the name of the var to delete)
          * Returns: ret(a {const} object with a bool value indicating the operation was successful)
          */
-
-        //TODO: synced
-
         public JsonObjSysBase sysClean(List<JsonObjSysBase> args, JsonObjSysBase func)
         {
             JsonObjSysBase ret = this.getConst("bool", "false");
@@ -2863,9 +2817,6 @@ namespace com.middlemind.JsonPL
         * Arg1: arg(a JSON object) 
         * Returns: ret(some bool, true or false)
         */
-
-        //TODO: synced
-
         public bool isObject(object arg)
         {
             if (arg == null)
@@ -2888,9 +2839,6 @@ namespace com.middlemind.JsonPL
          * Arg1: s(some string with a valid reference value)
          * Returns: ret(some bool, true or false)
          */
-
-        //TODO: synced
-
         public bool isRefStringClass(object s)
         {
             string ns = this.toStr(s);
@@ -2907,9 +2855,6 @@ namespace com.middlemind.JsonPL
          * Arg1: s(some string with a valid reference value)
          * Returns: ret(some bool, true or false)
          */
-
-        //TODO: synced
-
         public bool isRefString(object s)
         {
             string ns = this.toStr(s);
@@ -2926,7 +2871,6 @@ namespace com.middlemind.JsonPL
          * Arg1: s(some string with a valid reference value)
          * Returns: ret(some bool, true or false)
          */
-
         public bool isRefStringUrl(object s)
         {
             string ns = this.toStr(s);
@@ -2943,9 +2887,6 @@ namespace com.middlemind.JsonPL
          * Arg1: s(some string with a valid reference value)
          * Returns: ret(some bool, true or false)
          */
-
-        //TODO: synced
-        
         public bool isFuncSys(object s)
         {
             string ns = this.toStr(s);
@@ -2992,9 +2933,6 @@ namespace com.middlemind.JsonPL
          * Arg1: s(some string with a valid reference value)
          * Returns: ret(some bool, true or false)
          */
-
-        //TODO: synced
-
         public bool isRefStringDec(object s)
         {
             if (this.isRefString(s))
@@ -3111,9 +3049,6 @@ namespace com.middlemind.JsonPL
          * Arg1: arg(some value)
          * Returns: (true | false)
          */
-
-        //TODO: synced
-
         public bool isNumber(object arg)
         {
             if (arg == null)
@@ -3144,9 +3079,6 @@ namespace com.middlemind.JsonPL
          * Arg1: arg(some value)
          * Returns: (true | false)
          */
-
-        //TODO: synced
-
         public bool isInteger(object arg)
         {
             int ti = -1;
@@ -3176,9 +3108,6 @@ namespace com.middlemind.JsonPL
          * Arg1: arg(some value)
          * Returns: (true | false)
          */
-
-        //TODO: synced
-
         public bool isFloat(object arg)
         {
             float ti = -1;
@@ -3207,9 +3136,6 @@ namespace com.middlemind.JsonPL
          * Arg1: arg(some value)
          * Returns: (true | false)
          */
-
-        //TODO: synced
-
         public bool isBool(object arg)
         {
             bool ti = false;
@@ -3245,7 +3171,6 @@ namespace com.middlemind.JsonPL
                 return false;
             }
         }
-
 
         /////////////////////////SYS OBJECT ID METHODS
         /**
@@ -3612,10 +3537,7 @@ namespace com.middlemind.JsonPL
         * Desc: Gets the value of the sys attribute of the given sys object.
         * Arg1: obj(sys obj to check)
         * Returns: (true | false)
-         */
-
-        //TODO: synced
-
+        */
         public string getSysObjType(JsonObjSysBase obj)
         {
             if (this.isObject(obj) == true && this.isSysObj(obj) == true)
@@ -3637,9 +3559,6 @@ namespace com.middlemind.JsonPL
          * Arg2: 
          * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
          */
-
-        //TODO: synced
-
         public JsonObjSysBase processUrlFind(String url)
         {
             return processUrlFind(url, false);
@@ -3733,8 +3652,6 @@ namespace com.middlemind.JsonPL
          * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
          */
 
-        //TODO: synced
-
         public JsonObjSysBase processUrlSet(string url)
         {
             return processUrlSet(url, false);
@@ -3765,13 +3682,13 @@ namespace com.middlemind.JsonPL
 
             if (Utils.IsStringEmpty(url))
             {
-                this.wr("processUrlFind: Error: url is not properly defined");
+                this.wr("processUrlSet: Error: url is not properly defined");
                 return null;
             }
 
             if (url.Length >= 2048)
             {
-                this.wr("processUrlFind: Warning: maximum URL length with get params has been reached!");
+                this.wr("processUrlSet: Warning: maximum URL length with get params has been reached!");
             }
 
             try
@@ -3827,9 +3744,6 @@ namespace com.middlemind.JsonPL
          * Arg1: url(some complete URL with set message generated by JsonPL)
          * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
          */
-
-        //TODO: sync
-
         public JsonObjSysBase processUrlCall(string url)
         {
             return processUrlCall(url, false);
@@ -3923,8 +3837,6 @@ namespace com.middlemind.JsonPL
         * Arg2: func(func obj, sys=func)
         * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
         */
-
-        //TODO: synced
 
         public JsonObjSysBase processRef(JsonObjSysBase objRef, JsonObjSysBase func)
         {
@@ -4490,9 +4402,6 @@ namespace com.middlemind.JsonPL
         * Arg1: v(the value to convert)
         * Returns: (0 | 1)
         */
-
-        //TODO: synced
-
         public int toBoolInt(object v)
         {
             if (this.toBool(v))
@@ -4538,9 +4447,6 @@ namespace com.middlemind.JsonPL
         * Arg1: v(the value to convert)
         * Returns: (the string value of v)
         */
-
-        //TODO: synced
-
         public string toStr(object v)
         {
             if (this.isObject(v))
@@ -4563,9 +4469,6 @@ namespace com.middlemind.JsonPL
          * Arg1: t(The string representation of the JSON object not parsed by default)
          * Returns: (a new JsonObjSysBase instance)
          */
-
-        //TODO: sync
-
         public JsonObjSysBase processLinkedTreeMap(JObject t)
         {
             LoaderSysBase ldr = new LoaderSysBase();
@@ -4614,9 +4517,6 @@ namespace com.middlemind.JsonPL
         * Arg1: v(the value to convert)
         * Returns: (the bool value of v)
         */
-
-        //TODO: synced
-
         public bool toBool(object arg)
         {
             string vb = this.toStr(arg);
@@ -4671,7 +4571,7 @@ namespace com.middlemind.JsonPL
         * Arg1: objIf(if obj, sys=if)
         * Arg2: func(func obj, sys=func)
         * Returns: {null | (const obj, sys=const)}
-         */
+        */
         public JsonObjSysBase processIf(JsonObjSysBase objIf, JsonObjSysBase func)
         {
             JsonObjSysBase left = null;
@@ -5419,9 +5319,6 @@ namespace com.middlemind.JsonPL
          * Arg2: func(func obj, sys=func) 
          * Returns: {null | (const obj, sys=const)}
          */
-
-        //TODO: synced
-
         public JsonObjSysBase processAsgn(JsonObjSysBase objAsgn, JsonObjSysBase func)
         {
             JsonObjSysBase left = null;
@@ -6269,7 +6166,7 @@ namespace com.middlemind.JsonPL
         * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
          */
 
-        //TODO: synced
+        //TODO: sync
 
         public JsonObjSysBase processCall(JsonObjSysBase objCall, JsonObjSysBase func)
         {
@@ -6397,6 +6294,24 @@ namespace com.middlemind.JsonPL
             {
                 this.wr("processCall: Error: unknown function name type: " + name);
                 return null;
+            }
+
+            bool hasPubs = false;
+            if (funcDef != null && this.validateProperties(funcDef, new String[] { "pubs" }) && this.isArray(funcDef.pubs))
+            {
+                hasPubs = true;
+            }
+
+            if (this.VERBOSE)
+            {
+                if (hasPubs)
+                {
+                    this.wr("processCall: has publications: " + hasPubs + ", Found: " + this.toStr(funcDef.pubs) + ", Path: " + name);
+                }
+                else
+                {
+                    this.wr("processCall: has publications: " + hasPubs + ", Path: " + name);
+                }
             }
 
             if (funcArgs != null)
@@ -6566,6 +6481,26 @@ namespace com.middlemind.JsonPL
                                 err = true;
                             }
 
+                            if (hasPubs)
+                            {
+                                for (int k = 0; k < funcDef.pubs.Count; k++)
+                                {
+                                    string nurl = null;
+                                    if (this.isString(funcDef.pubs[k]))
+                                    {
+                                        nurl = funcDef.pubs[k];
+                                        try
+                                        {
+                                            this.processUrlCall(nurl + "&type=call&name=" + HttpUtility.UrlEncode(name) + "&args=" + HttpUtility.UrlEncode(Utils.JSONstringify(args)), true);
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            this.wrErr(e);
+                                        }
+                                    }
+                                }
+                            }
+
                             if (lret == null)
                             {
                                 JsonObjSysBase ret1 = new JsonObjSysBase("val");
@@ -6609,6 +6544,26 @@ namespace com.middlemind.JsonPL
                             {
                                 this.wr("processCall: Returning:");
                                 this.wrObj(lret);
+                            }
+
+                            if (hasPubs)
+                            {
+                                for (int k = 0; k < funcDef.pubs.Count; k++)
+                                {
+                                    string nurl = null;
+                                    if (this.isString(funcDef.pubs[k]))
+                                    {
+                                        nurl = funcDef.pubs[k];
+                                        try
+                                        {
+                                            this.processUrlCall(nurl + "&type=call&name=" + HttpUtility.UrlEncode(name) + "&args=" + HttpUtility.UrlEncode(Utils.JSONstringify(args)), true);
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            this.wrErr(e);
+                                        }
+                                    }
+                                }
                             }
 
                             return lret;
@@ -6658,6 +6613,26 @@ namespace com.middlemind.JsonPL
                                     {
                                         this.wr("processCall: Returning:");
                                         this.wrObj(lret);
+                                    }
+
+                                    if (hasPubs)
+                                    {
+                                        for (int k = 0; k < funcDef.pubs.Count; k++)
+                                        {
+                                            string nurl = null;
+                                            if (this.isString(funcDef.pubs[k]))
+                                            {
+                                                nurl = funcDef.pubs[k];
+                                                try
+                                                {
+                                                    this.processUrlCall(nurl + "&type=call&name=" + HttpUtility.UrlEncode(name) + "&args=" + HttpUtility.UrlEncode(Utils.JSONstringify(args)), true);
+                                                }
+                                                catch (Exception e)
+                                                {
+                                                    this.wrErr(e);
+                                                }
+                                            }
+                                        }
                                     }
 
                                     return lret;
@@ -6975,9 +6950,6 @@ namespace com.middlemind.JsonPL
          * has any replacement directives defined. Arg1: src(the JSON text to check)
          * Returns: {true | false}
          */
-
-        //TODO: synced
-
         public bool hasReplDirectives(string src)
         {
             if (src == null)

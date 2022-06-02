@@ -143,9 +143,6 @@ public class JsonPlState {
     * Arg3: sep(an optional string separator) 
     * Returns: const(a {const} bool object) 
     */
-    
-    //TODO: sync    
-    
     public JsonObjSysBase sysWr(List<JsonObjSysBase> args, JsonObjSysBase func, String sep) throws Exception {
         JsonObjSysBase ret = new JsonObjSysBase("val");
         ret.type = "bool";
@@ -194,9 +191,6 @@ public class JsonPlState {
      * Desc: A system level method to access the last asgn value object. 
      * Returns: const(a {const} bool object)
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase sysGetLastAsgnValue(List<JsonObjSysBase> args, JsonObjSysBase func) {
         if (this.lastAsgnValue != null) {
             return this.lastAsgnValue;
@@ -210,9 +204,6 @@ public class JsonPlState {
      * Desc: A system level method to access the last exp return object. 
      * Returns: const(a {const} bool object)
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase sysGetLastExpReturn(List<JsonObjSysBase> args, JsonObjSysBase func) {
         if (this.lastExpReturn != null) {
             return this.lastExpReturn;
@@ -350,9 +341,6 @@ public class JsonPlState {
      * Desc: Executes the current program and returns the result. 
      * Returns: ret(some {const}, {ref} object)
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase runProgram() {
         if (this.validateSysObjClass(this.program)) {
             long start = System.currentTimeMillis();
@@ -616,9 +604,6 @@ public class JsonPlState {
      * Arg1: obj(the object to inspect)
      * Returns: ret(some bool, true or false)
      */
-    
-    //TODO: sync
-    
     public boolean isForEach(JsonObjSysBase obj) {
         return (this.isSysObjFor(obj) && !this.isFullFor(obj) && this.validateProperties(obj, new String[] {"each"}));
     }
@@ -966,9 +951,6 @@ public class JsonPlState {
      *   "right": {ref | const | exp | bex | call}
      * }
      */
-    
-    //TODO: sync
-    
     public boolean validateSysObjAsgn(JsonObjSysBase obj) {
         if (this.isSysObjAsgn(obj) && this.validateProperties(obj, new String[]{"sys", "left", "op", "right"})) {
             JsonObjSysBase tobj = null;
@@ -1389,9 +1371,6 @@ public class JsonPlState {
      *   "v": "some valid value"
      * }
      */
-    
-    //TODO: sync
-    
     public boolean validateSysObjVal(JsonObjSysBase obj) {
         //this.wr("validateSysObjVal: Receiving: ");
         //this.wrObj(obj);
@@ -1468,7 +1447,6 @@ public class JsonPlState {
                         skipArVer = true;
                     }
 
-                    //TODO: sync
                     //array data types
                     if (obj.type.equals("int[]")) {
                         if (!this.isArray(obj.v)) {
@@ -1686,9 +1664,6 @@ public class JsonPlState {
     *       Prints object using NON pretty JSON.stringify call.
     * Arg1: jsonObj(jsonObj to write)
     */
-   
-   //TODO: sync
-   
     public void wrObjAbr(JsonObjSysBase jsonObj) {
       if (this.LOGGING == true) {
          Utils.PrintObject(jsonObj, "wrObjAbr", false);
@@ -1735,9 +1710,6 @@ public class JsonPlState {
      * Arg2: func(the associated {func} object if any)
      * Returns: ret(a {const} object)
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase sysLen(List<JsonObjSysBase> args, JsonObjSysBase func) {
         JsonObjSysBase s = null;
         JsonObjSysBase ret = null;
@@ -1782,9 +1754,6 @@ public class JsonPlState {
      * Arg2: func(the associated {func} object if any)
      * Returns: ret(a {ref} object)
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase sysType(List<JsonObjSysBase> args, JsonObjSysBase func) {
         JsonObjSysBase s = null;
         JsonObjSysBase ret = null;
@@ -1857,9 +1826,6 @@ public class JsonPlState {
     * Arg2: func(the {func} object associated with this function call)
     * Returns: ret(a {const} object)
     */
-    
-    //TODO: sync
-    
     public JsonObjSysBase sysGetArrayIdxRef(List<JsonObjSysBase> args, JsonObjSysBase func) {
         JsonObjSysBase ret = this.sysGetRef(args, func);
         String idx = null;
@@ -1879,9 +1845,6 @@ public class JsonPlState {
      * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
      * Returns: ret(a {ref} object)
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase sysGetRef(List<JsonObjSysBase> args, JsonObjSysBase func) {
         JsonObjSysBase ret = this.getRef("string", "");
 
@@ -1948,9 +1911,6 @@ public class JsonPlState {
      * Arg4: val(a {const} or {ref} used as the value for the new variable)
      * Returns: ret(a {ref} object)
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase sysMalloc(List<JsonObjSysBase> args, JsonObjSysBase func) {
         JsonObjSysBase ret = this.getRef("string", "");
 
@@ -2033,9 +1993,6 @@ public class JsonPlState {
      * Arg4: len(a {const} or {ref} with an integer representing the array length)
      * Returns: ret(a {ref} object)
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase sysMallocArray(List<JsonObjSysBase> args, JsonObjSysBase func) {
         JsonObjSysBase ret = this.getRef("string", "");
 
@@ -2148,9 +2105,6 @@ public class JsonPlState {
      * Arg2: name(a {const} or {ref} string indicating the name of the var to delete)
      * Returns: ret(a {const} object with a bool value indicating the operation was successful)
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase sysClean(List<JsonObjSysBase> args, JsonObjSysBase func) {
         JsonObjSysBase ret = this.getConst("bool", "false");
 
@@ -2239,9 +2193,6 @@ public class JsonPlState {
      * Arg1: arg(a JSON object) 
      * Returns: ret(some bool, true or false)
      */
-    
-    //TODO: sync
-    
     public boolean isObject(Object arg) {
         if (arg == null) {
             return false;
@@ -2258,9 +2209,6 @@ public class JsonPlState {
      * Arg1: s(some string with a valid reference value)
      * Returns: ret(some bool, true or false)
      */
-    
-    //TODO: sync
-    
     public boolean isRefStringClass(Object s) {
         String ns = this.toStr(s);
         if (ns.indexOf("@.") == 0) {
@@ -2275,9 +2223,6 @@ public class JsonPlState {
      * Arg1: s(some string with a valid reference value)
      * Returns: ret(some bool, true or false)
      */
-    
-    //TODO: sync
-    
     public boolean isRefString(Object s) {
         String ns = this.toStr(s);
         if (ns.indexOf("$.") == 0 || ns.indexOf("#.") == 0 || ns.indexOf("[$.") == 0 || ns.indexOf("[#.") == 0 || ns.indexOf("<$.") == 0 || ns.indexOf("<#.") == 0) {
@@ -2306,9 +2251,6 @@ public class JsonPlState {
      * Arg1: s(some string with a valid reference value)
      * Returns: ret(some bool, true or false)
      */
-    
-    //TODO: sync    
-    
     public boolean isFuncSys(Object s) {
         String ns = this.toStr(s);
         if (ns.indexOf("SYS::") != -1) {
@@ -2347,9 +2289,6 @@ public class JsonPlState {
      * Arg1: s(some string with a valid reference value)
      * Returns: ret(some bool, true or false)
      */
-    
-    //TODO: sync
-    
     public boolean isRefStringDec(Object s) {
         if (this.isRefString(s)) {
             String ns = this.toStr(s);
@@ -2441,9 +2380,6 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
      */
-    
-    //TODO: sync
-    
     public boolean isNumber(Object arg) {
         if (arg == null) {
             return false;
@@ -2464,9 +2400,6 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
      */
-    
-    //TODO: sync
-    
     public boolean isInteger(Object arg) {
         boolean isIntStr = false;
         try {
@@ -2493,9 +2426,6 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
      */
-    
-    //TODO: sync
-    
     public boolean isFloat(Object arg) {
         boolean isFltStr = false;
         try {
@@ -2522,9 +2452,6 @@ public class JsonPlState {
      * Arg1: arg(some value)
      * Returns: (true | false)
      */
-    
-    //TODO: sync    
-    
     public boolean isBool(Object arg) {
         boolean isBlStr = false;
         try {
@@ -2857,9 +2784,6 @@ public class JsonPlState {
      * Arg1: obj(sys obj to check) 
      * Returns: (true | false)
      */
-    
-    //TODO: sync
-    
     public String getSysObjType(JsonObjSysBase obj) {
         if (this.isObject(obj) == true && this.isSysObj(obj) == true) {
             return obj.sys;
@@ -2876,9 +2800,6 @@ public class JsonPlState {
      * Arg2: 
      * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase processUrlFind(String url) {
         return processUrlFind(url, false);
     }
@@ -2958,9 +2879,6 @@ public class JsonPlState {
      * Arg1: url(some complete URL with set message generated by JsonPL)
      * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase processUrlSet(String url) {
         return processUrlFind(url, false);
     }
@@ -2982,12 +2900,12 @@ public class JsonPlState {
         }
 
         if (Utils.IsStringEmpty(url)) {
-            this.wr("processUrlFind: Error: url is not properly defined");
+            this.wr("processUrlSet: Error: url is not properly defined");
             return null;
         }
 
         if (url.length() >= 2048) {
-            this.wr("processUrlFind: Warning: maximum URL length with get params has been reached!");
+            this.wr("processUrlSet: Warning: maximum URL length with get params has been reached!");
         }
 
         try {
@@ -3040,9 +2958,6 @@ public class JsonPlState {
      * Arg1: url(some complete URL with set message generated by JsonPL)
      * Returns: {null | (const obj, sys=var) | (ref obj, sys=arg)}
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase processUrlCall(String url) {
         return processUrlFind(url, false);
     }
@@ -3064,12 +2979,12 @@ public class JsonPlState {
         }
 
         if (Utils.IsStringEmpty(url)) {
-            this.wr("processUrlFind: Error: url is not properly defined");
+            this.wr("processUrlCall: Error: url is not properly defined");
             return null;
         }
 
         if (url.length() >= 2048) {
-            this.wr("processUrlFind: Warning: maximum URL length with get params has been reached!");
+            this.wr("processUrlCall: Warning: maximum URL length with get params has been reached!");
         }
 
         try {
@@ -3122,10 +3037,7 @@ public class JsonPlState {
      * Arg1: objRef(string ref encoding) 
      * Arg2: func(func obj, sys=func)
      * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
-     */
-    
-    //TODO: sync
-    
+     */    
     public JsonObjSysBase processRef(JsonObjSysBase objRef, JsonObjSysBase func) {
         return processRef(objRef, func, null);
     }
@@ -3547,9 +3459,6 @@ public class JsonPlState {
      * Arg1: v(the value to convert)
      * Returns: (0 | 1)
      */
-    
-    //TODO: sync
-    
     public int toBoolInt(Object v) {
         if (this.toBool(v)) {
             return 1;
@@ -3588,9 +3497,6 @@ public class JsonPlState {
      * Arg1: v(the value to convert)
      * Returns: (the string value of v)
      */
-    
-    //TODO: sync
-    
     public String toStr(Object v) {
         if (this.isObject(v)) {
             return Utils.JSONstringify(v);
@@ -3607,9 +3513,6 @@ public class JsonPlState {
      * Arg1: t(The string representation of the JSON object not parsed by default)
      * Returns: (a new JsonObjSysBase instance)
      */
-    
-    //TODO: sync    
-    
     public JsonObjSysBase processLinkedTreeMapVal(String t) {
         JsonObjSysBase ret = new JsonObjSysBase("val");
         String nval = this.toStr(t);
@@ -3640,9 +3543,6 @@ public class JsonPlState {
      * Arg1: t(The unprocessed JSON parse object)
      * Returns: (a new JsonObjSysBase instance)
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase processLinkedTreeMap(LinkedTreeMap t) {
         LoaderSysBase ldr = new LoaderSysBase();
         LinkedTreeMap lltmp = (LinkedTreeMap) t;
@@ -3730,9 +3630,6 @@ public class JsonPlState {
      * Arg1: v(the value to convert)
      * Returns: (the bool value of v)
      */
-    
-    //TODO: sync
-    
     public boolean toBool(Object arg) {
         String vb = this.toStr(arg);
         vb = vb.toLowerCase();
@@ -4276,9 +4173,6 @@ public class JsonPlState {
      * Arg2: func(func obj, sys=func) 
      * Returns: {null | (const obj, sys=const)}
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase processAsgn(JsonObjSysBase objAsgn, JsonObjSysBase func) {
         JsonObjSysBase left = null;
         JsonObjSysBase op = null;
@@ -4961,6 +4855,19 @@ public class JsonPlState {
             return null;
         }
 
+        boolean hasPubs = false;
+        if (funcDef != null && this.validateProperties(funcDef, new String[] {"pubs"}) && this.isArray(funcDef.pubs)) {
+            hasPubs = true;
+        }
+        
+        if (this.VERBOSE) {
+            if(hasPubs) {
+                this.wr("processCall: has publications: " + hasPubs + ", Found: " + this.toStr(funcDef.pubs) + ", Path: " + name);
+            } else {
+                this.wr("processCall: has publications: " + hasPubs + ", Path: " + name);
+            }
+        }
+        
         if (funcArgs != null) {
             if (args.size() >= funcArgs.size() || funcArgs.size() == 0) {
                 if (funcArgs.size() == 0) {
@@ -5070,6 +4977,20 @@ public class JsonPlState {
                             err = true;
                         }
 
+                        if (hasPubs) {
+                            for (int k = 0; k < funcDef.pubs.size(); k++) {
+                                String nurl = null;
+                                if (this.isString(funcDef.pubs.get(k))) {
+                                    nurl = funcDef.pubs.get(k);
+                                    try {
+                                        this.processUrlCall(nurl + "&type=call&name=" + URLEncoder.encode(name, "UTF-8") + "&args=" + URLEncoder.encode(Utils.JSONstringify(args), "UTF-8"));
+                                    }catch (Exception e) {
+                                        this.wrErr(e);
+                                    }
+                                }
+                            }
+                        }
+                        
                         if (lret == null) {
                             JsonObjSysBase ret1 = new JsonObjSysBase("val");
                             ret1.type = "bool";
@@ -5103,6 +5024,20 @@ public class JsonPlState {
                             this.wrObj(lret);
                         }
 
+                        if (hasPubs) {
+                            for (int k = 0; k < funcDef.pubs.size(); k++) {
+                                String nurl = null;
+                                if (this.isString(funcDef.pubs.get(k))) {
+                                    nurl = funcDef.pubs.get(k);
+                                    try {
+                                        this.processUrlCall(nurl + "&type=call&name=" + URLEncoder.encode(name, "UTF-8") + "&args=" + URLEncoder.encode(Utils.JSONstringify(args), "UTF-8"));
+                                    }catch (Exception e) {
+                                        this.wrErr(e);
+                                    }
+                                }
+                            }
+                        }                        
+                        
                         return lret;
                     } else {
                         this.wr("processCall: Error: function returned a null value");
@@ -5141,6 +5076,20 @@ public class JsonPlState {
                                     this.wrObj(lret);
                                 }
 
+                                if (hasPubs) {
+                                    for (int k = 0; k < funcDef.pubs.size(); k++) {
+                                        String nurl = null;
+                                        if (this.isString(funcDef.pubs.get(k))) {
+                                            nurl = funcDef.pubs.get(k);
+                                            try {
+                                                this.processUrlCall(nurl + "&type=call&name=" + URLEncoder.encode(name, "UTF-8") + "&args=" + URLEncoder.encode(Utils.JSONstringify(args), "UTF-8"));
+                                            }catch (Exception e) {
+                                                this.wrErr(e);
+                                            }
+                                        }
+                                    }
+                                }
+                                
                                 return lret;
                             }
                         } else {
@@ -5169,9 +5118,6 @@ public class JsonPlState {
      * Arg2: func(func obj, sys=func)
      * Returns: {null | (const obj, sys=const)}
      */
-    
-    //TODO: sync
-    
     public JsonObjSysBase processExp(JsonObjSysBase objExp, JsonObjSysBase func) {
         JsonObjSysBase left = null;
         JsonObjSysBase op = null;
@@ -5359,9 +5305,6 @@ public class JsonPlState {
      * Arg1: src(the JSON text to check)
      * Returns: {true | false}
      */
-    
-    //TODO: sync
-    
     public boolean hasReplDirectives(String src) {
         if (src == null) {
             this.wr("hasReplDirectives: Error: argument src cannot be null.");

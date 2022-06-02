@@ -43,10 +43,7 @@ class jsonPlState {
     * Arg2: func(the {func} this system function is called from)
     * Arg3: sep(an optional string separator)
     * Returns: const(a {const} bool object)
-    */
-
-   //TODO: sync
-   
+    */   
    sysWr(args, func, sep) {
       var ret = {};
       ret.sys = "val";
@@ -101,10 +98,7 @@ class jsonPlState {
     * Name: sysGetLastAsgnValue
     * Desc: A system level method to access the last asgn value object.
     * Returns: const(a {const} bool object)
-    */
-   
-   //TODO: sync
-   
+    */   
    sysGetLastAsgnValue(args, func) {
       if (this.lastAsgnValue !== null) {
          return this.lastAsgnValue;
@@ -117,10 +111,7 @@ class jsonPlState {
     * Name: sysGetLastAsgnValue
     * Desc: A system level method to access the last exp return object.
     * Returns: const(a {const} bool object)
-    */
-
-   //TODO: sync
-   
+    */   
    sysGetLastExpReturn(args, func) {
       if (this.lastExpReturn !== null) {
          return this.lastExpReturn;
@@ -264,9 +255,6 @@ class jsonPlState {
     * Desc: Executes the current program and returns the result.
     * Returns: ret(some {const}, {ref} object)
     */
-
-   //TODO: sync
-
    runProgram() {
       if (this.validateSysObjClass(this.program)) {
          var start = Date.now();
@@ -530,9 +518,6 @@ class jsonPlState {
     * Arg1: obj(the object to inspect)
     * Returns: ret(some bool, true or false)
     */
-   
-   //TODO: sync
-   
    isForEach(obj) {
       return (this.isSysObjFor(obj) && !this.isFullFor(obj) && this.validateProperties(obj, ["each"]));
    }
@@ -880,9 +865,6 @@ class jsonPlState {
     *   "right": {ref | const | exp | bex | call}
     * }
     */
-
-   //TODO: sync
-   
    validateSysObjAsgn(obj) {
       if (this.isSysObjAsgn(obj) && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
          var tobj = null;
@@ -1299,9 +1281,6 @@ class jsonPlState {
     *   "v": "some valid value"
     * }
     */
-   
-   //TODO: sync
-   
    validateSysObjVal(obj) {
       //this.wr("validateSysObjVal: Receiving: ");
       //this.wrObj(obj);   
@@ -1378,7 +1357,6 @@ class jsonPlState {
                   skipArVer = true;
                }
 
-               //TODO: sync
                //array data types
                if (obj.type === "int[]") {
                   if (!this.isArray(obj.v)) {
@@ -1581,9 +1559,6 @@ class jsonPlState {
     *       Prints object using NON pretty JSON.stringify call.
     * Arg1: jsonObj(jsonObj to write)
     */
-   
-   //TODO: sync
-   
    wrObjAbr(jsonObj) {
       if (this.LOGGING === true) {
          this.wr(JSON.stringify(jsonObj));
@@ -1630,9 +1605,6 @@ class jsonPlState {
     * Arg2: func(the associated {func} object if any)
     * Returns: ret(a {const} object)
     */
-
-   //TODO: sync
-   
    sysLen(args, func) {
       var s = null;
       var ret = null;
@@ -1677,9 +1649,6 @@ class jsonPlState {
     * Arg2: func(the associated {func} object if any)
     * Returns: ret(a {ref} object)
     */
-
-   //TODO: sync
-   
    sysType(args, func) {
       var s = null;
       var ret = null;
@@ -1752,9 +1721,6 @@ class jsonPlState {
     * Arg2: func(the {func} object associated with this function call)
     * Returns: ret(a {const} object)
     */
-
-   //TODO: sync
-   
    sysGetArrayIdxRef(args, func) {
       var ret = this.sysGetRef(args, func);
       var idx = null;
@@ -1774,10 +1740,6 @@ class jsonPlState {
     * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
     * Returns: ret(a {ref} object)
     */
-
-   //TODO: sync
-   //CONTINUE HERE
-   
    sysGetRef(args, func) {
       var ret = this.getRef("string", "");
 
@@ -1844,9 +1806,6 @@ class jsonPlState {
     * Arg4: val(a {const} or {ref} used as the value for the new variable)
     * Returns: ret(a {ref} object)
     */
-   
-   //TODO: sync
-   
    sysMalloc(args, func) {
       var ret = this.getConst("string", "");
 
@@ -1931,9 +1890,6 @@ class jsonPlState {
     * Arg4: len(a {const} or {ref} with an integer representing the array length)
     * Returns: ret(a {ref} object)
     */
-
-   //TODO: sync
-
    sysMallocArray(args, func) {
       var ret = this.getConst("string", "");
 
@@ -2050,9 +2006,6 @@ class jsonPlState {
     * Arg2: name(a {const} or {ref} string indicating the name of the var to delete)
     * Returns: ret(a {const} object with a bool value indicating the operation was successful)
     */
-
-   //TODO: sync
-   
    sysClean(args, func) {
       var ret = this.getConst("bool", "false");
 
@@ -2135,9 +2088,6 @@ class jsonPlState {
     * Arg1: arg(a JSON object)
     * Returns: (true | false)
     */
-
-   //TODO: sync
-   
    isObject(arg) {
       if (arg === null) {
          return false;
@@ -2154,9 +2104,6 @@ class jsonPlState {
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
-
-   //TODO: sync
-
    isRefStringClass(s) {
       var ns = this.toStr(s);
       if (ns.indexOf("@.") === 0) {
@@ -2171,9 +2118,6 @@ class jsonPlState {
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
-
-   //TODO: sync
-
    isRefString(s) {
       var ns = this.toStr(s);
       if (ns.indexOf("$.") === 0 || ns.indexOf("#.") === 0 || ns.indexOf("[$.") == 0 || ns.indexOf("[#.") == 0 || ns.indexOf("<$.") == 0 || ns.indexOf("<#.") == 0) {
@@ -2202,9 +2146,6 @@ class jsonPlState {
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
-   
-   //TODO: sync
-   
    isFuncSys(s) {
       var ns = this.toStr(s);
       if (ns.indexOf("SYS::") !== -1) {
@@ -2243,9 +2184,6 @@ class jsonPlState {
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
-   
-   //TODO: sync
-   
    isRefStringDec(s) {
       if (this.isRefString(s)) {
          var ns = this.toStr(s);
@@ -2352,9 +2290,6 @@ class jsonPlState {
     * Arg1: arg(some value)
     * Returns: (true | false)
     */
-   
-   //TODO: sync
-   
    isInteger(arg) {
       var tmp = this.toInt(arg);
       if (arg === null) {
@@ -2372,9 +2307,6 @@ class jsonPlState {
     * Arg1: arg(some value)
     * Returns: (true | false)
     */
-   
-   //TODO: sync
-   
    isFloat(arg) {
       var tmp = this.toStr(arg);
       if (arg === null) {
@@ -2684,9 +2616,6 @@ class jsonPlState {
     * Arg1: obj(sys obj to check)
     * Returns: (true | false)
     */
-   
-   //TODO: sync
-   
    getSysObjType(obj) {
       if (this.isObject(obj) === true && this.isSysObj(obj) === true) {
          return obj.sys;
@@ -2702,9 +2631,6 @@ class jsonPlState {
     * Arg1: url(some complete URL with get message generated by JsonPL)
     * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
     */
-
-   //TODO: sync
-   
    processUrlFind(url, async=false) {
       if (this.VERBOSE) {
          this.wr("processUrlFind: Received url: " + url);
@@ -2721,22 +2647,49 @@ class jsonPlState {
 
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url, async);
-      xhr.send();
-
-      if (xhr.status === 200) {
-         var obj = JSON.parse(xhr.responseText);
-         if (this.toBool(obj.error) === false) {
-            if (this.VERBOSE) {
-               this.wr("processUrlSet: Notice: found response: " + obj.message + ", " + xhr.responseText);
+      if(async) {
+         xhr.onload = function () {
+            var that = this;
+            that.wr('DONE: ', xhr.status);
+            if (xhr.status === 200 || xhr.status === 0) {
+               var obj = JSON.parse(xhr.responseText);
+               if (this.toBool(obj.error) === false) {
+                  if (this.VERBOSE) {
+                     that.wr("processUrlFind: Notice: found response: " + obj.message + ", " + xhr.responseText + ", " + xhr.status);
+                  }
+      
+                  return obj.result;
+               } else {
+                  that.wr("processUrlFind: Error: ref request had issues: " + obj.message + ", " + xhr.responseText + ", " + xhr.status);
+                  return null;
+               }
+            } else {
+               that.wr("processUrlFind: Error: bad status code received: " + xhr.status);
             }
+         }.bind(this);
+      }
 
-            return obj.result;
+      xhr.send();
+      if(async) {
+         return null;
+      }
+      
+      if(!async) {
+         if (xhr.status === 200 || xhr.status === 0) {
+            var obj = JSON.parse(xhr.responseText);
+            if (this.toBool(obj.error) === false) {
+               if (this.VERBOSE) {
+                  this.wr("processUrlFind: Notice: found response: " + obj.message + ", " + xhr.responseText + ", " + xhr.status);
+               }
+
+               return obj.result;
+            } else {
+               this.wr("processUrlFind: Error: ref request had issues: " + obj.message + ", " + xhr.responseText + ", " + xhr.status);
+               return null;
+            }
          } else {
-            this.wr("processUrlFind: Error: ref request had issues: " + obj.message + ", " + xhr.responseText);
-            return null;
+            this.wr("processUrlFind: Error: bad status code received: " + xhr.status);
          }
-      } else {
-         this.wr("processUrlFind: Error: bad status code received: " + xhr.status);
       }
       return null;
    }
@@ -2747,9 +2700,6 @@ class jsonPlState {
     * Arg1: url(some complete URL with set message generated by JsonPL)
     * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
     */
-
-   //TODO: sync
-   
    processUrlSet(url, async=false) {
       if (this.VERBOSE) {
          this.wr("processUrlSet: Received url: " + url);
@@ -2766,22 +2716,49 @@ class jsonPlState {
 
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url, async);
-      xhr.send();
-
-      if (xhr.status === 200) {
-         var obj = JSON.parse(xhr.responseText);
-         if (this.toBool(obj.error) === false) {
-            if (this.VERBOSE) {
-               this.wr("processUrlSet: Notice: found response: " + obj.message + ", " + xhr.responseText);
+      if(async) {
+         xhr.onload = function () {
+            var that = this;            
+            that.wr('DONE: ', xhr.status);
+            if (xhr.status === 200 || xhr.status === 0) {
+               var obj = JSON.parse(xhr.responseText);
+               if (this.toBool(obj.error) === false) {
+                  if (this.VERBOSE) {
+                     that.wr("processUrlSet: Notice: found response: " + obj.message + ", " + xhr.responseText + ", " + xhr.status);
+                  }
+      
+                  return obj.result;
+               } else {
+                  that.wr("processUrlSet: Error: ref request had issues: " + obj.message + ", " + xhr.responseText + ", " + xhr.status);
+                  return null;
+               }
+            } else {
+               that.wr("processUrlSet: Error: bad status code received: " + xhr.status);
             }
+         }.bind(this);
+      }
 
-            return obj.result;
+      xhr.send();
+      if(async) {
+         return null;
+      }
+      
+      if(!async) {
+         if (xhr.status === 200 || xhr.status === 0) {
+            var obj = JSON.parse(xhr.responseText);
+            if (this.toBool(obj.error) === false) {
+               if (this.VERBOSE) {
+                  this.wr("processUrlSet: Notice: found response: " + obj.message + ", " + xhr.responseText + ", " + xhr.status);
+               }
+
+               return obj.result;
+            } else {
+               this.wr("processUrlSet: Error: ref request had issues: " + obj.message + ", " + xhr.responseText + ", " + xhr.status);
+               return null;
+            }
          } else {
-            this.wr("processUrlSet: Error: ref request had issues: " + obj.message + ", " + xhr.responseText);
-            return null;
+            this.wr("processUrlSet: Error: bad status code received: " + xhr.status);
          }
-      } else {
-         this.wr("processUrlSet: Error: bad status code received: " + xhr.status);
       }
       return null;
    }
@@ -2792,9 +2769,6 @@ class jsonPlState {
     * Arg1: url(some complete URL with set message generated by JsonPL)
     * Returns: {null | (const obj, sys=var) | (ref obj, sys=arg)}
     */
-   
-   //TODO: sync
-   
    processUrlCall(url, async=false) {
       if (this.VERBOSE) {
          this.wr("processUrlCall: Received url: " + url);
@@ -2811,22 +2785,49 @@ class jsonPlState {
 
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url, async);
-      xhr.send();
-
-      if (xhr.status === 200) {
-         var obj = JSON.parse(xhr.responseText);
-         if (this.toBool(obj.error) === false) {
-            if (this.VERBOSE) {
-               this.wr("processUrlCall: Notice: found response: " + obj.message + ", " + xhr.responseText);
+      if(async) {
+         xhr.onload = function () {
+            var that = this;
+            that.wr('DONE: ', xhr.status);
+            if (xhr.status === 200 || xhr.status === 0) {
+               var obj = JSON.parse(xhr.responseText);
+               if (this.toBool(obj.error) === false) {
+                  if (this.VERBOSE) {
+                     that.wr("processUrlCall: Notice: found response: " + obj.message + ", " + xhr.responseText + ", " + xhr.status);
+                  }
+      
+                  return obj.result;
+               } else {
+                  that.wr("processUrlCall: Error: ref request had issues: " + obj.message + ", " + xhr.responseText + ", " + xhr.status);
+                  return null;
+               }
+            } else {
+               that.wr("processUrlCall: Error: bad status code received: " + xhr.status);
             }
+         }.bind(this);
+      }
 
-            return obj.result;
+      xhr.send();
+      if(async) {
+         return null;
+      }
+      
+      if(!async) {
+         if (xhr.status === 200 || xhr.status === 0) {
+            var obj = JSON.parse(xhr.responseText);
+            if (this.toBool(obj.error) === false) {
+               if (this.VERBOSE) {
+                  this.wr("processUrlCall: Notice: found response: " + obj.message + ", " + xhr.responseText + ", " + xhr.status);
+               }
+
+               return obj.result;
+            } else {
+               this.wr("processUrlCall: Error: ref request had issues: " + obj.message + ", " + xhr.responseText + ", " + xhr.status);
+               return null;
+            }
          } else {
-            this.wr("processUrlCall: Error: ref request had issues: " + obj.message + ", " + xhr.responseText);
-            return null;
+            this.wr("processUrlCall: Error: bad status code received: " + xhr.status);
          }
-      } else {
-         this.wr("processUrlCall: Error: bad status code received: " + xhr.status);
       }
       return null;
    }
@@ -3224,9 +3225,6 @@ class jsonPlState {
     * Arg1: v(the value to convert)
     * Returns: (0 | 1)
     */
-   
-   //TODO: sync
-   
    toBoolInt(v) {
       if (this.toBool(v)) {
          return 1;
@@ -3261,9 +3259,6 @@ class jsonPlState {
     * Arg1: v(the value to convert)
     * Returns: (the string value of v)
     */
-   
-   //TODO: sync
-   
    toStr(v) {
       if (this.isObject(v)) {
          return JSON.stringify(v);
@@ -3296,9 +3291,6 @@ class jsonPlState {
     * Arg1: arg(the value to convert)
     * Returns: (the bool value of v)
     */
-   
-   //TODO: sync
-   
    toBool(arg) {
       var vb = this.toStr(arg);
       vb = vb.toLowerCase();
@@ -3844,9 +3836,6 @@ class jsonPlState {
     * Arg2: func(func obj, sys=func)
     * Returns: {null | (const obj, sys=const)}
     */
-
-   //TODO: sync
-   
    processAsgn(objAsgn, func) {
       var left = null;
       var op = null;
@@ -4396,7 +4385,6 @@ class jsonPlState {
     */
 
    //TODO: sync
-   //CONTINUE HERE
    
    processCall(objCall, func) {
       var name = null;
@@ -4494,6 +4482,19 @@ class jsonPlState {
          return null;
       }
 
+      var hasPubs = false;
+      if (funcDef != null && this.validateProperties(funcDef, ["pubs"]) && this.isArray(funcDef.pubs)) {
+         hasPubs = true;
+      }
+
+      if (this.VERBOSE) {
+         if(hasPubs) {
+            this.wr("processCall: has publications: " + hasPubs + ", Found: " + this.toStr(funcDef.pubs) + ", Path: " + name);
+         } else {
+            this.wr("processCall: has publications: " + hasPubs + ", Path: " + name);
+         }
+      }
+
       if (funcArgs !== null) {
          if (args.length >= funcArgs.length || funcArgs.length === 0) {
             if (funcArgs.length === 0) {
@@ -4549,6 +4550,16 @@ class jsonPlState {
                      err = true;
                   }
 
+                  if (hasPubs) {
+                     for (var k = 0; k < funcDef.pubs.length; k++) {
+                        var nurl = null;
+                        if (this.isString(funcDef.pubs[k])) {
+                           nurl = funcDef.pubs[k];
+                           this.processUrlCall(nurl + "&type=call&name=" + encodeURIComponent(name) + "&args=" + encodeURIComponent(JSON.stringify(args)), true);
+                        }
+                     }
+                  }
+      
                   if (lret === null) {
                      var ret = {};
                      ret.sys = "val";
@@ -4579,6 +4590,16 @@ class jsonPlState {
                      this.wrObj(lret);
                   }
 
+                  if (hasPubs) {
+                     for (var k = 0; k < funcDef.pubs.length; k++) {
+                        var nurl = null;
+                        if (this.isString(funcDef.pubs[k])) {
+                           nurl = funcDef.pubs[k];
+                           this.processUrlCall(nurl + "&type=call&name=" + encodeURIComponent(name) + "&args=" + encodeURIComponent(JSON.stringify(args)), true);
+                        }
+                     }
+                  }
+      
                   return lret;
                } else {
                   this.wr("processCall: Error: function returned a null value");
@@ -4617,6 +4638,16 @@ class jsonPlState {
                            this.wrObj(lret);
                         }
 
+                        if (hasPubs) {
+                           for (var k = 0; k < funcDef.pubs.length; k++) {
+                              var nurl = null;
+                              if (this.isString(funcDef.pubs[k])) {
+                                 nurl = funcDef.pubs[k];
+                                 this.processUrlCall(nurl + "&type=call&name=" + encodeURIComponent(name) + "&args=" + encodeURIComponent(JSON.stringify(args)), true);
+                              }
+                           }
+                        }
+
                         return lret;
                      }
                   } else {
@@ -4628,6 +4659,7 @@ class jsonPlState {
                   return null;
                }
             }
+
          } else {
             this.wr("processCall: Error: function argument length mismatch, func arg def: " + funcArgs.length + ", call arg: " + args.length);
             return null;
@@ -4645,9 +4677,6 @@ class jsonPlState {
     * Arg2: func(func obj, sys=func)
     * Returns: {null | (const obj, sys=const)}
     */
-   
-   //TODO: sync
-   
    processExp(objExp, func) {
       var left = null;
       var op = null;
@@ -4836,9 +4865,6 @@ class jsonPlState {
     * Arg1: src(the JSON text to check)
     * Returns: {true | false}
     */
-
-   //TODO: sync
-
    hasReplDirectives(src) {
       if (src === null) {
          this.wr("hasReplDirectives: Error: argument src cannot be null.");
