@@ -16,7 +16,7 @@ Recent Updates:
 4. Synced up the Javascript, Java, and C# versions to support all 26 test programs.
 5. **Ability to create new variables with system calls to mlc, malloc, and amlc, array malloc.
 6. **Ability to delete variables with system calls to cln, clean.
-7. **Added ability to use a server to host variable values into the languages referencing string encoding. An example can be found in test program 24 in the Javascript, Java, and C# interpreter's cfg directory. Requires the Node JS server, public_html/svr/EXEC4SVR.JS running on the URL specified in test program 24.
+7. **Added ability to use a server to host variable values into the languages referencing string encoding. An example can be found in test program 24 in the Javascript, Java, and C# interpreter's cfg directory. Requires the Node JS server, public_html/svr/EXEC4SVR_BASIC.JS running on the URL specified in test program 24.
 8. **Added support for URL function calls, not you can call function in native JsonPL, normal function, in the language of the interpreter, system function, or a web based function call, url function. test program 25.
 9. **Example of URL based {asgn} object in conjunction with a URL based {ref} object in test program 26.
 10. **Example of pubs on both a {var} and a {func}, automatic URL request on assignment of variable or call of function, test program 27.
@@ -32,6 +32,106 @@ Up Next:
 7. A more concise text based way to write JsonPL native code.
 8. Moving all the documentation to the wiki.
 9. Release of version 0.5.5 for the three main interpreters.
+
+## Calling a Class Function
+Now you can call a library class function. These class objects are associated to the main class object via the optional classes attribute.
+
+<pre>
+{
+"sys":"call", "name":"@.test27", "args":[]
+}
+</pre>
+
+An example of the library class defined as part of the classes attribute.
+
+<pre>
+"classes": [
+	{"sys":"class", "name":"test27",
+	  "call":{"sys":"call", "name":"main", "args":[]},
+	  "vars":[
+	     {
+		"sys":"var", "name":"f1",
+		"val": {
+		   "sys":"val",
+		   "type":"string",
+		   "v":"undefined string value!"
+		},
+		"pubs": [
+		   "http://localhost:8000/?jsonpl=true"
+		]
+	     }               
+	  ],
+	  "funcs":[
+	     {"sys":"func", "name":"main",
+		"args":[ 
+		],
+		"vars":[
+		],
+		"ret":{"sys":"val", "type":"bool", "v":"false"},
+		"lines":[
+		   {
+		      "sys":"asgn",
+		      "left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.f1"}},
+		      "op":{"sys":"op", "type":"asgn", "v":"="},
+		      "right":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"hello world!"}}
+		   },                 
+		   {
+		      "sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}
+		   }
+		],
+		"pubs": [
+		   "http://localhost:8000/?jsonpl=true&func=true"
+		]
+	     }
+	  ],
+	  "ret":{"sys":"val", "type":"bool", "v":"false"}
+	}
+]
+</pre>
+
+## Variable Pubs
+Now you can setup a pub for specific variables. Each URL in the list will be sent an async HTTP request with information about the variable.
+
+<pre>
+{
+  "sys":"var", "name":"f1",
+  "val": {
+     "sys":"val",
+     "type":"string",
+     "v":"undefined string value!"
+  },
+  "pubs": [
+     "http://localhost:8000/?jsonpl=true"
+  ]
+}
+</pre>
+
+## Function Pubs
+Now you can setup a pub for specific functions. Each URL in the list will be sent an async HTTP request with information about the function call.
+
+<pre>
+{"sys":"func", "name":"main",
+  "args":[ 
+  ],
+  "vars":[
+  ],
+  "ret":{"sys":"val", "type":"bool", "v":"false"},
+  "lines":[
+     {
+	"sys":"asgn",
+	"left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.f1"}},
+	"op":{"sys":"op", "type":"asgn", "v":"="},
+	"right":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"hello world!"}}
+     },                 
+     {
+	"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}
+     }
+  ],
+  "pubs": [
+     "http://localhost:8000/?jsonpl=true&func=true"
+  ]
+}
+</pre>
 
 ## URL Function Call:
 Now you can use URLs to handle function calls opening up a web layer of callable functions to the language. This addition makes the language highly distributed.
