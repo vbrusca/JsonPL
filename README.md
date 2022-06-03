@@ -20,7 +20,7 @@ Recent Updates:
 8. **Added support for URL function calls, not you can call function in native JsonPL, normal function, in the language of the interpreter, system function, or a web based function call, url function. test program 25.
 9. **Example of URL based {asgn} object in conjunction with a URL based {ref} object in test program 26.
 10. **Example of pubs on both a {var} and a {func}, automatic URL request on assignment of variable or call of function, test program 27.
-11. **Example of libs using the 'classes' attribute of the {class} object, example of class function reference, @.class_name.function_name, text program 28.
+11. **Example of libs using the 'classes' attribute of the {class} object, example of class function reference, @.class_name.function_name, test program 28.
 
 Up Next: 
 1. A C version of the base 0.5.1 interpreter. The C version of the 0.5.1 interpreter is coming along. A lot of the base code to handle strings, lists, memory management, etc. is done and ready for testing.
