@@ -18,6 +18,9 @@ Recent Updates:
 6. **Ability to delete variables with system calls to cln, clean.
 7. **Added ability to use a server to host variable values into the languages referencing string encoding. An example can be found in test program 24 in the Javascript, Java, and C# interpreter's cfg directory. Requires the Node JS server, public_html/svr/EXEC4SVR.JS running on the URL specified in test program 24.
 8. **Added support for URL function calls, not you can call function in native JsonPL, normal function, in the language of the interpreter, system function, or a web based function call, url function. test program 25.
+9. **Example of URL based {asgn} object in conjunction with a URL based {ref} object in test program 26.
+10. **Example of pubs on both a {var} and a {func}, automatic URL request on assignment of variable or call of function, test program 27.
+11. **Example of libs using the 'classes' attribute of the {class} object, example of class function reference, @.class_name.function_name, text program 28.
 
 Up Next: 
 1. A C version of the base 0.5.1 interpreter. The C version of the 0.5.1 interpreter is coming along. A lot of the base code to handle strings, lists, memory management, etc. is done and ready for testing.
@@ -26,13 +29,17 @@ Up Next:
 4. Adding an "imports" attribute to the class object, type of array, that stores loaded classes, @imports.class_name.vars.var_name, @imports.class_name.funcs.func_name.
 5. Step through execution and proper line number tracking.
 6. An IDE to demonstrate how concise the language can be when an IDE is present to automate creating the JSON encoding.
+7. A more concise text based way to write JsonPL native code.
+8. Moving all the documentation to the wiki.
+9. Release of version 0.5.5 for the three main interpreters.
 
 ## URL Function Call:
 Now you can use URLs to handle function calls opening up a web layer of callable functions to the language. This addition makes the language highly distributed.
 Levels of function calling:
 1. Normal: JsonPL defined function.
-2. System: Function defined in the native language of the interpreter.
-3. URL: Function defined on the specified server.
+2. Library: JsonPL function defined in a class objected registered in the classes attribute.
+3. System: Function defined in the native language of the interpreter.
+4. URL: Function defined on the specified server.
 
 <pre>
 {
