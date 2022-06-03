@@ -88,7 +88,7 @@ An example of the expected return value format:
 
 The location of the server in the project dirs:
 <pre>
-public_html/svr/EXEC4SVR.JS
+public_html/svr/EXEC4SVR_BASIC.JS
 </pre>
 
 How to start the server from the CLI with Node JS installed and enabled:
