@@ -209,7 +209,7 @@ class jsonPlState {
    }
 
    /**
-    * Name: getFuncFromRefThis
+    * Name: getFuncFromRefFunc
     * Desc: A function to get the function name from a full, this class, function reference.
     * Arg1: path(some string with a URL variable reference)
     * Returns: ret(a string value with the function name)
@@ -217,11 +217,11 @@ class jsonPlState {
 
    //TODO: sync
 
-   getFuncFromRefThis(path) {
-      if(this.isRefStringThis(path)) {
+   getFuncFromRefFunc(path) {
+      if(this.isRefStringFunc(path)) {
          var nvs = path.split(".");
-         if(nvs.length >= 2) {
-            return nvs[1];
+         if(nvs.length >= 3) {
+            return nvs[2];
          }         
       }
       return null;
@@ -2155,21 +2155,54 @@ class jsonPlState {
    }
 
    /**
-    * Name: isRefStringThis
-    * Desc: Checks if the given argument is a this, self class, reference string.
+    * Name: isRefStringClassDec
+    * Desc: Checks if the given argument is a decoded class reference string.
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
 
    //TODO: sync
 
-   isRefStringThis(s) {
-      var ns = this.toStr(s);
-      if (ns.indexOf("#.") === 0) {
+   isRefStringClassDec(s) {
+      if (this.isRefStringDec(s) && this.isRefStringClass(s)) {
          return true;
       }
       return false;
    }
+
+   /**
+    * Name: isRefStringFuncDec
+    * Desc: Checks if the given argument is a, class func, decoded reference string.
+    * Arg1: s(some string with a valid reference value)
+    * Returns: ret(some bool, true or false)
+    */
+
+   //TODO: sync
+
+   isRefStringFuncDec(s) {
+      if (this.isRefStringDec(s) && this.isRefStringFunc(s)) {
+         return true;
+      }
+      return false;
+   }
+
+   /**
+    * Name: isRefStringFunc
+    * Desc: Checks if the given argument is a, class func, reference string.
+    * Arg1: s(some string with a valid reference value)
+    * Returns: ret(some bool, true or false)
+    */
+
+   //TODO: sync
+
+   isRefStringFunc(s) {
+      var ns = this.toStr(s);
+      if (ns.indexOf("#.funcs.") === 0) {
+         return true;
+      }
+      return false;
+   }
+
 
    /**
     * Name: isRefString
@@ -2179,7 +2212,7 @@ class jsonPlState {
     */
    isRefString(s) {
       var ns = this.toStr(s);
-      if (ns.indexOf("$.") === 0 || ns.indexOf("#.") === 0 || ns.indexOf("[$.") == 0 || ns.indexOf("[#.") == 0 || ns.indexOf("<$.") == 0 || ns.indexOf("<#.") == 0) {
+      if (ns.indexOf("$.") === 0 || ns.indexOf("#.") === 0 || ns.indexOf("[$.") === 0 || ns.indexOf("[#.") === 0 || ns.indexOf("<$.") === 0 || ns.indexOf("<#.") === 0) {
          return true;
       }
       return false;
@@ -2194,6 +2227,24 @@ class jsonPlState {
    isRefStringUrl(s) {
       var ns = this.toStr(s);
       if (ns.indexOf("->(") !== -1) {
+         return true;
+      }
+      return false;
+   }
+
+   /**
+    * Name: isUrl
+    * Desc: Checks if the given argument is a URLstring.
+    * Arg1: s(some string with a valid URL value)
+    * Returns: ret(some bool, true or false)
+    */
+
+   //TODO: sync
+
+   isUrl(s) {
+      var ns = this.toStr(s);
+      ns = ns.toLowerCase();
+      if (ns.indexOf("http://") !== -1 || ns.indexOf("https://") !== -1) {
          return true;
       }
       return false;
@@ -2243,13 +2294,16 @@ class jsonPlState {
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
+
+   //TODO: sync
+
    isRefStringDec(s) {
-      if (this.isRefString(s)) {
+      //if (this.isRefString(s)) {
          var ns = this.toStr(s);
          if (ns.indexOf("[") === -1 && ns.indexOf("]") === -1 && ns.indexOf("<") === -1 && ns.indexOf(">") === -1) {
             return true;
          }
-      }
+      //}
       return false;
    }
 
@@ -3460,7 +3514,8 @@ class jsonPlState {
       //this.wr("left:");
       //this.wrObj(left);
       //this.wr("right:");
-      //this.wrObj(right);   
+      //this.wrObj(right);
+       
       if (left.val.type === right.val.type) {
          var ret = {};
          ret.sys = "val";
@@ -3899,7 +3954,7 @@ class jsonPlState {
    //TODO: sync
 
    processAsgn(objAsgn, func) {
-      this.wrObj(objAsgn);
+      //this.wrObj(objAsgn);
       var left = null;
       var op = null;
       var right = null;
@@ -3992,7 +4047,8 @@ class jsonPlState {
       }
 
       if (this.isSysObjConst(right)) {
-         //do nothing, all set      
+         //do nothing, all set
+
       } else if (this.isSysObjRef(right)) {
          right = this.processRef(right, func);
 
@@ -4244,7 +4300,16 @@ class jsonPlState {
                var nurl = null;
                if (this.isString(left.pubs[k])) {
                   nurl = left.pubs[k];
-                  this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(nval), true);
+                  if(this.isUrl(nurl)) {
+                     this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(nval), true);
+
+                  } else if(this.isRefStringFuncDec(nurl)) {
+                     //call local function
+                     
+                  } else if(this.isRefStringClassDec(nurl)) {
+                     //call lib class function
+
+                  }
                }
             }
          }
@@ -4274,7 +4339,16 @@ class jsonPlState {
                   var nurl = null;
                   if (this.isString(left.pubs[k])) {
                      nurl = left.pubs[k];
-                     this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(this.toStr(rightOrig.val.v)), true);
+                     if(this.isUrl(nurl)) {
+                        this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(this.toStr(rightOrig.val.v)), true);
+
+                     } else if(this.isRefStringFuncDec(nurl)) {
+                        //call local function
+                        
+                     } else if(this.isRefStringClassDec(nurl)) {
+                        //call lib class function
+   
+                     }
                   }
                }
             }
@@ -4308,7 +4382,16 @@ class jsonPlState {
                   var nurl = null;
                   if (this.isString(left.pubs[k])) {
                      nurl = left.pubs[k];
-                     this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=array&obj=" + encodeURIComponent(JSON.stringify(tmpA)), true);
+                     if(this.isUrl(nurl)) {
+                        this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=array&obj=" + encodeURIComponent(JSON.stringify(tmpA)), true);
+
+                     } else if(this.isRefStringFuncDec(nurl)) {
+                        //call local function
+                        
+                     } else if(this.isRefStringClassDec(nurl)) {
+                        //call lib class function
+   
+                     }
                   }
                }
             }
@@ -4645,8 +4728,8 @@ class jsonPlState {
          name = this.toStr(objCall.name);
       }
 
-      if(this.isRefStringThis(name)) {
-         var lname = this.getFuncFromRefThis(name);
+      if(this.isRefStringFuncDec(name)) {
+         var lname = this.getFuncFromRefFunc(name);
          if(lname !== null) {
             name = lname;
          } else {
@@ -4680,7 +4763,7 @@ class jsonPlState {
 
       //TODO: sync
       var hasClass = false;
-      if(this.isRefStringClass(name) === true) {
+      if(this.isRefStringClassDec(name) === true) {
          //handle class
          hasClass = true;
          classFunc = true;
@@ -4904,7 +4987,16 @@ class jsonPlState {
                         var nurl = null;
                         if (this.isString(funcDef.pubs[k])) {
                            nurl = funcDef.pubs[k];
-                           this.processUrlCall(nurl + "&type=call&name=" + encodeURIComponent(name) + "&args=" + encodeURIComponent(JSON.stringify(args)), true);
+                           if(this.isUrl(nurl)) {
+                              this.processUrlCall(nurl + "&type=call&name=" + encodeURIComponent(name) + "&args=" + encodeURIComponent(JSON.stringify(args)), true);
+                           
+                           } else if(this.isRefStringFuncDec(nurl)) {
+                              //call local function
+                              
+                           } else if(this.isRefStringClassDec(nurl)) {
+                              //call lib class function
+         
+                           }                              
                         }
                      }
                   }
@@ -4952,7 +5044,16 @@ class jsonPlState {
                               var nurl = null;
                               if (this.isString(funcDef.pubs[k])) {
                                  nurl = funcDef.pubs[k];
-                                 this.processUrlCall(nurl + "&type=call&name=" + encodeURIComponent(name) + "&args=" + encodeURIComponent(JSON.stringify(args)), true);
+                                 if(this.isUrl(nurl)) {
+                                    this.processUrlCall(nurl + "&type=call&name=" + encodeURIComponent(name) + "&args=" + encodeURIComponent(JSON.stringify(args)), true);
+                                 
+                                 } else if(this.isRefStringFuncDec(nurl)) {
+                                    //call local function
+                                    
+                                 } else if(this.isRefStringClassDec(nurl)) {
+                                    //call lib class function
+               
+                                 }                                    
                               }
                            }
                         }
@@ -5055,7 +5156,10 @@ class jsonPlState {
          return null;
       }
 
-      if (left.val.type === right.val.type && (left.val.type === "int" || left.val.type === "float" || left.val.type === "bool" || left.val.type === "string")) {
+      if (
+         (right.val.type === "int" || right.val.type === "float" || right.val.type === "bool" || right.val.type === "string") 
+         || (left.val.type === "int" || left.val.type === "float" || left.val.type === "bool" || left.val.type === "string")
+      ) {
          var ret = {};
          ret.sys = "val";
          ret.type = left.val.type;
@@ -5076,73 +5180,86 @@ class jsonPlState {
 
          if (op.v === "+") {
             if (left.val.type === "int") {
-               ret.v = parseInt(left.val.v) + parseInt(right.val.v);
+               ret.v = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
+            
             } else if (left.val.type === "float") {
-               ret.v = parseFloat(left.val.v) + parseFloat(right.val.v);
+               ret.v = this.toStr(this.toFloat(left.val.v) + this.toFloat(right.val.v));
+            
             } else if (left.val.type === "bool") {
-               ret.v = this.toBoolInt(left.val.v) + this.toBoolInt(right.val.v);
+               ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) + this.toBoolInt(right.val.v)));
+            
             } else if (left.val.type === "string") {
                ret.v = this.toStr(left.val.v) + this.toStr(right.val.v);               
             }
          } else if (op.v === "-") {
             if (left.val.type === "int") {
-               ret.v = parseInt(left.val.v) - parseInt(right.val.v);
+               ret.v = this.toStr(this.toInt(left.val.v) - this.toInt(right.val.v));
+            
             } else if (left.val.type === "float") {
-               ret.v = parseFloat(left.val.v) - parseFloat(right.val.v);
+               ret.v = this.toStr(this.toFloat(left.val.v) - this.toFloat(right.val.v));
+            
             } else if (left.val.type === "bool") {
-               ret.v = this.toBoolInt(left.val.v) - this.toBoolInt(right.val.v);
+               ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) - this.toBoolInt(right.val.v)));
+            
             } else if (left.val.type === "string") {
                ret.v = this.toStr(left.val.v).replaceAll(this.toStr(right.val.v), "");                              
             }
          } else if (op.v === "/") {
             if (left.val.type === "int") {
-               if (parseInt(right.val.v) === 0) {
+               if (this.toInt(right.val.v) === 0) {
                   this.wr("processExp: Error: divide by zero error");
                   return null;
                } else {
-                  ret.v = parseInt(left.val.v) / parseInt(right.val.v);
+                  ret.v = this.toStr(this.toInt(left.val.v) / this.toInt(right.val.v));
                }
+
             } else if (left.val.type === "float") {
-               if (parseFloat(right.val.v) === 0) {
+               if (this.toFloat(right.val.v) === 0) {
                   this.wr("processExp: Error: divide by zero error");
                   return null;
                } else {
-                  ret.v = parseFloat(left.val.v) / parseFloat(right.val.v);
+                  ret.v = this.toStr(this.toFloat(left.val.v) / this.toFloat(right.val.v));
                }
+
             } else if (left.val.type === "bool") {
                if (this.toBoolInt(right.val.v) === 0) {
                   this.wr("processExp: Error: divide by zero error");
                   return null;
                } else {
-                  ret.v = this.toBoolInt(left.val.v) / this.toBoolInt(right.val.v);
+                  ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) / this.toBoolInt(right.val.v)));
                }
+
             } else if (left.val.type === "string") {
                s1 = this.toStr(right.val.v);
                s3 = this.toStr(left.val.v);
                ret.v = s1.split(s3).join();
+
             }
          } else if (op.v === "%") {
             if (left.val.type === "int") {
-               if (parseInt(right.val.v) === 0) {
+               if (this.toInt(right.val.v) === 0) {
                   this.wr("processExp: Error: divide by zero error");
                   return null;
                } else {
-                  ret.v = parseInt(left.val.v) % parseInt(right.val.v);
+                  ret.v = this.toStr(this.toInt(left.val.v) % this.toInt(right.val.v));
                }
+
             } else if (left.val.type === "float") {
-               if (parseFloat(right.val.v) === 0) {
+               if (this.toFloat(right.val.v) === 0) {
                   this.wr("processExp: Error: divide by zero error");
                   return null;
                } else {
-                  ret.v = parseFloat(left.val.v) % parseFloat(right.val.v);
+                  ret.v = this.toStr(this.toFloat(left.val.v) % this.toFloat(right.val.v));
                }
+
             } else if (left.val.type === "bool") {
                if (this.toBoolInt(right.val.v) === 0) {
                   this.wr("processExp: Error: divide by zero error");
                   return null;
                } else {
-                  ret.v = this.toBoolInt(left.val.v) % this.toBoolInt(right.val.v);
+                  ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) % this.toBoolInt(right.val.v)));
                }
+
             } else if (left.val.type === "string") {
                s1 = this.toStr(right.val.v);
                s3 = this.toStr(left.val.v);
@@ -5154,11 +5271,14 @@ class jsonPlState {
             }
          } else if (op.v === "*") {
             if (left.val.type === "int") {
-               ret.v = parseInt(left.val.v) * parseInt(right.val.v);
+               ret.v = this.toStr(this.toInt(left.val.v) * this.toInt(right.val.v));
+
             } else if (left.val.type === "float") {
-               ret.v = parseFloat(left.val.v) * parseFloat(right.val.v);
+               ret.v = this.toStr(this.toFloat(left.val.v) * this.toFloat(right.val.v));
+            
             } else if (left.val.type === "bool") {
-               ret.v = this.toBoolInt(left.val.v) * this.toBoolInt(right.val.v);
+               ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) * this.toBoolInt(right.val.v)));
+            
             } else if (left.val.type === "string") {
                s1 = this.toStr(left.val.v);
                i2 = this.toInt(right.val.v);
@@ -5170,29 +5290,32 @@ class jsonPlState {
             }
          } else if (op.v === "**") {
             if (left.val.type === "int") {
-               i1 = parseInt(left.val.v);
-               i2 = parseInt(right.val.v);
+               i1 = this.toInt(left.val.v);
+               i2 = this.toInt(right.val.v);
                i3 = 1;
                for(var k = 0; k < i2; k++) {
                   i3 *= i1;
                }
-               ret.v =  this.toInt(i3);
+               ret.v =  this.toStr(i3);
+
             } else if (left.val.type === "float") {
-               f1 = parseFloat(left.val.v);
-               i2 = parseInt(right.val.v);
+               f1 = this.toFloat(left.val.v);
+               i2 = this.toInt(right.val.v);
                f3 = 1.0;
                for(var k = 0; k < i2; k++) {
                   f3 *= f1;
                }               
-               ret.v =  this.toFloat(f3);
+               ret.v =  this.toStr(f3);
+
             } else if (left.val.type === "bool") {
                i1 = parseBoolInt(left.val.v);
-               i2 = parseBoolInt(right.val.v);
+               i2 = this.toInt(right.val.v);
                i3 = 1;
                for(var k = 0; k < i2; k++) {
                   i3 *= i1;
                }
-               ret.v = this.toBoolInt(i3);
+               ret.v = this.toStr(i3);
+
             } else if (left.val.type === "string") {
                s1 = this.toStr(left.val.v);
                i2 = this.toInt(right.val.v);
@@ -5200,36 +5323,12 @@ class jsonPlState {
                for(var k = 0; k < i2; k++) {
                   s3 += s1;
                }
-               ret.v = this.toStr(s3);
+               ret.v = s3;
             }
          } else {
             this.wr("processExp: Error: unknown operator: " + op.v);
             return null;
          }
-
-         /*
-         if (left.val.type === "int") {
-            ret.v = parseInt(ret.v) + "";
-         } else if (left.val.type === "float") {
-            ret.v = parseFloat(ret.v) + "";
-         } else if (left.val.type === "bool") {
-            ret.v = this.toBool(ret.v) + "";
-         }
-         */
-
-         ret.v = this.toStr(ret.v);
-         ret = ret2;
-         this.lastExpReturn = ret;
-         return ret;
-      } else if (left.val.type === right.val.type && left.val.type === "string" && op.v === "+") {
-         var ret = {};
-         ret.sys = "val";
-         ret.type = left.val.type;
-         ret.v = this.toStr(left.val.v) + this.toStr(right.val.v);
-
-         var ret2 = {};
-         ret2.sys = "const";
-         ret2.val = ret;
 
          ret = ret2;
          this.lastExpReturn = ret;
