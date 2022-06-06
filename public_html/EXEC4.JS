@@ -209,6 +209,25 @@ class jsonPlState {
    }
 
    /**
+    * Name: getFuncFromRefThis
+    * Desc: A function to get the function name from a full, this class, function reference.
+    * Arg1: path(some string with a URL variable reference)
+    * Returns: ret(a string value with the function name)
+    */
+
+   //TODO: sync
+
+   getFuncFromRefThis(path) {
+      if(this.isRefStringThis(path)) {
+         var nvs = path.split(".");
+         if(nvs.length >= 2) {
+            return nvs[1];
+         }         
+      }
+      return null;
+   }
+
+   /**
     * Name: sysJob1
     * Desc: A system level job method used to demonstrate JCL.
     * Arg1: args(an array of {arg} objects)
@@ -2136,6 +2155,23 @@ class jsonPlState {
    }
 
    /**
+    * Name: isRefStringThis
+    * Desc: Checks if the given argument is a this, self class, reference string.
+    * Arg1: s(some string with a valid reference value)
+    * Returns: ret(some bool, true or false)
+    */
+
+   //TODO: sync
+
+   isRefStringThis(s) {
+      var ns = this.toStr(s);
+      if (ns.indexOf("#.") === 0) {
+         return true;
+      }
+      return false;
+   }
+
+   /**
     * Name: isRefString
     * Desc: Checks if the given argument is a reference string.
     * Arg1: s(some string with a valid reference value)
@@ -3859,7 +3895,11 @@ class jsonPlState {
     * Arg2: func(func obj, sys=func)
     * Returns: {null | (const obj, sys=const)}
     */
+
+   //TODO: sync
+
    processAsgn(objAsgn, func) {
+      this.wrObj(objAsgn);
       var left = null;
       var op = null;
       var right = null;
@@ -3897,6 +3937,7 @@ class jsonPlState {
          rightIsRef = true;
       }
 
+      var hasPubs = false;
       var hasUrl = this.isRefStringUrl(left.val.v);
       var hasUrlAttr = this.validateProperties(objAsgn, ["url"]);
       var vals = null;
@@ -3940,8 +3981,7 @@ class jsonPlState {
          this.wr("processAsgn: Error: error processing left");
          return null;
       }
-
-      var hasPubs = false;
+      
       if (this.validateProperties(left, ["pubs"]) && this.isArray(left.pubs)) {
          hasPubs = true;
          path = origRefVal;
@@ -3997,60 +4037,222 @@ class jsonPlState {
       ret2.val = ret;
       ret = ret2;
 
-      if (left.val.type === right.val.type) {
-         if (leftIsBasic && rightIsBasic) {
-            //both are basic, dereference if need be, and copy value
-            var nval = null;
-            if (objAsgn.op.v === "+=") {
-               this.wr("Left val type: " + left.val.type + "," + left.val.type + ", " + left.val.v + ", " + right.val.v);
+      if (leftIsBasic && rightIsBasic) {
+         //both are basic, dereference if need be, and copy value
+         var nval = null;
+         var i1 = null;
+         var i2 = null;
+         var i3 = null;
+         var f1 = null;
+         var f3 = null;                  
+         var s1 = null;
+         var s3 = null;
+         var nvals = null;
 
-               if (left.val.type === "int") {
-                  nval = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
-               } else if (left.val.type === "float") {
-                  nval = this.toStr(this.toFloat(left.val.v) + this.toFloat(right.val.v));
-               } else if (left.val.type === "bool") {
-                  var ll = this.toBool(left.val.v);
-                  var lr = this.toBool(right.val.v);
-                  if (ll || lr) {
-                     nval = "true";
-                  } else {
-                     nval = "false";
-                  }
-               } else if (left.val.type === "string") {
-                  nval = this.toStr(left.val.v) + this.toStr(right.val.v);
-               } else {
-                  this.wr("processAsgn: Error: append operator not supported in this case: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
-                  ret.val.v = "false";
-                  this.lastAsgnValue = this.cloneJsonObj(left);
-                  this.lastAsgnReturn = ret;
-                  return ret;
+         if(left.val.type === "int") {
+            if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {
+               nval = this.toStr(this.toInt(right.val.v));
+
+            } else if (objAsgn.op.v === "+=") {
+               nval = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
+            
+            } else if (objAsgn.op.v === "-=") {
+               nval = this.toStr(this.toInt(left.val.v) - this.toInt(right.val.v));
+            
+            } else if (objAsgn.op.v === "*=") {
+               nval = this.toStr(this.toInt(left.val.v) * this.toInt(right.val.v));
+            
+            } else if (objAsgn.op.v === "**=") {
+               i1 = this.toInt(left.val.v);
+               i2 = this.toInt(right.val.v);
+               i3 = 1;
+               for(var k = 0; k < i2; k++) {
+                  i3 *= i1;
                }
+               nval = this.toStr(i3);
+
+            } else if (objAsgn.op.v === "/=") {
+               if(this.toInt(right.val.v) === 0) {
+                  //error
+                  this.wr("processAsgn: Error: error processing right, divide by zero error");
+                  return null;
+               }
+               nval = this.toStr(this.toInt(left.val.v) / this.toInt(right.val.v));
+            
+            } else if (objAsgn.op.v === "%=") {
+               if(this.toInt(right.val.v) === 0) {
+                  //error
+                  this.wr("processAsgn: Error: error processing right, modulo by zero error");
+                  return null;
+               }
+               nval = this.toStr(this.toInt(left.val.v) % this.toInt(right.val.v));               
+            
             } else {
+               //error
+               this.wr("processAsgn: Error: error processing assignment, unsupported operator");
+               return null;
+            }
+         } else if(left.val.type === "bool") {
+            if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {
+               nval = this.toStr(this.toBool(right.val.v));
+            
+            } else if (objAsgn.op.v === "+=") {
+               nval = this.toStr(this.toBool(this.toBoolInt(left.val.v) + this.toBoolInt(right.val.v)));
+            
+            } else if (objAsgn.op.v === "-=") {
+               nval = this.toStr(this.toBool(this.toBoolInt(left.val.v) - this.toBoolInt(right.val.v)));
+            
+            } else if (objAsgn.op.v === "*=") {
+               nval = this.toStr(this.toBool(this.toBoolInt(left.val.v) * this.toBoolInt(right.val.v)));
+            
+            } else if (objAsgn.op.v === "**=") {
+               i1 = this.toBoolInt(left.val.v);
+               i2 = this.toBoolInt(right.val.v);
+               i3 = 1;
+               for(var k = 0; k < i2; k++) {
+                  i3 *= i1;
+               }
+               nval = this.toStr(i3);               
+            
+            } else if (objAsgn.op.v === "/=") {
+               if(this.toBoolInt(right.val.v) === 0) {
+                  //error
+                  this.wr("processAsgn: Error: error processing right, divide by zero error");
+                  return null;
+               }
+               nval = this.toStr(this.toBool(this.toBoolInt(left.val.v) / this.toBoolInt(right.val.v)));
+
+            } else if (objAsgn.op.v === "%=") {
+               if(this.toBoolInt(right.val.v) === 0) {
+                  //error
+                  this.wr("processAsgn: Error: error processing right, modulo by zero error");
+                  return null;
+               }
+               nval = this.toStr(this.toBool(this.toBoolInt(left.val.v) % this.toBoolInt(right.val.v)));
+            
+            } else {
+               //error
+               this.wr("processAsgn: Error: error processing assignment, unsupported operator");
+               return null;
+            }
+         } else if(left.val.type === "float") {
+            if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {
+               nval = this.toStr(this.toFloat(right.val.v));
+            
+            } else if (objAsgn.op.v === "+=") {
+               nval = this.toStr(this.toFloat(left.val.v) + this.toFloat(right.val.v));
+            
+            } else if (objAsgn.op.v === "-=") {
+               nval = this.toStr(this.toFloat(left.val.v) - this.toFloat(right.val.v));
+            
+            } else if (objAsgn.op.v === "*=") {
+               nval = this.toStr(this.toFloat(left.val.v) * this.toFloat(right.val.v));
+            
+            } else if (objAsgn.op.v === "**=") {
+               f1 = this.toFloat(left.val.v);
+               i2 = this.toInt(right.val.v);
+               f3 = 1;
+               for(var k = 0; k < i2; k++) {
+                  f3 *= f1;
+               }
+               nval = this.toStr(f3);               
+            
+            } else if (objAsgn.op.v === "/=") {
+               if(this.toBoolInt(right.val.v) === 0) {
+                  //error
+                  this.wr("processAsgn: Error: error processing right, divide by zero error");
+                  return null;
+               }
+               nval = this.toStr(this.toFloat(left.val.v) / this.toFloat(right.val.v));
+            
+            } else if (objAsgn.op.v === "%=") {
+               if(this.toBoolInt(right.val.v) === 0) {
+                  //error
+                  this.wr("processAsgn: Error: error processing right, modulo by zero error");
+                  return null;
+               }
+               nval = this.toStr(this.toFloat(left.val.v) % this.toFloat(right.val.v));
+            
+            } else {
+               //error
+               this.wr("processAsgn: Error: error processing assignment, unsupported operator");
+               return null;
+            }
+         } else if(left.val.type === "string") {
+            if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {
                nval = this.toStr(right.val.v);
-            }
+            
+            } else if (objAsgn.op.v === "+=") {
+               nval = this.toStr(left.val.v) + this.toStr(right.val.v);
+            
+            } else if (objAsgn.op.v === "-=") {
+               nval = this.toStr(left.val.v).replaceAll(this.toStr(right.val.v), "");
+            
+            } else if (objAsgn.op.v === "*=") {
+               s1 = this.toStr(left.val.v);
+               i2 = this.toInt(right.val.v);
+               s3 = "";
+               for(var k = 0; k < i2; k++) {
+                  s3 += s1;
+               }
+               nval = this.toStr(s3);
+            
+            } else if (objAsgn.op.v === "**=") {
+               s1 = this.toStr(left.val.v);
+               i2 = this.toInt(right.val.v);
+               s3 = "";
+               for(var k = 0; k < i2; k++) {
+                  s3 += s1;
+               }
+               nval =this.toStr(s3);
 
-            if (hasUrl) {
-               //url, path, obj
-               //?type=set&ref=   &cat=   &obj=
-               this.processUrlSet(url + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(nval));
+            } else if (objAsgn.op.v === "/=") {
+               s1 = this.toStr(right.val.v);
+               s3 = this.toStr(left.val.v);
+               nval = this.toStr(s1.split(s3).join());
+
+            } else if (objAsgn.op.v === "%=") {
+               s1 = this.toStr(right.val.v);
+               s3 = this.toStr(left.val.v);
+               nvals = s1.split(s3);
+               for(var k = 0; k < nvals.length; k++) {
+                  nvals[i] = "";
+               }
+               nval = this.toStr(nvals.join(s3));
+
             } else {
-               left.val.v = nval;
+               //error
+               this.wr("processAsgn: Error: error processing assignment, unsupported operator");
+               return null;
             }
+         } else {
+            //error
+            this.wr("processAsgn: Error: error processing assignment, unsupported basic data type");
+            return null;
+         }
 
-            if (hasPubs) {
-               for (var k = 0; k < left.pubs.length; k++) {
-                  var nurl = null;
-                  if (this.isString(left.pubs[k])) {
-                     nurl = left.pubs[k];
-                     this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(nval), true);
-                  }
+         if (hasUrl) {
+            //url, path, obj
+            //?type=set&ref=   &cat=   &obj=
+            this.processUrlSet(url + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(nval));
+         } else {
+            left.val.v = nval;
+         }
+
+         if (hasPubs) {
+            for (var k = 0; k < left.pubs.length; k++) {
+               var nurl = null;
+               if (this.isString(left.pubs[k])) {
+                  nurl = left.pubs[k];
+                  this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(nval), true);
                }
             }
+         }
 
-            this.lastAsgnValue = this.cloneJsonObj(left);
-            this.lastAsgnReturn = ret;
-            return ret;
-         } else if (leftIsArray && rightIsArray && rightIsRef) {
+         this.lastAsgnValue = this.cloneJsonObj(left);
+         this.lastAsgnReturn = ret;
+         return ret;
+      } else if (leftIsArray && rightIsArray && rightIsRef) {
             //both are array refs, dereference if need be, and copy reference
             if (objAsgn.op.v === "+=") {
                this.wr("processAsgn: Error: append operator not supported in this case: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
@@ -4080,7 +4282,7 @@ class jsonPlState {
             this.lastAsgnValue = this.cloneJsonObj(left);
             this.lastAsgnReturn = ret;
             return ret;
-         } else if (leftIsArray && rightIsArray && !rightIsRef) {
+      } else if (leftIsArray && rightIsArray && !rightIsRef) {
             //left is array ref, right is array const, copy value
             var tmpA = null;
             if (objAsgn.op.v === "+=") {
@@ -4114,15 +4316,8 @@ class jsonPlState {
             this.lastAsgnValue = this.cloneJsonObj(left);
             this.lastAsgnReturn = ret;
             return ret;
-         } else {
-            this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef + ", op val: " + objAsgn.op.v);
-            ret.val.v = "false";
-            this.lastAsgnValue = this.cloneJsonObj(left);
-            this.lastAsgnReturn = ret;
-            return ret;
-         }
       } else {
-         this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+         this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef + ", op val: " + objAsgn.op.v);
          ret.val.v = "false";
          this.lastAsgnValue = this.cloneJsonObj(left);
          this.lastAsgnReturn = ret;
@@ -4448,6 +4643,16 @@ class jsonPlState {
          }
       } else {
          name = this.toStr(objCall.name);
+      }
+
+      if(this.isRefStringThis(name)) {
+         var lname = this.getFuncFromRefThis(name);
+         if(lname !== null) {
+            name = lname;
+         } else {
+            this.wr("processCall: Error: found reference string, this class, that couldn't be processed, " + name);
+            return null;            
+         }
       }
 
       if (this.VERBOSE) {
@@ -4781,6 +4986,9 @@ class jsonPlState {
     * Arg2: func(func obj, sys=func)
     * Returns: {null | (const obj, sys=const)}
     */
+
+   //TODO: sync
+
    processExp(objExp, func) {
       var left = null;
       var op = null;
@@ -4847,7 +5055,7 @@ class jsonPlState {
          return null;
       }
 
-      if (left.val.type === right.val.type && (left.val.type === "int" || left.val.type === "float" || left.val.type === "bool")) {
+      if (left.val.type === right.val.type && (left.val.type === "int" || left.val.type === "float" || left.val.type === "bool" || left.val.type === "string")) {
          var ret = {};
          ret.sys = "val";
          ret.type = left.val.type;
@@ -4857,6 +5065,15 @@ class jsonPlState {
          ret2.sys = "const";
          ret2.val = ret;
 
+         var i1 = null; 
+         var i2 = null; 
+         var i3 = null;
+         var f1 = null;
+         var f3 = null;         
+         var s1 = null;
+         var s3 = null;
+         var nvals = null;
+
          if (op.v === "+") {
             if (left.val.type === "int") {
                ret.v = parseInt(left.val.v) + parseInt(right.val.v);
@@ -4864,6 +5081,8 @@ class jsonPlState {
                ret.v = parseFloat(left.val.v) + parseFloat(right.val.v);
             } else if (left.val.type === "bool") {
                ret.v = this.toBoolInt(left.val.v) + this.toBoolInt(right.val.v);
+            } else if (left.val.type === "string") {
+               ret.v = this.toStr(left.val.v) + this.toStr(right.val.v);               
             }
          } else if (op.v === "-") {
             if (left.val.type === "int") {
@@ -4872,6 +5091,8 @@ class jsonPlState {
                ret.v = parseFloat(left.val.v) - parseFloat(right.val.v);
             } else if (left.val.type === "bool") {
                ret.v = this.toBoolInt(left.val.v) - this.toBoolInt(right.val.v);
+            } else if (left.val.type === "string") {
+               ret.v = this.toStr(left.val.v).replaceAll(this.toStr(right.val.v), "");                              
             }
          } else if (op.v === "/") {
             if (left.val.type === "int") {
@@ -4895,6 +5116,10 @@ class jsonPlState {
                } else {
                   ret.v = this.toBoolInt(left.val.v) / this.toBoolInt(right.val.v);
                }
+            } else if (left.val.type === "string") {
+               s1 = this.toStr(right.val.v);
+               s3 = this.toStr(left.val.v);
+               ret.v = s1.split(s3).join();
             }
          } else if (op.v === "%") {
             if (left.val.type === "int") {
@@ -4918,8 +5143,15 @@ class jsonPlState {
                } else {
                   ret.v = this.toBoolInt(left.val.v) % this.toBoolInt(right.val.v);
                }
+            } else if (left.val.type === "string") {
+               s1 = this.toStr(right.val.v);
+               s3 = this.toStr(left.val.v);
+               nvals = s1.split(s2);
+               for(var k = 0; k < nvals.length; k++) {
+                  nvals[i] = "";
+               }
+               ret.v = nvals.join(s3);
             }
-
          } else if (op.v === "*") {
             if (left.val.type === "int") {
                ret.v = parseInt(left.val.v) * parseInt(right.val.v);
@@ -4927,12 +5159,55 @@ class jsonPlState {
                ret.v = parseFloat(left.val.v) * parseFloat(right.val.v);
             } else if (left.val.type === "bool") {
                ret.v = this.toBoolInt(left.val.v) * this.toBoolInt(right.val.v);
+            } else if (left.val.type === "string") {
+               s1 = this.toStr(left.val.v);
+               i2 = this.toInt(right.val.v);
+               s3 = "";
+               for(var k = 0; k < i2; k++) {
+                  s3 += s1;
+               }
+               ret.v = s3;                              
+            }
+         } else if (op.v === "**") {
+            if (left.val.type === "int") {
+               i1 = parseInt(left.val.v);
+               i2 = parseInt(right.val.v);
+               i3 = 1;
+               for(var k = 0; k < i2; k++) {
+                  i3 *= i1;
+               }
+               ret.v =  this.toInt(i3);
+            } else if (left.val.type === "float") {
+               f1 = parseFloat(left.val.v);
+               i2 = parseInt(right.val.v);
+               f3 = 1.0;
+               for(var k = 0; k < i2; k++) {
+                  f3 *= f1;
+               }               
+               ret.v =  this.toFloat(f3);
+            } else if (left.val.type === "bool") {
+               i1 = parseBoolInt(left.val.v);
+               i2 = parseBoolInt(right.val.v);
+               i3 = 1;
+               for(var k = 0; k < i2; k++) {
+                  i3 *= i1;
+               }
+               ret.v = this.toBoolInt(i3);
+            } else if (left.val.type === "string") {
+               s1 = this.toStr(left.val.v);
+               i2 = this.toInt(right.val.v);
+               s3 = "";
+               for(var k = 0; k < i2; k++) {
+                  s3 += s1;
+               }
+               ret.v = this.toStr(s3);
             }
          } else {
             this.wr("processExp: Error: unknown operator: " + op.v);
             return null;
          }
 
+         /*
          if (left.val.type === "int") {
             ret.v = parseInt(ret.v) + "";
          } else if (left.val.type === "float") {
@@ -4940,7 +5215,9 @@ class jsonPlState {
          } else if (left.val.type === "bool") {
             ret.v = this.toBool(ret.v) + "";
          }
+         */
 
+         ret.v = this.toStr(ret.v);
          ret = ret2;
          this.lastExpReturn = ret;
          return ret;
