@@ -4298,6 +4298,7 @@ class jsonPlState {
          if (hasPubs) {
             for (var k = 0; k < left.pubs.length; k++) {
                var nurl = null;
+               var lcall = null;
                if (this.isString(left.pubs[k])) {
                   nurl = left.pubs[k];
                   if(this.isUrl(nurl)) {
@@ -4305,9 +4306,33 @@ class jsonPlState {
 
                   } else if(this.isRefStringFuncDec(nurl)) {
                      //call local function
-                     
+                     lcall = {};
+                     lcall.sys = "call";
+                     lcall.name = nurl;
+                     lcall.args = [];
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":this.toStr(nval)}});
+
+                     setTimeout(function() {
+                        this.processCall(lcall, func);
+                     }, 0);
+
                   } else if(this.isRefStringClassDec(nurl)) {
                      //call lib class function
+                     lcall = {};
+                     lcall.sys = "call";
+                     lcall.name = nurl;
+                     lcall.args = [];
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":this.toStr(nval)}});
+                     
+                     setTimeout(function() {
+                        this.processCall(lcall, func);
+                     }, 0);
 
                   }
                }
@@ -4337,6 +4362,7 @@ class jsonPlState {
             if (hasPubs) {
                for (var k = 0; k < left.pubs.length; k++) {
                   var nurl = null;
+                  var lcall = null;
                   if (this.isString(left.pubs[k])) {
                      nurl = left.pubs[k];
                      if(this.isUrl(nurl)) {
@@ -4344,9 +4370,33 @@ class jsonPlState {
 
                      } else if(this.isRefStringFuncDec(nurl)) {
                         //call local function
-                        
+                        lcall = {};
+                        lcall.sys = "call";
+                        lcall.name = nurl;
+                        lcall.args = [];
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":this.toStr(rightOrig.val.v)}});
+   
+                        setTimeout(function() {
+                           this.processCall(lcall, func);
+                        }, 0);
+   
                      } else if(this.isRefStringClassDec(nurl)) {
                         //call lib class function
+                        lcall = {};
+                        lcall.sys = "call";
+                        lcall.name = nurl;
+                        lcall.args = [];
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":this.toStr(rightOrig.val.v)}});
+                        
+                        setTimeout(function() {
+                           this.processCall(lcall, func);
+                        }, 0);
    
                      }
                   }
@@ -4387,9 +4437,33 @@ class jsonPlState {
 
                      } else if(this.isRefStringFuncDec(nurl)) {
                         //call local function
-                        
+                        lcall = {};
+                        lcall.sys = "call";
+                        lcall.name = nurl;
+                        lcall.args = [];
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":JSON.stringify(tmpA)}});
+   
+                        setTimeout(function() {
+                           this.processCall(lcall, func);
+                        }, 0);
+   
                      } else if(this.isRefStringClassDec(nurl)) {
                         //call lib class function
+                        lcall = {};
+                        lcall.sys = "call";
+                        lcall.name = nurl;
+                        lcall.args = [];
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":JSON.stringify(tmpA)}});
+                        
+                        setTimeout(function() {
+                           this.processCall(lcall, func);
+                        }, 0);
    
                      }
                   }
@@ -4945,9 +5019,45 @@ class jsonPlState {
                   if (hasPubs) {
                      for (var k = 0; k < funcDef.pubs.length; k++) {
                         var nurl = null;
+                        var lcall = null;
                         if (this.isString(funcDef.pubs[k])) {
                            nurl = funcDef.pubs[k];
-                           this.processUrlCall(nurl + "&type=call&name=" + encodeURIComponent(name) + "&args=" + encodeURIComponent(JSON.stringify(args)), true);
+                           if(this.isUrl(nurl)) {
+                              this.processUrlCall(nurl + "&type=call&name=" + encodeURIComponent(name) + "&args=" + encodeURIComponent(JSON.stringify(args)), true);
+
+                           } else if(this.isRefStringFuncDec(nurl)) {
+                              //call local function
+                              lcall = {};
+                              lcall.sys = "call";
+                              lcall.name = nurl;
+                              lcall.args = args;
+                              if(lcall.args === null) {
+                                 lcall.args = [];
+                              }
+                              lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"call"}});
+                              lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":name}});                             
+                              
+                              setTimeout(function() {
+                                 this.processCall(lcall, func);
+                              }, 0);
+
+                           } else if(this.isRefStringClassDec(nurl)) {
+                              //call lib class function
+                              lcall = {};
+                              lcall.sys = "call";
+                              lcall.name = nurl;
+                              lcall.args = args;
+                              if(lcall.args === null) {
+                                 lcall.args = [];
+                              }
+                              lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"call"}});
+                              lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":name}});                             
+                              
+                              setTimeout(function() {
+                                 this.processCall(lcall, func);
+                              }, 0);
+
+                           }
                         }
                      }
                   }
@@ -4985,6 +5095,7 @@ class jsonPlState {
                   if (hasPubs) {
                      for (var k = 0; k < funcDef.pubs.length; k++) {
                         var nurl = null;
+                        var lcall = null;
                         if (this.isString(funcDef.pubs[k])) {
                            nurl = funcDef.pubs[k];
                            if(this.isUrl(nurl)) {
@@ -4992,11 +5103,37 @@ class jsonPlState {
                            
                            } else if(this.isRefStringFuncDec(nurl)) {
                               //call local function
+                              lcall = {};
+                              lcall.sys = "call";
+                              lcall.name = nurl;
+                              lcall.args = args;
+                              if(lcall.args === null) {
+                                 lcall.args = [];
+                              }
+                              lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"call"}});
+                              lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":name}});                             
                               
+                              setTimeout(function() {
+                                 this.processCall(lcall, func);
+                              }, 0);
+
                            } else if(this.isRefStringClassDec(nurl)) {
                               //call lib class function
-         
-                           }                              
+                              lcall = {};
+                              lcall.sys = "call";
+                              lcall.name = nurl;
+                              lcall.args = args;
+                              if(lcall.args === null) {
+                                 lcall.args = [];
+                              }
+                              lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"call"}});
+                              lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":name}});                             
+                              
+                              setTimeout(function() {
+                                 this.processCall(lcall, func);
+                              }, 0);
+
+                           }
                         }
                      }
                   }
@@ -5042,6 +5179,7 @@ class jsonPlState {
                         if (hasPubs) {
                            for (var k = 0; k < funcDef.pubs.length; k++) {
                               var nurl = null;
+                              var lcall = null;
                               if (this.isString(funcDef.pubs[k])) {
                                  nurl = funcDef.pubs[k];
                                  if(this.isUrl(nurl)) {
@@ -5049,11 +5187,37 @@ class jsonPlState {
                                  
                                  } else if(this.isRefStringFuncDec(nurl)) {
                                     //call local function
+                                    lcall = {};
+                                    lcall.sys = "call";
+                                    lcall.name = nurl;
+                                    lcall.args = args;
+                                    if(lcall.args === null) {
+                                       lcall.args = [];
+                                    }
+                                    lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"call"}});
+                                    lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":name}});                             
                                     
+                                    setTimeout(function() {
+                                       this.processCall(lcall, func);
+                                    }, 0);
+      
                                  } else if(this.isRefStringClassDec(nurl)) {
                                     //call lib class function
-               
-                                 }                                    
+                                    lcall = {};
+                                    lcall.sys = "call";
+                                    lcall.name = nurl;
+                                    lcall.args = args;
+                                    if(lcall.args === null) {
+                                       lcall.args = [];
+                                    }
+                                    lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"call"}});
+                                    lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":name}});                             
+                                    
+                                    setTimeout(function() {
+                                       this.processCall(lcall, func);
+                                    }, 0);
+      
+                                 }
                               }
                            }
                         }
