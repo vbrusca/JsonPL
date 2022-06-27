@@ -12,6 +12,9 @@
  */
 class jsonPlState {
    constructor() {
+      /*
+      * The current version number of the interpreter.
+      */
       this.version = "0.5.1";
       this.lineNumCurrent = 0;
       this.lineNumPrev = 0;
@@ -108,7 +111,7 @@ class jsonPlState {
    }
    
    /**
-    * Name: sysGetLastAsgnValue
+    * Name: sysGetLastExpReturn
     * Desc: A system level method to access the last exp return object.
     * Returns: const(a {const} bool object)
     */   
@@ -375,7 +378,7 @@ class jsonPlState {
    }
 
    /**
-    * Name: findFunc
+    * Name: findClass
     * Desc: Search the current program for a class with the given name.
     * Arg1: name(string to find)
     * Returns: ret(null or {class} object)
@@ -408,7 +411,6 @@ class jsonPlState {
       var str;
       var subj;
       var sFuncs = prog.system.functions;
-
       for (var i = 0; i < sFuncs.length; i++) {
          subj = sFuncs[i];
          str = this.toStr(subj.name);
@@ -757,12 +759,16 @@ class jsonPlState {
     * {
     *   "sys": "class",
     *   "name": "some name",
+    *   "ret": {ret},
     *   "call": {call},
+    *   "classes": [class] (optional),
     *   "vars": [var],
-    *   "funcs": [func],
-    *   "ret": {val}
+    *   "funcs": [func]
     * }
     */
+
+   //TODO: sync doc
+
    validateSysObjClass(obj) {
       if (this.isSysObjClass(obj) && this.validateProperties(obj, ["sys", "name", "vars", "funcs", "ret", "call"])) {
          if (!this.validateSysObjVal(obj.ret)) {
@@ -855,12 +861,16 @@ class jsonPlState {
     * {
     *   "sys": "func",
     *   "name": "some name",
+    *   "ret": {val},
     *   "args": [arg],
     *   "vars": [var],
-    *   "ret": {val},
+    *   "url" : string (optional),
     *   "lines": [asgn | for | if | return | call]
     * }
     */
+
+   //TODO: sync doc
+
    validateSysObjFunc(obj) {
       if (this.isSysObjFunc(obj) && this.validateProperties(obj, ["sys", "name", "args", "vars", "ret", "lines"])) {
          if (!this.validateSysObjVal(obj.ret)) {
@@ -897,16 +907,20 @@ class jsonPlState {
    /**
     * Name: validateSysObjAsgn
     * Desc: Validates if the given object is a valid asgn object.
-    * Arg1: obj(a {asgn} object to check)
+    * Arg1: obj(an {asgn} object to check)
     * Returns: ret(some bool, true or false)
     * Struct:
     * {
     *   "sys": "asgn",
     *   "left": {ref},
-    *   "op": {op & type of asgn},
+    *   "op": {asgn op},
     *   "right": {ref | const | exp | bex | call}
+    *   "url": string (optional)
     * }
     */
+
+   //TODO: sync doc
+
    validateSysObjAsgn(obj) {
       if (this.isSysObjAsgn(obj) && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
          var tobj = null;
@@ -998,10 +1012,13 @@ class jsonPlState {
     * {
     *   "sys": "bex",
     *   "left": {ref | const | exp | bex | call},
-    *   "op": {op & type of bex},
+    *   "op": {bex op},
     *   "right": {ref | const | exp | bex | call}
     * }
     */
+
+   //TODO: sync doc
+
    validateSysObjBex(obj) {
       if (this.isSysObjBex(obj) && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
          var tobj = null;
@@ -1094,10 +1111,13 @@ class jsonPlState {
     * {
     *   "sys": "exp",
     *   "left": {ref | const | exp | bex | call},
-    *   "op": {op & type of exp},
+    *   "op": {exp op},
     *   "right": {ref | const | exp | bex | call}
     * }
     */
+
+   //TODO: sync doc
+
    validateSysObjExp(obj) {
       if (this.isSysObjExp(obj) && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
          var tobj = null;
@@ -1189,10 +1209,14 @@ class jsonPlState {
     * Struct:
     * {
     *   "sys": "call",
-    *   "name": name(string | {const} | {ref}),
-    *   "args": [ref | const]
+    *   "name": name(string ->(url) (optional) | {const} | {ref}),
+    *   "args": [ref | const],
+    *   "url": string (optional)
     * }
     */
+
+   //TODO: sync doc
+
    validateSysObjCall(obj) {
       if (this.isSysObjCall(obj) && this.validateProperties(obj, ["sys", "name", "args"])) {
          if (obj.name !== null) {
@@ -1319,10 +1343,13 @@ class jsonPlState {
     * Struct:
     * {
     *   "sys": "val",
-    *   "type": "int | float | string | bool & type of string",
+    *   "type": "string int | float | string | bool | int[] | float[] | string[] | bool[]",
     *   "v": "some valid value"
     * }
     */
+
+   //TODO: sync doc
+
    validateSysObjVal(obj) {
       //this.wr("validateSysObjVal: Receiving: ");
       //this.wrObj(obj);   
@@ -1471,9 +1498,12 @@ class jsonPlState {
     * Struct:
     * {
     *   "sys": "ref",
-    *   "val": {val & with value like #.vars.tmp1 or $.vars.tmp1}
+    *   "val": {val & with as a reference string value like #.vars.tmp1 or $.vars.tmp1}
     * }
     */
+
+   //TODO: sync doc
+
    validateSysObjRef(obj) {
       if (this.isSysObjRef(obj) && this.validateProperties(obj, ["sys", "val"])) {
          if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
@@ -1555,8 +1585,11 @@ class jsonPlState {
     * Desc: A method to access the version of this JsonPL interpreter.
     * Returns: ret(string version number)
     */
+
+   //TODO: sync
+
    getVersion() {
-      this.wr(this.version);
+      this.wr("JsonPL Version: " + this.version);
       return this.version;
    }
    
@@ -1777,6 +1810,7 @@ class jsonPlState {
    /**
     * Name: sysGetRef
     * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
+    *       Doesn't handle full local func references or lib class references.
     * Arg1: v(a {val} obj to get the reference for)
     * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
     * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
@@ -2430,6 +2464,7 @@ class jsonPlState {
          return false;
       }
    }
+
    /**
     * Name: isBool
     * Desc: Checks if the given argument is a bool.
@@ -4096,11 +4131,11 @@ class jsonPlState {
       if (leftIsBasic && rightIsBasic) {
          //both are basic, dereference if need be, and copy value
          var nval = null;
-         var i1 = null;
-         var i2 = null;
-         var i3 = null;
-         var f1 = null;
-         var f3 = null;                  
+         var i1 = -1;
+         var i2 = -1;
+         var i3 = -1;
+         var f1 = -1.0;
+         var f3 = -1.0;
          var s1 = null;
          var s3 = null;
          var nvals = null;
@@ -4272,7 +4307,7 @@ class jsonPlState {
                s3 = this.toStr(left.val.v);
                nvals = s1.split(s3);
                for(var k = 0; k < nvals.length; k++) {
-                  nvals[i] = "";
+                  nvals[k] = "";
                }
                nval = this.toStr(nvals.join(s3));
 
@@ -4430,6 +4465,7 @@ class jsonPlState {
             if (hasPubs) {
                for (var k = 0; k < left.pubs.length; k++) {
                   var nurl = null;
+                  var lcall = null;
                   if (this.isString(left.pubs[k])) {
                      nurl = left.pubs[k];
                      if(this.isUrl(nurl)) {
@@ -4818,11 +4854,12 @@ class jsonPlState {
 
       //handle function name url
       var hasUrl = this.isRefStringUrl(name);
+      var hasUrlAttr = this.validateProperties(objCall, ["url"]);
       var hasSys = this.isFuncSys(name);
       var vals = null;
       var url = null;
 
-      if (hasUrl) {
+      if (hasUrl && !hasUrlAttr) {
          vals = this.getPathAndUrlFromRef(name);
          url = vals[0];
          name = vals[1];
@@ -4831,11 +4868,24 @@ class jsonPlState {
             this.wr("processCall: Function Name: " + name);
             this.wr("processCall: Url: " + url);
          }
+      } else if (hasUrlAttr) {
+         //allow url attribute to override inherent url
+         if (this.VERBOSE) {
+            this.wr("processAsgn: URL Attribute override found.");
+         }
+
+         hasUrl = true;
+         vals = [objCall.url, "unknown_ref_path"];
+         url = vals[0];
+         name = vals[1];         
+      } else {
+         hasUrl = false;
       }
 
       args = this.cloneJsonObjList(objCall.args);
 
       //TODO: sync
+
       var hasClass = false;
       if(this.isRefStringClassDec(name) === true) {
          //handle class
@@ -4945,7 +4995,9 @@ class jsonPlState {
             }
 
             //TODO: sync
+
             var err = true;
+            var lcall = null;
             if(classFunc) {
                //call class with function as default calling function
                var pret = null;
@@ -5333,6 +5385,7 @@ class jsonPlState {
          ret2.sys = "const";
          ret2.val = ret;
 
+         var nval = null;
          var i1 = null; 
          var i2 = null; 
          var i3 = null;
@@ -5366,7 +5419,7 @@ class jsonPlState {
                ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) - this.toBoolInt(right.val.v)));
             
             } else if (left.val.type === "string") {
-               ret.v = this.toStr(left.val.v).replaceAll(this.toStr(right.val.v), "");                              
+               ret.v = this.toStr(left.val.v).replaceAll(this.toStr(right.val.v), "");
             }
          } else if (op.v === "/") {
             if (left.val.type === "int") {
@@ -5427,11 +5480,12 @@ class jsonPlState {
             } else if (left.val.type === "string") {
                s1 = this.toStr(right.val.v);
                s3 = this.toStr(left.val.v);
-               nvals = s1.split(s2);
+               nvals = s1.split(s3);
                for(var k = 0; k < nvals.length; k++) {
-                  nvals[i] = "";
+                  nvals[k] = "";
                }
                ret.v = nvals.join(s3);
+
             }
          } else if (op.v === "*") {
             if (left.val.type === "int") {
@@ -5450,7 +5504,8 @@ class jsonPlState {
                for(var k = 0; k < i2; k++) {
                   s3 += s1;
                }
-               ret.v = s3;                              
+               ret.v = s3;
+
             }
          } else if (op.v === "**") {
             if (left.val.type === "int") {
@@ -5472,7 +5527,7 @@ class jsonPlState {
                ret.v =  this.toStr(f3);
 
             } else if (left.val.type === "bool") {
-               i1 = parseBoolInt(left.val.v);
+               i1 = this.toBoolInt(left.val.v);
                i2 = this.toInt(right.val.v);
                i3 = 1;
                for(var k = 0; k < i2; k++) {

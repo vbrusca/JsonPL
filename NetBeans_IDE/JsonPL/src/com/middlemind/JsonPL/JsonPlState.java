@@ -32,7 +32,7 @@ import java.util.List;
 public class JsonPlState {
 
     /*
-    *
+    * The current version number of the interpreter.
     */
     public String version = "0.5.1";
 
@@ -128,7 +128,7 @@ public class JsonPlState {
 
     /*
     * Generic class constructor.
-    */
+     */
     public JsonPlState() {
         List<JsonObjSysBase> sfuncs = new ArrayList<>();
         system = new Hashtable<>();
@@ -142,7 +142,7 @@ public class JsonPlState {
     * Arg2: func(the {func} this system function is called from) 
     * Arg3: sep(an optional string separator) 
     * Returns: const(a {const} bool object) 
-    */
+     */
     public JsonObjSysBase sysWr(List<JsonObjSysBase> args, JsonObjSysBase func, String sep) throws Exception {
         JsonObjSysBase ret = new JsonObjSysBase("val");
         ret.type = "bool";
@@ -151,15 +151,15 @@ public class JsonPlState {
         JsonObjSysBase ret2 = new JsonObjSysBase("const");
         ret2.val = ret;
         ret = ret2;
-        
+
         if (args == null) {
             this.wr("sysWr: Error: args cannot be null");
             return ret;
         } else if (func == null) {
             this.wr("sysWr: Error: func cannot be null");
             return ret;
-        }        
-        
+        }
+
         int len = args.size();
         int i = 0;
         String s = "";
@@ -180,9 +180,9 @@ public class JsonPlState {
                 }
             }
         }
-        
+
         this.wr(s);
-        ret2.val.v = "true";        
+        ret2.val.v = "true";
         return ret;
     }
 
@@ -200,7 +200,7 @@ public class JsonPlState {
     }
 
     /*
-     * Name: sysGetLastAsgnValue 
+     * Name: sysGetLastExpReturn 
      * Desc: A system level method to access the last exp return object. 
      * Returns: const(a {const} bool object)
      */
@@ -291,6 +291,25 @@ public class JsonPlState {
             }
         }
 
+        return null;
+    }
+
+    /*
+    * Name: getFuncFromRefFunc
+    * Desc: A function to get the function name from a full, this class, function reference.
+    * Arg1: path(some string with a URL variable reference)
+    * Returns: ret(a string value with the function name)
+    */
+    
+    //TODO: sync
+    
+    public String getFuncFromRefFunc(String path) {
+        if (this.isRefStringFunc(path)) {
+            String[] nvs = path.split("\\.");
+            if (nvs.length >= 3) {
+                return nvs[2];
+            }
+        }
         return null;
     }
 
@@ -441,13 +460,13 @@ public class JsonPlState {
         return null;
     }
 
-   /*
-    * Name: findFunc
+    /*
+    * Name: findClass
     * Desc: Search the current program for a class with the given name.
     * Arg1: name(string to find)
     * Returns: ret(null or {class} object)
-    */
-
+     */
+    
     //TODO: sync
     
     public JsonObjSysBase findClass(String name) {
@@ -462,8 +481,8 @@ public class JsonPlState {
             }
         }
         return null;
-    }    
-    
+    }
+
     /*
      * Name: findSysFunc 
      * Desc: Search the current program's system functions for a func with the given name. 
@@ -475,7 +494,6 @@ public class JsonPlState {
         String str;
         JsonObjSysBase subj;
         List<JsonObjSysBase> sFuncs = prog.system.get("functions");
-
         for (int i = 0; i < sFuncs.size(); i++) {
             subj = sFuncs.get(i);
             str = this.toStr(subj.name);
@@ -628,7 +646,7 @@ public class JsonPlState {
      * Returns: ret(some bool, true or false)
      */
     public boolean isForEach(JsonObjSysBase obj) {
-        return (this.isSysObjFor(obj) && !this.isFullFor(obj) && this.validateProperties(obj, new String[] {"each"}));
+        return (this.isSysObjFor(obj) && !this.isFullFor(obj) && this.validateProperties(obj, new String[]{"each"}));
     }
 
     /*
@@ -824,12 +842,16 @@ public class JsonPlState {
      * {
      *   "sys": "class",
      *   "name": "some name",
+     *   "ret": {ret},
      *   "call": {call},
+     *   "classes": [class] (optional),
      *   "vars": [var],
-     *   "funcs": [func],
-     *   "ret": {val}
+     *   "funcs": [func]
      * }
      */
+    
+    //TODO: sync doc
+    
     public boolean validateSysObjClass(JsonObjSysBase obj) {
         if (this.isSysObjClass(obj) && this.validateProperties(obj, new String[]{"sys", "name", "vars", "funcs", "ret", "call"})) {
             if (!this.validateSysObjVal(obj.ret)) {
@@ -922,12 +944,16 @@ public class JsonPlState {
      * {
      *   "sys": "func",
      *   "name": "some name",
+     *   "ret": {val},
      *   "args": [arg],
      *   "vars": [var],
-     *   "ret": {val},
+     *   "url" : string (optional),
      *   "lines": [asgn | for | if | return | call]
      * }
      */
+    
+    //TODO: sync doc
+    
     public boolean validateSysObjFunc(JsonObjSysBase obj) {
         if (this.isSysObjFunc(obj) && this.validateProperties(obj, new String[]{"sys", "name", "args", "vars", "ret", "lines"})) {
             if (!this.validateSysObjVal(obj.ret)) {
@@ -964,16 +990,20 @@ public class JsonPlState {
     /*
      * Name: validateSysObjAsgn 
      * Desc: Validates if the given object is a valid asgn object. 
-     * Arg1: obj(a {asgn} object to check) 
+     * Arg1: obj(an {asgn} object to check) 
      * Returns: ret(some bool, true or false)
      * Struct:
      * {
      *   "sys": "asgn",
      *   "left": {ref},
-     *   "op": {op & type of asgn},
-     *   "right": {ref | const | exp | bex | call}
+     *   "op": {asgn op},
+     *   "right": {ref | const | exp | bex | call},
+     *   "url": string (optional)
      * }
      */
+    
+    //TODO: sync doc
+    
     public boolean validateSysObjAsgn(JsonObjSysBase obj) {
         if (this.isSysObjAsgn(obj) && this.validateProperties(obj, new String[]{"sys", "left", "op", "right"})) {
             JsonObjSysBase tobj = null;
@@ -1065,10 +1095,13 @@ public class JsonPlState {
      * {
      *   "sys": "bex",
      *   "left": {ref | const | exp | bex | call},
-     *   "op": {op & type of bex},
+     *   "op": {bex op},
      *   "right": {ref | const | exp | bex | call}
      * }
      */
+    
+    //TODO: sync doc
+    
     public boolean validateSysObjBex(JsonObjSysBase obj) {
         if (this.isSysObjBex(obj) && this.validateProperties(obj, new String[]{"sys", "left", "op", "right"})) {
             JsonObjSysBase tobj = null;
@@ -1161,10 +1194,13 @@ public class JsonPlState {
      * {
      *   "sys": "exp",
      *   "left": {ref | const | exp | bex | call},
-     *   "op": {op & type of exp},
+     *   "op": {exp op},
      *   "right": {ref | const | exp | bex | call}
      * }
      */
+    
+    //TODO: sync doc   
+    
     public boolean validateSysObjExp(JsonObjSysBase obj) {
         if (this.isSysObjExp(obj) && this.validateProperties(obj, new String[]{"sys", "left", "op", "right"})) {
             JsonObjSysBase tobj = null;
@@ -1256,10 +1292,14 @@ public class JsonPlState {
      * Struct:
      * {
      *   "sys": "call",
-     *   "name": name(string | {const} | {ref}),
-     *   "args": [ref | const]
+     *   "name": name(string ->(url) (optional) | {const} | {ref}),
+     *   "args": [ref | const],
+     *   "url": string (optional)
      * }
      */
+    
+    //TODO: sync doc
+    
     public boolean validateSysObjCall(JsonObjSysBase obj) {
         if (this.isSysObjCall(obj) && this.validateProperties(obj, new String[]{"sys", "name", "args"})) {
             if (obj.name != null) {
@@ -1390,10 +1430,13 @@ public class JsonPlState {
      * Struct:
      * {
      *   "sys": "val",
-     *   "type": "int | float | string | bool & type of string",
+     *   "type": "string int | float | string | bool | int[] | float[] | string[] | bool[]",
      *   "v": "some valid value"
      * }
      */
+    
+    //TODO: sync doc
+    
     public boolean validateSysObjVal(JsonObjSysBase obj) {
         //this.wr("validateSysObjVal: Receiving: ");
         //this.wrObj(obj);
@@ -1542,9 +1585,12 @@ public class JsonPlState {
      * Struct:
      * {
      *   "sys": "ref",
-     *   "val": {val & with value like #.vars.tmp1 or $.vars.tmp1}
+     *   "val": {val & with value as a reference string like #.vars.tmp1 or $.vars.tmp1}
      * }
      */
+    
+    //TODO: sync doc  
+    
     public boolean validateSysObjRef(JsonObjSysBase obj) {
         if (this.isSysObjRef(obj) && this.validateProperties(obj, new String[]{"sys", "val"})) {
             if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
@@ -1563,7 +1609,7 @@ public class JsonPlState {
      * Struct:
      * {
      *   "sys": "return",
-     *   "val": {ref} | {const}
+     *   "val": {ref | const}
      * }
      */
     public boolean validateSysObjReturn(JsonObjSysBase obj) {
@@ -1637,8 +1683,11 @@ public class JsonPlState {
      * Desc: A method to access the version of this JsonPL interpreter. 
      * Returns: ret(string version number)
      */
+    
+    //TODO: sync
+    
     public String getVersion() {
-        this.wr(this.version);
+        this.wr("JsonPL Version: " + this.version);
         return this.version;
     }
 
@@ -1686,13 +1735,13 @@ public class JsonPlState {
     *       Sets the WR_PREFIX to each object written.
     *       Prints object using NON pretty JSON.stringify call.
     * Arg1: jsonObj(jsonObj to write)
-    */
+     */
     public void wrObjAbr(JsonObjSysBase jsonObj) {
-      if (this.LOGGING == true) {
-         Utils.PrintObject(jsonObj, "wrObjAbr", false);
-      }
-   }    
-    
+        if (this.LOGGING == true) {
+            Utils.PrintObject(jsonObj, "wrObjAbr", false);
+        }
+    }
+
     /*
      * Name: wrObjList
      * Desc: Writes a JSON object list to write to standard output if LOGGING is on. 
@@ -1737,7 +1786,7 @@ public class JsonPlState {
         JsonObjSysBase s = null;
         JsonObjSysBase ret = null;
         JsonObjSysBase v = null;
-        
+
         ret = this.getConst("int", "0");
         if (args == null) {
             this.wr("sysLen: Error: args cannot be null");
@@ -1745,7 +1794,7 @@ public class JsonPlState {
         } else if (func == null) {
             this.wr("sysLen: Error: func cannot be null");
             return ret;
-        }        
+        }
         s = args.get(0);
 
         if (s != null && this.isObject(s) && this.isSysObj(s)) {
@@ -1755,7 +1804,7 @@ public class JsonPlState {
             this.wr("sysLen: Error: reference argument cannt be null");
             return ret;
         }
-        
+
         if (v != null) {
             v = v.val;
         }
@@ -1782,14 +1831,14 @@ public class JsonPlState {
         JsonObjSysBase ret = null;
         JsonObjSysBase v = null;
 
-        ret = this.getConst("string", "");        
+        ret = this.getConst("string", "");
         if (args == null) {
             this.wr("sysType: Error: args cannot be null");
             return ret;
         } else if (func == null) {
             this.wr("sysType: Error: func cannot be null");
             return ret;
-        }        
+        }
         s = args.get(0);
 
         if (s != null && this.isObject(s) && this.isSysObj(s)) {
@@ -1798,8 +1847,8 @@ public class JsonPlState {
         } else {
             this.wr("sysType: Error: reference argument cannt be null");
             return ret;
-        }        
-        
+        }
+
         if (v != null) {
             v = v.val;
         }
@@ -1848,11 +1897,11 @@ public class JsonPlState {
     * Arg1: args(a list of {arg} objects)
     * Arg2: func(the {func} object associated with this function call)
     * Returns: ret(a {const} object)
-    */
+     */
     public JsonObjSysBase sysGetArrayIdxRef(List<JsonObjSysBase> args, JsonObjSysBase func) {
         JsonObjSysBase ret = this.sysGetRef(args, func);
         String idx = null;
-        if(this.toStr(ret.val.v).equals("") == false) {
+        if (this.toStr(ret.val.v).equals("") == false) {
             idx = this.toStr(args.get(3).val.v);
             ret.val.v += "." + idx;
         }
@@ -1863,11 +1912,15 @@ public class JsonPlState {
     /*
      * Name: sysGetRef
      * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
+     *       Doesn't handle full local func references or lib class references.
      * Arg1: v(a {val} obj to get the reference for)
      * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
      * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
      * Returns: ret(a {ref} object)
      */
+    
+    //TODO: sync doc    
+    
     public JsonObjSysBase sysGetRef(List<JsonObjSysBase> args, JsonObjSysBase func) {
         JsonObjSysBase ret = this.getRef("string", "");
 
@@ -1890,7 +1943,7 @@ public class JsonPlState {
             this.wr("sysGetRef: Error: arg is not an array object");
             return ret;
         }
-      
+
         String name = this.toStr(args.get(0).val.v);
         boolean isVar = this.toBool(args.get(1).val.v);
         String funcName = this.toStr(args.get(2).val.v);
@@ -2038,7 +2091,7 @@ public class JsonPlState {
             this.wr("sysMallocArray: Error: arg is not an array object");
             return ret;
         }
-        
+
         JsonObjSysBase tt = null;
         boolean isClassVar = this.toBool(args.get(0).val.v);
         String name = this.toStr(args.get(1).val.v);
@@ -2153,7 +2206,7 @@ public class JsonPlState {
             this.wr("sysClean: Error: arg is not an array object");
             return ret;
         }
-      
+
         boolean isClassVar = this.toBool(args.get(0).val.v);
         String name = this.toStr(args.get(1).val.v);
         JsonObjSysBase res = null;
@@ -2238,8 +2291,57 @@ public class JsonPlState {
             return true;
         }
         return false;
-    }    
+    }
+
+    /*
+    * Name: isRefStringClassDec
+    * Desc: Checks if the given argument is a decoded class reference string.
+    * Arg1: s(some string with a valid reference value)
+    * Returns: ret(some bool, true or false)
+     */
     
+    //TODO: sync
+    
+    public boolean isRefStringClassDec(Object s) {
+        if (this.isRefStringDec(s) && this.isRefStringClass(s)) {
+            return true;
+        }
+        return false;
+    }
+
+    /*
+    * Name: isRefStringFuncDec
+    * Desc: Checks if the given argument is a, class func, decoded reference string.
+    * Arg1: s(some string with a valid reference value)
+    * Returns: ret(some bool, true or false)
+     */
+    
+    //TODO: sync
+    
+    public boolean isRefStringFuncDec(Object s) {
+        if (this.isRefStringDec(s) && this.isRefStringFunc(s)) {
+            return true;
+        }
+        return false;
+    }
+
+    /*
+    * Name: isRefStringFunc
+    * Desc: Checks if the given argument is a, class func, reference string.
+    * Arg1: s(some string with a valid reference value)
+    * Returns: ret(some bool, true or false)
+    */
+    
+    //TODO: sync
+    
+    public boolean isRefStringFunc(Object s) {
+        String ns = this.toStr(s);
+        if (ns.indexOf("#.funcs.") == 0) {
+            return true;
+        }
+        return false;
+    }
+
     /*
      * Name: isRefString
      * Desc: Checks if the given argument is a reference string. 
@@ -2263,6 +2365,24 @@ public class JsonPlState {
     public boolean isRefStringUrl(Object s) {
         String ns = this.toStr(s);
         if (ns.indexOf("->(") != -1) {
+            return true;
+        }
+        return false;
+    }
+
+    /*
+    * Name: isUrl
+    * Desc: Checks if the given argument is a URLstring.
+    * Arg1: s(some string with a valid URL value)
+    * Returns: ret(some bool, true or false)
+    */
+    
+    //TODO: sync
+    
+    public boolean isUrl(Object s) {
+        String ns = this.toStr(s);
+        ns = ns.toLowerCase();
+        if (ns.indexOf("http://") != -1 || ns.indexOf("https://") != -1) {
             return true;
         }
         return false;
@@ -2312,13 +2432,16 @@ public class JsonPlState {
      * Arg1: s(some string with a valid reference value)
      * Returns: ret(some bool, true or false)
      */
+    
+    //TODO: sync
+    
     public boolean isRefStringDec(Object s) {
-        if (this.isRefString(s)) {
-            String ns = this.toStr(s);
-            if (ns.indexOf("[") == -1 && ns.indexOf("]") == -1 && ns.indexOf("<") == -1 && ns.indexOf(">") == -1) {
-                return true;
-            }
+        //if (this.isRefString(s)) {
+        String ns = this.toStr(s);
+        if (ns.indexOf("[") == -1 && ns.indexOf("]") == -1 && ns.indexOf("<") == -1 && ns.indexOf(">") == -1) {
+            return true;
         }
+        //}
         return false;
     }
 
@@ -2484,7 +2607,7 @@ public class JsonPlState {
             isBlStr = false;
         }
         String vb = this.toStr(arg).toLowerCase();
-        
+
         if (arg == null) {
             return false;
         } else if (arg instanceof Boolean) {
@@ -2502,7 +2625,7 @@ public class JsonPlState {
         }
     }
 
-    /////////////////////////OBJECT ID METHODS
+    /////////////////////////SYS OBJECT ID METHODS
     /*
      * Name: isSysObjIf 
      * Desc: Checks if the given object is an if object.
@@ -2826,9 +2949,9 @@ public class JsonPlState {
     public JsonObjSysBase processUrlFind(String url) {
         return processUrlFind(url, false);
     }
-    
+
     public JsonObjSysBase processUrlFind(String url, boolean async) {
-        if(async) {
+        if (async) {
             ProcessUrlFindRunner urlRun = new ProcessUrlFindRunner(this, url);
             Thread t = new Thread(urlRun);
             t.start();
@@ -2837,7 +2960,7 @@ public class JsonPlState {
             return processUrlFindExec(url, false);
         }
     }
-    
+
     public JsonObjSysBase processUrlFindExec(String url, boolean async) {
         if (this.VERBOSE) {
             this.wr("processUrlFind: Received url: " + url);
@@ -2853,7 +2976,7 @@ public class JsonPlState {
         }
 
         try {
-            URL lurl = new URL(url);            
+            URL lurl = new URL(url);
             HttpURLConnection con = (HttpURLConnection) lurl.openConnection();
             con.setRequestMethod("GET");
             //con.setRequestProperty("Content-Type", "application/json");
@@ -2905,9 +3028,9 @@ public class JsonPlState {
     public JsonObjSysBase processUrlSet(String url) {
         return processUrlFind(url, false);
     }
-    
+
     public JsonObjSysBase processUrlSet(String url, boolean async) {
-        if(async) {
+        if (async) {
             ProcessUrlSetRunner urlRun = new ProcessUrlSetRunner(this, url);
             Thread t = new Thread(urlRun);
             t.start();
@@ -2916,7 +3039,7 @@ public class JsonPlState {
             return processUrlSetExec(url, false);
         }
     }
-    
+
     public JsonObjSysBase processUrlSetExec(String url, boolean async) {
         if (this.VERBOSE) {
             this.wr("processUrlSet: Received url: " + url);
@@ -2984,9 +3107,9 @@ public class JsonPlState {
     public JsonObjSysBase processUrlCall(String url) {
         return processUrlFind(url, false);
     }
-    
+
     public JsonObjSysBase processUrlCall(String url, boolean async) {
-        if(async) {
+        if (async) {
             ProcessUrlCallRunner urlRun = new ProcessUrlCallRunner(this, url);
             Thread t = new Thread(urlRun);
             t.start();
@@ -2994,8 +3117,8 @@ public class JsonPlState {
         } else {
             return processUrlCallExec(url, false);
         }
-    }    
-    
+    }
+
     public JsonObjSysBase processUrlCallExec(String url, boolean async) {
         if (this.VERBOSE) {
             this.wr("processUrlCall: Received url: " + url);
@@ -3060,7 +3183,7 @@ public class JsonPlState {
      * Arg1: objRef(string ref encoding) 
      * Arg2: func(func obj, sys=func)
      * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
-     */    
+     */
     public JsonObjSysBase processRef(JsonObjSysBase objRef, JsonObjSysBase func) {
         return processRef(objRef, func, null);
     }
@@ -3660,18 +3783,18 @@ public class JsonPlState {
             return false;
 
         } else if (arg instanceof Boolean) {
-            return (boolean)arg;
+            return (boolean) arg;
 
-        } else if (this.isInteger(arg) && (int)arg == 1) {
+        } else if (this.isInteger(arg) && (int) arg == 1) {
             return true;
 
-        } else if (this.isInteger(arg) && (int)arg == 0) {
+        } else if (this.isInteger(arg) && (int) arg == 0) {
             return false;
 
-        } else if (this.isFloat(arg) && (float)arg == 1.0) {
+        } else if (this.isFloat(arg) && (float) arg == 1.0) {
             return true;
 
-        } else if (this.isFloat(arg) && (float)arg == 0.0) {
+        } else if (this.isFloat(arg) && (float) arg == 0.0) {
             return false;
 
         } else if (this.isString(arg) && (vb.equals("yes") || vb.equals("true") || vb.equals("1") || vb.equals("1.0"))) {
@@ -3682,7 +3805,7 @@ public class JsonPlState {
 
         } else {
             return false;
-        }        
+        }
     }
 
     /*
@@ -3766,7 +3889,6 @@ public class JsonPlState {
         //this.wrObj(left);
         //this.wr("right:");
         //this.wrObj(right);
-                
         if (left.val.type.equals(right.val.type)) {
             JsonObjSysBase ret = new JsonObjSysBase("val");
             ret.type = "bool";
@@ -4004,7 +4126,6 @@ public class JsonPlState {
 
                 //this.wr("processIfForLines:---------------------------");
                 //this.wrObj(ret);
-                
                 if (ret == null) {
                     this.wr("processIfForLines: Error: processing line returned null: " + j);
                     return null;
@@ -4173,7 +4294,6 @@ public class JsonPlState {
 
         //this.wr("processFor: BBB: " + incAmt + ", " + lenAmt + ", " + startAmt);
         //this.wrObj(stop);
-        
         for (i = startAmt; i < lenAmt; i += incAmt) {
             ret3 = this.processIfForLines(objFor.lines, func);
             if (ret3 == null) {
@@ -4196,7 +4316,11 @@ public class JsonPlState {
      * Arg2: func(func obj, sys=func) 
      * Returns: {null | (const obj, sys=const)}
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase processAsgn(JsonObjSysBase objAsgn, JsonObjSysBase func) {
+        //this.wrObj(objAsgn);
         JsonObjSysBase left = null;
         JsonObjSysBase op = null;
         JsonObjSysBase right = null;
@@ -4233,7 +4357,8 @@ public class JsonPlState {
         if (this.isSysObjRef(right)) {
             rightIsRef = true;
         }
-        
+
+        boolean hasPubs = false;
         boolean hasUrl = this.isRefStringUrl(left.val.v);
         boolean hasUrlAttr = this.validateProperties(objAsgn, new String[]{"url"});
         String[] vals = null;
@@ -4277,9 +4402,8 @@ public class JsonPlState {
             this.wr("processAsgn: Error: error processing left");
             return null;
         }
-        
-        boolean hasPubs = false;
-        if (this.validateProperties(left, new String[] {"pubs"}) && this.isArray(left.pubs)) {
+
+        if (this.validateProperties(left, new String[]{"pubs"}) && this.isArray(left.pubs)) {
             hasPubs = true;
             path = origRefVal;
         }
@@ -4287,7 +4411,7 @@ public class JsonPlState {
         if (this.VERBOSE) {
             this.wr("processAsgn: has publications: " + hasPubs + ", Found: " + this.toStr(left.pubs) + ", Path: " + origRefVal);
         }
-        
+
         if (this.isSysObjConst(right)) {
             //do nothing      
         } else if (this.isSysObjRef(right)) {
@@ -4332,170 +4456,663 @@ public class JsonPlState {
         ret2.val = ret;
         ret = ret2;
 
-        if (left.val.type.equals(right.val.type)) {
-            if (leftIsBasic && rightIsBasic) {
-                //both are basic, dereference if need be, and copy value
-                String nval = null;
-                if(objAsgn.op.v.equals("+=")) {
-                   this.wr("Left val type: " + left.val.type + "," + left.val.type + ", " + left.val.v + ", " + right.val.v);
+        if (leftIsBasic && rightIsBasic) {
+            String nval = null;
+            int i1 = -1;
+            int i2 = -1;
+            int i3 = -1;
+            float f1 = -1.0f;
+            float f3 = -1.0f;
+            String s1 = null;
+            String s3 = null;
+            String[] nvals = null;
 
-                   if(left.val.type.equals("int")) {
-                      nval = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
-                   } else if(left.val.type.equals("float")) {
-                      nval = this.toStr(this.toFloat(left.val.v) + this.toFloat(right.val.v));
-                   } else if(left.val.type.equals("bool")) {
-                      boolean ll = this.toBool(left.val.v);
-                      boolean lr = this.toBool(right.val.v);
-                      if(ll || lr) {
-                         nval = "true";
-                      } else {
-                         nval = "false";
-                      }
-                   } else if(left.val.type.equals("string")) {               
-                      nval = this.toStr(left.val.v) + this.toStr(right.val.v);
-                   } else {
-                      this.wr("processAsgn: Error: append operator not supported in this case: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
-                      ret.val.v = "false";
-                      this.lastAsgnValue = this.cloneJsonObj(left);
-                      this.lastAsgnReturn = ret;
-                      return ret;
-                   }
-                } else {
-                   nval = this.toStr(right.val.v);
-                }                
-                
-                if (hasUrl) {
-                    try {
-                        this.processUrlSet(url + "&type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(nval, "UTF-8"));
-                    } catch (Exception e) {
-                        this.wrErr(e);
-                        this.wr("processAsgn: Error: could not update the remote variable");
-                        ret.val.v = "false";
-                        this.lastAsgnValue = this.cloneJsonObj(left);
-                        this.lastAsgnReturn = ret;
-                        return ret;
+            if (left.val.type.equals("int") == true) {
+                if (objAsgn.op.v.equals("==") || objAsgn.op.v.equals("=")) {
+                    nval = this.toStr(this.toInt(right.val.v));
+
+                } else if (objAsgn.op.v.equals("+=")) {
+                    nval = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
+
+                } else if (objAsgn.op.v.equals("-=")) {
+                    nval = this.toStr(this.toInt(left.val.v) - this.toInt(right.val.v));
+
+                } else if (objAsgn.op.v.equals("*=")) {
+                    nval = this.toStr(this.toInt(left.val.v) * this.toInt(right.val.v));
+
+                } else if (objAsgn.op.v.equals("**=")) {
+                    i1 = this.toInt(left.val.v);
+                    i2 = this.toInt(right.val.v);
+                    i3 = 1;
+                    for (int k = 0; k < i2; k++) {
+                        i3 *= i1;
                     }
-                } else {
-                    left.val.v = nval;
-                }
+                    nval = this.toStr(i3);
 
-                if (hasPubs) {
-                    for (int k = 0; k < left.pubs.size(); k++) {
-                        String nurl = null;
-                        if (this.isString(left.pubs.get(k))) {
-                            nurl = left.pubs.get(k);
+                } else if (objAsgn.op.v.equals("/=")) {
+                    if (this.toInt(right.val.v) == 0) {
+                        //error
+                        this.wr("processAsgn: Error: error processing right, divide by zero error");
+                        return null;
+                    }
+                    nval = this.toStr(this.toInt(left.val.v) / this.toInt(right.val.v));
+
+                } else if (objAsgn.op.v.equals("%=")) {
+                    if (this.toInt(right.val.v) == 0) {
+                        //error
+                        this.wr("processAsgn: Error: error processing right, modulo by zero error");
+                        return null;
+                    }
+                    nval = this.toStr(this.toInt(left.val.v) % this.toInt(right.val.v));
+
+                } else {
+                    //error
+                    this.wr("processAsgn: Error: error processing assignment, unsupported operator");
+                    return null;
+                }
+            } else if (left.val.type.equals("bool") == true) {
+                if (objAsgn.op.v.equals("==") || objAsgn.op.v.equals("=")) {
+                    nval = this.toStr(this.toBool(right.val.v));
+
+                } else if (objAsgn.op.v.equals("+=")) {
+                    nval = this.toStr(this.toBool(this.toBoolInt(left.val.v) + this.toBoolInt(right.val.v)));
+
+                } else if (objAsgn.op.v.equals("-=")) {
+                    nval = this.toStr(this.toBool(this.toBoolInt(left.val.v) - this.toBoolInt(right.val.v)));
+
+                } else if (objAsgn.op.v.equals("*=")) {
+                    nval = this.toStr(this.toBool(this.toBoolInt(left.val.v) * this.toBoolInt(right.val.v)));
+
+                } else if (objAsgn.op.v.equals("**=")) {
+                    i1 = this.toBoolInt(left.val.v);
+                    i2 = this.toBoolInt(right.val.v);
+                    i3 = 1;
+                    for (int k = 0; k < i2; k++) {
+                        i3 *= i1;
+                    }
+                    nval = this.toStr(i3);
+
+                } else if (objAsgn.op.v.equals("/=")) {
+                    if (this.toBoolInt(right.val.v) == 0) {
+                        //error
+                        this.wr("processAsgn: Error: error processing right, divide by zero error");
+                        return null;
+                    }
+                    nval = this.toStr(this.toBool(this.toBoolInt(left.val.v) / this.toBoolInt(right.val.v)));
+
+                } else if (objAsgn.op.v.equals("%=")) {
+                    if (this.toBoolInt(right.val.v) == 0) {
+                        //error
+                        this.wr("processAsgn: Error: error processing right, modulo by zero error");
+                        return null;
+                    }
+                    nval = this.toStr(this.toBool(this.toBoolInt(left.val.v) % this.toBoolInt(right.val.v)));
+
+                } else {
+                    //error
+                    this.wr("processAsgn: Error: error processing assignment, unsupported operator");
+                    return null;
+                }
+            } else if (left.val.type.equals("float") == true) {
+                if (objAsgn.op.v.equals("==") || objAsgn.op.v.equals("=")) {
+                    nval = this.toStr(this.toFloat(right.val.v));
+
+                } else if (objAsgn.op.v.equals("+=")) {
+                    nval = this.toStr(this.toFloat(left.val.v) + this.toFloat(right.val.v));
+
+                } else if (objAsgn.op.v.equals("-=")) {
+                    nval = this.toStr(this.toFloat(left.val.v) - this.toFloat(right.val.v));
+
+                } else if (objAsgn.op.v.equals("*=")) {
+                    nval = this.toStr(this.toFloat(left.val.v) * this.toFloat(right.val.v));
+
+                } else if (objAsgn.op.v.equals("**=")) {
+                    f1 = this.toFloat(left.val.v);
+                    i2 = this.toInt(right.val.v);
+                    f3 = 1;
+                    for (int k = 0; k < i2; k++) {
+                        f3 *= f1;
+                    }
+                    nval = this.toStr(f3);
+
+                } else if (objAsgn.op.v.equals("/=")) {
+                    if (this.toBoolInt(right.val.v) == 0) {
+                        //error
+                        this.wr("processAsgn: Error: error processing right, divide by zero error");
+                        return null;
+                    }
+                    nval = this.toStr(this.toFloat(left.val.v) / this.toFloat(right.val.v));
+
+                } else if (objAsgn.op.v.equals("%=")) {
+                    if (this.toBoolInt(right.val.v) == 0) {
+                        //error
+                        this.wr("processAsgn: Error: error processing right, modulo by zero error");
+                        return null;
+                    }
+                    nval = this.toStr(this.toFloat(left.val.v) % this.toFloat(right.val.v));
+
+                } else {
+                    //error
+                    this.wr("processAsgn: Error: error processing assignment, unsupported operator");
+                    return null;
+                }
+            } else if (left.val.type.equals("string") == true) {
+                if (objAsgn.op.v.equals("==") || objAsgn.op.v.equals("=")) {
+                    nval = this.toStr(right.val.v);
+
+                } else if (objAsgn.op.v.equals("+=")) {
+                    nval = this.toStr(left.val.v) + this.toStr(right.val.v);
+
+                } else if (objAsgn.op.v.equals("-=")) {
+                    nval = this.toStr(left.val.v).replaceAll(this.toStr(right.val.v), "");
+
+                } else if (objAsgn.op.v.equals("*=")) {
+                    s1 = this.toStr(left.val.v);
+                    i2 = this.toInt(right.val.v);
+                    s3 = "";
+                    for (int k = 0; k < i2; k++) {
+                        s3 += s1;
+                    }
+                    nval = this.toStr(s3);
+
+                } else if (objAsgn.op.v.equals("**=")) {
+                    s1 = this.toStr(left.val.v);
+                    i2 = this.toInt(right.val.v);
+                    s3 = "";
+                    for (int k = 0; k < i2; k++) {
+                        s3 += s1;
+                    }
+                    nval = this.toStr(s3);
+
+                } else if (objAsgn.op.v.equals("/=")) {
+                    s1 = this.toStr(right.val.v);
+                    s3 = this.toStr(left.val.v);
+                    nvals = s1.split(s3);
+                    nval = "";
+                    for (int k = 0; k < nvals.length; k++) {
+                        nval += this.toStr(nvals[k]);
+                    }
+
+                } else if (objAsgn.op.v.equals("%=")) {
+                    s1 = this.toStr(right.val.v);
+                    s3 = this.toStr(left.val.v);
+                    nvals = s1.split(s3);
+                    nval = "";
+                    for (int k = 0; k < nvals.length; k++) {
+                        nvals[k] = "";
+                        nval += (nvals[k] + s3);
+                    }
+
+                } else {
+                    //error
+                    this.wr("processAsgn: Error: error processing assignment, unsupported operator");
+                    return null;
+                }
+            } else {
+                //error
+                this.wr("processAsgn: Error: error processing assignment, unsupported basic data type");
+                return null;
+            }
+
+            if (hasUrl) {
+                //url, path, obj
+                //?type=set&ref=   &cat=   &obj=
+                try {
+                    this.processUrlSet(url + "&type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(nval, "UTF-8"));
+                } catch (Exception e) {
+                    this.wrErr(e);
+                    this.wr("processAsgn: Error: could not update the remote variable");
+                    ret.val.v = "false";
+                    this.lastAsgnValue = this.cloneJsonObj(left);
+                    this.lastAsgnReturn = ret;
+                    return ret;
+                }
+            } else {
+                left.val.v = nval;
+            }
+
+            if (hasPubs) {
+                for (int k = 0; k < left.pubs.size(); k++) {
+                    String nurl = null;
+                    JsonObjSysBase lcall = null;
+                    if (this.isString(left.pubs.get(k))) {
+                        nurl = left.pubs.get(k);
+                        if (this.isUrl(nurl)) {
                             try {
                                 this.processUrlSet(nurl + "&type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(nval, "UTF-8"), true);
                             } catch (Exception e) {
                                 this.wrErr(e);
                                 this.wr("processAsgn: Error: could not update the remote variable");
+                                ret.val.v = "false";
+                                this.lastAsgnValue = this.cloneJsonObj(left);
+                                this.lastAsgnReturn = ret;
+                                return ret;
                             }
+                        } else if (this.isRefStringFuncDec(nurl)) {
+                            //call local function
+                            lcall = new JsonObjSysBase();
+                            lcall.sys = "call";
+                            lcall.name = nurl;
+                            lcall.args = new ArrayList<JsonObjSysBase>();
+
+                            JsonObjSysBase sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "set";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "path";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "basic";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = this.toStr(nval);
+                            lcall.args.add(sb);
+
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":this.toStr(nval)}});
+                            
+                            //setTimeout(function() {
+                            //    this.processCall(lcall, func);
+                            //}, 0);
+                            
+                            ProcessCallRunner urlRun = new ProcessCallRunner(lcall, func, this);
+                            Thread t = new Thread(urlRun);
+                            t.start();
+                            
+                        } else if (this.isRefStringClassDec(nurl)) {
+                            //call lib class function
+                            lcall = new JsonObjSysBase();
+                            lcall.sys = "call";
+                            lcall.name = nurl;
+                            lcall.args = new ArrayList<JsonObjSysBase>();
+
+                            JsonObjSysBase sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "set";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "path";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "basic";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = this.toStr(nval);
+                            lcall.args.add(sb);
+
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":this.toStr(nval)}});
+                            
+                            //setTimeout(function() {
+                            //    this.processCall(lcall, func);
+                            //}, 0);
+                            
+                            ProcessCallRunner urlRun = new ProcessCallRunner(lcall, func, this);
+                            Thread t = new Thread(urlRun);
+                            t.start();                            
                         }
                     }
                 }
-                
-                this.lastAsgnValue = this.cloneJsonObj(left);
-                this.lastAsgnReturn = ret;
-                return ret;
-            } else if (leftIsArray && rightIsArray && rightIsRef) {
-                //both are array refs, copy reference
-                if(objAsgn.op.v.equals("+=")) {
-                   this.wr("processAsgn: Error: append operator not supported in this case: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
-                   ret.val.v = "false";
-                   this.lastAsgnValue = this.cloneJsonObj(left);
-                   this.lastAsgnReturn = ret;
-                   return ret;
-                }                
-                
-                if (hasUrl) {
-                    try {
-                        this.processUrlSet(url + "?type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(this.toStr(rightOrig.val.v), "UTF-8"));
-                    } catch (Exception e) {
-                        this.wrErr(e);
-                        this.wr("processAsgn: Error: could not update the remote variable");
-                        ret.val.v = "false";
-                        this.lastAsgnValue = this.cloneJsonObj(left);
-                        this.lastAsgnReturn = ret;
-                        return ret;
-                    }
-                } else {
-                    leftOrig.val.v = rightOrig.val.v;
-                }
+            }
 
-                if (hasPubs) {
-                    for (int k = 0; k < left.pubs.size(); k++) {
-                        String nurl = null;
-                        if (this.isString(left.pubs.get(k))) {
-                            nurl = left.pubs.get(k);
-                            try {
-                                this.processUrlSet(nurl + "&type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(this.toStr(rightOrig.val.v), "UTF-8"), true);
-                            } catch (Exception e) {
-                                this.wrErr(e);
-                                this.wr("processAsgn: Error: could not update the remote variable");
-                            }
-                        }
-                    }
-                }                
-                
-                this.lastAsgnValue = this.cloneJsonObj(left);
-                this.lastAsgnReturn = ret;
-                return ret;
-            } else if (leftIsArray && rightIsArray && !rightIsRef) {
-                //left is array ref, right is array const, copy value                
-                List<JsonObjSysBase> tmpA = null;
-                if(objAsgn.op.v.equals("+=")) {
-                   tmpA = this.toArray(left.val.v);
-                } else {
-                   tmpA = new ArrayList<JsonObjSysBase>();
-                }
-                
-                List<JsonObjSysBase> tmpB = this.toArray(right.val.v);
-                for (int i = 0; i < tmpB.size(); i++) {
-                    tmpA.add(tmpB.get(i));
-                }
-
-                if (hasUrl) {
-                    try {
-                        this.processUrlSet(url + "?type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=array&obj=" + URLEncoder.encode(Utils.JSONstringify(tmpA), "UTF-8"));
-                    } catch (Exception e) {
-                        this.wrErr(e);
-                        this.wr("processAsgn: Error: could not update the remote variable");
-                        ret.val.v = "false";
-                        this.lastAsgnValue = this.cloneJsonObj(left);
-                        this.lastAsgnReturn = ret;
-                        return ret;
-                    }
-                } else {
-                    left.val.v = tmpA;
-                }
-
-                if (hasPubs) {
-                    for (int k = 0; k < left.pubs.size(); k++) {
-                        String nurl = null;
-                        if (this.isString(left.pubs.get(k))) {
-                            nurl = left.pubs.get(k);
-                            try {
-                                this.processUrlSet(nurl + "&type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=array&obj=" + URLEncoder.encode(Utils.JSONstringify(tmpA), "UTF-8"), true);
-                            } catch (Exception e) {
-                                this.wrErr(e);
-                                this.wr("processAsgn: Error: could not update the remote variable");
-                            }
-                        }
-                    }
-                }                
-                                
-                this.lastAsgnValue = this.cloneJsonObj(left);
-                this.lastAsgnReturn = ret;
-                return ret;
-            } else {
-                this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+            this.lastAsgnValue = this.cloneJsonObj(left);
+            this.lastAsgnReturn = ret;
+            return ret;
+        } else if (leftIsArray && rightIsArray && rightIsRef) {
+            //both are array refs, dereference if need be, and copy reference
+            if (objAsgn.op.v.equals("+=")) {
+                this.wr("processAsgn: Error: append operator not supported in this case: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
                 ret.val.v = "false";
                 this.lastAsgnValue = this.cloneJsonObj(left);
                 this.lastAsgnReturn = ret;
                 return ret;
             }
+
+            if (hasUrl) {
+                //url, path, obj
+                try {
+                    this.processUrlSet(url + "&type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(this.toStr(rightOrig.val.v), "UTF-8"));
+                } catch (Exception e) {
+                    this.wrErr(e);
+                    this.wr("processAsgn: Error: could not update the remote variable");
+                    ret.val.v = "false";
+                    this.lastAsgnValue = this.cloneJsonObj(left);
+                    this.lastAsgnReturn = ret;
+                    return ret;
+                }
+            } else {
+                leftOrig.val.v = rightOrig.val.v;
+            }
+
+            if (hasPubs) {
+                for (int k = 0; k < left.pubs.size(); k++) {
+                    String nurl = null;
+                    JsonObjSysBase lcall = null;
+                    if (this.isString(left.pubs.get(k))) {
+                        nurl = left.pubs.get(k);
+                        if (this.isUrl(nurl)) {
+                            try {
+                                this.processUrlSet(nurl + "&type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=basic&obj=" + URLEncoder.encode(this.toStr(rightOrig.val.v), "UTF-8"), true);
+                            } catch (Exception e) {
+                                this.wrErr(e);
+                                this.wr("processAsgn: Error: could not publish the variable");
+                                ret.val.v = "false";
+                                this.lastAsgnValue = this.cloneJsonObj(left);
+                                this.lastAsgnReturn = ret;
+                                return ret;
+                            }
+                        } else if (this.isRefStringFuncDec(nurl)) {
+                            //call local function
+                            lcall = new JsonObjSysBase();
+                            lcall.sys = "call";
+                            lcall.name = nurl;
+                            lcall.args = new ArrayList<JsonObjSysBase>();
+
+                            JsonObjSysBase sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "set";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "path";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "basic";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = this.toStr(rightOrig.val.v);
+                            lcall.args.add(sb);
+
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":this.toStr(rightOrig.val.v)}});
+
+                            //setTimeout(function() {
+                            //    this.processCall(lcall, func);
+                            //}, 0);
+                            
+                            ProcessCallRunner urlRun = new ProcessCallRunner(lcall, func, this);
+                            Thread t = new Thread(urlRun);
+                            t.start();                            
+                        } else if (this.isRefStringClassDec(nurl)) {
+                            //call lib class function
+                            lcall = new JsonObjSysBase();
+                            lcall.sys = "call";
+                            lcall.name = nurl;
+                            lcall.args = new ArrayList<JsonObjSysBase>();
+
+                            JsonObjSysBase sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "set";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "path";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "basic";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = this.toStr(rightOrig.val.v);
+                            lcall.args.add(sb);
+
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":this.toStr(rightOrig.val.v)}});
+                            
+                            //setTimeout(function() {
+                            //   this.processCall(lcall, func);
+                            //}, 0);
+                            
+                            ProcessCallRunner urlRun = new ProcessCallRunner(lcall, func, this);
+                            Thread t = new Thread(urlRun);
+                            t.start();                            
+                        }
+                    }
+                }
+            }
+
+            this.lastAsgnValue = this.cloneJsonObj(left);
+            this.lastAsgnReturn = ret;
+            return ret;
+        } else if (leftIsArray && rightIsArray && !rightIsRef) {
+            //left is array ref, right is array const, copy value
+            List<JsonObjSysBase> tmpA = null;
+            if (objAsgn.op.v.equals("+=")) {
+                tmpA = this.toArray(left.val.v);
+            } else {
+                tmpA = new ArrayList<JsonObjSysBase>();
+            }
+
+            List<JsonObjSysBase> tmpB = this.toArray(right.val.v);
+            for (int i = 0; i < tmpB.size(); i++) {
+                tmpA.add(tmpB.get(i));
+            }
+
+            if (hasUrl) {
+                //url, path, obj
+                try {
+                    this.processUrlSet(url + URLEncoder.encode(path, "UTF-8") + "&cat=array&obj=" + URLEncoder.encode(Utils.JSONstringify(tmpA), "UTF-8"));
+                } catch (Exception e) {
+                    this.wrErr(e);
+                    this.wr("processAsgn: Error: could not update the remote variable");
+                    ret.val.v = "false";
+                    this.lastAsgnValue = this.cloneJsonObj(left);
+                    this.lastAsgnReturn = ret;
+                    return ret;
+                }
+            } else {
+                left.val.v = tmpA;
+            }
+
+            if (hasPubs) {
+                for (int k = 0; k < left.pubs.size(); k++) {
+                    String nurl = null;
+                    JsonObjSysBase lcall = null;
+                    if (this.isString(left.pubs.get(k))) {
+                        nurl = left.pubs.get(k);
+                        if (this.isUrl(nurl)) {
+                            try {
+                                this.processUrlSet(nurl + "&type=set&ref=" + URLEncoder.encode(path, "UTF-8") + "&cat=array&obj=" + URLEncoder.encode(Utils.JSONstringify(tmpA), "UTF-8"), true);
+                            } catch (Exception e) {
+                                this.wrErr(e);
+                                this.wr("processAsgn: Error: could not publish the variable");
+                                ret.val.v = "false";
+                                this.lastAsgnValue = this.cloneJsonObj(left);
+                                this.lastAsgnReturn = ret;
+                                return ret;
+                            }
+                        } else if (this.isRefStringFuncDec(nurl)) {
+                            //call local function
+                            lcall = new JsonObjSysBase();
+                            lcall.sys = "call";
+                            lcall.name = nurl;
+                            lcall.args = new ArrayList<JsonObjSysBase>();
+
+                            JsonObjSysBase sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "set";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "path";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "basic";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = Utils.JSONstringify(tmpA);
+                            lcall.args.add(sb);
+
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":JSON.stringify(tmpA)}});
+                            
+                            //setTimeout(function() {
+                            //    this.processCall(lcall, func);
+                            //}, 0);
+                            
+                            ProcessCallRunner urlRun = new ProcessCallRunner(lcall, func, this);
+                            Thread t = new Thread(urlRun);
+                            t.start();                            
+                            
+                        } else if (this.isRefStringClassDec(nurl)) {
+                            //call lib class function
+                            lcall = new JsonObjSysBase();
+                            lcall.sys = "call";
+                            lcall.name = nurl;
+                            lcall.args = new ArrayList<JsonObjSysBase>();
+
+                            JsonObjSysBase sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "set";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "path";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = "basic";
+                            lcall.args.add(sb);
+
+                            sb = new JsonObjSysBase();
+                            sb.sys = "const";
+                            sb.val = new JsonObjSysBase();
+                            sb.val.sys = "val";
+                            sb.val.type = "string";
+                            sb.val.v = Utils.JSONstringify(tmpA);
+                            lcall.args.add(sb);
+
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                            //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":JSON.stringify(tmpA)}});
+                            
+                            //setTimeout(function() {
+                            //this.processCall(lcall, func);
+                            //}, 0);
+
+                            ProcessCallRunner urlRun = new ProcessCallRunner(lcall, func, this);
+                            Thread t = new Thread(urlRun);
+                            t.start();                            
+                            
+                        }
+                    }
+                }
+            }
+
+            this.lastAsgnValue = this.cloneJsonObj(left);
+            this.lastAsgnReturn = ret;
+            return ret;
         } else {
-            this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
+            this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef + ", op val: " + objAsgn.op.v);
             ret.val.v = "false";
             this.lastAsgnValue = this.cloneJsonObj(left);
             this.lastAsgnReturn = ret;
@@ -4792,7 +5409,7 @@ public class JsonPlState {
         boolean sysFunc = false;
         boolean urlFunc = false;
         boolean classFunc = false;
-        
+
         if (this.VERBOSE) {
             this.wr("processCall: Receiving:");
             this.wrObj(objCall);
@@ -4823,17 +5440,28 @@ public class JsonPlState {
             name = this.toStr(objCall.name);
         }
 
+        if(this.isRefStringFuncDec(name)) {
+            String lname = this.getFuncFromRefFunc(name);
+            if(lname != null) {
+                name = lname;
+            } else {
+                this.wr("processCall: Error: found reference string, this class, that couldn't be processed, " + name);
+                return null;            
+            }
+        }
+        
         if (this.VERBOSE) {
             this.wr("processCall: Function Name: " + name);
         }
 
         //handle function name url
         boolean hasUrl = this.isRefStringUrl(name);
+        boolean hasUrlAttr = this.validateProperties(objCall, new String[] {"url"});
         boolean hasSys = this.isFuncSys(name);
         String[] vals = null;
         String url = null;
 
-        if (hasUrl) {
+        if (hasUrl && !hasUrlAttr) {
             vals = this.getPathAndUrlFromRef(name);
             url = vals[0];
             name = vals[1];
@@ -4842,13 +5470,26 @@ public class JsonPlState {
                 this.wr("processCall: Function Name: " + name);
                 this.wr("processCall: Url: " + url);
             }
+        } else if (hasUrlAttr) {
+            //allow url attribute to override inherent url
+            if (this.VERBOSE) {
+                this.wr("processAsgn: URL Attribute override found.");
+            }
+
+            hasUrl = true;
+            vals = new String[] {objCall.url, "unknown_ref_path"};
+            url = vals[0];
+            name = vals[1];         
+        } else {
+            hasUrl = false;
         }
 
         args = this.cloneJsonObjList(objCall.args);
 
         //TODO: sync
+        
         boolean hasClass = false;
-        if(this.isRefStringClass(name) == true) {
+        if (this.isRefStringClass(name) == true) {
             //handle class
             hasClass = true;
             classFunc = true;
@@ -4857,8 +5498,8 @@ public class JsonPlState {
                 this.wr("processCall: Class Name: " + name);
                 this.wr("processCall: hasClass: " + hasClass);
             }
-        }        
-        
+        }
+
         if (!hasSys && !hasUrl && !hasClass) {
             //normal function
             urlFunc = false;
@@ -4903,18 +5544,18 @@ public class JsonPlState {
         }
 
         boolean hasPubs = false;
-        if (funcDef != null && this.validateProperties(funcDef, new String[] {"pubs"}) && this.isArray(funcDef.pubs)) {
+        if (funcDef != null && this.validateProperties(funcDef, new String[]{"pubs"}) && this.isArray(funcDef.pubs)) {
             hasPubs = true;
         }
-        
+
         if (this.VERBOSE) {
-            if(hasPubs) {
+            if (hasPubs) {
                 this.wr("processCall: has publications: " + hasPubs + ", Found: " + this.toStr(funcDef.pubs) + ", Path: " + name);
             } else {
                 this.wr("processCall: has publications: " + hasPubs + ", Path: " + name);
             }
         }
-        
+
         if (funcArgs != null) {
             if (args.size() >= funcArgs.size() || funcArgs.size() == 0) {
                 if (funcArgs.size() == 0) {
@@ -4956,8 +5597,10 @@ public class JsonPlState {
                 }
 
                 //TODO: sync
+                
                 boolean err = false;
-                if(classFunc) {
+                JsonObjSysBase lcall = null;
+                if (classFunc) {
                     //call class with function as default calling function
                     JsonObjSysBase pret = null;
                     try {
@@ -4966,22 +5609,22 @@ public class JsonPlState {
                         String classFuncName = null;
                         JsonObjSysBase classDef = null;
 
-                        if(vls.length == 2) {                  
-                           className = vls[1];
-                        } else if(vls.length == 3) {
-                           className = vls[1];
-                           classFuncName = vls[2];                     
+                        if (vls.length == 2) {
+                            className = vls[1];
+                        } else if (vls.length == 3) {
+                            className = vls[1];
+                            classFuncName = vls[2];
                         } else {
-                           this.wr("processCall: Error: class reference is malformed, " + name);
-                           return null;
+                            this.wr("processCall: Error: class reference is malformed, " + name);
+                            return null;
                         }
 
                         classDef = this.findClass(className);
-                        if(classDef != null) {
+                        if (classDef != null) {
                             JsonPlState ljpl = new JsonPlState();
                             ljpl.program = this.cloneJsonObj(classDef);
 
-                            if(classFuncName != null) {
+                            if (classFuncName != null) {
                                 ljpl.program.call = new JsonObjSysBase();
                                 ljpl.program.sys = "call";
                                 ljpl.program.name = classFuncName;
@@ -5014,7 +5657,7 @@ public class JsonPlState {
                         return lret;
                     } else {
                         return pret;
-                    }               
+                    }
 
                 } else if (sysFunc) {
                     //call system function
@@ -5089,15 +5732,91 @@ public class JsonPlState {
                                 String nurl = null;
                                 if (this.isString(funcDef.pubs.get(k))) {
                                     nurl = funcDef.pubs.get(k);
-                                    try {
-                                        this.processUrlCall(nurl + "&type=call&name=" + URLEncoder.encode(name, "UTF-8") + "&args=" + URLEncoder.encode(Utils.JSONstringify(args), "UTF-8"));
-                                    }catch (Exception e) {
-                                        this.wrErr(e);
-                                    }
+                                    if(this.isUrl(nurl)) {
+                                        try {
+                                            this.processUrlCall(nurl + "&type=call&name=" + URLEncoder.encode(name, "UTF-8") + "&args=" + URLEncoder.encode(Utils.JSONstringify(args), "UTF-8"));
+                                        } catch (Exception e) {
+                                            this.wrErr(e);
+                                        }
+                                    } else if(this.isRefStringFuncDec(nurl)) {
+                                        //call local function
+                                        lcall = new JsonObjSysBase();
+                                        lcall.sys = "call";
+                                        lcall.name = nurl;
+                                        lcall.args = args;
+                                        if(lcall.args == null) {
+                                            lcall.args = new ArrayList<JsonObjSysBase>();
+                                        }
+                                       
+                                        JsonObjSysBase sb = new JsonObjSysBase();
+                                        sb.sys = "const";
+                                        sb.val = new JsonObjSysBase();
+                                        sb.val.sys = "val";
+                                        sb.val.type = "string";
+                                        sb.val.v = "call";
+                                        lcall.args.add(sb);
+
+                                        sb = new JsonObjSysBase();
+                                        sb.sys = "const";
+                                        sb.val = new JsonObjSysBase();
+                                        sb.val.sys = "val";
+                                        sb.val.type = "string";
+                                        sb.val.v = name;
+                                        lcall.args.add(sb);
+
+                                        ProcessCallRunner urlRun = new ProcessCallRunner(lcall, func, this);
+                                        Thread t = new Thread(urlRun);
+                                        t.start();                                        
+                                        
+                                        //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"call"}});
+                                        //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":name}});                             
+
+                                        //setTimeout(function() {
+                                        //   this.processCall(lcall, func);
+                                        //}, 0);                                        
+                                                                                
+                                    } else if(this.isRefStringClassDec(nurl)) {
+                                        //call lib class function
+                                        lcall = new JsonObjSysBase();
+                                        lcall.sys = "call";
+                                        lcall.name = nurl;
+                                        lcall.args = args;
+                                        if(lcall.args == null) {
+                                            lcall.args = new ArrayList<JsonObjSysBase>();
+                                        }
+                                        
+                                        JsonObjSysBase sb = new JsonObjSysBase();
+                                        sb.sys = "const";
+                                        sb.val = new JsonObjSysBase();
+                                        sb.val.sys = "val";
+                                        sb.val.type = "string";
+                                        sb.val.v = "call";
+                                        lcall.args.add(sb);
+
+                                        sb = new JsonObjSysBase();
+                                        sb.sys = "const";
+                                        sb.val = new JsonObjSysBase();
+                                        sb.val.sys = "val";
+                                        sb.val.type = "string";
+                                        sb.val.v = name;
+                                        lcall.args.add(sb);
+
+                                        ProcessCallRunner urlRun = new ProcessCallRunner(lcall, func, this);
+                                        Thread t = new Thread(urlRun);
+                                        t.start();                                        
+                                        
+                                        //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"call"}});
+                                        //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":name}});                             
+                              
+                                        //setTimeout(function() {
+                                        //    this.processCall(lcall, func);
+                                        //}, 0);
+
+                                    }                                    
                                 }
                             }
                         }
-                        
+
                         if (lret == null) {
                             JsonObjSysBase ret1 = new JsonObjSysBase("val");
                             ret1.type = "bool";
@@ -5136,15 +5855,91 @@ public class JsonPlState {
                                 String nurl = null;
                                 if (this.isString(funcDef.pubs.get(k))) {
                                     nurl = funcDef.pubs.get(k);
-                                    try {
-                                        this.processUrlCall(nurl + "&type=call&name=" + URLEncoder.encode(name, "UTF-8") + "&args=" + URLEncoder.encode(Utils.JSONstringify(args), "UTF-8"));
-                                    }catch (Exception e) {
-                                        this.wrErr(e);
-                                    }
+                                    if(this.isUrl(nurl)) {
+                                        try {
+                                            this.processUrlCall(nurl + "&type=call&name=" + URLEncoder.encode(name, "UTF-8") + "&args=" + URLEncoder.encode(Utils.JSONstringify(args), "UTF-8"));
+                                        } catch (Exception e) {
+                                            this.wrErr(e);
+                                        }
+                                    } else if(this.isRefStringFuncDec(nurl)) {
+                                        //call local function
+                                        lcall = new JsonObjSysBase();
+                                        lcall.sys = "call";
+                                        lcall.name = nurl;
+                                        lcall.args = args;
+                                        if(lcall.args == null) {
+                                            lcall.args = new ArrayList<JsonObjSysBase>();
+                                        }
+
+                                        JsonObjSysBase sb = new JsonObjSysBase();
+                                        sb.sys = "const";
+                                        sb.val = new JsonObjSysBase();
+                                        sb.val.sys = "val";
+                                        sb.val.type = "string";
+                                        sb.val.v = "call";
+                                        lcall.args.add(sb);
+
+                                        sb = new JsonObjSysBase();
+                                        sb.sys = "const";
+                                        sb.val = new JsonObjSysBase();
+                                        sb.val.sys = "val";
+                                        sb.val.type = "string";
+                                        sb.val.v = name;
+                                        lcall.args.add(sb);
+
+                                        ProcessCallRunner urlRun = new ProcessCallRunner(lcall, func, this);
+                                        Thread t = new Thread(urlRun);
+                                        t.start();                                        
+                                        
+                                        //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"call"}});
+                                        //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":name}});                             
+
+                                        //setTimeout(function() {
+                                        //    this.processCall(lcall, func);
+                                        //}, 0);
+
+                                    } else if(this.isRefStringClassDec(nurl)) {
+                                        //call lib class function
+                                        lcall = new JsonObjSysBase();
+                                        lcall.sys = "call";
+                                        lcall.name = nurl;
+                                        lcall.args = args;
+                                        if(lcall.args == null) {
+                                            lcall.args = new ArrayList<JsonObjSysBase>();
+                                        }
+
+                                        JsonObjSysBase sb = new JsonObjSysBase();
+                                        sb.sys = "const";
+                                        sb.val = new JsonObjSysBase();
+                                        sb.val.sys = "val";
+                                        sb.val.type = "string";
+                                        sb.val.v = "call";
+                                        lcall.args.add(sb);
+
+                                        sb = new JsonObjSysBase();
+                                        sb.sys = "const";
+                                        sb.val = new JsonObjSysBase();
+                                        sb.val.sys = "val";
+                                        sb.val.type = "string";
+                                        sb.val.v = name;
+                                        lcall.args.add(sb);
+
+                                        ProcessCallRunner urlRun = new ProcessCallRunner(lcall, func, this);
+                                        Thread t = new Thread(urlRun);
+                                        t.start();                                        
+                                        
+                                        //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"call"}});
+                                        //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":name}});                             
+
+                                        //setTimeout(function() {
+                                        //    this.processCall(lcall, func);
+                                        //}, 0);
+
+                                    }                                        
                                 }
                             }
-                        }                        
-                        
+                        }
+
                         return lret;
                     } else {
                         this.wr("processCall: Error: function returned a null value");
@@ -5188,15 +5983,92 @@ public class JsonPlState {
                                         String nurl = null;
                                         if (this.isString(funcDef.pubs.get(k))) {
                                             nurl = funcDef.pubs.get(k);
-                                            try {
-                                                this.processUrlCall(nurl + "&type=call&name=" + URLEncoder.encode(name, "UTF-8") + "&args=" + URLEncoder.encode(Utils.JSONstringify(args), "UTF-8"));
-                                            }catch (Exception e) {
-                                                this.wrErr(e);
-                                            }
+                                            if(this.isUrl(nurl)) {
+                                                try {
+                                                    this.processUrlCall(nurl + "&type=call&name=" + URLEncoder.encode(name, "UTF-8") + "&args=" + URLEncoder.encode(Utils.JSONstringify(args), "UTF-8"));
+                                                } catch (Exception e) {
+                                                    this.wrErr(e);
+                                                }
+                                            
+                                            } else if(this.isRefStringFuncDec(nurl)) {
+                                               //call local function
+                                                lcall = new JsonObjSysBase();
+                                                lcall.sys = "call";
+                                                lcall.name = nurl;
+                                                lcall.args = args;
+                                                if(lcall.args == null) {
+                                                    lcall.args = new ArrayList<JsonObjSysBase>();
+                                                }
+                                               
+                                                JsonObjSysBase sb = new JsonObjSysBase();
+                                                sb.sys = "const";
+                                                sb.val = new JsonObjSysBase();
+                                                sb.val.sys = "val";
+                                                sb.val.type = "string";
+                                                sb.val.v = "call";
+                                                lcall.args.add(sb);
+
+                                                sb = new JsonObjSysBase();
+                                                sb.sys = "const";
+                                                sb.val = new JsonObjSysBase();
+                                                sb.val.sys = "val";
+                                                sb.val.type = "string";
+                                                sb.val.v = name;
+                                                lcall.args.add(sb);
+
+                                                ProcessCallRunner urlRun = new ProcessCallRunner(lcall, func, this);
+                                                Thread t = new Thread(urlRun);
+                                                t.start();                                                
+                                                
+                                                //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"call"}});
+                                                //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":name}});                             
+
+                                                //setTimeout(function() {
+                                                //    this.processCall(lcall, func);
+                                                //}, 0);
+      
+                                            } else if(this.isRefStringClassDec(nurl)) {
+                                                //call lib class function
+                                                lcall = new JsonObjSysBase();
+                                                lcall.sys = "call";
+                                                lcall.name = nurl;
+                                                lcall.args = args;
+                                                if(lcall.args == null) {
+                                                    lcall.args = new ArrayList<JsonObjSysBase>();
+                                                }
+
+                                                JsonObjSysBase sb = new JsonObjSysBase();
+                                                sb.sys = "const";
+                                                sb.val = new JsonObjSysBase();
+                                                sb.val.sys = "val";
+                                                sb.val.type = "string";
+                                                sb.val.v = "call";
+                                                lcall.args.add(sb);
+
+                                                sb = new JsonObjSysBase();
+                                                sb.sys = "const";
+                                                sb.val = new JsonObjSysBase();
+                                                sb.val.sys = "val";
+                                                sb.val.type = "string";
+                                                sb.val.v = name;
+                                                lcall.args.add(sb);
+
+                                                ProcessCallRunner urlRun = new ProcessCallRunner(lcall, func, this);
+                                                Thread t = new Thread(urlRun);
+                                                t.start();                                                
+                                                
+                                                //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"call"}});
+                                                //lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":name}});                             
+
+                                                //setTimeout(function() {
+                                                //    this.processCall(lcall, func);
+                                                //}, 0);
+      
+                                            }                                            
                                         }
                                     }
                                 }
-                                
+
                                 return lret;
                             }
                         } else {
@@ -5208,6 +6080,7 @@ public class JsonPlState {
                         return null;
                     }
                 }
+                
             } else {
                 this.wr("processCall: Error: function argument length mismatch, func arg def: " + funcArgs.size() + ", call arg: " + args.size());
                 return null;
@@ -5225,6 +6098,9 @@ public class JsonPlState {
      * Arg2: func(func obj, sys=func)
      * Returns: {null | (const obj, sys=const)}
      */
+    
+    //TODO: sync
+    
     public JsonObjSysBase processExp(JsonObjSysBase objExp, JsonObjSysBase func) {
         JsonObjSysBase left = null;
         JsonObjSysBase op = null;
@@ -5293,7 +6169,10 @@ public class JsonPlState {
             return null;
         }
 
-        if (left.val.type.equals(right.val.type) && (left.val.type.equals("int") || left.val.type.equals("float") || left.val.type.equals("bool"))) {
+        if (
+           (left.val.type.equals("int") || left.val.type.equals("float") || left.val.type.equals("bool") || left.val.type.equals("string"))
+           || (left.val.type.equals("int[]") || left.val.type.equals("float[]") || left.val.type.equals("bool[]") || left.val.type.equals("string[]"))
+        ) {
             JsonObjSysBase ret = new JsonObjSysBase("val");
             ret.type = left.val.type;
             ret.v = null;
@@ -5301,81 +6180,179 @@ public class JsonPlState {
             JsonObjSysBase ret2 = new JsonObjSysBase("const");
             ret2.val = ret;
 
+            String nval = null;
+            int i1 = -1; 
+            int i2 = -1; 
+            int i3 = -1;
+            float f1 = -1.0f;
+            float f3 = -1.0f;         
+            String s1 = null;
+            String s3 = null;
+            String[] nvals = null;            
+            
             if (op.v.equals("+")) {
                 if (left.val.type.equals("int")) {
-                    ret.v = (Integer.parseInt(left.val.v + "") + Integer.parseInt(right.val.v + "")) + "";
+                    ret.v = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
+                    
                 } else if (left.val.type.equals("float")) {
-                    ret.v = (Float.parseFloat(left.val.v + "") + Float.parseFloat(right.val.v + "")) + "";
+                    ret.v = this.toStr(this.toFloat(left.val.v) + this.toFloat(right.val.v));
+                    
                 } else if (left.val.type.equals("bool")) {
-                    ret.v = (this.toBoolInt(left.val.v + "") + this.toBoolInt(right.val.v + "")) + "";
+                    ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) + this.toBoolInt(right.val.v)));
+                
+                } else if (left.val.type.equals("string")) {
+                    ret.v = this.toStr(left.val.v) + this.toStr(right.val.v);
                 }
             } else if (op.v.equals("-")) {
                 if (left.val.type.equals("int")) {
-                    ret.v = (Integer.parseInt(left.val.v + "") - Integer.parseInt(right.val.v + "")) + "";
+                    ret.v = this.toStr(this.toInt(left.val.v) - this.toInt(right.val.v));
+                    
                 } else if (left.val.type.equals("float")) {
-                    ret.v = (Float.parseFloat(left.val.v + "") - Float.parseFloat(right.val.v + "")) + "";
+                    ret.v = this.toStr(this.toFloat(left.val.v) - this.toFloat(right.val.v));
+                
                 } else if (left.val.type.equals("bool")) {
-                    ret.v = (this.toBoolInt(left.val.v + "") - this.toBoolInt(right.val.v + "")) + "";
+                    ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) - this.toBoolInt(right.val.v)));
+                
+                } else if (left.val.type.equals("string")) {                    
+                    ret.v = this.toStr(left.val.v).replaceAll(this.toStr(right.val.v), "");
                 }
             } else if (op.v.equals("/")) {
                 if (left.val.type.equals("int")) {
-                    if (Integer.parseInt(right.val.v + "") == 0) {
+                    if (this.toInt(right.val.v) == 0) {
                         this.wr("processExp: Error: divide by zero error");
                         return null;
                     } else {
-                        ret.v = (Integer.parseInt(left.val.v + "") / Integer.parseInt(right.val.v + "")) + "";
+                        ret.v = this.toStr(this.toInt(left.val.v) / this.toInt(right.val.v));
                     }
+
                 } else if (left.val.type.equals("float")) {
-                    if (Float.parseFloat(right.val.v + "") == 0) {
+                    if (this.toFloat(right.val.v) == 0) {
                         this.wr("processExp: Error: divide by zero error");
                         return null;
                     } else {
-                        ret.v = (Float.parseFloat(left.val.v + "") / Float.parseFloat(right.val.v + "")) + "";
+                        ret.v = this.toStr(this.toFloat(left.val.v) / this.toFloat(right.val.v));
                     }
+
                 } else if (left.val.type.equals("bool")) {
-                    if (this.toBoolInt(right.val.v + "") == 0) {
+                    if (this.toBoolInt(right.val.v) == 0) {
                         this.wr("processExp: Error: divide by zero error");
                         return null;
                     } else {
-                        ret.v = (this.toBoolInt(left.val.v + "") / this.toBoolInt(right.val.v + "")) + "";
+                        ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) / this.toBoolInt(right.val.v)));
                     }
+
+                } else if (left.val.type.equals("string")) {
+                    s1 = this.toStr(right.val.v);
+                    s3 = this.toStr(left.val.v);
+                    nvals = s1.split(s3);
+                    nval = "";
+                    for(int l = 0; l < nvals.length; l++) {
+                        nval += nvals[l];
+                    }
+                    ret.v = nval;
+                    
                 }
             } else if (op.v.equals("%")) {
                 if (left.val.type.equals("int")) {
-                    if (Integer.parseInt(right.val.v + "") == 0) {
+                    if (this.toInt(right.val.v) == 0) {
                         this.wr("processExp: Error: divide by zero error");
                         return null;
                     } else {
-                        ret.v = (Integer.parseInt(left.val.v + "") % Integer.parseInt(right.val.v + "")) + "";
+                        ret.v = this.toStr(this.toInt(left.val.v) % this.toInt(right.val.v));
                     }
+
                 } else if (left.val.type.equals("float")) {
-                    if (Float.parseFloat(right.val.v + "") == 0) {
+                    if (this.toFloat(right.val.v) == 0) {
                         this.wr("processExp: Error: divide by zero error");
                         return null;
                     } else {
-                        ret.v = (Float.parseFloat(left.val.v + "") % Float.parseFloat(right.val.v + "")) + "";
+                        ret.v = this.toStr(this.toFloat(left.val.v) % this.toFloat(right.val.v));
                     }
+
                 } else if (left.val.type.equals("bool")) {
-                    if (this.toBoolInt(right.val.v + "") == 0) {
+                    if (this.toBoolInt(right.val.v) == 0) {
                         this.wr("processExp: Error: divide by zero error");
                         return null;
                     } else {
-                        ret.v = (this.toBoolInt(left.val.v + "") % this.toBoolInt(right.val.v + "")) + "";
+                        ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) % this.toBoolInt(right.val.v)));
                     }
-                }                
+
+                } else if (left.val.type.equals("string")) { 
+                    s1 = this.toStr(right.val.v);
+                    s3 = this.toStr(left.val.v);
+                    nvals = s1.split(s3);
+                    nval = "";
+                    for(int k = 0; k < nvals.length; k++) {
+                       nvals[k] = "";
+                       nval += (nvals[k] + s3);
+                    }
+                    ret.v = nval;
+               
+                }
             } else if (op.v.equals("*")) {
                 if (left.val.type.equals("int")) {
-                    ret.v = (Integer.parseInt(left.val.v + "") * Integer.parseInt(right.val.v + "")) + "";
+                    ret.v = this.toStr(this.toInt(left.val.v) * this.toInt(right.val.v));
+                    
                 } else if (left.val.type.equals("float")) {
-                    ret.v = (Float.parseFloat(left.val.v + "") * Float.parseFloat(right.val.v + "")) + "";
+                    ret.v = this.toStr(this.toFloat(left.val.v) * this.toFloat(right.val.v));
+                    
                 } else if (left.val.type.equals("bool")) {
-                    ret.v = (this.toBoolInt(left.val.v + "") * this.toBoolInt(right.val.v + "")) + "";
+                    ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) * this.toBoolInt(right.val.v)));
+                    
+                } else if (left.val.type.equals("string")) {                    
+                    s1 = this.toStr(left.val.v);
+                    i2 = this.toInt(right.val.v);
+                    s3 = "";
+                    for(int k = 0; k < i2; k++) {
+                        s3 += s1;
+                    }
+                    ret.v = s3;
+                    
                 }
+            } else if (op.v.equals("**")) {
+                if (left.val.type.equals("int")) {
+                    i1 = this.toInt(left.val.v);
+                    i2 = this.toInt(right.val.v);
+                    i3 = 1;
+                    for(int k = 0; k < i2; k++) {
+                        i3 *= i1;
+                    }
+                    ret.v =  this.toStr(i3);
+                    
+                } else if (left.val.type.equals("float")) {
+                    f1 = this.toFloat(left.val.v);
+                    i2 = this.toInt(right.val.v);
+                    f3 = 1.0f;
+                    for(int k = 0; k < i2; k++) {
+                       f3 *= f1;
+                    }               
+                    ret.v =  this.toStr(f3);
+                    
+                } else if (left.val.type.equals("bool")) {
+                    i1 = this.toBoolInt(left.val.v);
+                    i2 = this.toInt(right.val.v);
+                    i3 = 1;
+                    for(int k = 0; k < i2; k++) {
+                        i3 *= i1;
+                    }
+                    ret.v = this.toStr(i3);
+                    
+                } else if (left.val.type.equals("string")) {                    
+                    s1 = this.toStr(left.val.v);
+                    i2 = this.toInt(right.val.v);
+                    s3 = "";
+                    for(int k = 0; k < i2; k++) {
+                        s3 += s1;
+                    }
+                    ret.v = s3;
+                    
+                }                
             } else {
                 this.wr("processExp: Error: unknown operator: " + op.v);
                 return null;
             }
 
+            /*
             if (left.val.type.equals("int")) {
                 ret.v = Integer.parseInt(ret.v + "") + "";
             } else if (left.val.type.equals("float")) {
@@ -5383,10 +6360,13 @@ public class JsonPlState {
             } else if (left.val.type.equals("bool")) {
                 ret.v = (this.toBool(ret.v + "")) + "";
             }
+            */
 
             ret = ret2;
             this.lastExpReturn = ret;
             return ret;
+        
+        /*
         } else if (left.val.type.equals(right.val.type) && left.val.type.equals("string") && op.v.equals("+")) {
             JsonObjSysBase ret = new JsonObjSysBase();
             ret.sys = "val";
@@ -5399,7 +6379,9 @@ public class JsonPlState {
 
             ret = ret2;
             this.lastExpReturn = ret;
-            return ret;            
+            return ret;
+        */
+        
         } else {
             this.wr("processExp: Error: type mismatch: " + left.val.type + " - " + right.val.type);
             return null;
