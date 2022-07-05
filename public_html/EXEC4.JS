@@ -1620,6 +1620,9 @@ class jsonPlState {
     *       Prints object using pretty JSON.stringify call.
     * Arg1: jsonObj(jsonObj to write)
     */
+
+   //TODO: sync2.0
+
    wrObj(jsonObj) {
       if (this.LOGGING === true) {
          this.wr(JSON.stringify(jsonObj, null, 2));
@@ -4084,8 +4087,14 @@ class jsonPlState {
          path = origRefVal;
       }
 
+      //TODO sync2.0
+      
       if (this.VERBOSE) {
-         this.wr("processAsgn: has publications: " + hasPubs + ", Found: " + this.toStr(left.pubs) + ", Path: " + origRefVal);
+         if(left.pubs !== null) {
+            this.wr("processAsgn: Has publications: " + hasPubs + ", Found Pubs: " + this.toStr(left.pubs) + ", Path: " + origRefVal);
+         } else {
+            this.wr("processAsgn: Has publications: " + hasPubs + ", Found Pubs: 'none found', Path: " + origRefVal);
+         }
       }
 
       if (this.isSysObjConst(right)) {
