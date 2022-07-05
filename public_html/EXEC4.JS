@@ -2458,7 +2458,7 @@ class jsonPlState {
       var tmp = this.toStr(arg);
       if (arg === null) {
          return false;
-      } else if (this.isNumber(arg) && Number.isInteger(arg) === false && tmp.indexOf(".") !== -1) {
+      } else if (this.isNumber(arg) && tmp.indexOf(".") !== -1) {
          return true;
       } else {
          return false;
@@ -3397,8 +3397,15 @@ class jsonPlState {
     * Arg1: v(the value to convert)
     * Returns: (the float value of v)
     */
+
+   //TODO: SYNC
+
    toFloat(v) {
-      return parseFloat(v);
+      var r = parseFloat(v);
+      if(this.toStr(r).indexOf(".") === -1) {
+         r += ".0";
+      }
+      return r;
    }
 
    /**
