@@ -1,0 +1,140 @@
+<html>
+    <head>
+    <title>JsonPL Program: PRG007_CallExample2.HTML</title>
+    <script type="text/javascript" src="../EXEC4.JS"></script>
+    <script type="text/javascript">
+        try {
+            var code = {"sys":"class", "name":"CallExample2",
+                "ret":{"sys":"val", "type":"bool", "v":"false"},
+                "call":{"sys":"call", "name":"main", "args":[]},
+                "classes":[],
+                "vars":[],
+                "funcs":[
+                    {"sys":"func", "name":"main",
+                        "ret":{"sys":"val", "type":"bool", "v":"false"},
+                        "args":[],
+                        "vars":[
+                            {"sys":"var", "name":"ptr1", "val":{"sys":"val", "type":"string", "v":"main2"}}
+                        ],
+                        "lines":[
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found variable values"}},
+                                    
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.vars.ptr1 = "}},         
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.ptr1"}}
+                                ]
+                            },
+                            {"sys":"call", "name":"main2", "args":[]},
+                            {"sys":"call", "name":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"main2"}}, "args":[]},
+                            {"sys":"call", "name":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"$.vars.ptr1"}}, "args":[]},
+                            {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}}
+                        ]
+                    },
+                    {"sys":"func", "name":"main2",
+                        "ret":{"sys":"val", "type":"bool", "v":"false"},
+                        "args":[],
+                        "vars":[],
+                        "lines":[
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Executing function main2..."}}
+                                ]
+                            },
+                            {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}}
+                        ]
+                    }
+                ]
+            };
+         
+            /**
+             * Name: init
+             * Desc: A function to init the test page.
+             */
+            function init() {
+                var txtAreaMsg = document.getElementById("message");
+                var txtAreaSrc = document.getElementById("source");
+                var nl = "\r\n";         
+
+                jsonPlState.prototype.wr = function(s) {
+                    if (this.LOGGING === true) {
+                        console.log(this.WR_PREFIX + s);
+                        txtAreaMsg.value += (this.WR_PREFIX + s + nl);
+                    }
+                };
+            
+                jsonPlState.prototype.wrObj = function(s) {
+                    if (this.LOGGING === true) {
+                        console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
+                        txtAreaMsg.value += (this.WR_PREFIX + JSON.stringify(s, null, 2) + nl);
+                    }
+                };
+
+                jsonPlState.prototype.wrVal = function(v) {
+                    if (this.LOGGING === true) {
+                        if(this.isSysObjValArray(v)) {
+                            console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+                            txtAreaMsg.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len + nl);
+                        } else {
+                            console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+                            txtAreaMsg.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v + nl);
+                        }
+                    }
+                };
+         
+                /////////////////////////PROGRAM SECTION
+                var jpl = new jsonPlState();
+                var codeStr = JSON.stringify(code, null, 2);
+                txtAreaSrc.value += codeStr;
+                jpl.program = JSON.parse(codeStr);
+            
+                if(!jpl.validateSysObjClass(jpl.program)) {
+                    jpl.wr("runProgram: Error: could not validate the class object.");
+                    return;
+                }
+
+                jpl.wr("====================== Program Results ======================");
+                jpl.runProgram();             
+            }
+        } catch(e) {
+            txtAreaSrc.value = "Error:";
+            txtAreaSrc.value += "Message:" + e;
+        }
+        </script>
+    </head>
+    <body style="padding:12px;" onload="init()">
+        <span style="font-size:18px; font-weight:bold;">Output:</span>
+        <br/>
+<textarea cols="90" rows="15" id="message" style="font-size:16px;">
+</textarea>    
+        <br/><br/>
+
+        <span style="font-size:18px; font-weight:bold;">Source:</span>
+        <br/>
+<textarea cols="90" rows="15" id="source" style="font-size:16px;">
+</textarea>
+        <br/><br/>
+
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Title:</span>
+            <span style="font-size:18px; font-weight:normal;">JsonPL Program: PRG007 - CallExample2</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">File:</span>
+            <span style="font-size:18px; font-weight:normal;">PRG007_CallExample2.HTML</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Code:</span>
+            <span style="font-size:18px; font-weight:normal;">PRG007</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Name:</span>
+            <span style="font-size:18px; font-weight:normal;">CallExample2</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Desc:</span>
+            <span style="font-size:18px; font-weight:normal;">
+                This program demonstrates using 
+            </span>            
+        </div>
+    </body>
+</html>

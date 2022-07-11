@@ -122,6 +122,22 @@ class jsonPlState {
          return this.getConstBool();
       }
    }
+
+   /**
+    * Name: sysGetLastExpReturn
+    * Desc: A system level method to access the last exp return object.
+    * Returns: const(a {const} bool object)
+    */
+   
+   //TODO: sync
+
+   sysGetLastBexReturn(args, func) {
+      if (this.lastBexReturn !== null) {
+         return this.lastBexReturn;
+      } else {
+         return this.getConstBool();
+      }
+   }
    
    /**
     * Name: getConstBool
@@ -2987,6 +3003,9 @@ class jsonPlState {
     * Arg2: func(func obj, sys=func)
     * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
     */
+
+   //TODO: sync2.0
+
    processRef(objRef, func, url=null) {
       var path = null;
       var vls = null;
@@ -3009,7 +3028,7 @@ class jsonPlState {
       path = this.toStr(objRef.val.v);
 
       if (this.VERBOSE) {
-         this.wr("processRef: Initial Path: " + path);
+         //this.wr("processRef: Initial Path: " + path);
       }
 
       //check for URL
@@ -3018,7 +3037,7 @@ class jsonPlState {
       var forceLocal = false;
 
       if (this.VERBOSE) {
-         this.wr("processRef: Url Start Index: " + urlStart);
+         //this.wr("processRef: Url Start Index: " + urlStart);
       }
 
       var nvs = null;
@@ -3035,8 +3054,8 @@ class jsonPlState {
          nurl = nvs[1].substring(0, nvs[1].length - 1).trim();
 
          if (this.VERBOSE) {
-            this.wr("processRef: New Path: " + npath);
-            this.wr("processRef: New URL: " + nurl);
+            //this.wr("processRef: New Path: " + npath);
+            //this.wr("processRef: New URL: " + nurl);
          }
 
          hasUrl = true;
@@ -3049,7 +3068,7 @@ class jsonPlState {
       }
 
       if (this.VERBOSE) {
-         this.wr("processRef: Has URL: " + hasUrl);
+         //this.wr("processRef: Has URL: " + hasUrl);
       }
 
       //check for forced local de-reference for outer bracket only
@@ -3087,8 +3106,8 @@ class jsonPlState {
          tmp.val.v = nc;
 
          if (this.VERBOSE) {
-            this.wr("processRef: Initial De-Reference:");
-            this.wrObj(tmp);
+            //this.wr("processRef: Initial De-Reference:");
+            //this.wrObj(tmp);
          }
 
          if (!forceLocal) {
@@ -3158,7 +3177,7 @@ class jsonPlState {
             vls[k] = nvls[k];
 
             if (this.VERBOSE) {
-               this.wr("processRef: path idx: " + k + " val: " + vls[k]);
+               //this.wr("processRef: path idx: " + k + " val: " + vls[k]);
             }
          }
       }
@@ -5631,6 +5650,13 @@ jsonPlState.prototype.system = {
       },
       {
          "sys": "func",
+         "name": "SYS::getLastBexReturn",
+         "fname": "sysGetLastBexReturn",
+         "args": [
+         ]
+      },      
+      {
+         "sys": "func",
          "name": "SYS::getLastAsgnValue",
          "fname": "sysGetLastAsgnValue",
          "args": [
@@ -6044,105 +6070,3 @@ try {
 } catch(e) {
    console.log(e);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
