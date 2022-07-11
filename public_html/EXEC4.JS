@@ -1365,6 +1365,7 @@ class jsonPlState {
     */
 
    //TODO: sync doc
+   //TODO: sync2.0
 
    validateSysObjVal(obj) {
       //this.wr("validateSysObjVal: Receiving: ");
@@ -1443,6 +1444,9 @@ class jsonPlState {
                }
 
                //array data types
+
+               //TODO sync2.0
+
                if (obj.type === "int[]") {
                   if (!this.isArray(obj.v)) {
                      this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
@@ -1450,7 +1454,7 @@ class jsonPlState {
                   } else {
                      for (var i = 0; i < arrayLenActual; i++) {
                         var ltmp = tmpA[i];
-                        if (!this.isArrayType(ltmp.val.type) && (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "int"))) {
+                        if (!this.isArrayType(ltmp.val.type) && (!skipArVer && ltmp.val.type !== "int")) {
                            this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'int' but found '" + ltmp.val.type + "'");
                            return false;
                         }
@@ -1463,7 +1467,7 @@ class jsonPlState {
                   } else {
                      for (var i = 0; i < arrayLenActual; i++) {
                         var ltmp = tmpA[i];
-                        if (!this.isArrayType(ltmp.val.type) && (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "float"))) {
+                        if (!this.isArrayType(ltmp.val.type) && (!skipArVer && ltmp.val.type !== "float")) {
                            this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'float' but found '" + ltmp.val.type + "'");
                            return false;
                         }
@@ -1476,7 +1480,7 @@ class jsonPlState {
                   } else {
                      for (var i = 0; i < arrayLenActual; i++) {
                         var ltmp = tmpA[i];
-                        if (!this.isArrayType(ltmp.val.type) && (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "string"))) {
+                        if (!this.isArrayType(ltmp.val.type) && (!skipArVer && ltmp.val.type !== "string")) {
                            this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'string' but found '" + ltmp.val.type + "'");
                            return false;
                         }
@@ -1489,7 +1493,7 @@ class jsonPlState {
                   } else {
                      for (var i = 0; i < arrayLenActual; i++) {
                         var ltmp = tmpA[i];
-                        if (!this.isArrayType(ltmp.val.type) && (!this.isSysObjVar(ltmp) || (!skipArVer && ltmp.val.type !== "bool"))) {
+                        if (!this.isArrayType(ltmp.val.type) && (!skipArVer && ltmp.val.type !== "bool")) {
                            this.wr("validateSysObjVal: Error: array element " + i + " has the wrong type, expected 'bool' but found '" + ltmp.val.type + "'");
                            return false;
                         }
@@ -1636,6 +1640,9 @@ class jsonPlState {
     *       Prints object using pretty JSON.stringify call.
     * Arg1: jsonObj(jsonObj to write)
     */
+
+   //TODO: sync2.0
+
    wrObj(jsonObj) {
       if (this.LOGGING === true) {
          this.wr(JSON.stringify(jsonObj, null, 2));
@@ -2474,7 +2481,7 @@ class jsonPlState {
       var tmp = this.toStr(arg);
       if (arg === null) {
          return false;
-      } else if (this.isNumber(arg) && Number.isInteger(arg) === false && tmp.indexOf(".") !== -1) {
+      } else if (this.isNumber(arg) && tmp.indexOf(".") !== -1) {
          return true;
       } else {
          return false;
@@ -3416,8 +3423,15 @@ class jsonPlState {
     * Arg1: v(the value to convert)
     * Returns: (the float value of v)
     */
+
+   //TODO: SYNC
+
    toFloat(v) {
-      return parseFloat(v);
+      var r = parseFloat(v);
+      if(this.toStr(r).indexOf(".") === -1) {
+         r += ".0";
+      }
+      return r;
    }
 
    /**
@@ -4006,6 +4020,7 @@ class jsonPlState {
     */
 
    //TODO: sync
+   //TODO: sync2.0
 
    processAsgn(objAsgn, func) {
       //this.wrObj(objAsgn);
@@ -4096,8 +4111,14 @@ class jsonPlState {
          path = origRefVal;
       }
 
+      //TODO sync2.0
+      
       if (this.VERBOSE) {
-         this.wr("processAsgn: has publications: " + hasPubs + ", Found: " + this.toStr(left.pubs) + ", Path: " + origRefVal);
+         if(left.pubs !== undefined && left.pubs.length > 0) {
+            this.wr("processAsgn: Has publications: " + hasPubs + ", Found Pubs: " + this.toStr(left.pubs) + ", Path: " + origRefVal);
+         } else {
+            this.wr("processAsgn: Has publications: " + hasPubs + ", Found Pubs: 'none found', Path: " + origRefVal);
+         }
       }
 
       if (this.isSysObjConst(right)) {
@@ -4125,15 +4146,21 @@ class jsonPlState {
          return null;
       }
 
-      if (this.isSysObjValArray(left)) {
+      //TODO: sync2.0
+
+      if (this.isSysObjValArray(left.val)) {
          leftIsArray = true;
+         leftIsBasic = false;
       } else {
-         leftIsBasic = true;
+         leftIsArray = false;         
+         leftIsBasic = true;         
       }
 
-      if (this.isSysObjValArray(right)) {
+      if (this.isSysObjValArray(right.val)) {
          rightIsArray = true;
+         rightIsBasic = false;
       } else {
+         rightIsArray = false;
          rightIsBasic = true;
       }
 
@@ -4397,13 +4424,51 @@ class jsonPlState {
          this.lastAsgnReturn = ret;
          return ret;
       } else if (leftIsArray && rightIsArray && rightIsRef) {
-            //both are array refs, dereference if need be, and copy reference
+            
+            //TODO: sync2.0
+            //both are array refs, dereference if need be, and copy values            
+            var tmpA = this.toArray(left.val.v);
+            var tmpB = this.toArray(right.val.v);
+            var lobj = null;
+            var isArg = false;
             if (objAsgn.op.v === "+=") {
-               this.wr("processAsgn: Error: append operator not supported in this case: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef);
-               ret.val.v = "false";
-               this.lastAsgnValue = this.cloneJsonObj(left);
-               this.lastAsgnReturn = ret;
-               return ret;
+               isArg = this.isSysObjArg(tmpA[0]);            
+               for (var i = 0; i < tmpB.length; i++) {
+                  if(isArg) {
+                     //add new arg
+                     lobj = {"sys":"arg"};              
+                  } else {
+                     //add new var
+                     lobj = {"sys":"var"};
+                  }
+
+                  lobj.name = "itm" + ((tmpA.length - 1) + i);                  
+                  lobj.val = tmpB[i].val;
+                  tmpA.push(lobj);                  
+               }
+            } else if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {               
+               isArg = this.isSysObjArg(tmpA[0]);
+               for (var i = 0; i < tmpB.length; i++) {
+                  if(isArg) {
+                     //add new arg
+                     lobj = {"sys":"arg"};                     
+                  } else {
+                     //add new var
+                     lobj = {"sys":"var"};
+                  }
+
+                  if(i < tmpA.length) {
+                     lobj.name = tmpA.name;
+                  } else {
+                     lobj.name = "itm" + ((tmpA.length - 1) + i);
+                  }
+
+                  lobj.val = tmpB[i].val;
+                  tmpA[i] = lobj;
+               }
+            } else {
+               this.wr("processAsgn: Error: unsupported assignment operator, " + objAsgn.op.v + ", when using arrays");
+               return null;
             }
 
             if (hasUrl) {
@@ -4461,17 +4526,52 @@ class jsonPlState {
             this.lastAsgnReturn = ret;
             return ret;
       } else if (leftIsArray && rightIsArray && !rightIsRef) {
-            //left is array ref, right is array const, copy value
-            var tmpA = null;
-            if (objAsgn.op.v === "+=") {
-               tmpA = this.toArray(left.val.v);
-            } else {
-               tmpA = [];
-            }
 
+            //TODO: sync2.0
+
+            //left is array ref, right is array const, copy value
+            var tmpA = this.toArray(left.val.v);
             var tmpB = this.toArray(right.val.v);
-            for (var i = 0; i < tmpB.size(); i++) {
-               tmpA.push(tmpB[i]);
+            var lobj = null;
+            var isArg = false;
+            if (objAsgn.op.v === "+=") {
+               isArg = this.isSysObjArg(tmpA[0]);            
+               for (var i = 0; i < tmpB.size(); i++) {
+                  if(isArg) {
+                     //add new arg
+                     lobj = {"sys":"arg"};              
+                  } else {
+                     //add new var
+                     lobj = {"sys":"var"};
+                  }
+
+                  lobj.name = "itm" + ((tmpA.length - 1) + i);                  
+                  lobj.val = tmpB[i].val;
+                  tmpA.push(lobj);                  
+               }
+            } else if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {               
+               isArg = this.isSysObjArg(tmpA[0]);
+               for (var i = 0; i < tmpB.size(); i++) {
+                  if(isArg) {
+                     //add new arg
+                     lobj = {"sys":"arg"};                     
+                  } else {
+                     //add new var
+                     lobj = {"sys":"var"};
+                  }
+
+                  if(i < tmpA.length) {
+                     lobj.name = tmpA.name;
+                  } else {
+                     lobj.name = "itm" + ((tmpA.length - 1) + i);
+                  }
+
+                  lobj.val = tmpB[i].val;
+                  tmpA[i] = lobj;
+               }
+            } else {
+               this.wr("processAsgn: Error: unsupported assignment operator, " + objAsgn.op.v + ", when using arrays");
+               return null;
             }
 
             if (hasUrl) {
