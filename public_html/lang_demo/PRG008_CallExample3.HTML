@@ -1,5 +1,6 @@
 <html>
     <head>
+    <link rel="stylesheet" href="style.css">         
     <title>JsonPL Program: PRG008_CallExample3.HTML</title>
     <script type="text/javascript" src="../EXEC4.JS"></script>
     <script type="text/javascript">
@@ -15,11 +16,11 @@
                         "vars":[],
                         "funcs":[
                             {"sys":"func", "name":"main",
-                                "ret":{"sys":"ret", "type":"int", "v":"0"},
+                                "ret":{"sys":"val", "type":"int", "v":"0"},
                                 "args":[],
                                 "vars":[],
                                 "lines":[
-                                    {"sys":"return", "val":{"sys":"val", "type":"int", "v":"1"}}
+                                    {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}}
                                 ]
                             }
                         ]
@@ -45,6 +46,8 @@
                             {"sys":"call", "name":"@.InnerClass", "args":[]},
                             {"sys":"call", "name":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"@.InnerClass"}}, "args":[]},
                             {"sys":"call", "name":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}}, "args":[]},
+                            {"sys":"call", "name":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"[$.vars.ptr1]"}}, "args":[]},
+                            {"sys":"call", "name":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"<$.vars.ptr1>"}}, "args":[]},                            
                             {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}}
                         ]
                     }
@@ -115,7 +118,7 @@
 
         <span style="font-size:18px; font-weight:bold;">Source:</span>
         <br/>
-<textarea cols="90" rows="15" id="source" style="font-size:16px;">
+<textarea cols="90" rows="5" id="source" style="font-size:16px;">
 </textarea>
         <br/><br/>
 
@@ -138,7 +141,9 @@
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Desc:</span>
             <span style="font-size:18px; font-weight:normal;">
-                This program demonstrates using 
+                This program demonstrates calling the default function, 'call' attribute of the {class} object, of a library class.
+                Library classes are stored in the {class} object's 'classes' attribute. Calling a library class invoke's that {class} object's
+                default function as described by the 'call' attribute.
             </span>            
         </div>
     </body>

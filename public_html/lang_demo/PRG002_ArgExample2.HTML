@@ -1,5 +1,6 @@
 <html>
     <head>
+    <link rel="stylesheet" href="style.css"> 
     <title>JsonPL Program: PRG002_ArgExample2.HTML</title>
     <script type="text/javascript" src="../EXEC4.JS"></script>
     <script type="text/javascript">
@@ -47,9 +48,8 @@
                                 "op":{"sys":"op", "type":"asgn", "v":"="},
                                 "right":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"$.args.funcArgString"}}
                             },
-                            
                             {"sys":"call", "name":"SYS::wr", "args":[
-                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found arguments"}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found variables"}},
                                     
                                     {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
                                     {"sys":"const", "val":{"sys":"val", "type":"string", "v":"funcVarInt = "}},                                    
@@ -68,6 +68,26 @@
                                     {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.funcVarString"}}
                                 ]
                             },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found arguments"}},
+                                    
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"funcArgInt = "}},                                    
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.funcArgInt"}},
+                                    
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"funcArgFloat = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.funcArgFloat"}},
+                                    
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"funcArgBool = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.funcArgBool"}},
+
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"funcArgString = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.funcArgString"}}
+                                ]
+                            },                            
                             {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}}
                         ]
                     }
@@ -138,7 +158,7 @@
 
         <span style="font-size:18px; font-weight:bold;">Source:</span>
         <br/>
-<textarea cols="90" rows="15" id="source" style="font-size:16px;">
+<textarea cols="90" rows="5" id="source" style="font-size:16px;">
 </textarea>
         <br/><br/>
 

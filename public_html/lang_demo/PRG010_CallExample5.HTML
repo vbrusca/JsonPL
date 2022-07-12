@@ -1,5 +1,6 @@
 <html>
     <head>
+    <link rel="stylesheet" href="style.css">         
     <title>JsonPL Program: PRG010_CallExample5.HTML</title>
     <script type="text/javascript" src="../EXEC4.JS"></script>
     <script type="text/javascript">
@@ -96,7 +97,7 @@
 
         <span style="font-size:18px; font-weight:bold;">Source:</span>
         <br/>
-<textarea cols="90" rows="15" id="source" style="font-size:16px;">
+<textarea cols="90" rows="5" id="source" style="font-size:16px;">
 </textarea>
         <br/><br/>
 
@@ -119,7 +120,13 @@
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Desc:</span>
             <span style="font-size:18px; font-weight:normal;">
-                This program demonstrates using 
+                This program requires a server to support the backend functionality.                
+                Requires the basic node js server is running. Use the command: 'node EXEC4SVR_BASIC.JS' in the 'svr' directory.
+                This program demonstrates using a remote function call. In this case the function is handled by the end point, 
+                http://localhost:8000/?jsonpl=true, which generates the following HTTP request,
+                http://localhost:8000/?jsonpl=true&type=call&name=unknown_ref_path&args=%5B%7B%22sys%22%3A%22const%22%2C%22val%22%3A%7B%22sys%22%3A%22val%22%2C%22type%22%3A%22int%22%2C%22v%22%3A10%7D%7D%2C%7B%22sys%22%3A%22const%22%2C%22val%22%3A%7B%22sys%22%3A%22val%22%2C%22type%22%3A%22string%22%2C%22v%22%3A%22category%22%7D%7D%2C%7B%22sys%22%3A%22const%22%2C%22val%22%3A%7B%22sys%22%3A%22val%22%2C%22type%22%3A%22bool%22%2C%22v%22%3Afalse%7D%7D%5D,
+                sent to the provided URL. This program also demonstrates using a {const} value to define the default function, main, as opposed
+                to the direct string variation.
             </span>            
         </div>
     </body>

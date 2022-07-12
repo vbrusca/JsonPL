@@ -1,5 +1,6 @@
 <html>
     <head>
+    <link rel="stylesheet" href="style.css">         
     <title>JsonPL Program: PRG010_CallExample5.HTML</title>
     <script type="text/javascript" src="../EXEC4.JS"></script>
     <script type="text/javascript">
@@ -22,8 +23,10 @@
                                 ]
                             },                            
                             {"sys":"call", "name":"#.funcs.main2", "args":[]},
-                            {"sys":"call", "name":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.funcs.main2"}, "args":[]}},
-                            {"sys":"call", "name":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"$.vars.ptr1"}, "args":[]}},                            
+                            {"sys":"call", "name":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.funcs.main2"}}, "args":[]},
+                            {"sys":"call", "name":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"$.vars.ptr1"}}, "args":[]},                            
+                            {"sys":"call", "name":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"[$.vars.ptr1]"}}, "args":[]},
+                            {"sys":"call", "name":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"<$.vars.ptr1>"}}, "args":[]},
                             {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}}
                         ]
                     },
@@ -106,7 +109,7 @@
 
         <span style="font-size:18px; font-weight:bold;">Source:</span>
         <br/>
-<textarea cols="90" rows="15" id="source" style="font-size:16px;">
+<textarea cols="90" rows="5" id="source" style="font-size:16px;">
 </textarea>
         <br/><br/>
 
@@ -129,7 +132,10 @@
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Desc:</span>
             <span style="font-size:18px; font-weight:normal;">
-                This program demonstrates using 
+                This program demonstrates using three different techniques for calling the 'main2' function using a full reference string.
+                The first is by using the direct function name, the second is by using a {const} object with the function name as 
+                the value. Lastly, a {ref} object is used to reference the actual variable that holds the name of the function to call.
+                Also this program shows the full replacement, [], forces local replacement, @lt;@gt;, brackets in use along with the function name. 
             </span>            
         </div>
     </body>

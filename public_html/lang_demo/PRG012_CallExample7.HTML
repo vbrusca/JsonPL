@@ -1,11 +1,11 @@
 <html>
     <head>
     <link rel="stylesheet" href="style.css">         
-    <title>JsonPL Program: PRG009_CallExample4.HTML</title>
+    <title>JsonPL Program: PRG012_CallExample7.HTML</title>
     <script type="text/javascript" src="../EXEC4.JS"></script>
     <script type="text/javascript">
         try {
-            var code = {"sys":"class", "name":"CallExample4",
+            var code = {"sys":"class", "name":"CallExample7",
                 "ret":{"sys":"val", "type":"bool", "v":"false"},
                 "call":{"sys":"call", "name":"main", "args":[]},
                 "classes":[
@@ -22,20 +22,12 @@
                                 "lines":[
                                     {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}}
                                 ]
-                            },
-                            {"sys":"func", "name":"main2",
-                                "ret":{"sys":"val", "type":"int", "v":"0"},
-                                "args":[],
-                                "vars":[],
-                                "lines":[
-                                    {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"2"}}}
-                                ]
-                            }                            
+                            }
                         ]
                     }
                 ],
                 "vars":[
-                    {"sys":"var", "name":"ptr1", "val":{"sys":"val", "type":"string", "v":"@.InnerClass.main2"}}
+                    {"sys":"var", "name":"ptr1", "val":{"sys":"val", "type":"string", "v":"#.classes.InnerClass"}}
                 ],
                 "funcs":[
                     {"sys":"func", "name":"main",
@@ -51,8 +43,8 @@
                                     {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ptr1"}}
                                 ]
                             },
-                            {"sys":"call", "name":"@.InnerClass.main2", "args":[]},
-                            {"sys":"call", "name":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"@.InnerClass.main2"}}, "args":[]},
+                            {"sys":"call", "name":"#.classes.InnerClass", "args":[]},
+                            {"sys":"call", "name":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.classes.InnerClass"}}, "args":[]},
                             {"sys":"call", "name":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"#.vars.ptr1"}}, "args":[]},
                             {"sys":"call", "name":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"[$.vars.ptr1]"}}, "args":[]},
                             {"sys":"call", "name":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"<$.vars.ptr1>"}}, "args":[]},
@@ -132,26 +124,26 @@
 
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Title:</span>
-            <span style="font-size:18px; font-weight:normal;">JsonPL Program: PRG009 - CallExample4</span>
+            <span style="font-size:18px; font-weight:normal;">JsonPL Program: PRG012 - CallExample7</span>
         </div>
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">File:</span>
-            <span style="font-size:18px; font-weight:normal;">PRG009_CallExample4.HTML</span>
+            <span style="font-size:18px; font-weight:normal;">PRG012_CallExample7.HTML</span>
         </div>
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Code:</span>
-            <span style="font-size:18px; font-weight:normal;">PRG009</span>
+            <span style="font-size:18px; font-weight:normal;">PRG012</span>
         </div>
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Name:</span>
-            <span style="font-size:18px; font-weight:normal;">CallExample4</span>
+            <span style="font-size:18px; font-weight:normal;">CallExample7</span>
         </div>
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Desc:</span>
             <span style="font-size:18px; font-weight:normal;">
-                This program demonstrates calling a specific function, specified in the short reference path, of a library class.
+                This program demonstrates calling the default function, 'call' attribute of the {class} object, of a library class using a full reference string.
                 Library classes are stored in the {class} object's 'classes' attribute. Calling a library class invoke's that {class} object's
-                function as described by the 'call' attribute.
+                default function as described by the 'call' attribute.
             </span>            
         </div>
     </body>

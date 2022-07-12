@@ -1,0 +1,25 @@
+li {
+    padding:6px;
+    margin:6px;
+}
+
+body {
+    padding:16px;
+    margin:16px;
+    width:750px;
+}
+
+.desc {
+    font-size:16px; 
+    font-weight:normal;
+}
+
+.link {
+    font-size:16px; 
+    font-weight:bold;
+}
+
+.hdr {
+    font-size:18px; 
+    font-weight:bold;
+}

@@ -1,5 +1,6 @@
 <html>
     <head>
+    <link rel="stylesheet" href="style.css"> 
     <title>JsonPL Program: PRG004_ArgExample4.HTML</title>
     <script type="text/javascript" src="../EXEC4.JS"></script>
     <script type="text/javascript">
@@ -8,8 +9,8 @@
                 "ret":{"sys":"val", "type":"int", "v":"0"},
                 "call":{"sys":"call", "name":"main", "args":[
                         {"sys":"const", "val":{"sys":"val", "type":"int[]", "strict":"true", "len":"2", "v":[
-                                    {"sys":"const", "val":{"sys":"val", "type":"int", "v":"10"}},
-                                    {"sys":"const", "val":{"sys":"val", "type":"int", "v":"20"}}                                    
+                                    {"sys":"const", "name":"itm0", "val":{"sys":"val", "type":"int", "v":"10"}},
+                                    {"sys":"const", "name":"itm1", "val":{"sys":"val", "type":"int", "v":"20"}}                                    
                                 ]
                             }
                         } 
@@ -52,20 +53,78 @@
                                 "op":{"sys":"op", "type":"asgn", "v":"="},
                                 "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.ar3"}}
                             },
-                            
                             {"sys":"call", "name":"SYS::wr", "args":[
-                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found array variable initial index values"}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found class array variable, ar1, by index"}},
                                     
                                     {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
-                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1.itm0 = "}},         
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1.0 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.0"}},
+                                    
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1.1 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.1"}},
+                                ]
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found class array variable, ar1, by name"}},
+                                    
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1.itm0 = "}},
                                     {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.itm0"}},
                                     
                                     {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
-                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.vars.ar2.itm1 = "}},
-                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.ar2.itm0"}}
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1.itm1 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.itm1"}},
                                 ]
                             },                            
-                            
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found func array variable, ar2, by index"}},
+                                                                        
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.vars.ar2.0 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.ar2.0"}},
+
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.vars.ar2.1 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.ar2.1"}}                                    
+                                ]
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found func array variable, ar2, by name"}},
+                                                                        
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.vars.ar2.itm0 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.ar2.itm0"}},
+
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.vars.ar2.itm1 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.ar2.itm1"}}                                    
+                                ]
+                            },                            
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found func array argument, ar3, by index"}},
+                                                                        
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.args.ar3.0 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.ar3.0"}},
+
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.args.ar3.1 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.ar3.1"}}                                    
+                                ]
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found func array argument, ar3, by name"}},
+                                                                        
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.args.ar3.itm0 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.ar3.itm0"}},
+
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.args.ar3.itm1 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.ar3.itm1"}}
+                                ]
+                            },
                             {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}}
                         ]
                     }
@@ -136,7 +195,7 @@
 
         <span style="font-size:18px; font-weight:bold;">Source:</span>
         <br/>
-<textarea cols="90" rows="15" id="source" style="font-size:16px;">
+<textarea cols="90" rows="5" id="source" style="font-size:16px;">
 </textarea>
         <br/><br/>
 
@@ -159,7 +218,7 @@
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Desc:</span>
             <span style="font-size:18px; font-weight:normal;">
-                This program demonstrates simple use of arguments with the {class}  ...
+                This program demonstrates simple use of arguments that use the array data types, int[], float[], bool[], and string[].
             </span>            
         </div>
     </body>

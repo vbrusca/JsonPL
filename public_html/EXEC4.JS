@@ -1236,7 +1236,7 @@ class jsonPlState {
    validateSysObjCall(obj) {
       if (this.isSysObjCall(obj) && this.validateProperties(obj, ["sys", "name", "args"])) {
          if (obj.name !== null) {
-            if (!this.isString(obj.name) && !this.isSysObjConst(obj.name) && !this.isSysObjRef(obj.name)) {
+            if (!this.isString(obj.name) && !this.isSysObjConst(obj.name) && !this.isSysObjRef(obj.name) && !this.isRefStringFunc(obj.name)) {
                this.wr("validateSysObjCall: Error: name is of unknown object type");
                return false;
             }
@@ -1247,10 +1247,12 @@ class jsonPlState {
                var tobj = obj.args[i];
                if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "ref") {
                   if (!this.validateSysObjRef(tobj)) {
+                     this.wr("validateSysObjCall: Error: AAA");
                      return false;
                   }
                } else if (this.isSysObj(tobj) && this.getSysObjType(tobj) === "const") {
                   if (!this.validateSysObjConst(tobj)) {
+                     this.wr("validateSysObjCall: Error: BBB");                     
                      return false;
                   }
                } else {
@@ -1261,6 +1263,8 @@ class jsonPlState {
          }
          return true;
       }
+      this.wr("validateSysObjCall: Error: CCC: " + this.isSysObjCall(obj) + ", " + this.validateProperties(obj, ["sys", "name", "args"]));
+      this.wrObj(obj);
       return false;
    }
 
@@ -2198,6 +2202,39 @@ class jsonPlState {
    }
 
    /**
+    * Name: isRefStringClassLng
+    * Desc: Checks if the given argument is a, long, class reference string.
+    * Arg1: s(some string with a valid reference value)
+    * Returns: ret(some bool, true or false)
+    */
+
+   //TODO: sync2.0
+
+   isRefStringClassLng(s) {
+      var ns = this.toStr(s);
+      if (ns.indexOf("#.classes.") === 0) {
+         return true;
+      }
+      return false;
+   }
+
+   /**
+    * Name: isRefStringClassLngDec
+    * Desc: Checks if the given argument is a decoded, long, class reference string.
+    * Arg1: s(some string with a valid reference value)
+    * Returns: ret(some bool, true or false)
+    */
+
+   //TODO: sync2.0
+
+   isRefStringClassLngDec(s) {
+      if (this.isRefStringDec(s) && this.isRefStringClassLng(s)) {
+         return true;
+      }
+      return false;
+   }
+
+   /**
     * Name: isRefStringClass
     * Desc: Checks if the given argument is a class reference string.
     * Arg1: s(some string with a valid reference value)
@@ -3032,6 +3069,16 @@ class jsonPlState {
          return null;
       }
 
+      //TODO: sync2.0
+
+      if(this.isRefStringClassLng(objRef.val.v)) {
+         objRef.val.v = objRef.val.v.replace("#.classes.", "@.");
+      }
+
+      if(this.isRefStringFunc(objRef.val.v)) {
+         objRef.val.v = objRef.val.v.replace("#.funcs.", "");
+      }
+
       path = this.toStr(objRef.val.v);
 
       if (this.VERBOSE) {
@@ -3140,6 +3187,16 @@ class jsonPlState {
             this.wr("processRef: Error 1: could not lookup object, for ref path: " + path);
             return null;
          }
+      }
+
+      //TODO: sync2.0
+
+      if(this.isRefStringClassLng(objRef.val.v)) {
+         objRef.val.v = objRef.val.v.replace("#.classes.", "@.");
+      }
+
+      if(this.isRefStringFunc(objRef.val.v)) {
+         objRef.val.v = objRef.val.v.replace("#.funcs.", "");
       }
 
       vls = path.split(".");
@@ -3312,6 +3369,8 @@ class jsonPlState {
             var lidx = this.toStr(c);
             tmp = null;
 
+            //this.wr("============================== !foundIndex: " + lidx);
+
             //lookup use of string var here
             if (c.indexOf('[') === 0) {
                var nc = c.substring(1, c.length - 1);
@@ -3333,8 +3392,12 @@ class jsonPlState {
                }
             }
 
+            //this.wr("============================== fnd.val: ");
+            //this.wrObj(fnd.val);
+
             if (this.isSysObjValArray(fnd.val)) {
                if (this.isNumber(lidx)) {
+                  //this.wr("============================== AAA");
                   idx = this.toInt(lidx);
                   fnd = (this.toArray(fnd.val.v)[idx]);
 
@@ -3343,13 +3406,16 @@ class jsonPlState {
                   }
 
                   foundIndex = true;
-               } else {
+               } else {                  
                   var ar = this.toArray(fnd.val.v);
                   var len = ar.length;
                   var target = this.toStr(lidx);
-                  for (var l = 0; l < len; l++) {
-                     if (ar[l].name === target) {
 
+                  //this.wr("============================== BBB: len: " + len + ", " + target);
+                  for (var l = 0; l < len; l++) {
+                     //this.wr("============================== BBB: idx: " + l + ", Name: " + ar[l].name + ", Target: " + target);
+                     //this.wrObj(ar[l]);                  
+                     if (ar[l].name === target) {
                         if (hasUrl && this.lastProcessUrlFindPath !== null) {
                            this.lastProcessUrlFindPath += "." + target;
                         }
@@ -4423,211 +4489,223 @@ class jsonPlState {
          this.lastAsgnValue = this.cloneJsonObj(left);
          this.lastAsgnReturn = ret;
          return ret;
-      } else if (leftIsArray && rightIsArray && rightIsRef) {
-            
-            //TODO: sync2.0
-            //both are array refs, dereference if need be, and copy values            
-            var tmpA = this.toArray(left.val.v);
-            var tmpB = this.toArray(right.val.v);
-            var lobj = null;
-            var isArg = false;
-            if (objAsgn.op.v === "+=") {
-               isArg = this.isSysObjArg(tmpA[0]);            
-               for (var i = 0; i < tmpB.length; i++) {
-                  if(isArg) {
-                     //add new arg
-                     lobj = {"sys":"arg"};              
-                  } else {
-                     //add new var
-                     lobj = {"sys":"var"};
-                  }
-
-                  lobj.name = "itm" + ((tmpA.length - 1) + i);                  
-                  lobj.val = tmpB[i].val;
-                  tmpA.push(lobj);                  
+      } else if (leftIsArray && rightIsArray && rightIsRef) {            
+         //TODO: sync2.0
+         //both are array refs, dereference if need be, and copy values            
+         var tmpA = this.toArray(left.val.v);
+         var tmpB = this.toArray(right.val.v);
+         var lobj = null;
+         var isArg = false;
+         if (objAsgn.op.v === "+=") {
+            isArg = this.isSysObjArg(tmpA[0]);            
+            for (var i = 0; i < tmpB.length; i++) {
+               if(isArg) {
+                  //add new arg
+                  lobj = {"sys":"arg"};              
+               } else {
+                  //add new var
+                  lobj = {"sys":"var"};
                }
-            } else if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {               
-               isArg = this.isSysObjArg(tmpA[0]);
-               for (var i = 0; i < tmpB.length; i++) {
-                  if(isArg) {
-                     //add new arg
-                     lobj = {"sys":"arg"};                     
-                  } else {
-                     //add new var
-                     lobj = {"sys":"var"};
-                  }
 
-                  if(i < tmpA.length) {
-                     lobj.name = tmpA.name;
-                  } else {
-                     lobj.name = "itm" + ((tmpA.length - 1) + i);
-                  }
-
-                  lobj.val = tmpB[i].val;
-                  tmpA[i] = lobj;
+               lobj.name = "itm" + ((tmpA.length - 1) + i);                  
+               lobj.val = tmpB[i].val;
+               tmpA.push(lobj);                  
+            }
+         } else if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {               
+            isArg = this.isSysObjArg(tmpA[0]);
+            for (var i = 0; i < tmpB.length; i++) {
+               if(isArg) {
+                  //add new arg
+                  lobj = {"sys":"arg"};                     
+               } else {
+                  //add new var
+                  lobj = {"sys":"var"};
                }
-            } else {
-               this.wr("processAsgn: Error: unsupported assignment operator, " + objAsgn.op.v + ", when using arrays");
-               return null;
+
+               //TODO: sync2.0
+
+               lobj.val = tmpB[i].val;
+               if(i < tmpA.length) {
+                  lobj.name = tmpA[i].name;
+                  tmpA[i] = lobj;                  
+               } else {
+                  lobj.name = "itm" + ((tmpA.length - 1) + i);
+                  tmpA.push(lobj);
+               }               
+
+               /*
+               if(i < tmpA.length) {
+                  lobj.name = tmpA[i].name;
+               } else {
+                  lobj.name = "itm" + ((tmpA.length - 1) + i);
+               }
+
+               lobj.val = tmpB[i].val;
+               tmpA[i] = lobj;
+               */
             }
+         } else {
+            this.wr("processAsgn: Error: unsupported assignment operator, " + objAsgn.op.v + ", when using arrays");
+            return null;
+         }
 
-            if (hasUrl) {
-               //url, path, obj
-               this.processUrlSet(url + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(this.toStr(rightOrig.val.v)));
-            } else {
-               leftOrig.val.v = rightOrig.val.v;
-            }
+         if (hasUrl) {
+            //url, path, obj
+            this.processUrlSet(url + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(this.toStr(rightOrig.val.v)));
+         } else {
+            leftOrig.val.v = rightOrig.val.v;
+         }
 
-            if (hasPubs) {
-               for (var k = 0; k < left.pubs.length; k++) {
-                  var nurl = null;
-                  var lcall = null;
-                  if (this.isString(left.pubs[k])) {
-                     nurl = left.pubs[k];
-                     if(this.isUrl(nurl)) {
-                        this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(this.toStr(rightOrig.val.v)), true);
+         if (hasPubs) {
+            for (var k = 0; k < left.pubs.length; k++) {
+               var nurl = null;
+               var lcall = null;
+               if (this.isString(left.pubs[k])) {
+                  nurl = left.pubs[k];
+                  if(this.isUrl(nurl)) {
+                     this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=basic&obj=" + encodeURIComponent(this.toStr(rightOrig.val.v)), true);
 
-                     } else if(this.isRefStringFuncDec(nurl)) {
-                        //call local function
-                        lcall = {};
-                        lcall.sys = "call";
-                        lcall.name = nurl;
-                        lcall.args = [];
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":this.toStr(rightOrig.val.v)}});
-   
-                        setTimeout(function() {
-                           this.processCall(lcall, func);
-                        }, 0);
-   
-                     } else if(this.isRefStringClassDec(nurl)) {
-                        //call lib class function
-                        lcall = {};
-                        lcall.sys = "call";
-                        lcall.name = nurl;
-                        lcall.args = [];
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":this.toStr(rightOrig.val.v)}});
-                        
-                        setTimeout(function() {
-                           this.processCall(lcall, func);
-                        }, 0);
-   
-                     }
+                  } else if(this.isRefStringFuncDec(nurl)) {
+                     //call local function
+                     lcall = {};
+                     lcall.sys = "call";
+                     lcall.name = nurl;
+                     lcall.args = [];
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":this.toStr(rightOrig.val.v)}});
+
+                     setTimeout(function() {
+                        this.processCall(lcall, func);
+                     }, 0);
+
+                  } else if(this.isRefStringClassDec(nurl)) {
+                     //call lib class function
+                     lcall = {};
+                     lcall.sys = "call";
+                     lcall.name = nurl;
+                     lcall.args = [];
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":this.toStr(rightOrig.val.v)}});
+                     
+                     setTimeout(function() {
+                        this.processCall(lcall, func);
+                     }, 0);
+
                   }
                }
             }
+         }
 
-            this.lastAsgnValue = this.cloneJsonObj(left);
-            this.lastAsgnReturn = ret;
-            return ret;
+         this.lastAsgnValue = this.cloneJsonObj(left);
+         this.lastAsgnReturn = ret;
+         return ret;
       } else if (leftIsArray && rightIsArray && !rightIsRef) {
-
-            //TODO: sync2.0
-
-            //left is array ref, right is array const, copy value
-            var tmpA = this.toArray(left.val.v);
-            var tmpB = this.toArray(right.val.v);
-            var lobj = null;
-            var isArg = false;
-            if (objAsgn.op.v === "+=") {
-               isArg = this.isSysObjArg(tmpA[0]);            
-               for (var i = 0; i < tmpB.size(); i++) {
-                  if(isArg) {
-                     //add new arg
-                     lobj = {"sys":"arg"};              
-                  } else {
-                     //add new var
-                     lobj = {"sys":"var"};
-                  }
-
-                  lobj.name = "itm" + ((tmpA.length - 1) + i);                  
-                  lobj.val = tmpB[i].val;
-                  tmpA.push(lobj);                  
+         //TODO: sync2.0
+         //left is array ref, right is array const, copy value
+         var tmpA = this.toArray(left.val.v);
+         var tmpB = this.toArray(right.val.v);
+         var lobj = null;
+         var isArg = false;
+         if (objAsgn.op.v === "+=") {
+            isArg = this.isSysObjArg(tmpA[0]);            
+            for (var i = 0; i < tmpB.size(); i++) {
+               if(isArg) {
+                  //add new arg
+                  lobj = {"sys":"arg"};              
+               } else {
+                  //add new var
+                  lobj = {"sys":"var"};
                }
-            } else if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {               
-               isArg = this.isSysObjArg(tmpA[0]);
-               for (var i = 0; i < tmpB.size(); i++) {
-                  if(isArg) {
-                     //add new arg
-                     lobj = {"sys":"arg"};                     
-                  } else {
-                     //add new var
-                     lobj = {"sys":"var"};
-                  }
 
-                  if(i < tmpA.length) {
-                     lobj.name = tmpA.name;
-                  } else {
-                     lobj.name = "itm" + ((tmpA.length - 1) + i);
-                  }
-
-                  lobj.val = tmpB[i].val;
-                  tmpA[i] = lobj;
+               lobj.name = "itm" + ((tmpA.length - 1) + i);                  
+               lobj.val = tmpB[i].val;
+               tmpA.push(lobj);                  
+            }
+         } else if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {               
+            isArg = this.isSysObjArg(tmpA[0]);
+            for (var i = 0; i < tmpB.size(); i++) {
+               if(isArg) {
+                  //add new arg
+                  lobj = {"sys":"arg"};                     
+               } else {
+                  //add new var
+                  lobj = {"sys":"var"};
                }
-            } else {
-               this.wr("processAsgn: Error: unsupported assignment operator, " + objAsgn.op.v + ", when using arrays");
-               return null;
-            }
 
-            if (hasUrl) {
-               //url, path, obj
-               this.processUrlSet(url + encodeURIComponent(path) + "&cat=array&obj=" + encodeURIComponent(JSON.stringify(tmpA)));
-            } else {
-               left.val.v = tmpA;
-            }
+               //TODO: sync2.0
 
-            if (hasPubs) {
-               for (var k = 0; k < left.pubs.length; k++) {
-                  var nurl = null;
-                  var lcall = null;
-                  if (this.isString(left.pubs[k])) {
-                     nurl = left.pubs[k];
-                     if(this.isUrl(nurl)) {
-                        this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=array&obj=" + encodeURIComponent(JSON.stringify(tmpA)), true);
-
-                     } else if(this.isRefStringFuncDec(nurl)) {
-                        //call local function
-                        lcall = {};
-                        lcall.sys = "call";
-                        lcall.name = nurl;
-                        lcall.args = [];
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":JSON.stringify(tmpA)}});
-   
-                        setTimeout(function() {
-                           this.processCall(lcall, func);
-                        }, 0);
-   
-                     } else if(this.isRefStringClassDec(nurl)) {
-                        //call lib class function
-                        lcall = {};
-                        lcall.sys = "call";
-                        lcall.name = nurl;
-                        lcall.args = [];
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
-                        lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":JSON.stringify(tmpA)}});
-                        
-                        setTimeout(function() {
-                           this.processCall(lcall, func);
-                        }, 0);
-   
-                     }
-                  }
+               lobj.val = tmpB[i].val;
+               if(i < tmpA.length) {
+                  lobj.name = tmpA[i].name;
+                  tmpA[i] = lobj;                  
+               } else {
+                  lobj.name = "itm" + ((tmpA.length - 1) + i);
+                  tmpA.push(lobj);
                }
             }
+         } else {
+            this.wr("processAsgn: Error: unsupported assignment operator, " + objAsgn.op.v + ", when using arrays");
+            return null;
+         }
 
-            this.lastAsgnValue = this.cloneJsonObj(left);
-            this.lastAsgnReturn = ret;
-            return ret;
+         if (hasUrl) {
+            //url, path, obj
+            this.processUrlSet(url + encodeURIComponent(path) + "&cat=array&obj=" + encodeURIComponent(JSON.stringify(tmpA)));
+         } else {
+            left.val.v = tmpA;
+         }
+
+         if (hasPubs) {
+            for (var k = 0; k < left.pubs.length; k++) {
+               var nurl = null;
+               var lcall = null;
+               if (this.isString(left.pubs[k])) {
+                  nurl = left.pubs[k];
+                  if(this.isUrl(nurl)) {
+                     this.processUrlSet(nurl + "&type=set&ref=" + encodeURIComponent(path) + "&cat=array&obj=" + encodeURIComponent(JSON.stringify(tmpA)), true);
+
+                  } else if(this.isRefStringFuncDec(nurl)) {
+                     //call local function
+                     lcall = {};
+                     lcall.sys = "call";
+                     lcall.name = nurl;
+                     lcall.args = [];
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":JSON.stringify(tmpA)}});
+
+                     setTimeout(function() {
+                        this.processCall(lcall, func);
+                     }, 0);
+
+                  } else if(this.isRefStringClassDec(nurl)) {
+                     //call lib class function
+                     lcall = {};
+                     lcall.sys = "call";
+                     lcall.name = nurl;
+                     lcall.args = [];
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"set"}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":path}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":"basic"}});
+                     lcall.args.push({"sys":"const", "val":{"sys":"val", "type":"string", "v":JSON.stringify(tmpA)}});
+                     
+                     setTimeout(function() {
+                        this.processCall(lcall, func);
+                     }, 0);
+
+                  }
+               }
+            }
+         }
+
+         this.lastAsgnValue = this.cloneJsonObj(left);
+         this.lastAsgnReturn = ret;
+         return ret;
       } else {
          this.wr("processAsgn: Error: type mismatch: " + left.val.type + " - " + right.val.type + ", left is array: " + leftIsArray + ", left is ref: " + leftIsRef + ", right is array: " + rightIsArray + ", right is ref: " + rightIsRef + ", op val: " + objAsgn.op.v);
          ret.val.v = "false";
@@ -4929,7 +5007,7 @@ class jsonPlState {
 
       if (this.VERBOSE) {
          this.wr("processCall: Receiving:");
-         this.wrObj(objCall);
+         //this.wrObj(objCall);
       }
 
       if (!this.isSysObjCall(objCall)) {
@@ -4955,6 +5033,16 @@ class jsonPlState {
          }
       } else {
          name = this.toStr(objCall.name);
+      }
+
+      //TODO: sync2.0
+
+      if(this.isRefStringClassLng(name)) {
+         name = name.replace("#.classes.", "@.");
+      }
+
+      if(this.isRefStringFunc(name)) {
+         name = name.replace("#.funcs.", "");
       }
 
       if(this.isRefStringFuncDec(name)) {
@@ -5321,6 +5409,10 @@ class jsonPlState {
                   //backup default args and vars
                   funcDef.vars_def = this.cloneJsonObjList(funcDef.vars);
                   funcDef.args_def = this.cloneJsonObjList(funcDef.args);
+
+                  //this.wr("================================================++++++++++");
+                  //this.wrObj(args);
+
                   funcDef.args = args;
 
                   if (this.VERBOSE) {

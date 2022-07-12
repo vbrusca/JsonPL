@@ -1,5 +1,6 @@
 <html>
     <head>
+    <link rel="stylesheet" href="style.css">         
     <title>JsonPL Program: PRG005_ArgExample5.HTML</title>
     <script type="text/javascript" src="../EXEC4.JS"></script>
     <script type="text/javascript">
@@ -48,15 +49,75 @@
                                 "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.ar3"}}
                             },
                             {"sys":"call", "name":"SYS::wr", "args":[
-                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found array variable initial index values"}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found class array variable, ar1, by index"}},
                                     
                                     {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
-                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1.itm0 = "}},         
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1.0 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.0"}},
+                                    
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1.1 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.1"}},
+                                ]
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found class array variable, ar1, by name"}},
+                                    
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1.itm0 = "}},
                                     {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.itm0"}},
                                     
                                     {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1.itm1 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.itm1"}},
+                                ]
+                            },                            
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found func array variable, ar2, by index"}},
+                                                                        
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.vars.ar2.0 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.ar2.0"}},
+
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.vars.ar2.1 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.ar2.1"}}                                    
+                                ]
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found func array variable, ar2, by name"}},
+                                                                        
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
                                     {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.vars.ar2.itm0 = "}},
-                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.ar2.itm0"}}
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.ar2.itm0"}},
+
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.vars.ar2.itm1 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.ar2.itm1"}}                                    
+                                ]
+                            },                            
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found func array argument, ar3, by index"}},
+                                                                        
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.args.ar3.0 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.ar3.0"}},
+
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.args.ar3.1 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.ar3.1"}}                                    
+                                ]
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found func array argument, ar3, by name"}},
+                                                                        
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.args.ar3.itm0 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.ar3.itm0"}},
+
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":", "}},
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"$.args.ar3.itm1 = "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.ar3.itm1"}}
                                 ]
                             },
                             {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}}
@@ -129,7 +190,7 @@
 
         <span style="font-size:18px; font-weight:bold;">Source:</span>
         <br/>
-<textarea cols="90" rows="15" id="source" style="font-size:16px;">
+<textarea cols="90" rows="5" id="source" style="font-size:16px;">
 </textarea>
         <br/><br/>
 
@@ -152,11 +213,9 @@
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Desc:</span>
             <span style="font-size:18px; font-weight:normal;">
-                This program demonstrates using arguments of type array {ref} when
-                passing parameters to functions. In this demonstration program 
-                the array argument is assigned to both a function and a class variable 
-                and the resulting array element changes are printed to output using the
-                system function SYS::wr.
+                This program demonstrates using arguments of type array {ref} when passing parameters to functions. 
+                In this demonstration program the array argument is assigned to both a function and a class variable 
+                and the resulting array element values are printed to output using the system function SYS::wr.
             </span>            
         </div>
     </body>
