@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <link rel="stylesheet" href="style.css"> 
+    <title>JsonPL Program: PRG014_DeclarationExampleAdv1.HTML</title>
+    <script type="text/javascript" src="../EXEC4.JS"></script>
+    <script type="text/javascript">
+        try {
+            var code = {"sys":"class", "name":"DeclarationExampleAdv1",
+                "ret":{"sys":"val", "type":"int", "v":"0"},
+                "call":{"sys":"call", "name":"main", "args":[]},
+                "classes":[],
+                "vars":[
+                    {"sys":"var", "name":"classVarIntArray", "val":{"sys":"val", "type":"int[]", "strict":"true", "len":"2", "v":[
+                                {"sys":"var", "name":"itm0", "val":{"sys":"val", "type":"int", "v":"0"}}
+                            ]
+                        }
+                    }
+                ],
+                "funcs":[
+                    {"sys":"func", "name":"main",
+                        "ret":{"sys":"val", "type":"int", "v":"0"},
+                        "args":[
+                            {"sys":"arg", "name":"funcInt1", "val":{"sys":"val", "type":"int", "v":"0"}}
+                        ],
+                        "vars":[],
+                        "lines":[
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.remoteInt1->(http://localhost:8000/?jsonpl=true&get=true)"}},
+                                "op":{"sys":"op", "type":"asgn", "v":"="},
+                                "url":"http://localhost:8000/?jsonpl=true&asgn=true&op=eq",
+                                "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.funcInt1"}}
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"Found argument 'funcInt1' with value "}},
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.args.funcInt1"}}
+                                ]
+                            },
+                            {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}}
+                        ]
+                    }
+                ]
+             };
+         
+            /**
+             * Name: init
+             * Desc: A function to init the test page.
+             */
+            function init() {
+                var txtAreaMsg = document.getElementById("message");
+                var txtAreaSrc = document.getElementById("source");
+                var nl = "\r\n";         
+
+                jsonPlState.prototype.wr = function(s) {
+                    if (this.LOGGING === true) {
+                        console.log(this.WR_PREFIX + s);
+                        txtAreaMsg.value += (this.WR_PREFIX + s + nl);
+                    }
+                };
+            
+                jsonPlState.prototype.wrObj = function(s) {
+                    if (this.LOGGING === true) {
+                        console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
+                        txtAreaMsg.value += (this.WR_PREFIX + JSON.stringify(s, null, 2) + nl);
+                    }
+                };
+
+                jsonPlState.prototype.wrVal = function(v) {
+                    if (this.LOGGING === true) {
+                        if(this.isSysObjValArray(v)) {
+                            console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+                            txtAreaMsg.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len + nl);
+                        } else {
+                            console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+                            txtAreaMsg.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v + nl);
+                        }
+                    }
+                };
+         
+                /////////////////////////PROGRAM SECTION
+                var jpl = new jsonPlState();
+                var codeStr = JSON.stringify(code, null, 2);
+                txtAreaSrc.value += codeStr;
+                jpl.program = JSON.parse(codeStr);
+            
+                if(!jpl.validateSysObjClass(jpl.program)) {
+                    jpl.wr("runProgram: Error: could not validate the class object.");
+                    return;
+                }
+
+                jpl.wr("====================== Program Results ======================");
+                jpl.runProgram();             
+            }
+        } catch(e) {
+            txtAreaSrc.value = "Error:";
+            txtAreaSrc.value += "Message:" + e;
+        }
+        </script>
+    </head>
+    <body style="padding: 6px;" onload="init()">
+        <span style="font-size:18px; font-weight:bold;">Output:</span>
+        <br/>
+<textarea cols="90" rows="15" id="message" style="font-size:16px;">
+</textarea>    
+        <br/><br/>
+
+        <span style="font-size:18px; font-weight:bold;">Source:</span>
+        <br/>
+<textarea cols="90" rows="5" id="source" style="font-size:16px;">
+</textarea>
+        <br/><br/>
+
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Title:</span>
+            <span style="font-size:18px; font-weight:normal;">JsonPL Program: PRG014 - DeclarationExampleAdv1</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">File:</span>
+            <span style="font-size:18px; font-weight:normal;">PRG014_DeclarationExampleAdv1.HTML</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Code:</span>
+            <span style="font-size:18px; font-weight:normal;">PRG014</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Name:</span>
+            <span style="font-size:18px; font-weight:normal;">DeclarationExampleAdv1</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Desc:</span>
+            <span style="font-size:18px; font-weight:normal;">
+                ...
+            </span>            
+        </div>
+    </body>
+</html>
