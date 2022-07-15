@@ -6,17 +6,16 @@
     <script type="text/javascript" src="../EXEC4.JS"></script>
     <script type="text/javascript">
         try {
-            //TODO: finish this
             var code = {"sys":"class", "name":"DeclarationExampleAdv2",
                 "ret":{"sys":"val", "type":"int", "v":"0"},
                 "call":{"sys":"call", "name":"main", "args":[]},
                 "classes":[],
                 "vars":[
-                    {"sys":"var", "name":"classVarIntArray", "val":{"sys":"val", "type":"int[]", "strict":"true", "len":"2", "v":[
-                                {"sys":"var", "name":"itm0", "val":{"sys":"val", "type":"int", "v":"1"}},
-                                {"sys":"var", "name":"itm0", "val":{"sys":"val", "type":"float", "v":"0.0"}},
-                                {"sys":"var", "name":"itm0", "val":{"sys":"val", "type":"bool", "v":"false"}},
-                                {"sys":"var", "name":"itm1", "val":{"sys":"val", "type":"string", "v":"1.0"}}
+                    {"sys":"var", "name":"classVarIntArray", "val":{"sys":"val", "type":"int[]", "strict":"false", "len":"4", "v":[
+                                {"sys":"var", "name":"itm0", "val":{"sys":"val", "type":"int", "v":"0"}},
+                                {"sys":"var", "name":"itm1", "val":{"sys":"val", "type":"float", "v":"0.0"}},
+                                {"sys":"var", "name":"itm2", "val":{"sys":"val", "type":"bool", "v":"false"}},
+                                {"sys":"var", "name":"itm3", "val":{"sys":"val", "type":"string", "v":"0.0"}}
                             ]
                         }
                     }
@@ -26,11 +25,11 @@
                         "ret":{"sys":"val", "type":"int", "v":"0"},
                         "args":[],
                         "vars":[
-                            {"sys":"var", "name":"funcVarIntArray", "val":{"sys":"val", "type":"int[]", "strict":"true", "len":"2", "v":[
+                            {"sys":"var", "name":"funcVarIntArray", "val":{"sys":"val", "type":"int[]", "strict":"false", "len":"4", "v":[
                                         {"sys":"var", "name":"itm0", "val":{"sys":"val", "type":"int", "v":"1"}},
-                                        {"sys":"var", "name":"itm0", "val":{"sys":"val", "type":"float", "v":"0.0"}},
-                                        {"sys":"var", "name":"itm0", "val":{"sys":"val", "type":"bool", "v":"false"}},
-                                        {"sys":"var", "name":"itm1", "val":{"sys":"val", "type":"string", "v":"1.0"}}
+                                        {"sys":"var", "name":"itm1", "val":{"sys":"val", "type":"float", "v":"0.0"}},
+                                        {"sys":"var", "name":"itm2", "val":{"sys":"val", "type":"bool", "v":"false"}},
+                                        {"sys":"var", "name":"itm3", "val":{"sys":"val", "type":"string", "v":"1.0"}}
                                     ]
                                 }
                             }
@@ -129,7 +128,9 @@
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Desc:</span>
             <span style="font-size:18px; font-weight:normal;">
-                ...
+                This program demonstrates the declaration of arrays using the advanced, non-strict, form.
+                This form allows the arrays to contain elements of different basic data types.
+                You cannot define a multidimensoinal array at this time.
             </span>            
         </div>
     </body>
