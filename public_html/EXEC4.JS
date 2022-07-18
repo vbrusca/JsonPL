@@ -3383,9 +3383,17 @@ class jsonPlState {
                tmp.val.v = nc;
 
                tmp = this.cloneJsonObj(this.processRef(tmp, func, url));
-               if (tmp !== null && tmp.val.type === "int") {
-                  idx = this.toInt(tmp.val.v);
-                  lidx = this.toStr(tmp.val.v);
+
+               //TODO: sync2.0
+
+               if (tmp !== null) {
+                  if(tmp.val.type === "int") {
+                     idx = this.toInt(tmp.val.v);
+                     lidx = this.toStr(tmp.val.v);
+                  } else {
+                     idx = this.toInt(tmp.val.v);
+                     lidx = this.toStr(tmp.val.v);
+                  }                  
                } else {
                   this.wr("processRef: Error 3: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
                   return null;
@@ -4612,7 +4620,7 @@ class jsonPlState {
          var isArg = false;
          if (objAsgn.op.v === "+=") {
             isArg = this.isSysObjArg(tmpA[0]);            
-            for (var i = 0; i < tmpB.size(); i++) {
+            for (var i = 0; i < tmpB.length; i++) {
                if(isArg) {
                   //add new arg
                   lobj = {"sys":"arg"};              
@@ -4627,7 +4635,7 @@ class jsonPlState {
             }
          } else if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {               
             isArg = this.isSysObjArg(tmpA[0]);
-            for (var i = 0; i < tmpB.size(); i++) {
+            for (var i = 0; i < tmpB.length; i++) {
                if(isArg) {
                   //add new arg
                   lobj = {"sys":"arg"};                     

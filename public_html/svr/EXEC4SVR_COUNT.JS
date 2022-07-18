@@ -15,6 +15,14 @@ const data = {
                 }
             },
             {
+                "sys":"var", "name":"remoteStr1",
+                "val":{
+                    "sys":"val",
+                    "type":"string",
+                    "v":"testing123"
+                }
+            },            
+            {
                 "sys":"var", "name":"ar1",
                 "val":{
                    "sys":"val",
@@ -50,6 +58,14 @@ const data = {
                     "sys":"val",
                     "type":"int",
                     "v":"555"
+                }
+            },
+            {
+                "sys":"var", "name":"remoteStr1",
+                "val":{
+                    "sys":"val",
+                    "type":"string",
+                    "v":"testing123"
                 }
             },            
             {"sys":"var", "name":"tmp1", "val":{"sys":"val", "type":"int", "v":"5"}},
