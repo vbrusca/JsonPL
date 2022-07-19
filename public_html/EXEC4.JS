@@ -965,7 +965,10 @@ class jsonPlState {
                } else if (tobj.type !== 'asgn') {
                   this.wr("validateSysObjAsgn: Error: could not validate obj as op type");
                   return false;
-               } else if (tobj.v !== "=" && tobj.v !== "+=") {
+               
+               //TODO sync2.0
+
+               } else if (tobj.v !== "=" && tobj.v !== "==" && tobj.v !== "-=" && tobj.v !== "*=" && tobj.v !== "**=" && tobj.v !== "/=" && tobj.v !== "%=" && tobj.v !== "+=") {
                   this.wr("validateSysObjAsgn: Error: could not validate obj as op code");
                   return false;
                }

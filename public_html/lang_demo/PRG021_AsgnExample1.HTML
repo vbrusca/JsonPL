@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <link rel="stylesheet" href="style.css"> 
+    <title>JsonPL Program: PRG021_AsgnExample1.HTML</title>
+    <script type="text/javascript" src="../EXEC4.JS"></script>
+    <script type="text/javascript">
+        try {
+            var code = {"sys":"class", "name":"AsgnExample1",
+                "ret":{"sys":"val", "type":"int", "v":"0"},
+                "call":{"sys":"call", "name":"main", "args":[]},
+                "classes":[],
+                "vars":[],
+                "funcs":[
+                    {"sys":"func", "name":"main",
+                        "ret":{"sys":"val", "type":"int", "v":"0"},
+                        "args":[],
+                        "vars":[
+                            {"sys":"var", "name":"tmpInt", "val":{"sys":"val", "type":"int", "v":"0"}}                            
+                        ],
+                        "lines":[
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.tmpInt"}},
+                                "op":{"sys":"op", "type":"asgn", "v":"="},
+                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"5"}}
+                            },
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.tmpInt"}},
+                                "op":{"sys":"op", "type":"asgn", "v":"=="},
+                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"10"}}
+                            },                            
+                            {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}}
+                        ]
+                    }
+                ]
+             };
+         
+            /**
+             * Name: init
+             * Desc: A function to init the test page.
+             */
+            function init() {
+                var txtAreaMsg = document.getElementById("message");
+                var txtAreaSrc = document.getElementById("source");
+                var nl = "\r\n";         
+
+                jsonPlState.prototype.wr = function(s) {
+                    if (this.LOGGING === true) {
+                        console.log(this.WR_PREFIX + s);
+                        txtAreaMsg.value += (this.WR_PREFIX + s + nl);
+                    }
+                };
+            
+                jsonPlState.prototype.wrObj = function(s) {
+                    if (this.LOGGING === true) {
+                        console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
+                        txtAreaMsg.value += (this.WR_PREFIX + JSON.stringify(s, null, 2) + nl);
+                    }
+                };
+
+                jsonPlState.prototype.wrVal = function(v) {
+                    if (this.LOGGING === true) {
+                        if(this.isSysObjValArray(v)) {
+                            console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+                            txtAreaMsg.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len + nl);
+                        } else {
+                            console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+                            txtAreaMsg.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v + nl);
+                        }
+                    }
+                };
+         
+                /////////////////////////PROGRAM SECTION
+                var jpl = new jsonPlState();
+                var codeStr = JSON.stringify(code, null, 2);
+                txtAreaSrc.value += codeStr;
+                jpl.program = JSON.parse(codeStr);
+            
+                if(!jpl.validateSysObjClass(jpl.program)) {
+                    jpl.wr("runProgram: Error: could not validate the class object.");
+                    return;
+                }
+
+                jpl.wr("====================== Program Results ======================");
+                jpl.runProgram();             
+            }
+        } catch(e) {
+            txtAreaSrc.value = "Error:";
+            txtAreaSrc.value += "Message:" + e;
+        }
+        </script>
+    </head>
+    <body style="padding: 6px;" onload="init()">
+        <span style="font-size:18px; font-weight:bold;">Output:</span>
+        <br/>
+<textarea cols="90" rows="15" id="message" style="font-size:16px;">
+</textarea>    
+        <br/><br/>
+
+        <span style="font-size:18px; font-weight:bold;">Source:</span>
+        <br/>
+<textarea cols="90" rows="5" id="source" style="font-size:16px;">
+</textarea>
+        <br/><br/>
+
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Title:</span>
+            <span style="font-size:18px; font-weight:normal;">JsonPL Program: PRG021 - AsgnExample1</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">File:</span>
+            <span style="font-size:18px; font-weight:normal;">PRG021_AsgnExample1.HTML</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Code:</span>
+            <span style="font-size:18px; font-weight:normal;">PRG021</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Name:</span>
+            <span style="font-size:18px; font-weight:normal;">AsgnExample1</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Desc:</span>
+            <span style="font-size:18px; font-weight:normal;">
+                This program demonstrates assigning a value to a local function variables. The variable is referenced 
+                by the {ref} object in the "left" field of the {asgn} object. This program demonstrates local function 
+                variables reference strings. These strings start with "$.vars." followed by the variable name. There are 
+                two slightly different syntaxes supported, and shown in the program's source code. In the second example 
+                the operator is "==" which is allowed alongside the "=" operator.
+            </span>
+        </div>
+    </body>
+</html>
