@@ -4170,6 +4170,13 @@ class jsonPlState {
 
       if (hasUrl) {
          path = this.lastProcessUrlFindPath;
+
+         //TODO sync2.0
+         
+         if(path === null) {
+            path = origRefVal;
+         }
+
          url = vals[0];
 
          if (this.VERBOSE) {
@@ -4251,6 +4258,8 @@ class jsonPlState {
       ret2.val = ret;
       ret = ret2;
 
+      this.wr("processAsgn: Type: " + left.val.type + " Op: " + objAsgn.op.v + " Right Val: " + right.val.v);
+
       if (leftIsBasic && rightIsBasic) {
          //both are basic, dereference if need be, and copy value
          var nval = null;
@@ -4265,7 +4274,9 @@ class jsonPlState {
 
          if(left.val.type === "int") {
             if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {
+               this.wr("processAsgn: Type AAA: " + this.toInt(right.val.v));
                nval = this.toStr(this.toInt(right.val.v));
+               this.wr("processAsgn: Type BBBB: " + nval);
 
             } else if (objAsgn.op.v === "+=") {
                nval = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));

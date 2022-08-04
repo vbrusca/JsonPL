@@ -6,25 +6,25 @@
     <script type="text/javascript" src="../EXEC4.JS"></script>
     <script type="text/javascript">
         try {
-            //TODO: finish updating this with the correct JsonPL code
             var code = {"sys":"class", "name":"AsgnExample5",
                 "ret":{"sys":"val", "type":"int", "v":"0"},
                 "call":{"sys":"call", "name":"main", "args":[]},
                 "classes":[],
                 "vars":[
-                    {"sys":"var", "name":"itm0", "val":{"sys":"val", "type":"int", "v":"0"}}
+                    {"sys":"var", "name":"remoteInt1", "val":{"sys":"val", "type":"int", "v":"128"}}
                 ],
                 "funcs":[
                     {"sys":"func", "name":"main",
                         "ret":{"sys":"val", "type":"int", "v":"0"},
                         "args":[],
                         "vars":[
-                            {"sys":"var", "name":"idx0", "val":{"sys":"val", "type":"int", "v":"1"}}
+                            {"sys":"var", "name":"remoteInt1", "val":{"sys":"val", "type":"int", "v":"256"}}
                         ],
                         "lines":[
-                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.0"}},
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.remoteInt1"}},
                                 "op":{"sys":"op", "type":"asgn", "v":"="},
-                                "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.idx0"}}
+                                "url":"http://localhost:8000/?jsonpl=true&asgn=true&op=eq",
+                                "right":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"$.vars.remoteInt1->(http://localhost:8000/?jsonpl=true&get=true)"}}
                             },
                             {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}}
                         ]
@@ -119,7 +119,13 @@
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Desc:</span>
             <span style="font-size:18px; font-weight:normal;">
-                TODO: finish this description ...
+                This program requires a server to support the backend functionality.
+                Requires the basic node js server is running. Use the command: 'node EXEC4SVR_BASIC.JS' in the 'svr' directory.
+                This example program is a bit misleading. At first glance this program seems to assign a 
+                value to a class variable using a value pulled from a URL. However, the URL attribute of the {asgn} object
+                indicates the assignment message should be sent to the specified URL. This program actually doesn't update or use
+                any local variables. Instead it pulls in a value from a specified URL and sends that value back out to the destination
+                in the {asgn} object's url attribute.
             </span>            
         </div>
     </body>
