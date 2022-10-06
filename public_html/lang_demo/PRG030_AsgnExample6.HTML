@@ -2,50 +2,32 @@
 <html>
     <head>
     <link rel="stylesheet" href="../styles/style.css"> 
-    <title>JsonPL Program: PRG020_RefExample4.HTML</title>
+    <title>JsonPL Program: PRG030_AsgnExample6.HTML</title>
     <script type="text/javascript" src="../EXEC4.JS"></script>
     <script type="text/javascript">
         try {
-            var code = {"sys":"class", "name":"RefExample4",
+            var code = {"sys":"class", "name":"AsgnExample6",
                 "ret":{"sys":"val", "type":"int", "v":"0"},
                 "call":{"sys":"call", "name":"main", "args":[]},
                 "classes":[],
                 "vars":[
-                    {"sys":"var", "name":"ar1", "val":{"sys":"val", "type":"int[]", "strict":"true", "len":"2", "v":[
-                                {"sys":"var", "name":"itm0", "val":{"sys":"val", "type":"int", "v":"0"}},
-                                {"sys":"var", "name":"itm1", "val":{"sys":"val", "type":"int", "v":"1"}}
-                            ]
-                        }
+                    {"sys":"var", "name":"tmpInt1", "val":{"sys":"val", "type":"int", "v":"0"},
+                        "pubs": [
+                            "http://localhost:8000?jsonpl=true"
+                        ]
                     }
                 ],
                 "funcs":[
                     {"sys":"func", "name":"main",
                         "ret":{"sys":"val", "type":"int", "v":"0"},
                         "args":[],
-                        "vars":[
-                            {"sys":"var", "name":"ptr1", "val":{"sys":"val", "type":"string", "v":"#.vars.ar1.itm0"}},
-                            {"sys":"var", "name":"ptr2", "val":{"sys":"val", "type":"string", "v":"ar1"}},
-                            {"sys":"var", "name":"ptr3", "val":{"sys":"val", "type":"string", "v":"itm0"}},                            
-                            {"sys":"var", "name":"ptr4", "val":{"sys":"val", "type":"string", "v":"0"}}                                                        
-                        ],
+                        "vars":[],
                         "lines":[
-                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.[$.vars.ptr2].[$.vars.ptr3]"}},
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt1"}},
                                 "op":{"sys":"op", "type":"asgn", "v":"="},
-                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"60"}}
+                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"5"}}
                             },
-                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.[$.vars.ptr2].[$.vars.ptr4]"}},
-                                "op":{"sys":"op", "type":"asgn", "v":"="},
-                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"72"}}
-                            },
-                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.ptr3]"}},
-                                "op":{"sys":"op", "type":"asgn", "v":"="},
-                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"84"}}
-                            },
-                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.[$.vars.ptr4]"}},
-                                "op":{"sys":"op", "type":"asgn", "v":"="},
-                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"96"}}
-                            },
-                            {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}}
+                            {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"0"}}}
                         ]
                     }
                 ]
@@ -121,24 +103,26 @@
 
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Title:</span>
-            <span style="font-size:18px; font-weight:normal;">JsonPL Program: PRG020 - RefExample4</span>
+            <span style="font-size:18px; font-weight:normal;">JsonPL Program: PRG030 - AsgnExample6</span>
         </div>
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">File:</span>
-            <span style="font-size:18px; font-weight:normal;">PRG020_RefExample4.HTML</span>
+            <span style="font-size:18px; font-weight:normal;">PRG030_AsgnExample6.HTML</span>
         </div>
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Code:</span>
-            <span style="font-size:18px; font-weight:normal;">PRG020</span>
+            <span style="font-size:18px; font-weight:normal;">PRG030</span>
         </div>
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Name:</span>
-            <span style="font-size:18px; font-weight:normal;">RefExample4</span>
+            <span style="font-size:18px; font-weight:normal;">AsgnExample6</span>
         </div>
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Desc:</span>
             <span style="font-size:18px; font-weight:normal;">
-                This program demonstrates using dynamic referencing with array variables and array elements.
+                In this example program we see use of the "pubs" attribute on a class variable.
+                The local class variable is updated with a constant value. This {asgn} object updates the class
+                variable and asychronously calls the variable's "pubs" URL with data about the update.
             </span>            
         </div>
     </body>

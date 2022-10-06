@@ -3490,8 +3490,22 @@ class jsonPlState {
     * Arg1: v(the value to convert)
     * Returns: (the int value of v)
     */
+
+   //TODO: SYNC 2.0
+
    toInt(v) {
-      return parseInt(v);
+      var arg = v;
+      var vb = this.toStr(arg);
+      vb = vb.toLowerCase();
+      if (arg === null) {
+         return 0;
+      } else if (typeof arg === 'boolean' || arg instanceof Boolean) {
+         return 1;
+      } else if (this.isString(arg) && (vb === "yes" || vb === "no" || vb === "true" || vb === "false" || vb === "1" || vb === "0" || vb === "1.0" || vb === "0.0")) {
+         return 1;
+      } else {
+         return parseInt(v);
+      }
    }
 
    /**

@@ -2,32 +2,79 @@
 <html>
     <head>
     <link rel="stylesheet" href="../styles/style.css"> 
-    <title>JsonPL Program: PRG022_AsgnExample2.HTML</title>
+    <title>JsonPL Program: PRG026_AsgnExampleInt1.HTML</title>
     <script type="text/javascript" src="../EXEC4.JS"></script>
     <script type="text/javascript">
         try {
-            var code = {"sys":"class", "name":"AsgnExample2",
+            var code = {"sys":"class", "name":"AsgnExampleInt1",
                 "ret":{"sys":"val", "type":"int", "v":"0"},
                 "call":{"sys":"call", "name":"main", "args":[]},
                 "classes":[],
                 "vars":[
-                    {"sys":"var", "name":"tmpInt", "val":{"sys":"val", "type":"int", "v":"0"}}
+                    {"sys":"var", "name":"tmpInt", "val":{"sys":"val", "type":"int", "v":"10"}}
                 ],
                 "funcs":[
                     {"sys":"func", "name":"main",
                         "ret":{"sys":"val", "type":"int", "v":"0"},
                         "args":[],
-                        "vars":[],
+                        "vars":[
+                        ],
                         "lines":[
-                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}},
-                                "op":{"sys":"op", "type":"asgn", "v":"="},
-                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"5"}}
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"1: Val: "}},  
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}}
+                                ]
                             },
                             {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}},
-                                "op":{"sys":"op", "type":"asgn", "v":"=="},
-                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"10"}}
+                                "op":{"sys":"op", "type":"asgn", "v":"+="},
+                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"5"}}
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"2: Val: "}},  
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}}
+                                ]
+                            },
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}},
+                                "op":{"sys":"op", "type":"asgn", "v":"-="},
+                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"5"}}
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"3: Val: "}},  
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}}
+                                ]
+                            },
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}},
+                                "op":{"sys":"op", "type":"asgn", "v":"*="},
+                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"2"}}
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"4: Val: "}},  
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}}
+                                ]
+                            },
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}},
+                                "op":{"sys":"op", "type":"asgn", "v":"/="},
+                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"2"}}
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"5: Val: "}},  
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}}
+                                ]
+                            },
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}},
+                                "op":{"sys":"op", "type":"asgn", "v":"%="},
+                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"3"}}
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"6: Val: "}},  
+                                    {"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}}
+                                ]
+                            },
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.tmpInt"}},
+                                "op":{"sys":"op", "type":"asgn", "v":"**="},
+                                "right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"2"}}
                             },                            
-                            {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"1"}}}
+                            {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"0"}}}
                         ]
                     }
                 ]
@@ -103,25 +150,24 @@
 
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Title:</span>
-            <span style="font-size:18px; font-weight:normal;">JsonPL Program: PRG022 - AsgnExample2</span>
+            <span style="font-size:18px; font-weight:normal;">JsonPL Program: PRG026 - AsgnExampleInt1</span>
         </div>
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">File:</span>
-            <span style="font-size:18px; font-weight:normal;">PRG022_AsgnExample2.HTML</span>
+            <span style="font-size:18px; font-weight:normal;">PRG026_AsgnExampleInt1.HTML</span>
         </div>
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Code:</span>
-            <span style="font-size:18px; font-weight:normal;">PRG022</span>
+            <span style="font-size:18px; font-weight:normal;">PRG026</span>
         </div>
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Name:</span>
-            <span style="font-size:18px; font-weight:normal;">AsgnExample2</span>
+            <span style="font-size:18px; font-weight:normal;">AsgnExampleInt1</span>
         </div>
         <div style="float:left; clear:both;">
             <span style="font-size:18px; font-weight:bold;">Desc:</span>
             <span style="font-size:18px; font-weight:normal;">
-                This program demonstrates assignment using a {ref} object with a reference string that points
-                to a class variable. Both versions of the {asgn} object are shown in this example.
+                This program demonstrates compound operators and integer to integer assignment.
             </span>            
         </div>
     </body>
