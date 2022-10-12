@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <link rel="stylesheet" href="../styles/style.css"> 
+    <title>JsonPL Program: PRG033_ExpExample1.HTML</title>
+    <script type="text/javascript" src="../EXEC4.JS"></script>
+    <script type="text/javascript">
+        try {
+            var code = {"sys":"class", "name":"ExpExample1",
+                "ret":{"sys":"val", "type":"float", "v":"0.0"},
+                "call":{"sys":"call", "name":"main", "args":[]},
+                "classes":[],
+                "vars":[
+                    {"sys":"var", "name":"var1", "val":{"sys":"val", "type":"float", "v":"10.0"}},
+                    {"sys":"var", "name":"ptrVar1", "val":{"sys":"val", "type":"string", "v":"#.vars.var1"}}
+                ],
+                "funcs":[
+                    {"sys":"func", "name":"main",
+                        "ret":{"sys":"val", "type":"float", "v":"0.0"},
+                        "args":[],
+                        "vars":[],
+                        "lines":[
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"1: Val: "}},  
+                                    {"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}}
+                                ]
+                            },
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}},
+                                "op":{"sys":"op", "type":"asgn", "v":"="},
+                                "right":{"sys":"exp", "left":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"5.0"}},
+                                    "op":{"sys":"op", "type":"exp", "v":"+"},
+                                    "right":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"5.0"}}
+                                }
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"2: Val: "}},  
+                                    {"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}}
+                                ]
+                            },
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}},
+                                "op":{"sys":"op", "type":"asgn", "v":"="},
+                                "right":{"sys":"exp", "left":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"5.0"}},
+                                    "op":{"sys":"op", "type":"exp", "v":"-"},
+                                    "right":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"5.0"}}
+                                }
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"3: Val: "}},  
+                                    {"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}}
+                                ]
+                            },
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}},
+                                "op":{"sys":"op", "type":"asgn", "v":"="},
+                                "right":{"sys":"exp", "left":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"5.0"}},
+                                    "op":{"sys":"op", "type":"exp", "v":"*"},
+                                    "right":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"2.0"}}
+                                }
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"4: Val: "}},  
+                                    {"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}}
+                                ]
+                            },
+                            {"sys":"asgn", "left":{"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}},
+                                "op":{"sys":"op", "type":"asgn", "v":"="},
+                                "right":{"sys":"exp", "left":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"20.0"}},
+                                    "op":{"sys":"op", "type":"exp", "v":"/"},
+                                    "right":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"2.0"}}
+                                }
+                            },
+                            {"sys":"call", "name":"SYS::wr", "args":[
+                                    {"sys":"const", "val":{"sys":"val", "type":"string", "v":"5: Val: "}},  
+                                    {"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}}
+                                ]
+                            },                            
+                            {"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"0.0"}}}
+                        ]
+                    }
+                ]
+            };
+         
+            /**
+             * Name: init
+             * Desc: A function to init the test page.
+             */
+            function init() {
+                var txtAreaMsg = document.getElementById("message");
+                var txtAreaSrc = document.getElementById("source");
+                var nl = "\r\n";         
+
+                jsonPlState.prototype.wr = function(s) {
+                    if (this.LOGGING === true) {
+                        console.log(this.WR_PREFIX + s);
+                        txtAreaMsg.value += (this.WR_PREFIX + s + nl);
+                    }
+                };
+            
+                jsonPlState.prototype.wrObj = function(s) {
+                    if (this.LOGGING === true) {
+                        console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
+                        txtAreaMsg.value += (this.WR_PREFIX + JSON.stringify(s, null, 2) + nl);
+                    }
+                };
+
+                jsonPlState.prototype.wrVal = function(v) {
+                    if (this.LOGGING === true) {
+                        if(this.isSysObjValArray(v)) {
+                            console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+                            txtAreaMsg.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len + nl);
+                        } else {
+                            console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+                            txtAreaMsg.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v + nl);
+                        }
+                    }
+                };
+         
+                /////////////////////////PROGRAM SECTION
+                var jpl = new jsonPlState();
+                var codeStr = JSON.stringify(code, null, 2);
+                txtAreaSrc.value += codeStr;
+                jpl.program = JSON.parse(codeStr);
+            
+                if(!jpl.validateSysObjClass(jpl.program)) {
+                    jpl.wr("runProgram: Error: could not validate the class object.");
+                    return;
+                }
+
+                jpl.wr("====================== Program Results ======================");
+                jpl.runProgram();             
+            }
+        } catch(e) {
+            txtAreaSrc.value = "Error:";
+            txtAreaSrc.value += "Message:" + e;
+        }
+        </script>
+    </head>
+    <body style="padding: 6px;" onload="init()">
+        <span style="font-size:18px; font-weight:bold;">Output:</span>
+        <br/>
+<textarea cols="90" rows="15" id="message" style="font-size:16px;">
+</textarea>    
+        <br/><br/>
+
+        <span style="font-size:18px; font-weight:bold;">Source:</span>
+        <br/>
+<textarea cols="90" rows="5" id="source" style="font-size:16px;">
+</textarea>
+        <br/><br/>
+
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Title:</span>
+            <span style="font-size:18px; font-weight:normal;">JsonPL Program: PRG033 - ExpExample1</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">File:</span>
+            <span style="font-size:18px; font-weight:normal;">PRG033_ExpExample1.HTML</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Code:</span>
+            <span style="font-size:18px; font-weight:normal;">PRG033</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Name:</span>
+            <span style="font-size:18px; font-weight:normal;">ExpExample1</span>
+        </div>
+        <div style="float:left; clear:both;">
+            <span style="font-size:18px; font-weight:bold;">Desc:</span>
+            <span style="font-size:18px; font-weight:normal;">
+                This program demonstrates the use of expressions, {exp}, in different operations with different data basic data types.
+            </span>            
+        </div>
+    </body>
+</html>

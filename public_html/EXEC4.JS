@@ -3516,13 +3516,14 @@ class jsonPlState {
     */
 
    //TODO: SYNC
+   //TODO: sync2.0
 
    toFloat(v) {
       var r = parseFloat(v);
       if(this.toStr(r).indexOf(".") === -1) {
          r += ".0";
-      }
-      return r;
+      }      
+      return parseFloat(r);
    }
 
    /**
@@ -4139,6 +4140,7 @@ class jsonPlState {
 
       left = objAsgn.left;
       op = objAsgn.op;
+      this.wr("===========================WWWWW111: " + JSON.stringify(objAsgn.right));
       right = objAsgn.right;
 
       leftOrig = left;
@@ -4219,25 +4221,34 @@ class jsonPlState {
          }
       }
 
+      this.wr("===========================WWWWW222: " + JSON.stringify(right));
+
       if (this.isSysObjConst(right)) {
+         this.wr("===========================WWWWW222AAA");
          //do nothing, all set
 
       } else if (this.isSysObjRef(right)) {
+         this.wr("===========================WWWWW222BBB");         
          right = this.processRef(right, func);
 
       } else if (this.isSysObjBex(right)) {
+         this.wr("===========================WWWWW222CCC");         
          right = this.processBex(right, func);
 
       } else if (this.isSysObjExp(right)) {
+         this.wr("===========================WWWWW222DDD");         
          right = this.processExp(right, func);
 
       } else if (this.isSysObjCall(right)) {
+         this.wr("===========================WWWWW222EEE");         
          right = this.processCall(right, func);
 
       } else {
          this.wr("processAsgn: Error: argument right is an unknown obj: " + this.getSysObjType(right));
          return null;
       }
+
+      this.wr("===========================WWWWW333: " + JSON.stringify(right));
 
       if (right === null) {
          this.wr("processAsgn: Error: error processing right");
@@ -5619,6 +5630,8 @@ class jsonPlState {
          return null;
       }
 
+      this.wr("===============YYYYY: " + JSON.stringify(right) + ", " + op.v + ", " + left.val.type);
+
       if (
          (right.val.type === "int" || right.val.type === "float" || right.val.type === "bool" || right.val.type === "string") 
          || (left.val.type === "int" || left.val.type === "float" || left.val.type === "bool" || left.val.type === "string")
@@ -5647,8 +5660,10 @@ class jsonPlState {
                ret.v = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
             
             } else if (left.val.type === "float") {
+               this.wr("===============YYYYY000: " + this.toFloat(left.val.v) + ", " + this.toFloat(right.val.v));  
                ret.v = this.toStr(this.toFloat(left.val.v) + this.toFloat(right.val.v));
-            
+               this.wr("===============YYYYY111: " + ret.v);
+
             } else if (left.val.type === "bool") {
                ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) + this.toBoolInt(right.val.v)));
             
