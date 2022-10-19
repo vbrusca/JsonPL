@@ -39,6 +39,56 @@ class jsonPlState {
       this.lastProcessUrlFindPath = null;
    }
 
+   sysWrApp(args, func, sep) {
+      var ret = {};
+      ret.sys = "val";
+      ret.type = "bool";
+      ret.v = "false";
+
+      var ret2 = {};
+      ret2.sys = "const";
+      ret2.val = ret;
+      ret = ret2;
+
+      if (args === null) {
+         this.wr("sysWrApp: Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr("sysWrApp: Error: func cannot be null");
+         return ret;
+      }
+
+      var len = args.length;
+      var i = 0;
+      var s = "";
+
+      if (sep === null || sep === "" || sep === undefined) {
+         sep = null;
+      }
+
+      for (; i < len; i++) {
+         if (args[i] !== null && this.isSysObj(args[i]) && this.isSysObjVal(args[i].val)) {
+            if (this.isArray(args[i].val.v)) {
+               this.sysWrApp(this.toArray(args[i].val.v), func, ", ");
+            } else {
+               s += this.toStr(args[i].val.v);
+               if (sep !== null) {
+                  if (i < len - 1) {
+                     s += sep;
+                  }
+               }
+            }
+         } else {
+            this.wr("sysWrApp: Error: could not process argument " + i + ", unknown object type");
+            return ret;
+         }
+      }
+
+      this.wrApp(s);
+      ret2.val.v = "true";
+      return ret;
+   }
+
    /**
     * Name: sysWr
     * Desc: A system level write function.
@@ -1602,6 +1652,12 @@ class jsonPlState {
     * Arg1: s(string to write)
     */
    wr(s) {
+      if (this.LOGGING === true) {
+         console.log(this.WR_PREFIX + s);
+      }
+   }
+
+   wrApp(s) {
       if (this.LOGGING === true) {
          console.log(this.WR_PREFIX + s);
       }
@@ -3522,8 +3578,9 @@ class jsonPlState {
       var r = parseFloat(v);
       if(this.toStr(r).indexOf(".") === -1) {
          r += ".0";
-      }      
-      return parseFloat(r);
+      }
+
+      return r;
    }
 
    /**
@@ -4140,7 +4197,7 @@ class jsonPlState {
 
       left = objAsgn.left;
       op = objAsgn.op;
-      this.wr("===========================WWWWW111: " + JSON.stringify(objAsgn.right));
+      //this.wr("===========================WWWWW111: " + JSON.stringify(objAsgn.right));
       right = objAsgn.right;
 
       leftOrig = left;
@@ -4221,26 +4278,26 @@ class jsonPlState {
          }
       }
 
-      this.wr("===========================WWWWW222: " + JSON.stringify(right));
+      //this.wr("===========================WWWWW222: " + JSON.stringify(right));
 
       if (this.isSysObjConst(right)) {
-         this.wr("===========================WWWWW222AAA");
+         //this.wr("===========================WWWWW222AAA");
          //do nothing, all set
 
       } else if (this.isSysObjRef(right)) {
-         this.wr("===========================WWWWW222BBB");         
+         //this.wr("===========================WWWWW222BBB");         
          right = this.processRef(right, func);
 
       } else if (this.isSysObjBex(right)) {
-         this.wr("===========================WWWWW222CCC");         
+         //this.wr("===========================WWWWW222CCC");         
          right = this.processBex(right, func);
 
       } else if (this.isSysObjExp(right)) {
-         this.wr("===========================WWWWW222DDD");         
+         //this.wr("===========================WWWWW222DDD");         
          right = this.processExp(right, func);
 
       } else if (this.isSysObjCall(right)) {
-         this.wr("===========================WWWWW222EEE");         
+         //this.wr("===========================WWWWW222EEE");         
          right = this.processCall(right, func);
 
       } else {
@@ -4248,7 +4305,7 @@ class jsonPlState {
          return null;
       }
 
-      this.wr("===========================WWWWW333: " + JSON.stringify(right));
+      //this.wr("===========================WWWWW333: " + JSON.stringify(right));
 
       if (right === null) {
          this.wr("processAsgn: Error: error processing right");
@@ -4283,7 +4340,7 @@ class jsonPlState {
       ret2.val = ret;
       ret = ret2;
 
-      this.wr("processAsgn: Type: " + left.val.type + " Op: " + objAsgn.op.v + " Right Val: " + right.val.v);
+      //this.wr("processAsgn: Type: " + left.val.type + " Op: " + objAsgn.op.v + " Right Val: " + right.val.v);
 
       if (leftIsBasic && rightIsBasic) {
          //both are basic, dereference if need be, and copy value
@@ -4299,9 +4356,9 @@ class jsonPlState {
 
          if(left.val.type === "int") {
             if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {
-               this.wr("processAsgn: Type AAA: " + this.toInt(right.val.v));
+               //this.wr("processAsgn: Type AAA: " + this.toInt(right.val.v));
                nval = this.toStr(this.toInt(right.val.v));
-               this.wr("processAsgn: Type BBBB: " + nval);
+               //this.wr("processAsgn: Type BBBB: " + nval);
 
             } else if (objAsgn.op.v === "+=") {
                nval = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
@@ -5630,7 +5687,7 @@ class jsonPlState {
          return null;
       }
 
-      this.wr("===============YYYYY: " + JSON.stringify(right) + ", " + op.v + ", " + left.val.type);
+      //this.wr("===============YYYYY: " + JSON.stringify(right) + ", " + op.v + ", " + left.val.type);
 
       if (
          (right.val.type === "int" || right.val.type === "float" || right.val.type === "bool" || right.val.type === "string") 
@@ -5657,15 +5714,13 @@ class jsonPlState {
 
          if (op.v === "+") {
             if (left.val.type === "int") {
-               ret.v = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
+               ret.v = this.toStr(Number(this.toInt(left.val.v)) + Number(this.toInt(right.val.v)));
             
             } else if (left.val.type === "float") {
-               this.wr("===============YYYYY000: " + this.toFloat(left.val.v) + ", " + this.toFloat(right.val.v));  
-               ret.v = this.toStr(this.toFloat(left.val.v) + this.toFloat(right.val.v));
-               this.wr("===============YYYYY111: " + ret.v);
+               ret.v = this.toStr(Number(left.val.v) + Number(right.val.v));
 
             } else if (left.val.type === "bool") {
-               ret.v = this.toStr(this.toBool(this.toBoolInt(left.val.v) + this.toBoolInt(right.val.v)));
+               ret.v = this.toStr(this.toBool(Number(this.toBoolInt(left.val.v)) + Number(this.toBoolInt(right.val.v))));
             
             } else if (left.val.type === "string") {
                ret.v = this.toStr(left.val.v) + this.toStr(right.val.v);               
@@ -5912,6 +5967,13 @@ jsonPlState.prototype.system = {
          "args": [
          ]
       },
+      {
+         "sys": "func",
+         "name": "SYS::wrApp",
+         "fname": "sysWrApp",
+         "args": [
+         ]
+      },      
       {
          "sys": "func",
          "name": "SYS::wrInt",

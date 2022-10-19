@@ -20,7 +20,7 @@
                         "args":[],
                         "vars":[],
                         "lines":[
-                            {"sys":"call", "name":"SYS::wr", "args":[
+                            {"sys":"call", "name":"SYS::wrApp", "args":[
                                     {"sys":"const", "val":{"sys":"val", "type":"string", "v":"1: Val: "}},  
                                     {"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}}
                                 ]
@@ -32,7 +32,7 @@
                                     "right":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"5.0"}}
                                 }
                             },
-                            {"sys":"call", "name":"SYS::wr", "args":[
+                            {"sys":"call", "name":"SYS::wrApp", "args":[
                                     {"sys":"const", "val":{"sys":"val", "type":"string", "v":"2: Val: "}},  
                                     {"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}}
                                 ]
@@ -41,10 +41,10 @@
                                 "op":{"sys":"op", "type":"asgn", "v":"="},
                                 "right":{"sys":"exp", "left":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"5.0"}},
                                     "op":{"sys":"op", "type":"exp", "v":"-"},
-                                    "right":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"5.0"}}
+                                    "right":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"-5.0"}}
                                 }
                             },
-                            {"sys":"call", "name":"SYS::wr", "args":[
+                            {"sys":"call", "name":"SYS::wrApp", "args":[
                                     {"sys":"const", "val":{"sys":"val", "type":"string", "v":"3: Val: "}},  
                                     {"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}}
                                 ]
@@ -56,7 +56,7 @@
                                     "right":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"2.0"}}
                                 }
                             },
-                            {"sys":"call", "name":"SYS::wr", "args":[
+                            {"sys":"call", "name":"SYS::wrApp", "args":[
                                     {"sys":"const", "val":{"sys":"val", "type":"string", "v":"4: Val: "}},  
                                     {"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}}
                                 ]
@@ -68,7 +68,7 @@
                                     "right":{"sys":"const", "val":{"sys":"val", "type":"float", "v":"2.0"}}
                                 }
                             },
-                            {"sys":"call", "name":"SYS::wr", "args":[
+                            {"sys":"call", "name":"SYS::wrApp", "args":[
                                     {"sys":"const", "val":{"sys":"val", "type":"string", "v":"5: Val: "}},  
                                     {"sys":"ref", "val":{"sys":"val", "type":"float", "v":"[#.vars.ptrVar1]"}}
                                 ]
@@ -84,6 +84,7 @@
              * Desc: A function to init the test page.
              */
             function init() {
+                var txtAreaAppMsg = document.getElementById("appMessage");
                 var txtAreaMsg = document.getElementById("message");
                 var txtAreaSrc = document.getElementById("source");
                 var nl = "\r\n";         
@@ -92,6 +93,13 @@
                     if (this.LOGGING === true) {
                         console.log(this.WR_PREFIX + s);
                         txtAreaMsg.value += (this.WR_PREFIX + s + nl);
+                    }
+                };
+
+                jsonPlState.prototype.wrApp = function(s) {
+                    if (this.LOGGING === true) {
+                        console.log(this.WR_PREFIX + s);
+                        txtAreaAppMsg.value += (this.WR_PREFIX + s + nl);
                     }
                 };
             
@@ -135,9 +143,15 @@
         </script>
     </head>
     <body style="padding: 6px;" onload="init()">
-        <span style="font-size:18px; font-weight:bold;">Output:</span>
+        <span style="font-size:18px; font-weight:bold;">System Output:</span>
         <br/>
 <textarea cols="90" rows="15" id="message" style="font-size:16px;">
+</textarea>    
+        <br/><br/>
+
+        <span style="font-size:18px; font-weight:bold;">App Output:</span>
+        <br/>
+<textarea cols="90" rows="15" id="appMessage" style="font-size:16px;">
 </textarea>    
         <br/><br/>
 
