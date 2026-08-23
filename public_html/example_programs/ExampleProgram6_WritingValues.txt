@@ -1,0 +1,24 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram6_WritingValues",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "#.funcs.main", "args": []},
+  	"classes": [],
+  	"vars": [
+		{"sys": "var", "name": "funcInt1", "val": {"sys": "val", "type": "int", "v": "11"}}
+	],
+  	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [],
+      		"lines": [
+        		{"sys": "call", "name": "SYS::wrInt",
+          		"args": [
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.funcInt1"}}
+      			]},
+			{"sys": "return", "val": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.funcInt1"}}}
+  	  	]}
+  	],
+  	"comments": "Example program that prints out an integer. Takes no arguments and references the class variable. This example uses a more formal function calling name in the class's call attribute. Also this example program returns a value that is a reference to a local class variables."
+}

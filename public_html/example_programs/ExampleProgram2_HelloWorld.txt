@@ -1,0 +1,29 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram2_HelloWorld",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "main",
+		"args": [
+      			{"sys": "const", "val": {"sys": "val", "type": "int", "v": "10"}}
+    		]
+  	},
+  	"classes": [],
+  	"vars": [],
+  	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [
+        		{"sys": "arg", "name": "funcInt1", "val": {"sys": "val", "type": "int", "v": "0"}}
+      		],
+      		"vars": [],
+      		"lines": [
+        		{"sys": "call", "name": "SYS::wr",
+          		"args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Hello world!: "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.funcInt1"}}
+      			]},
+			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+  	  	]}
+  	],
+  	"comment": "Example program that prints a hello world message and takes and integer argument."
+}

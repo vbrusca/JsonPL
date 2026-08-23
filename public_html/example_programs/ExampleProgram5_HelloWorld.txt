@@ -1,0 +1,25 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram5_HelloWorld",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "#.funcs.main", "args": []},
+  	"classes": [],
+  	"vars": [
+		{"sys": "var", "name": "classInt1", "val": {"sys": "val", "type": "int", "v": "10"}}
+	],
+  	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [],
+      		"lines": [
+        		{"sys": "call", "name": "SYS::wr",
+          		"args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Hello world!: "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.classInt1"}}
+      			]},
+			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+  	  	]}
+  	],
+  	"comment": "Example program that prints a hello world message. Takes no arguments and references the class variable. This example uses a more formal function calling name in the class's call attribute."
+}

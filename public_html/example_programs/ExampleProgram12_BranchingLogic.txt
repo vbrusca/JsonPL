@@ -1,0 +1,47 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram12_BranchingLogic",
+	"ret": {"sys": "val", "type": "bool", "v": "false"},
+  	"call": {"sys": "call", "name": "#.funcs.main", "args": []},
+  	"classes": [],
+  	"vars": [
+		{"sys": "var", "name": "classInt", "val": {"sys": "val", "type": "int", "v": 0}}
+	],
+  	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "bool", "v": "false"},
+      		"args": [],
+      		"vars": [],
+      		"lines": [
+			{"sys": "call", "name": "SYS::wr", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Testing Branching Logic"}}
+			]},
+			{"sys": "if",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v":"#.vars.classInt"}},
+				"op": {"sys": "op", "type": "bex", "v": "=="},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 0}},
+				"thn": [
+					{"sys": "call", "name": "SYS::wr", "args": [
+						{"sys": "const", "val": {"sys": "val", "type": "string", "v": "ClassInt is equal to zero!"}}
+					]}
+				],
+				"els": [
+					{"sys": "call", "name": "SYS::wr", "args": [
+						{"sys": "const", "val": {"sys": "val", "type": "string", "v": "ClassInt is NOT equal to zero!"}}
+					]}
+				]
+			},
+			{"sys":"asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.classInt"}},
+				"op": {"sys": "op", "type": "asgn", "v": "="},
+				"right": {"sys": "exp",
+					"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.classInt"}},
+					"op": {"sys": "op", "type": "exp", "v": "+"},
+					"right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": 1}}	
+				}
+			},
+			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "true"}}}
+  	  	]}
+  	],
+  	"comment": "A program that demonstrates branching logic and incrementing a class variables such that if this program is run multiple times, sequentially, with class variable persistence the output should change."
+}

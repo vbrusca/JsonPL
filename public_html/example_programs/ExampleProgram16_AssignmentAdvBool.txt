@@ -1,0 +1,91 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram16_AssignmentAdvBool",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "#.funcs.main", "args": []},
+  	"classes": [],
+  	"vars": [
+		{"sys": "var", "name": "classVar", "val": {"sys": "val", "type": "bool", "v": "false"}}
+	],
+  	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [],
+      		"lines": [
+			{"sys": "call", "name": "SYS::wrBool", "args": [
+				{"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}}
+			]},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}},
+				"op": {"sys": "op", "type": "asgn", "v": "=="},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
+			},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}},
+				"op": {"sys": "op", "type": "asgn", "v": "="},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
+			},
+
+			{"sys": "call", "name": "SYS::wrBool", "args": [
+				{"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}}
+			]},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}},
+				"op": {"sys": "op", "type": "asgn", "v": "+="},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "true"}}
+			},
+
+			{"sys": "call", "name": "SYS::wrBool", "args": [
+				{"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}}
+			]},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}},
+				"op": {"sys": "op", "type": "asgn", "v": "-="},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
+			},
+
+			{"sys": "call", "name": "SYS::wrBool", "args": [
+				{"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}}
+			]},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}},
+				"op": {"sys": "op", "type": "asgn", "v": "*="},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
+			},
+
+			{"sys": "call", "name": "SYS::wrBool", "args": [
+				{"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}}
+			]},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}},
+				"op": {"sys": "op", "type": "asgn", "v": "/="},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "true"}}
+			},
+
+			{"sys": "call", "name": "SYS::wrBool", "args": [
+				{"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}}
+			]},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}},
+				"op": {"sys": "op", "type": "asgn", "v": "**="},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
+			},
+
+			{"sys": "call", "name": "SYS::wrBool", "args": [
+				{"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}}
+			]},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}},
+				"op": {"sys": "op", "type": "asgn", "v": "%="},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "true"}}
+			},
+
+			{"sys": "call", "name": "SYS::wrBool", "args": [
+				{"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classVar"}}
+			]},
+			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+  	  	]}
+  	],
+  	"comment": "A program that demonstrates advanced assignment of float variables."
+}

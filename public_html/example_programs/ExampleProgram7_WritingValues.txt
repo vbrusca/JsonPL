@@ -1,0 +1,48 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram7_WritingValues",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "#.funcs.main", "args": [
+		{"sys": "const", "val": {"sys": "val", "type":"int", "v":55}},
+		{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.classVar1"}}
+	]},
+  	"classes": [],
+  	"vars": [
+		{"sys": "var", "name": "classVar1", "val": {"sys": "val", "type": "int", "v": "65"}}
+	],
+  	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [
+			{"sys": "arg", "name": "funcArg1", "val": {"sys": "val", "type": "int", "v": 0}},
+			{"sys": "arg", "name": "funcArg2", "val": {"sys": "val", "type": "int", "v": 0}}
+		],
+      		"vars": [
+			{"sys": "var", "name": "funcVar1", "val": {"sys": "val", "type": "int", "v": "75"}}
+		],
+      		"lines": [
+        		{"sys": "call", "name": "SYS::wr",
+          		"args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Hello world!"}}
+      			]},
+        		{"sys": "call", "name": "SYS::wrApp",
+          		"args": [
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.classVar1"}}
+      			]},
+        		{"sys": "call", "name": "SYS::wrInt",
+          		"args": [
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.funcArg1"}}
+      			]},
+        		{"sys": "call", "name": "SYS::wrInt",
+          		"args": [
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.funcArg2"}}
+      			]},
+        		{"sys": "call", "name": "SYS::wr",
+          		"args": [
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.funcVar1"}}
+      			]},
+			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+  	  	]}
+  	],
+  	"comment": "Example program that prints a hello world message followed by writing class vars, function args, and function vars, demonstrating the reference path for those objects."
+}

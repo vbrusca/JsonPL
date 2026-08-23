@@ -1,0 +1,33 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram11_WritingValues",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "#.funcs.main", "args": []},
+  	"classes": [],
+  	"vars": [],
+  	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [],
+      		"lines": [
+			{"sys": "call", "name": "SYS::wr", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Hello World"}}
+			]},
+			{"sys": "call", "name": "SYS::wrInt", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "int", "v": "100.0"}}
+			]},
+			{"sys": "call", "name": "SYS::wrStr", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Hello Again!"}}
+			]},
+			{"sys": "call", "name": "SYS::wrFloat", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "float", "v": "200.0"}}
+			]},
+			{"sys": "call", "name": "SYS::wrBool", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "bool", "v": "true"}}
+			]},
+			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+  	  	]}
+  	],
+  	"comment": "A program that demonstrates system level writing functions for specific data types."
+}

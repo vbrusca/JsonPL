@@ -15,7 +15,7 @@ class jsonPlState {
       /*
       * The current version number of the interpreter.
       */
-      this.version = "0.5.1";
+      this.version = "0.5.3";
       this.lineNumCurrent = 0;
       this.lineNumPrev = 0;
       this.linNumNext = 0;
@@ -35,10 +35,35 @@ class jsonPlState {
       this.WR_PREFIX = "";
       this.objId = -1;
       this.VERBOSE = true;
+      this.PROGRAM_VALIDATED = false;
+      this.ABRIDGED_JSON_OUTPUT = true;
 
       this.lastProcessUrlFindPath = null;
+      this.parentDomElement = null;
    }
 
+   /**
+    * Name: eventWireUpClick
+    * Desc: A placeholder for receiving DOM events. Allows for local redirection via prototype redefinition.
+    * Arg1: HTML5 DOM event object
+    */
+   /*
+      jsonPlState.prototype.eventWireUpClick = function(event) {
+         localEventWireUpClick(event);
+      };
+   */
+   eventWireUpClick(event) {      
+   }
+
+   /**
+    * Name: sysWrApp
+    * Desc: A system level application write function.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg3: sep(an optional string separator)
+    * Arg1[X]: obj(a {const} or {ref} to print)
+    * Returns: const(a {const} bool object)
+    */
    sysWrApp(args, func, sep) {
       var ret = {};
       ret.sys = "val";
@@ -69,7 +94,11 @@ class jsonPlState {
       for (; i < len; i++) {
          if (args[i] !== null && this.isSysObj(args[i]) && this.isSysObjVal(args[i].val)) {
             if (this.isArray(args[i].val.v)) {
-               this.sysWrApp(this.toArray(args[i].val.v), func, ", ");
+               if (sep !== null) {
+                  this.sysWrApp(this.toArray(args[i].val.v), func, sep);
+               } else {
+                  this.sysWrApp(this.toArray(args[i].val.v), func, ", ");
+               }
             } else {
                s += this.toStr(args[i].val.v);
                if (sep !== null) {
@@ -90,11 +119,164 @@ class jsonPlState {
    }
 
    /**
+    * Name: sysWrFuncArgs
+    * Desc: A system level write function that prints out function arguments.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Returns: const(a {const} bool object)
+    */   
+   sysWrFuncArgs(args, func) {
+      var ret = this.getConst("bool", "false");
+
+      if (args === null) {
+         this.wr("sysWrFuncArgs: Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr("sysWrFuncArgs: Error: func cannot be null");
+         return ret;
+      }
+      
+      this.wr("============================== " + func.name + " - Argument List");
+      if(func.args != null && func.args.length > 0) {        
+         var len = func.args.length;
+         for(var i = 0; i < len; i++) {
+            this.wrObj(func.args[i]);
+         }
+      } else {
+         this.wr("-------------------------------------------------------------");
+      }
+      this.wr("");
+
+      ret.val.v = "true";
+      return ret;      
+   }
+
+   /**
+    * Name: sysWrFuncVars
+    * Desc: A system level write function that prints out function variables.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Returns: const(a {const} bool object)
+    */
+   sysWrFuncVars(args, func) {
+      var ret = this.getConst("bool", "false");
+
+      if (args === null) {
+         this.wr("sysWrFuncVars: Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr("sysWrFuncVars: Error: func cannot be null");
+         return ret;
+      }
+      
+      this.wr("============================== " + func.name + " - Variable List");
+      if(func.vars != null && func.vars.length > 0) {
+         var len = func.vars.length;
+         for(var i = 0; i < len; i++) {
+            this.wrObj(func.vars[i]);
+         }
+      } else {
+         this.wr("-------------------------------------------------------------");
+      }
+      this.wr("");
+
+      ret.val.v = "true";
+      return ret;
+   }
+
+   /**
+    * Name: sysCnvBoolToStr
+    * Desc: A system level conversion function that converts a bool argument to a str constant.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: b(a {const} or {ref} string resulting in a bool value to convert to a string)
+    * Returns: const(a {const} string object)
+    */
+   sysCnvBoolToStr(args, func) {
+      var ret = this.getConst("string", "");
+      var funcName = "sysCnvBoolToStr"; 
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      var boolValStr = "";
+      var res = null;
+
+      //process ref for bool value
+      if (this.isSysObjRef(args[0])) {
+         if (this.isRefStringArray(args[0].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg b");
+            return ret;
+         }
+
+         refDec = this.processRef(args[0], func);
+         if (refDec !== null) {
+            boolValStr = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg b");
+            return ret;
+         }
+      }
+
+      ret.val.v = boolValStr;
+      return ret; 
+   }
+
+   /**
+    * Name: sysWrClassVars
+    * Desc: A system level write function that prints out function variables.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Returns: const(a {const} bool object)
+    */   
+   sysWrClassVars(args, func) {
+      var ret = this.getConst("bool", "false");
+
+      if (args === null) {
+         this.wr("sysWrClassVars: Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr("sysWrClassVars: Error: func cannot be null");
+         return ret;
+      }
+      
+      this.wr("============================== " + this.program.name + " - Variable List");
+      if(this.program != null && this.program.vars != null && this.program.vars.length > 0) {
+         var len = this.program.vars.length;
+         for(var i = 0; i < len; i++) {
+            this.wrObj(this.program.vars[i]);
+         }
+      } else {
+         this.wr("-------------------------------------------------------------");
+      }
+      this.wr("");
+
+      ret.val.v = "true";
+      return ret;      
+   }
+
+   /**
     * Name: sysWr
     * Desc: A system level write function.
     * Arg1: args(an array of {arg} objects)
     * Arg2: func(the {func} this system function is called from)
     * Arg3: sep(an optional string separator)
+    * Arg1[X]: obj(a {const} or {ref} to print)
     * Returns: const(a {const} bool object)
     */   
    sysWr(args, func, sep) {
@@ -127,7 +309,11 @@ class jsonPlState {
       for (; i < len; i++) {
          if (args[i] !== null && this.isSysObj(args[i]) && this.isSysObjVal(args[i].val)) {
             if (this.isArray(args[i].val.v)) {
-               this.sysWr(this.toArray(args[i].val.v), func, ", ");
+               if (sep !== null) {
+                  this.sysWr(this.toArray(args[i].val.v), func, sep);                  
+               } else {
+                  this.sysWr(this.toArray(args[i].val.v), func, ", ");
+               }
             } else {
                s += this.toStr(args[i].val.v);
                if (sep !== null) {
@@ -150,6 +336,8 @@ class jsonPlState {
    /**
     * Name: sysGetLastAsgnValue
     * Desc: A system level method to access the last asgn value object.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
     * Returns: const(a {const} bool object)
     */   
    sysGetLastAsgnValue(args, func) {
@@ -163,6 +351,8 @@ class jsonPlState {
    /**
     * Name: sysGetLastExpReturn
     * Desc: A system level method to access the last exp return object.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
     * Returns: const(a {const} bool object)
     */   
    sysGetLastExpReturn(args, func) {
@@ -174,13 +364,12 @@ class jsonPlState {
    }
 
    /**
-    * Name: sysGetLastExpReturn
-    * Desc: A system level method to access the last exp return object.
+    * Name: sysGetLastBexReturn
+    * Desc: A system level method to access the last bex return object.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
     * Returns: const(a {const} bool object)
     */
-   
-   //TODO: sync
-
    sysGetLastBexReturn(args, func) {
       if (this.lastBexReturn !== null) {
          return this.lastBexReturn;
@@ -283,9 +472,6 @@ class jsonPlState {
     * Arg1: path(some string with a URL variable reference)
     * Returns: ret(a string value with the function name)
     */
-
-   //TODO: sync
-
    getFuncFromRefFunc(path) {
       if(this.isRefStringFunc(path)) {
          var nvs = path.split(".");
@@ -339,12 +525,62 @@ class jsonPlState {
    }
 
    /**
+    * Name: runClassFunc
+    * Desc: Executes the current call object against the current program and returns the result.
+    * Arg0: objCall(a valid {call} object for the given class or libs)
+    * Returns: ret(some {const}, {ref} object)
+    */
+   runClassFunc(objCall) {
+      if (this.PROGRAM_VALIDATED || this.validateSysObjClass(this.program)) {
+         var start = Date.now();
+         var callObj = objCall;
+         var callFuncName = null;
+
+         if (!this.isObject(callObj.name)) {
+            callFuncName = this.toStr(callObj.name);
+         } else {
+            if (this.isSysObjConst(callObj.name)) {
+               callFuncName = this.toStr((callObj.name).val.v);
+            } else if (this.isSysObjRef(callObj.name)) {
+               this.wr("runProgram: Error: cannot process call name {ref} objects at the class level.");
+               return null;
+            } else {
+               this.wr("runProgram: Error: cannot process unknown call name objects at the class level.");
+               return null;
+            }
+         }
+
+         //clean basic function path
+         if(this.isRefStringFunc(callFuncName)) {
+            callFuncName =callFuncName.replace("#.funcs.", "");
+         }
+
+         this.wr("runProgram: Call: " + callFuncName);
+         var callFunc = this.findFunc(callFuncName);
+
+         var ret = null;
+         ret = this.processCall(callObj, callFunc);
+         this.lastProgramReturn = ret;
+
+         this.wr("runProgram: Results: ");
+         this.wrObj(ret);
+
+         var duration = Date.now() - start;
+         this.wr("runClassFunc: Execution time: " + duration / 1000.0 + "s");
+         return ret;
+      } else {
+         this.wr("runClassFunc: Error: could not validate the class object.");
+         return null;
+      }
+   }
+
+   /**
     * Name: runProgram
     * Desc: Executes the current program and returns the result.
     * Returns: ret(some {const}, {ref} object)
     */
    runProgram() {
-      if (this.validateSysObjClass(this.program)) {
+      if (this.PROGRAM_VALIDATED || this.validateSysObjClass(this.program)) {
          var start = Date.now();
          var callObj = this.program.call;
          var callFuncName = null;
@@ -361,6 +597,11 @@ class jsonPlState {
                this.wr("runProgram: Error: cannot process unknown call name objects at the class level.");
                return null;
             }
+         }
+
+         //clean basic function path
+         if(this.isRefStringFunc(callFuncName)) {
+            callFuncName =callFuncName.replace("#.funcs.", "");
          }
 
          this.wr("runProgram: Call: " + callFuncName);
@@ -449,9 +690,6 @@ class jsonPlState {
     * Arg1: name(string to find)
     * Returns: ret(null or {class} object)
     */
-
-   //TODO: sync
-
    findClass(name) {
       var prog = this.program;
       var str;
@@ -654,6 +892,7 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid for object.
     * Arg1: obj(a {for} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * //full version
     * {
@@ -821,6 +1060,7 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid class object.
     * Arg1: obj(a {class} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * {
     *   "sys": "class",
@@ -832,10 +1072,8 @@ class jsonPlState {
     *   "funcs": [func]
     * }
     */
-
-   //TODO: sync doc
-
    validateSysObjClass(obj) {
+      this.PROGRAM_VALIDATED = false;
       if (this.isSysObjClass(obj) && this.validateProperties(obj, ["sys", "name", "vars", "funcs", "ret", "call"])) {
          if (!this.validateSysObjVal(obj.ret)) {
             this.wr("validateSysObjClass: Error: could not validate obj as val");
@@ -861,6 +1099,7 @@ class jsonPlState {
             }
          }
 
+         this.PROGRAM_VALIDATED = true;
          return true;
       }
       return false;
@@ -871,6 +1110,7 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid function line object.
     * Arg1: obj(an {asgn}, {for}, {if}, {return}, {call} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * [asgn | for | if | return | call]
     */
@@ -923,6 +1163,7 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid func object.
     * Arg1: obj(a {func} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * {
     *   "sys": "func",
@@ -975,6 +1216,7 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid asgn object.
     * Arg1: obj(an {asgn} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * {
     *   "sys": "asgn",
@@ -984,9 +1226,6 @@ class jsonPlState {
     *   "url": string (optional)
     * }
     */
-
-   //TODO: sync doc
-
    validateSysObjAsgn(obj) {
       if (this.isSysObjAsgn(obj) && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
          var tobj = null;
@@ -1077,6 +1316,7 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid bex object.
     * Arg1: obj(a {bex} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * {
     *   "sys": "bex",
@@ -1085,9 +1325,6 @@ class jsonPlState {
     *   "right": {ref | const | exp | bex | call}
     * }
     */
-
-   //TODO: sync doc
-
    validateSysObjBex(obj) {
       if (this.isSysObjBex(obj) && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
          var tobj = null;
@@ -1176,6 +1413,7 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid exp object.
     * Arg1: obj(a {exp} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * {
     *   "sys": "exp",
@@ -1184,9 +1422,6 @@ class jsonPlState {
     *   "right": {ref | const | exp | bex | call}
     * }
     */
-
-   //TODO: sync doc
-
    validateSysObjExp(obj) {
       if (this.isSysObjExp(obj) && this.validateProperties(obj, ["sys", "left", "op", "right"])) {
          var tobj = null;
@@ -1275,6 +1510,7 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid call object.
     * Arg1: obj(a {call} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * {
     *   "sys": "call",
@@ -1283,9 +1519,6 @@ class jsonPlState {
     *   "url": string (optional)
     * }
     */
-
-   //TODO: sync doc
-
    validateSysObjCall(obj) {
       if (this.isSysObjCall(obj) && this.validateProperties(obj, ["sys", "name", "args"])) {
          if (obj.name !== null) {
@@ -1326,6 +1559,7 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid {op} object.
     * Arg1: obj(a {op} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * {
     *   "sys": "op",
@@ -1348,6 +1582,7 @@ class jsonPlState {
        * Desc: Validates if the given object is a valid const object.
        * Arg1: obj(a {const} object to check)
        * Returns: ret(some bool, true or false)
+       * 
        * Struct:
        * {
        *   "sys": "const",
@@ -1369,6 +1604,7 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid var object.
     * Arg1: obj(a {var} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * {
     *   "sys": "var",
@@ -1413,6 +1649,7 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid val object.
     * Arg1: obj(a {val} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * {
     *   "sys": "val",
@@ -1420,10 +1657,6 @@ class jsonPlState {
     *   "v": "some valid value"
     * }
     */
-
-   //TODO: sync doc
-   //TODO: sync2.0
-
    validateSysObjVal(obj) {
       //this.wr("validateSysObjVal: Receiving: ");
       //this.wrObj(obj);   
@@ -1501,9 +1734,6 @@ class jsonPlState {
                }
 
                //array data types
-
-               //TODO sync2.0
-
                if (obj.type === "int[]") {
                   if (!this.isArray(obj.v)) {
                      this.wr("validateSysObjVal: Error: value is not an array value: " + obj.v + ", type: " + obj.type);
@@ -1572,15 +1802,13 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid ref object.
     * Arg1: obj(a {ref} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * {
     *   "sys": "ref",
     *   "val": {val & with as a reference string value like #.vars.tmp1 or $.vars.tmp1}
     * }
     */
-
-   //TODO: sync doc
-
    validateSysObjRef(obj) {
       if (this.isSysObjRef(obj) && this.validateProperties(obj, ["sys", "val"])) {
          if (!this.isSysObjVal(obj.val) || !this.validateSysObjVal(obj.val)) {
@@ -1596,6 +1824,7 @@ class jsonPlState {
     * Desc: Validates if the given object is a valid return object.
     * Arg1: obj(a {return} object to check)
     * Returns: ret(some bool, true or false)
+    * 
     * Struct:
     * {
     *   "sys": "return",
@@ -1657,6 +1886,12 @@ class jsonPlState {
       }
    }
 
+   /**
+    * Name: wrApp
+    * Desc: Writes a string to standard output if LOGGING is on.
+    *       Sets the WR_PREFIX to each string written.
+    * Arg1: s(string to write)
+    */   
    wrApp(s) {
       if (this.LOGGING === true) {
          console.log(this.WR_PREFIX + s);
@@ -1668,9 +1903,6 @@ class jsonPlState {
     * Desc: A method to access the version of this JsonPL interpreter.
     * Returns: ret(string version number)
     */
-
-   //TODO: sync
-
    getVersion() {
       this.wr("JsonPL Version: " + this.version);
       return this.version;
@@ -1703,13 +1935,14 @@ class jsonPlState {
     *       Prints object using pretty JSON.stringify call.
     * Arg1: jsonObj(jsonObj to write)
     */
-
-   //TODO: sync2.0
-
    wrObj(jsonObj) {
-      if (this.LOGGING === true) {
-         this.wr(JSON.stringify(jsonObj, null, 2));
-         this.wr("");
+      if(this.ABRIDGED_JSON_OUTPUT === false) {
+         if (this.LOGGING === true) {
+            this.wr(JSON.stringify(jsonObj, null, 2));
+            this.wr("");
+         }
+      } else {
+         this.wrObjAbr(jsonObj);
       }
    }
 
@@ -1784,19 +2017,27 @@ class jsonPlState {
       if (s !== null && this.isObject(s) && this.isSysObj(s)) {
          s = this.getRef("string", s.val.v);
          v = this.processRef(s, func);
+         if (v !== null) {
+            v = v.val;
+         }
       } else {
          this.wr("sysLen: Error: reference argument cannt be null");
          return ret;
       }
 
-      if (v !== null) {
-         v = v.val;
-      }
-
       if (v !== null && this.isSysObj(v)) {
          if (this.isSysObjValArray(v)) {
-            ret = this.getConst("int", this.toStr(v.len));
-         }
+            //ret = this.getConst("int", this.toStr(v.len));
+            ret.val.v  = this.toStr(v.len);
+         } else if(this.type === "string") {
+            ret.val.v = this.toStr((v.v + "").length); 
+         } else if(this.type === "int") {
+            ret.val.v = "4";
+         } else if(this.type === "float") {
+            ret.val.v = "4";
+         } else if(this.type === "bool") {
+            ret.val.v = "1";
+         }            
       }
 
       //this.wrVal(ret.val);
@@ -1838,7 +2079,8 @@ class jsonPlState {
       }
 
       if (v !== null && this.isSysObj(v)) {
-         ret = this.getConst("string", this.toStr(v.type));
+         //ret = this.getConst("string", this.toStr(v.type));
+         ret.val.v = this.toStr(v.type);
       }
 
       //this.wrVal(ret.val);
@@ -1897,9 +2139,11 @@ class jsonPlState {
     * Name: sysGetRef
     * Desc: Returns a string object with a reference to the {val} or {arg} object specified.
     *       Doesn't handle full local func references or lib class references.
-    * Arg1: v(a {val} obj to get the reference for)
-    * Arg2: isVar(bool indicating is the v object is a {var} or {arg})
-    * Arg3: funcName(the name of the function to lookup the variable in, blank for class level)
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: v(a {val} obj to get the reference for)
+    * Arg1[1]: isVar(a {const} bool indicating is the v object is a {var} or {arg})
+    * Arg1[2]: funcName(a {const} string with the name of the function to lookup the variable in, blank for class level)
     * Returns: ret(a {ref} object)
     */
    sysGetRef(args, func) {
@@ -1962,10 +2206,12 @@ class jsonPlState {
    /**
     * Name: sysMalloc
     * Desc: Returns a {ref} object with a reference to the newly created, non-array, variable {val} or {arg} object specified.
-    * Arg1: isClassVar(a {const} obj with a bool value indicating if this is a new class or func variable)
-    * Arg2: name(a {const} string indicating the name of the new var, blank value uses program object ID instead)
-    * Arg3: type(a {const} string representing the variable type to allocate)
-    * Arg4: val(a {const} or {ref} used as the value for the new variable)
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: isClassVar(a {const} obj with a bool value indicating if this is a new class or func variable)
+    * Arg1[1]: name(a {const} string indicating the name of the new var, blank value uses program object ID instead)
+    * Arg1[2]: type(a {const} string representing the variable type to allocate)
+    * Arg1[3]: val(a {const} or {ref} used as the value for the new variable)
     * Returns: ret(a {ref} object)
     */
    sysMalloc(args, func) {
@@ -2046,10 +2292,12 @@ class jsonPlState {
    /**
     * Name: sysMallocArray
     * Desc: Returns a {ref} object with a reference to the newly created, non-array, variable {val} or {arg} object specified.
-    * Arg1: isClassVar(a {const} obj with a bool value indicating if this is a new class or func variable)
-    * Arg2: name(a {const} string indicating the name of the new var, blank value uses program object ID instead)
-    * Arg3: type(a {const} string representing the variable type to allocate)
-    * Arg4: len(a {const} or {ref} with an integer representing the array length)
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: isClassVar(a {const} obj with a bool value indicating if this is a new class or func variable)
+    * Arg1[1]: name(a {const} string indicating the name of the new var, blank value uses program object ID instead)
+    * Arg1[2]: type(a {const} string representing the variable type to allocate)
+    * Arg1[3]: len(a {const} or {ref} with an integer representing the array length)
     * Returns: ret(a {ref} object)
     */
    sysMallocArray(args, func) {
@@ -2162,10 +2410,898 @@ class jsonPlState {
    }
 
    /**
+    * Name: sysAppendNewChildElementToContainer
+    * Desc: Adds a new child element with the given tag to the container DOM element.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: tagName(a {const} or {ref} string indicating the name of the tag to add to the parent)
+    * Arg1[1]: id(a {const} or {ref} string indicating the id of the tag to add to the parent)
+    * Arg1[2]: pre(a {const} or {ref} bool indicating whether to prepend or append the child element to the parent)
+    * Arg1[3]: parentId(a {const} or {ref} str indicating the id of the parent container element)
+    * Returns: ret(a {const} object with a bool value indicating the operation was successful)
+    */
+   sysAppendNewChildElementToContainer(args, func) {
+      var ret = this.getConst("bool", "false");
+      var funcName = "sysAppendNewChildElementToContainer";
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+
+         if (!this.isSysObj(args[1]) || !this.isSysObjVal(args[1].val)) {
+            this.wr(funcName + ": Error: arg 1 is not a known object type");
+            return ret;
+         }
+
+         if (!this.isSysObj(args[2]) || !this.isSysObjVal(args[2].val)) {
+            this.wr(funcName + ": Error: arg 2 is not a known object type");
+            return ret;
+         }
+
+         if (!this.isSysObj(args[3]) || !this.isSysObjVal(args[3].val)) {
+            this.wr(funcName + ": Error: arg 3 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      var tagName = this.toStr(args[0].val.v);
+      var idName = this.toStr(args[1].val.v);
+      var pre = this.toBool(args[2].val.v);
+      var parentIdName = this.toStr(args[3].val.v);
+      var res = null;
+
+      //process ref for tagName
+      if (this.isSysObjRef(args[0])) {
+         if (this.isRefStringArray(args[0].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg tagName");
+            return ret;
+         }
+
+         refDec = this.processRef(args[0], func);
+         if (refDec !== null) {
+            tagName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg tagName");
+            return ret;
+         }
+      }
+
+      //process ref for idName
+      if (this.isSysObjRef(args[1])) {
+         if (this.isRefStringArray(args[1].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg id");
+            return ret;
+         }
+
+         refDec = this.processRef(args[1], func);
+         if (refDec !== null) {
+            idName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg id");
+            return ret;
+         }
+      }
+
+      //process ref for pre
+      if (this.isSysObjRef(args[2])) {
+         if (this.isRefBoolArray(args[2].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[2].val.v + ", for arg pre");
+            return ret;
+         }
+
+         refDec = this.processRef(args[2], func);
+         if (refDec !== null) {
+            pre = this.toBool(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[2].val.v + ", for arg pre");
+            return ret;
+         }
+      }
+
+      //process ref for parentIdName
+      if (this.isSysObjRef(args[3])) {
+         if (this.isRefStringArray(args[3].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[3].val.v + ", for arg parentId");
+            return ret;
+         }
+
+         refDec = this.processRef(args[3], func);
+         if (refDec !== null) {
+            parentIdName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[3].val.v + ", for arg parentId");
+            return ret;
+         }
+      }
+
+      var parentElm = document.getElementById(parentIdName);
+      if(parentElm != null) {
+         var elm = document.createElement(tagName);
+         elm.id = idName;
+         if(pre) {
+            parentElm.prepend(elm);
+         } else {
+            parentElm.appendChild(elm);
+         }
+         ret.val.v = "true";
+      }
+      return ret;
+   }
+
+   /**
+    * Name: sysSetElementStyle
+    * Desc: Sets the style attribute of the DOM element with the given ID.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: id(a {const} or {ref} string indicating the id of the DOM element to set the style for)
+    * Arg1[1]: style(a {const} or {ref} string indicating the style string to set for the DOM element)
+    * Returns: ret(a {const} object with a bool value indicating if the operation was successful)
+    */
+   sysSetElementStyle(args, func) {
+      var ret = this.getConst("bool", "false");
+      var funcName = "sysSetElementStyle";
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+
+         if (!this.isSysObj(args[1]) || !this.isSysObjVal(args[1].val)) {
+            this.wr(funcName + ": Error: arg 1 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      var idName = this.toStr(args[0].val.v);
+      var styleStr = this.toStr(args[1].val.v);
+      var res = null;
+
+      //process ref for idName
+      if (this.isSysObjRef(args[0])) {
+         if (this.isRefStringArray(args[0].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+
+         refDec = this.processRef(args[0], func);
+         if (refDec !== null) {
+            idName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+      }
+
+      //process ref for styleStr
+      if (this.isSysObjRef(args[1])) {
+         if (this.isRefStringArray(args[1].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg style");
+            return ret;
+         }
+
+         refDec = this.processRef(args[1], func);
+         if (refDec !== null) {
+            styleStr = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg style");
+            return ret;
+         }
+      }
+
+      var elm = document.getElementById(idName);
+      this.wr("Found style string to set: " + styleStr);
+
+      if(elm != null) {
+         elm.style.cssText = styleStr;
+         ret.val.v = "true";         
+      }
+
+      return ret;      
+   }
+
+   /**
+    * Name: sysGetElementTextContent
+    * Desc: Sets the textContent of the DOM element with the given id.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: id(a {const} or {ref} string indicating the id of the DOM element to set the style for)
+    * Returns: ret(a {const} object with a string value of the element's text content)
+    */
+   sysGetElementTextContent(args, func) {
+      var ret = this.getConst("string", "");
+      var funcName = "sysGetElementTextContent";
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      var idName = this.toStr(args[0].val.v);
+      var res = null;
+
+      //process ref for idName
+      if (this.isSysObjRef(args[0])) {
+         if (this.isRefStringArray(args[0].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+
+         refDec = this.processRef(args[0], func);
+         if (refDec !== null) {
+            idName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+      }
+
+      var elm = document.getElementById(idName);
+      this.wr("Found a text content string to set: " + text);
+
+      if(elm != null) {
+         ret.val.v = elm.textContent;
+      }
+
+      return ret; 
+   }   
+
+   /**
+    * Name: sysSetElementTextContent
+    * Desc: Sets the textContent of the DOM element with the given id.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: id(a {const} or {ref} string indicating the id of the DOM element to set the style for)
+    * Arg1[1]: text(a {const} or {ref} string indicating the text string to set for the DOM element's text content)
+    * Returns: ret(a {const} object with a bool value indicating if the operation was successful)
+    */
+   sysSetElementTextContent(args, func) {
+      var ret = this.getConst("bool", "false");
+      var funcName = "sysSetElementTextContent";
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+
+         if (!this.isSysObj(args[1]) || !this.isSysObjVal(args[1].val)) {
+            this.wr(funcName + ": Error: arg 1 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      var idName = this.toStr(args[0].val.v);
+      var text = this.toStr(args[1].val.v);
+      var res = null;
+
+      //process ref for idName
+      if (this.isSysObjRef(args[0])) {
+         if (this.isRefStringArray(args[0].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+
+         refDec = this.processRef(args[0], func);
+         if (refDec !== null) {
+            idName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+      }
+
+      //process ref for text
+      if (this.isSysObjRef(args[1])) {
+         if (this.isRefStringArray(args[1].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg text");
+            return ret;
+         }
+
+         refDec = this.processRef(args[1], func);
+         if (refDec !== null) {
+            text = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg text");
+            return ret;
+         }
+      }
+
+      var elm = document.getElementById(idName);
+      this.wr("Found a text content string to set: " + text);
+
+      if(elm != null) {
+         elm.textContent = text;
+         ret.val.v = "true";         
+      }
+
+      return ret; 
+   }
+
+   /**
+    * Name: sysSetElementInnerHtml
+    * Desc: Sets the textContent of the DOM element with the given id.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: id(a {const} or {ref} string indicating the id of the DOM element to set the style for)
+    * Arg1[1]: html(a {const} or {ref} string indicating the html string to set for the DOM element's inner html)
+    * Returns: ret(a {const} object with a bool value indicating if the operation was successful)
+    */
+   sysSetElementInnerHtml(args, func) {
+      var ret = this.getConst("bool", "false");
+      var funcName = "sysSetElementInnerHtml";
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+
+         if (!this.isSysObj(args[1]) || !this.isSysObjVal(args[1].val)) {
+            this.wr(funcName + ": Error: arg 1 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      var idName = this.toStr(args[0].val.v);
+      var html = this.toStr(args[1].val.v);
+      var res = null;
+
+      //process ref for idName
+      if (this.isSysObjRef(args[0])) {
+         if (this.isRefStringArray(args[0].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+
+         refDec = this.processRef(args[0], func);
+         if (refDec !== null) {
+            idName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+      }
+
+      //process ref for text
+      if (this.isSysObjRef(args[1])) {
+         if (this.isRefStringArray(args[1].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg html");
+            return ret;
+         }
+
+         refDec = this.processRef(args[1], func);
+         if (refDec !== null) {
+            html = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg html");
+            return ret;
+         }
+      }
+
+      var elm = document.getElementById(idName);
+      this.wr("Found an html string to set: " + text);
+
+      if(elm != null) {
+         elm.innerHTML = html;
+         ret.val.v = "true";         
+      }
+
+      return ret; 
+   }
+
+   /**
+    * Name: sysGetElementStyle
+    * Desc: Gets the style attribute of the DOM element with the given ID.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: id(a {const} or {ref} string indicating the id of the DOM element to set the style for)
+    * Returns: ret(a {const} object with a string value containing the cssText, style, string)
+    */
+   sysGetElementStyle(args, func) {
+      var ret = this.getConst("string", "");
+      var funcName = "sysGetElementStyle";
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      var idName = this.toStr(args[0].val.v);
+      var styleStr = null;
+      var res = null;
+
+      //process ref for idName
+      if (this.isSysObjRef(args[0])) {
+         if (this.isRefStringArray(args[0].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+
+         refDec = this.processRef(args[0], func);
+         if (refDec !== null) {
+            idName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+      }
+
+      var elm = document.getElementById(idName);
+
+      if(elm != null) {
+         styleStr = elm.style.cssText;
+         ret.val.v = styleStr;         
+      }
+
+      return ret;      
+   }
+
+   /**
+    * Name: sysSetClickEventHandler
+    * Desc: Clears and sets the click event handler for the given DOM element id.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: id(a {const} or {ref} string indicating the id of the new element to add to the parent)
+    * Returns: ret(a {const} object with a bool value indicating if the operation was successful)
+    */   
+   sysSetClickEventHandler(args, func) {
+      var ret = this.getConst("bool", "false");
+      var funcName = "sysSetClickEventHandler";
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      var idName = this.toStr(args[0].val.v);
+      var res = null;
+
+      //process ref for idName
+      if (this.isSysObjRef(args[0])) {
+         if (this.isRefStringArray(args[0].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+
+         refDec = this.processRef(args[0], func);
+         if (refDec !== null) {
+            idName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+      }
+
+      var elm = document.getElementById(idName);
+      if(elm != null) {
+         elm.removeEventListener("click", this.eventWireUpClick);
+         elm.addEventListener("click", this.eventWireUpClick);         
+         ret.val.v = "true";
+      }
+
+      return ret;
+   }
+
+   /**
+    * Name: sysSetElementAttr
+    * Desc: Sets the value of an attribute for a DOM element with given id.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: id(a {const} or {ref} string indicating the id of the new element to add to the parent)
+    * Arg1[1]: attr(a {const} or {ref} string indicating the attribute to set the value for)
+    * Arg1[2]: value(a {const} or {ref} string indicating the value to set the attribute to)
+    * Returns: ret(a {const} object with a bool value indicating if the operation was successful)
+    */
+   sysSetElementAttr(args, func) {
+      var ret = this.getConst("bool", "false");
+      var funcName = "sysSetElementAttr";
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+
+         if (!this.isSysObj(args[1]) || !this.isSysObjVal(args[1].val)) {
+            this.wr(funcName + ": Error: arg 1 is not a known object type");
+            return ret;
+         }
+
+         if (!this.isSysObj(args[2]) || !this.isSysObjVal(args[2].val)) {
+            this.wr(funcName + ": Error: arg 2 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      var idName = this.toStr(args[0].val.v);
+      var attr = this.toStr(args[1].val.v);
+      var value = this.toStr(args[2].val.v);
+      var res = null;
+
+      //process ref for tagName
+      if (this.isSysObjRef(args[0])) {
+         if (this.isRefStringArray(args[0].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+
+         refDec = this.processRef(args[0], func);
+         if (refDec !== null) {
+            idName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+      }
+
+      //process ref for attr
+      if (this.isSysObjRef(args[1])) {
+         if (this.isRefStringArray(args[1].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg attr");
+            return ret;
+         }
+
+         refDec = this.processRef(args[1], func);
+         if (refDec !== null) {
+            attr = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg attr");
+            return ret;
+         }
+      }
+
+      //process ref for value
+      if (this.isSysObjRef(args[2])) {
+         if (this.isRefBoolArray(args[2].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[2].val.v + ", for arg value");
+            return ret;
+         }
+
+         refDec = this.processRef(args[2], func);
+         if (refDec !== null) {
+            value = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[2].val.v + ", for arg value");
+            return ret;
+         }
+      }
+
+      var elm = document.getElementById(idName);
+      if(elm != null) {      
+         if(attr.indexOf(",") != -1) {
+            var arrayAttr = attr.split(",");
+            var arrayVals = value.split(",");
+            if(arrayAttr.length == arrayVals.length) {
+               var len = arrayAttr.length;
+               for(var i = 0; i < len; i++) {
+                  elm.setAttribute(arrayAttr[i], arrayVals[i]);
+               }
+            } else {
+               this.wr(funcName + ": Error: attr array length, " + arrayAttr.length + ", does not match value array length, " + arrayVals.length);
+               return ret;               
+            }
+         } else {
+            elm.setAttribute(attr, value);
+         }
+         ret.val.v = "true";         
+      }
+
+      return ret;
+   }
+
+   /**
+    * Name: sysGetElementAttr
+    * Desc: Gets the value of an attribute for a DOM element with given id.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: id(a {const} or {ref} string indicating the id of the new element to add to the parent)
+    * Arg1[1]: attr(a {const} or {ref} string indicating the attribute to set the value for)
+    * Returns: ret(a {const} object with a string attribute value)
+    */
+   sysGetElementAttr(args, func) {
+      var ret = this.getConst("string", "");
+      var funcName = "sysGetElementAttr";
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+
+         if (!this.isSysObj(args[1]) || !this.isSysObjVal(args[1].val)) {
+            this.wr(funcName + ": Error: arg 1 is not a known object type");
+            return ret;
+         }
+
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      var idName = this.toStr(args[0].val.v);
+      var attr = this.toStr(args[1].val.v);
+      var res = null;
+
+      //process ref for tagName
+      if (this.isSysObjRef(args[0])) {
+         if (this.isRefStringArray(args[0].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+
+         refDec = this.processRef(args[0], func);
+         if (refDec !== null) {
+            idName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
+            return ret;
+         }
+      }
+
+      //process ref for attr
+      if (this.isSysObjRef(args[1])) {
+         if (this.isRefStringArray(args[1].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg attr");
+            return ret;
+         }
+
+         refDec = this.processRef(args[1], func);
+         if (refDec !== null) {
+            attr = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg attr");
+            return ret;
+         }
+      }
+
+      var elm = document.getElementById(idName);
+      if(elm != null) {
+         var tmpStr = "";
+         if(attr.indexOf(",") != -1) {
+            var arrayAttr = attr.split(",");
+            if(arrayAttr.length > 0) {
+               var len = arrayAttr.length;
+               for(var i = 0; i < len; i++) {
+                  tmpStr += elm.getAttribute(arrayAttr[i]);
+                  if(i < len - 1) {
+                     tmpStr += ",";
+                  }
+               }
+            } else {
+               this.wr(funcName + ": Error: attr array length, " + arrayAttr.length + ", does not match value array length, " + arrayVals.length);
+               return ret;               
+            }
+         } else {
+            tmpStr = elm.getAttribute(attr);
+         }
+         ret.val.v = tmpStr;         
+      }
+
+      return ret;
+   }
+
+   /**
+    * Name: sysAppendNewChildElementToParent
+    * Desc: Adds a new child element with the given tag to the parent DOM element.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: tagName(a {const} or {ref} string indicating the name of the tag to add to the parent)
+    * Arg1[1]: id(a {const} or {ref} string indicating the id of the new element to add to the parent)
+    * Arg1[2]: pre(a {const} or {ref} bool indicating whether to prepend or append the child element to the parent)
+    * Returns: ret(a {const} object with a bool value indicating if the operation was successful)
+    */
+   sysAppendNewChildElementToParent(args, func) {
+      var ret = this.getConst("bool", "false");
+      var funcName = "sysAppendNewChildElementToParent";
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+
+         if (!this.isSysObj(args[1]) || !this.isSysObjVal(args[1].val)) {
+            this.wr(funcName + ": Error: arg 1 is not a known object type");
+            return ret;
+         }
+
+         if (!this.isSysObj(args[2]) || !this.isSysObjVal(args[2].val)) {
+            this.wr(funcName + ": Error: arg 2 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      var tagName = this.toStr(args[0].val.v);
+      var idName = this.toStr(args[1].val.v);
+      var pre = this.toBool(args[2].val.v);
+      var res = null;
+
+      //process ref for tagName
+      if (this.isSysObjRef(args[0])) {
+         if (this.isRefStringArray(args[0].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg tagName");
+            return ret;
+         }
+
+         refDec = this.processRef(args[0], func);
+         if (refDec !== null) {
+            tagName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg tagName");
+            return ret;
+         }
+      }
+
+      //process ref for idName
+      if (this.isSysObjRef(args[1])) {
+         if (this.isRefStringArray(args[1].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg id");
+            return ret;
+         }
+
+         refDec = this.processRef(args[1], func);
+         if (refDec !== null) {
+            idName = this.toStr(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg id");
+            return ret;
+         }
+      }
+
+      //process ref for pre
+      if (this.isSysObjRef(args[2])) {
+         if (this.isRefBoolArray(args[2].val.v)) {
+            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[2].val.v + ", for arg pre");
+            return ret;
+         }
+
+         refDec = this.processRef(args[2], func);
+         if (refDec !== null) {
+            pre = this.toBool(refDec.val.v);
+         } else {
+            this.wr(funcName + ": Error: could not resolve referece value, " + args[2].val.v + ", for arg pre");
+            return ret;
+         }
+      }
+
+      if(this.parentDomElement != null) {
+         var elm = document.createElement(tagName);
+         elm.id = idName;
+         if(pre) {
+            this.parentDomElement.prepend(elm);
+         } else {
+            this.parentDomElement.appendChild(elm);
+         }
+         ret.val.v = "true";
+      }
+
+      return ret;
+   }
+
+   /**
     * Name: sysClean
-    * Desc: Removes the variable specified from the class or function vars..
-    * Arg1: isClassVar(a {const} object with a bool value indicating if this is a new class or func variable)
-    * Arg2: name(a {const} or {ref} string indicating the name of the var to delete)
+    * Desc: Removes the variable specified from the class or function vars.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: isClassVar(a {const} object with a bool value indicating if this is a new class or func variable)
+    * Arg1[1]: name(a {const} or {ref} string indicating the name of the var to delete)
     * Returns: ret(a {const} object with a bool value indicating the operation was successful)
     */
    sysClean(args, func) {
@@ -2199,6 +3335,7 @@ class jsonPlState {
       var res = null;
       var prog = this.program;
       var refDec = null;
+
       //process ref for name
       if (this.isSysObjRef(args[1])) {
          if (this.isRefStringArray(args[1].val.v)) {
@@ -2266,9 +3403,6 @@ class jsonPlState {
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
-
-   //TODO: sync2.0
-
    isRefStringClassLng(s) {
       var ns = this.toStr(s);
       if (ns.indexOf("#.classes.") === 0) {
@@ -2283,9 +3417,6 @@ class jsonPlState {
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
-
-   //TODO: sync2.0
-
    isRefStringClassLngDec(s) {
       if (this.isRefStringDec(s) && this.isRefStringClassLng(s)) {
          return true;
@@ -2313,9 +3444,6 @@ class jsonPlState {
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
-
-   //TODO: sync
-
    isRefStringClassDec(s) {
       if (this.isRefStringDec(s) && this.isRefStringClass(s)) {
          return true;
@@ -2329,9 +3457,6 @@ class jsonPlState {
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
-
-   //TODO: sync
-
    isRefStringFuncDec(s) {
       if (this.isRefStringDec(s) && this.isRefStringFunc(s)) {
          return true;
@@ -2345,9 +3470,6 @@ class jsonPlState {
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
-
-   //TODO: sync
-
    isRefStringFunc(s) {
       var ns = this.toStr(s);
       if (ns.indexOf("#.funcs.") === 0) {
@@ -2391,9 +3513,6 @@ class jsonPlState {
     * Arg1: s(some string with a valid URL value)
     * Returns: ret(some bool, true or false)
     */
-
-   //TODO: sync
-
    isUrl(s) {
       var ns = this.toStr(s);
       ns = ns.toLowerCase();
@@ -2447,9 +3566,6 @@ class jsonPlState {
     * Arg1: s(some string with a valid reference value)
     * Returns: ret(some bool, true or false)
     */
-
-   //TODO: sync
-
    isRefStringDec(s) {
       //if (this.isRefString(s)) {
          var ns = this.toStr(s);
@@ -2526,6 +3642,8 @@ class jsonPlState {
    isString(arg) {
       if (arg === null) {
          return false;
+      } else if(this.isNumber(arg)) {
+         return false;
       } else if (typeof arg === 'string' || arg instanceof String) {
          return true;
       } else {
@@ -2540,7 +3658,8 @@ class jsonPlState {
     * Returns: (true | false)
     */
    isNumber(arg) {
-      var tmp = this.toInt(arg);
+      var tmp = arg;
+      //var tmp = this.toInt(arg);
       if (arg === null) {
          return false;
       } else if ((typeof tmp === "number" || tmp instanceof Number) && Number.isNaN(tmp) === false) {
@@ -2557,10 +3676,11 @@ class jsonPlState {
     * Returns: (true | false)
     */
    isInteger(arg) {
-      var tmp = this.toInt(arg);
+      var tmp = arg;
+      //var tmp = this.toInt(arg);
       if (arg === null) {
          return false;
-      } else if (this.isNumber(tmp) && Number.isInteger(tmp) === true && !this.isFloat(arg)) {
+      } else if (this.isNumber(tmp) && Number.isInteger(tmp) === true) { // && !this.isFloat(arg)) {
          return true;
       } else {
          return false;
@@ -2577,7 +3697,7 @@ class jsonPlState {
       var tmp = this.toStr(arg);
       if (arg === null) {
          return false;
-      } else if (this.isNumber(arg) && tmp.indexOf(".") !== -1) {
+      } else if (this.isNumber(arg)) { //&& (tmp.hasOwnProperty("indexOf") && tmp.indexOf(".") !== -1)) {
          return true;
       } else {
          return false;
@@ -3106,9 +4226,6 @@ class jsonPlState {
     * Arg2: func(func obj, sys=func)
     * Returns: {null | (var obj, sys=var) | (arg obj, sys=arg)}
     */
-
-   //TODO: sync2.0
-
    processRef(objRef, func, url=null) {
       var path = null;
       var vls = null;
@@ -3546,21 +4663,31 @@ class jsonPlState {
     * Arg1: v(the value to convert)
     * Returns: (the int value of v)
     */
-
-   //TODO: SYNC 2.0
-
    toInt(v) {
+      //this.wr("toInt: " + v);
       var arg = v;
       var vb = this.toStr(arg);
       vb = vb.toLowerCase();
       if (arg === null) {
+         //this.wr("toInt: Is null return 0");
          return 0;
+      } else if (this.isString(arg) && (vb === "yes" || vb === "true" || vb === "1" || vb === "1.0")) {
+            //this.wr("toInt: Is string return 1");            
+            return 1;
+      } else if (this.isString(arg) && (vb === "no" || vb === "false" || vb === "0" || vb === "0.0")) {
+            //this.wr("toInt: Is bool return 0");
+            return 0;
       } else if (typeof arg === 'boolean' || arg instanceof Boolean) {
-         return 1;
-      } else if (this.isString(arg) && (vb === "yes" || vb === "no" || vb === "true" || vb === "false" || vb === "1" || vb === "0" || vb === "1.0" || vb === "0.0")) {
-         return 1;
+         if(arg === true) {
+            //this.wr("toInt: Is bool return 1");
+            return 1;
+         } else {
+            //this.wr("toInt: Is bool return 0");            
+            return 0;
+         }
       } else {
-         return parseInt(v);
+         //this.wr("toInt: Is bool return " + Math.floor(Number(v)));         
+         return Math.floor(Number(v));
       }
    }
 
@@ -3570,17 +4697,18 @@ class jsonPlState {
     * Arg1: v(the value to convert)
     * Returns: (the float value of v)
     */
-
-   //TODO: SYNC
-   //TODO: sync2.0
-
    toFloat(v) {
-      var r = parseFloat(v);
-      if(this.toStr(r).indexOf(".") === -1) {
-         r += ".0";
+      /*
+      var tmp = v;
+      if(this.toStr(tmp).indexOf(".") === -1) {
+         tmp += ".0";
       }
-
+      
+      var r = parseFloat(tmp); //Number(tmp);
+      this.wr("toFloat: returning " + r);
       return r;
+      */
+     return parseFloat(v);
    }
 
    /**
@@ -3626,28 +4754,20 @@ class jsonPlState {
       vb = vb.toLowerCase();
       if (arg === null) {
          return false;
-
       } else if (typeof arg === 'boolean' || arg instanceof Boolean) {
          return arg;
-
       } else if (this.isInteger(arg) && arg === 1) {
          return true;
-
       } else if (this.isInteger(arg) && arg === 0) {
          return false;
-
       } else if (this.isFloat(arg) && arg === 1.0) {
          return true;
-
       } else if (this.isFloat(arg) && arg === 0.0) {
          return false;
-
       } else if (this.isString(arg) && (vb === "yes" || vb === "true" || vb === "1" || vb === "1.0")) {
          return true;
-
       } else if (this.isString(arg) && (vb === "no" || vb === "false" || vb === "0" || vb === "0.0")) {
          return false;
-
       } else {
          return false;
       }
@@ -4167,10 +5287,6 @@ class jsonPlState {
     * Arg2: func(func obj, sys=func)
     * Returns: {null | (const obj, sys=const)}
     */
-
-   //TODO: sync
-   //TODO: sync2.0
-
    processAsgn(objAsgn, func) {
       //this.wrObj(objAsgn);
       var left = null;
@@ -4243,8 +5359,6 @@ class jsonPlState {
 
       if (hasUrl) {
          path = this.lastProcessUrlFindPath;
-
-         //TODO sync2.0
          
          if(path === null) {
             path = origRefVal;
@@ -4267,8 +5381,6 @@ class jsonPlState {
          hasPubs = true;
          path = origRefVal;
       }
-
-      //TODO sync2.0
       
       if (this.VERBOSE) {
          if(left.pubs !== undefined && left.pubs.length > 0) {
@@ -4278,7 +5390,8 @@ class jsonPlState {
          }
       }
 
-      //this.wr("===========================WWWWW222: " + JSON.stringify(right));
+      this.wr("===========================Right: " + JSON.stringify(right));
+      this.wr("===========================Left: " + JSON.stringify(left));      
 
       if (this.isSysObjConst(right)) {
          //this.wr("===========================WWWWW222AAA");
@@ -4312,8 +5425,6 @@ class jsonPlState {
          return null;
       }
 
-      //TODO: sync2.0
-
       if (this.isSysObjValArray(left.val)) {
          leftIsArray = true;
          leftIsBasic = false;
@@ -4340,7 +5451,7 @@ class jsonPlState {
       ret2.val = ret;
       ret = ret2;
 
-      //this.wr("processAsgn: Type: " + left.val.type + " Op: " + objAsgn.op.v + " Right Val: " + right.val.v);
+      this.wr("processAsgn: Left Val: " + left.val.v + " Type: " + left.val.type + " Op: " + objAsgn.op.v + " Right Val: " + right.val.v);
 
       if (leftIsBasic && rightIsBasic) {
          //both are basic, dereference if need be, and copy value
@@ -4355,10 +5466,11 @@ class jsonPlState {
          var nvals = null;
 
          if(left.val.type === "int") {
+            this.wr("processAsgn: processing int");
             if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {
-               //this.wr("processAsgn: Type AAA: " + this.toInt(right.val.v));
+               this.wr("processAsgn: Type AAA: " + this.toInt(right.val.v));
                nval = this.toStr(this.toInt(right.val.v));
-               //this.wr("processAsgn: Type BBBB: " + nval);
+               this.wr("processAsgn: Type BBBB: " + nval);
 
             } else if (objAsgn.op.v === "+=") {
                nval = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
@@ -4381,7 +5493,7 @@ class jsonPlState {
             } else if (objAsgn.op.v === "/=") {
                if(this.toInt(right.val.v) === 0) {
                   //error
-                  this.wr("processAsgn: Error: error processing right, divide by zero error");
+                  this.wr("processAsgn: Error: int, error processing right, divide by zero error");
                   return null;
                }
                nval = this.toStr(this.toInt(left.val.v) / this.toInt(right.val.v));
@@ -4465,15 +5577,15 @@ class jsonPlState {
                nval = this.toStr(f3);               
             
             } else if (objAsgn.op.v === "/=") {
-               if(this.toBoolInt(right.val.v) === 0) {
+               if(this.toFloat(right.val.v) === 0) {
                   //error
-                  this.wr("processAsgn: Error: error processing right, divide by zero error");
+                  this.wr("processAsgn: Error: float, error processing right, divide by zero error");
                   return null;
                }
                nval = this.toStr(this.toFloat(left.val.v) / this.toFloat(right.val.v));
             
             } else if (objAsgn.op.v === "%=") {
-               if(this.toBoolInt(right.val.v) === 0) {
+               if(this.toFloat(right.val.v) === 0) {
                   //error
                   this.wr("processAsgn: Error: error processing right, modulo by zero error");
                   return null;
@@ -4537,6 +5649,8 @@ class jsonPlState {
             this.wr("processAsgn: Error: error processing assignment, unsupported basic data type");
             return null;
          }
+
+         this.wr("processAsgn: Found new value: " + nval);
 
          if (hasUrl) {
             //url, path, obj
@@ -5094,10 +6208,7 @@ class jsonPlState {
     * Arg1: objCall(call obj, sys=call)
     * Arg2: func(func obj, sys=func)
     * Returns: {null | (const obj, sys=const) | (return obj, sys=return)}
-    */
-
-   //TODO: sync
-   
+    */   
    processCall(objCall, func) {
       var name = null;
       var args = null;
@@ -5111,7 +6222,7 @@ class jsonPlState {
 
       if (this.VERBOSE) {
          this.wr("processCall: Receiving:");
-         //this.wrObj(objCall);
+         this.wrObj(objCall);
       }
 
       if (!this.isSysObjCall(objCall)) {
@@ -5338,6 +6449,11 @@ class jsonPlState {
                      }
 
                      pret = ljpl.runProgram();
+                     if (this.VERBOSE) {
+                        this.wr("processCall: Returning: A:");
+                        this.wrObj(pret);
+                     }
+
                   } else {
                      this.wr("processCall: Error: classDef should be defined");
                      return null;
@@ -5371,6 +6487,12 @@ class jsonPlState {
                   var lret = null;
                   try {
                      lret = this[funcDef.fname](args, func);
+
+                     if (this.VERBOSE) {
+                        this.wr("processCall: Returning: B:");
+                        this.wrObj(lret);
+                     }
+
                      err = false;
                   } catch (e) {
                      this.wr("processCall: Error calling system function: ");
@@ -5451,7 +6573,7 @@ class jsonPlState {
                if (ret !== null) {
                   var lret = this.getConst(ret.val.type, ret.val.v);
                   if (this.VERBOSE) {
-                     this.wr("processCall: Returning:");
+                     this.wr("processCall: Returning: C:");
                      this.wrObj(lret);
                   }
 
@@ -5539,7 +6661,7 @@ class jsonPlState {
                      } else {
                         var lret = this.getConst(ret.val.type, ret.val.v);
                         if (this.VERBOSE) {
-                           this.wr("processCall: Returning:");
+                           this.wr("processCall: Returning: D:");
                            this.wrObj(lret);
                         }
 
@@ -5618,9 +6740,6 @@ class jsonPlState {
     * Arg2: func(func obj, sys=func)
     * Returns: {null | (const obj, sys=const)}
     */
-
-   //TODO: sync
-
    processExp(objExp, func) {
       var left = null;
       var op = null;
@@ -5940,428 +7059,245 @@ class jsonPlState {
 jsonPlState.prototype.system = {
    "functions": [
       {
-         "sys": "func",
-         "name": "SYS::getLastExpReturn",
-         "fname": "sysGetLastExpReturn",
+         "sys": "func", "name": "SYS::getLastExpReturn", "fname": "sysGetLastExpReturn",
          "args": [
          ]
       },
       {
-         "sys": "func",
-         "name": "SYS::getLastBexReturn",
-         "fname": "sysGetLastBexReturn",
+         "sys": "func", "name": "SYS::getLastBexReturn", "fname": "sysGetLastBexReturn",
          "args": [
          ]
       },      
       {
-         "sys": "func",
-         "name": "SYS::getLastAsgnValue",
-         "fname": "sysGetLastAsgnValue",
+         "sys": "func", "name": "SYS::getLastAsgnValue", "fname": "sysGetLastAsgnValue",
          "args": [
          ]
       },
       {
-         "sys": "func",
-         "name": "SYS::wr",
-         "fname": "sysWr",
+         "sys": "func", "name": "SYS::wr", "fname": "sysWr",
          "args": [
          ]
       },
       {
-         "sys": "func",
-         "name": "SYS::wrApp",
-         "fname": "sysWrApp",
+         "sys": "func", "name": "SYS::wrApp", "fname": "sysWrApp",
          "args": [
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::wrFuncArgs", "fname": "sysWrFuncArgs",
+         "args": [
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::wrFuncVars", "fname": "sysWrFuncVars",
+         "args": [
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::wrClassVars", "fname": "sysWrClassVars",
+         "args": [
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::wrInt", "fname": "sysWr",
+         "args": [
+            {"sys": "arg", "name": "s", "val": {"sys": "val", "type": "int", "v": ""}}
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::wrFloat", "fname": "sysWr",
+         "args": [
+            {"sys": "arg", "name": "s", "val": {"sys": "val", "type": "float", "v": ""}}
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::wrStr", "fname": "sysWr",
+         "args": [
+            {"sys": "arg", "name": "s", "val": {"sys": "val", "type": "string", "v": ""}}
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::wrBool", "fname": "sysWr",
+         "args": [
+            {"sys": "arg", "name": "s", "val": {"sys": "val", "type": "bool", "v": ""}}
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::job1", "fname": "sysJob1",
+         "args": [
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::job2", "fname": "sysJob2",
+         "args": [
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::job3", "fname": "sysJob3",
+         "args": [
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::len", "fname": "sysLen",
+         "args": [
+            {"sys": "arg", "name": "variableName", "val": {"sys": "val", "type": "string", "v": ""}}            
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::type", "fname": "sysType",
+         "args": [
+            {"sys": "arg", "name": "variableName", "val": {"sys": "val", "type": "string", "v": ""}}
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::getRef", "fname": "sysGetRef",
+         "args": [
+            {"sys": "arg", "name": "varOrArgName", "val": {"sys": "val", "type": "string", "v": ""}},
+            {"sys": "arg", "name": "isVariable", "val": {"sys": "val", "type": "bool", "v": "false"}},
+            {"sys": "arg", "name": "functionName", "val": {"sys": "val", "type": "string", "v": ""}}
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::getRefStr", "fname": "sysGetRefStr",
+         "args": [
+            {"sys": "arg", "name": "varOrArgName", "val": {"sys": "val", "type": "string", "v": ""}},
+            {"sys": "arg", "name": "isVariable", "val": {"sys": "val", "type": "bool", "v": "false"}},
+            {"sys": "arg", "name": "functionName", "val": {"sys": "val", "type": "string", "v": ""}}
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::getArrayIdxRef", "fname": "sysGetArrayIdxRef",
+         "args": [
+            {"sys": "arg", "name": "varOrArgName", "val": {"sys": "val", "type": "string", "v": ""}},
+            {"sys": "arg", "name": "isVariable", "val": {"sys": "val", "type": "bool", "v": "false"}},
+            {"sys": "arg", "name": "functionName", "val": {"sys": "val", "type": "string", "v": ""}},
+            {"sys": "arg", "name": "index", "val": {"sys": "val", "type": "string", "v": ""}}
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::getArrayIdxRefStr", "fname": "sysGetArrayIdxRefStr",
+         "args": [
+            {"sys": "arg", "name": "varOrArgName", "val": {"sys": "val", "type": "string", "v": ""}},
+            {"sys": "arg", "name": "isVariable", "val": {"sys": "val", "type": "bool", "v": "false"}},
+            {"sys": "arg", "name": "functionName", "val": {"sys": "val", "type": "string", "v": ""}},
+            {"sys": "arg", "name": "index", "val": {"sys": "val", "type": "string", "v": ""}}            
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::mlc", "fname": "sysMalloc",
+         "args": [
+            {"sys": "arg", "name": "isClassVariable", "val": {"sys": "val", "type": "bool", "v": "false"}},
+            {"sys": "arg", "name": "variableName", "val": {"sys": "val", "type": "string", "v": ""}},
+            {"sys": "arg", "name": "variableType", "val": {"sys": "val", "type": "string", "v": ""}},
+            {"sys": "arg", "name": "variableValue", "val": {"sys": "val", "type": "string", "v": ""}}                        
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::getElementTextContent", "fname": "sysGetElementTextContent",
+         "args": [
+            {"sys": "arg", "name": "id", "val": {"sys": "val", "type": "string", "v": "dom_id"}}
          ]
       },      
       {
-         "sys": "func",
-         "name": "SYS::wrInt",
-         "fname": "sysWr",
+         "sys": "func", "name": "SYS::getElementAttr", "fname": "sysGetElementAttr",
          "args": [
-            {
-               "sys": "arg",
-               "name": "s",
-               "val": {
-                  "sys": "val",
-                  "type": "int",
-                  "v": ""
-               }
-            }
+            {"sys": "arg", "name": "id", "val": {"sys": "val", "type": "string", "v": "dom_id"}},
+            {"sys": "arg", "name": "attr", "val": {"sys": "val", "type": "string", "v": "text"}}
+         ]         
+      },      
+      {
+         "sys": "func", "name": "SYS::getElementStyle", "fname": "sysGetElementStyle",
+         "args": [
+            {"sys": "arg", "name": "id", "val": {"sys": "val", "type": "string", "v": "dom_id"}}            
+         ]         
+      },
+      {
+         "sys": "func", "name": "SYS::setClickEventHandler", "fname": "sysSetClickEventHandler",
+         "args": [
+            {"sys": "arg", "name": "id", "val": {"sys": "val", "type": "string", "v": "dom_id"}},
+         ]         
+      },
+      {
+         "sys": "func", "name": "SYS::setElementAttr", "fname": "sysSetElementAttr",
+         "args": [
+            {"sys": "arg", "name": "id", "val": {"sys": "val", "type": "string", "v": "dom_id"}},
+            {"sys": "arg", "name": "attr", "val": {"sys": "val", "type": "string", "v": "text"}},
+            {"sys": "arg", "name": "value", "val": {"sys": "val", "type": "string", "v": "some text"}}
+         ]         
+      },
+      {
+         "sys": "func", "name": "SYS::setElementTextContent", "fname": "sysSetElementTextContent",
+         "args": [
+            {"sys": "arg", "name": "id", "val": {"sys": "val", "type": "string", "v": "dom_id"}},
+            {"sys": "arg", "name": "textContent", "val": {"sys": "val", "type": "string", "v": "text_content"}}
          ]
       },
       {
-         "sys": "func",
-         "name": "SYS::wrFloat",
-         "fname": "sysWr",
+         "sys": "func", "name": "SYS::setElementInnerHtml", "fname": "sysSetElementInnerHtml",
          "args": [
-            {
-               "sys": "arg",
-               "name": "s",
-               "val": {
-                  "sys": "val",
-                  "type": "float",
-                  "v": ""
-               }
-            }
+            {"sys": "arg", "name": "id", "val": {"sys": "val", "type": "string", "v": "dom_id"}},
+            {"sys": "arg", "name": "innerHtml", "val": {"sys": "val", "type": "string", "v": "inner_html"}}
+         ]         
+      },            
+      {
+         "sys": "func", "name": "SYS::setElementStyle", "fname": "sysSetElementStyle",
+         "args": [
+            {"sys": "arg", "name": "id", "val": {"sys": "val", "type": "string", "v": "dom_id"}},
+            {"sys": "arg", "name": "style", "val": {"sys": "val", "type": "string", "v": "style_str"}}            
+         ]         
+      },
+      {
+         "sys": "func", "name": "SYS::appendNewChildElementToContainer", "fname": "sysAppendNewChildElementToContainer",
+         "args": [
+            {"sys": "arg", "name": "tagName", "val": {"sys": "val", "type": "string", "v": "div"}},
+            {"sys": "arg", "name": "id","val": {"sys": "val", "type": "string", "v": "new_dom_id"}},
+            {"sys": "arg", "name": "prepend", "val": {"sys": "val", "type": "bool", "v": "false", "comment":"Prepend or append?"}},
+            {"sys": "arg", "name": "parentId", "val": {"sys": "val", "type": "string", "v": "parent_id"}}
          ]
       },
       {
-         "sys": "func",
-         "name": "SYS::wrStr",
-         "fname": "sysWr",
+         "sys": "func", "name": "SYS::appendNewChildElementToParent", "fname": "sysAppendNewChildElementToParent",
          "args": [
-            {
-               "sys": "arg",
-               "name": "s",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            }
+            {"sys": "arg", "name": "tagName", "val": {"sys": "val", "type": "string", "v": "div"}},
+            {"sys": "arg", "name": "id", "val": {"sys": "val", "type": "string", "v": "new_dom_id"}},
+            {"sys": "arg", "name": "prepend", "val": {"sys": "val", "type": "bool", "v": "false", "comment":"Prepend or append?"}}
          ]
       },
       {
-         "sys": "func",
-         "name": "SYS::wrBool",
-         "fname": "sysWr",
+         "sys": "func", "name": "SYS::cln", "fname": "sysClean",
          "args": [
-            {
-               "sys": "arg",
-               "name": "s",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": ""
-               }
-            }
+            {"sys": "arg", "name": "isClassVariable", "val": {"sys": "val", "type": "bool", "v": "false"}},
+            {"sys": "arg", "name": "variableName", "val": {"sys": "val", "type": "string", "v": ""}}            
          ]
       },
       {
-         "sys": "func",
-         "name": "SYS::job1",
-         "fname": "sysJob1",
-         "args": []
-      },
-      {
-         "sys": "func",
-         "name": "SYS::job2",
-         "fname": "sysJob2",
-         "args": []
-      },
-      {
-         "sys": "func",
-         "name": "SYS::job3",
-         "fname": "sysJob3",
-         "args": []
-      },
-      {
-         "sys": "func",
-         "name": "SYS::len",
-         "fname": "sysLen",
+         "sys": "func", "name": "SYS::amlc", "fname": "sysMallocArray",
          "args": [
-            {
-               "sys": "arg",
-               "name": "s",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            }
+            {"sys": "arg", "name": "isClassVariable", "val": {"sys": "val", "type": "bool", "v": "false"}},
+            {"sys": "arg", "name": "variableName", "val": {"sys": "val", "type": "string", "v": ""}},
+            {"sys": "arg", "name": "variableType", "val": {"sys": "val", "type": "string", "v": ""}},
+            {"sys": "arg", "name": "arrayLength", "val": {"sys": "val", "type": "int", "v": "0"}},
+            {"sys": "arg", "name": "strict", "val": {"sys": "val", "type": "bool", "v": "false"}}
          ]
       },
       {
-         "sys": "func",
-         "name": "SYS::type",
-         "fname": "sysType",
+         "sys": "func", "name": "SYS::cnvIntToStr", "fname": "sysCnvIntToStr",
          "args": [
-            {
-               "sys": "arg",
-               "name": "s",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            }
+            {"sys": "arg", "name": "i", "val": {"sys": "val", "type": "int", "v": "0"}}
          ]
       },
       {
-         "sys": "func",
-         "name": "SYS::getRef",
-         "fname": "sysGetRef",
+         "sys": "func", "name": "SYS::cnvFloatToStr", "fname": "sysCnvFloatToStr",
          "args": [
-            {
-               "sys": "arg",
-               "name": "name",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "isVar",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": "false"
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "funcName",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            }
+            {"sys": "arg", "name": "f", "val": {"sys": "val", "type": "float", "v": "0.0"}}
          ]
       },
       {
-         "sys": "func",
-         "name": "SYS::getRefStr",
-         "fname": "sysGetRefStr",
+         "sys": "func", "name": "SYS::cnvBoolToStr", "fname": "sysCnvBoolToStr",
          "args": [
-            {
-               "sys": "arg",
-               "name": "name",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "isVar",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": "false"
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "funcName",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            }
+            {"sys": "arg", "name": "b", "val": {"sys": "val", "type": "bool", "v": "false"}}
          ]
-      },
-      {
-         "sys": "func",
-         "name": "SYS::getArrayIdxRef",
-         "fname": "sysGetArrayIdxRef",
-         "args": [
-            {
-               "sys": "arg",
-               "name": "name",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "isVar",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": "false"
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "funcName",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "idx",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            }
-         ]
-      },
-      {
-         "sys": "func",
-         "name": "SYS::getArrayIdxRefStr",
-         "fname": "sysGetArrayIdxRefStr",
-         "args": [
-            {
-               "sys": "arg",
-               "name": "name",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "isVar",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": "false"
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "funcName",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "idx",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            }            
-         ]
-      },
-      {
-         "sys": "func",
-         "name": "SYS::mlc",
-         "fname": "sysMalloc",
-         "args": [
-            {
-               "sys": "arg",
-               "name": "isClassVar",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": "false"
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "name",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "type",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "val",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            }                        
-         ]
-      },
-      {
-         "sys": "func",
-         "name": "SYS::cln",
-         "fname": "sysClean",
-         "args": [
-            {
-               "sys": "arg",
-               "name": "isClassVar",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": "false"
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "name",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            }            
-         ]
-      },
-      {
-         "sys": "func",
-         "name": "SYS::amlc",
-         "fname": "sysMallocArray",
-         "args": [
-            {
-               "sys": "arg",
-               "name": "isClassVar",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": "false"
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "name",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "type",
-               "val": {
-                  "sys": "val",
-                  "type": "string",
-                  "v": ""
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "len",
-               "val": {
-                  "sys": "val",
-                  "type": "int",
-                  "v": "0"
-               }
-            },
-            {
-               "sys": "arg",
-               "name": "strict",
-               "val": {
-                  "sys": "val",
-                  "type": "bool",
-                  "v": "false"
-               }
-            }
-         ]
-      }      
+      },      
    ]
 };
 

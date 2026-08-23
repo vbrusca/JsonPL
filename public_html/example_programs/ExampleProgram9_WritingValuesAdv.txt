@@ -1,0 +1,34 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram9_WritingValuesAdv",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "#.funcs.main", "args": [
+		{"sys": "const", "val": {"sys": "val", "type":"int", "v":55}},
+		{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "<#.vars.classVar2>"}}
+	]},
+  	"classes": [],
+  	"vars": [
+		{"sys": "var", "name": "classVar1", "val": {"sys": "val", "type": "int", "v": "65"}},
+		{"sys": "var", "name": "classVar2", "val": {"sys": "val", "type": "int", "v": "#.vars.classVar1"}},
+		{"sys": "var", "name": "classVar3", "val": {"sys": "val", "type": "int", "v": "85"}},
+		{"sys": "var", "name": "classVar4", "val": {"sys": "val", "type": "int", "v": "#.vars.classVar3"}}
+	],
+  	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [
+			{"sys": "arg", "name": "funcArg1", "val": {"sys": "val", "type": "int", "v": 0}},
+			{"sys": "arg", "name": "funcArg2", "val": {"sys": "val", "type": "int", "v": 0}}
+		],
+      		"vars": [
+			{"sys": "var", "name": "funcVar1", "val": {"sys": "val", "type": "int", "v": "75"}}
+		],
+      		"lines": [
+        		{"sys": "call", "name": "SYS::wrFuncArgs", "args": []},
+        		{"sys": "call", "name": "SYS::wrFuncVars", "args": []},
+        		{"sys": "call", "name": "SYS::wrClassVars", "args": []},
+			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+  	  	]}
+  	],
+  	"comment": "A program that demonstrates system level writing functions for local function arguments, variables, and class level variables."
+}

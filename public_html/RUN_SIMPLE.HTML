@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="./styles/style.css"> 
+        <title>JSONPL: SIMPLE PROGRAM EXECUTION ENVIRONMENT</title>
+        <script type="text/javascript" src="./EXEC4.JS"></script>
+        <script type="text/javascript">
+        try {
+            var jpl = null;	
+            var code = {"sys":"class", "name":"INIT_FORM",
+                "ret":{"sys":"val", "type":"int", "v":"0"},
+                "call":{"sys":"call", "name":"main", "args":[]},
+                "classes":[],
+                "vars":[],
+                "funcs":[
+                    {"sys":"func", "name":"main",
+                        "ret":{"sys":"val", "type":"int", "v":"0"},
+                        "args":[],
+                        "vars":[],
+                        "lines":[
+                            {"sys": "call", "name": "SYS::appendNewChildElementToParent",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "div"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_0"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::appendNewChildElementToContainer",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "span"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_0_span"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_0"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementTextContent",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_0_span"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "Program Source Code / Input:"}}
+                                ]
+                            },                            
+                            {"sys": "call", "name": "SYS::appendNewChildElementToParent",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "div"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_1"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementStyle",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_1"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "width:600px;"}}                                
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::getElementStyle",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_1"}},
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::appendNewChildElementToContainer",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "textarea"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_textarea"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_1"}}
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementAttr",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_textarea"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "cols,rows"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "120,30"}}
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::appendNewChildElementToParent",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "div"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_2"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
+                                ]
+                            },                            
+                            {"sys": "call", "name": "SYS::appendNewChildElementToContainer",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "input"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "run_program_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_2"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementAttr",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "run_program_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "value"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "Run Program"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementAttr",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "run_program_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "type"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "button"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setClickEventHandler",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "run_program_button"}},
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::appendNewChildElementToContainer",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "input"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "clear_output_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_2"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementAttr",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "clear_output_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "value"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "Clear Output"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementAttr",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "clear_output_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "type"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "button"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementStyle",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "clear_output_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "margin-left:10px;"}}                         
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setClickEventHandler",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "clear_output_button"}},
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::appendNewChildElementToContainer",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "input"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "clear_program_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_2"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementAttr",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "clear_program_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "value"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "Clear Program Code"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementAttr",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "clear_program_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "type"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "button"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementStyle",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "clear_program_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "margin-left:10px;"}}                         
+                                ]
+                            },                            
+                            {"sys": "call", "name": "SYS::setClickEventHandler",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "clear_program_button"}},
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::appendNewChildElementToContainer",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "input"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "run_program_call_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_2"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementAttr",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "run_program_call_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "value"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "Run Program Call (Main)"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementAttr",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "run_program_call_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "type"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "button"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementStyle",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "run_program_call_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "margin-left:10px;"}}                         
+                                ]
+                            },                            
+                            {"sys": "call", "name": "SYS::setClickEventHandler",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "run_program_call_button"}},
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::appendNewChildElementToParent",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "div"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_3"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementStyle",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_3"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "margin-top:10px;"}}                         
+                                ]
+                            },                            
+                            {"sys": "call", "name": "SYS::appendNewChildElementToContainer",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "span"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_3_span"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_3"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementTextContent",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_3_span"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "Program Execution / Output:"}}
+                                ]
+                            },  
+                            {"sys": "call", "name": "SYS::appendNewChildElementToParent",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "div"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_4"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementStyle",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_4"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "width:600px;"}}                                
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::appendNewChildElementToContainer",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "textarea"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_output_textarea"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_4"}}                                    
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementAttr",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_output_textarea"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "cols,rows"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "120,25"}}
+                                ]
+                            },
+                            {"sys":"return", "val": {"sys":"const", "val": {"sys":"val", "type":"int", "v":"1"}}}                            
+                        ]
+                    }
+                ],
+		        "comments": "This program initializes the web form for this page. This page provides a simple way to execute JSONPL code."
+            };
+
+            var codeStr = null;
+            var txtAreaSrc = null;
+            var txtAreaMsg = null;
+            var nl = "\r\n";
+            var ljpl = null;
+            var lcodeStr = null;
+
+            /**
+             * Name: init
+             * Desc: A function that uses JPL to init the page.
+             */
+            function init() {
+                jsonPlState.prototype.eventWireUpClick = function(event) {
+                    localEventWireUpClick(event);
+                };
+
+                jpl = new jsonPlState();
+                jpl.parentDomElement = document.getElementById("main_div");
+
+                codeStr = JSON.stringify(code, null, 2);
+                jpl.program = code; //JSON.parse(codeStr);
+            
+                if(!jpl.validateSysObjClass(jpl.program)) {
+                    jpl.wr("runProgram: Error: could not validate the class object.");
+                    return;
+                }
+
+                jpl.wr("====================== Running Form Init Program ======================");
+                jpl.wr(codeStr);
+
+                jpl.wr("====================== Program Results ======================");
+                jpl.runProgram();
+
+                txtAreaSrc = document.getElementById("program_code_textarea");
+                txtAreaMsg = document.getElementById("program_output_textarea");
+
+                jsonPlState.prototype.wr = function(s) {
+                    if (this.LOGGING === true) {
+                        console.log(this.WR_PREFIX + s);
+                        txtAreaMsg.value += (this.WR_PREFIX + s + nl);
+                    }
+                };
+
+                jsonPlState.prototype.wrApp = function(s) {
+                    if (this.LOGGING === true) {
+                        console.log(this.WR_PREFIX + s);
+                        txtAreaMsg.value += (this.WR_PREFIX + s + nl);
+                    }
+                };
+            
+                jsonPlState.prototype.wrObj = function(s) {                    
+                    if (this.LOGGING === true) {           
+                        if(this.ABRIDGED_JSON_OUTPUT === false) {            
+                            console.log(this.WR_PREFIX + JSON.stringify(s, null, 2));
+                            txtAreaMsg.value += (this.WR_PREFIX + JSON.stringify(s, null, 2) + nl);
+                        } else {
+                            console.log(this.WR_PREFIX + JSON.stringify(s));
+                            txtAreaMsg.value += (this.WR_PREFIX + JSON.stringify(s) + nl);
+                        }
+                    }
+                };
+
+                jsonPlState.prototype.wrVal = function(v) {
+                    if (this.LOGGING === true) {
+                        if(this.isSysObjValArray(v)) {
+                            console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len);
+                            txtAreaMsg.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " len: " + v.len + nl);
+                        } else {
+                            console.log(this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v);
+                            txtAreaMsg.value += (this.WR_PREFIX + "Val Obj: Type: " + v.type + " v: " + v.v + nl);
+                        }
+                    }
+                };                
+            }
+
+            /**
+             * Name: localEventWireUpClick
+             * Desc: A generic event handler for piping local DOM click events to JPL.
+             * Arg0: HTML5 DOM element click event
+             */
+            function localEventWireUpClick(event) {
+                var targetElement = event.target;
+                var targetId = targetElement.id;
+                var eventType = event.type;
+                var eventPath = targetId + "." + eventType;
+                var callObj = {"sys": "call", "name": eventPath, 
+                    "args": [
+                        { "sys": "const", "val": {"sys": "val", "type": "string", "v": targetId}},
+                        { "sys": "const", "val": {"sys": "val", "type": "string", "v": eventType}}                            
+                    ]
+                };
+
+                console.log("localEventWireUpClick: " + eventPath);
+                if(eventPath == "run_program_button.click") {
+                    ljpl = new jsonPlState();
+                    lcodeStr = txtAreaSrc.value;
+                    ljpl.program = JSON.parse(lcodeStr);
+                
+                    if(!ljpl.validateSysObjClass(ljpl.program)) {
+                        ljpl.wr("runProgram: Error: could not validate the class object.");
+                        return;
+                    }
+
+                    ljpl.wr("====================== Program Results ======================");
+                    ljpl.runProgram();
+                } else if(eventPath == "clear_output_button.click") {
+                    txtAreaMsg.value = "";
+
+                } else if(eventPath == "clear_program_button.click") {
+                    txtAreaSrc.value = "";
+
+                } else if(eventPath == "run_program_call_button.click") {
+                    if(ljpl != null) {
+                        if(ljpl.program != null) {
+                            var lcallObj = ljpl.program.call;
+                            console.log("localEventWireUpClick: found call object:" + JSON.stringify(ljpl.program.call));
+                            if(lcallObj != null) {
+                                if(ljpl.isSysObj(lcallObj)) {
+                                    if(ljpl.isSysObjCall(lcallObj)) {
+                                        if(ljpl.validateSysObjCall(lcallObj)) {
+                                            ljpl.runClassFunc(lcallObj);
+                                        } else {
+                                            console.log("localEventWireUpClick: Could not validate the call object.");
+                                        }
+                                    } else {
+                                        console.log("localEventWireUpClick: Could not identify the call object.");
+                                    }
+                                } else {
+                                    console.log("localEventWireUpClick: Could not identify a sys object.");
+                                }
+                            } else {
+                                console.log("localEventWireUpClick: Could not find a proper call object to run for the given program.");
+                            }
+                        } else {
+                                console.log("localEventWireUpClick: Could not find a loaded program to execute the call object for.");                        
+                        }
+                    } else {
+                            console.log("localEventWireUpClick: Could not find a loaded JSONPL object to process.");                        
+                    }
+                } else {
+                    jpl.runClassFunc(callObj);
+                }
+            }
+
+        } catch(e) {
+            var s = "Unhandled error encountered!";
+	    	console.log(s);
+            txtAreaMsg.value += (this.WR_PREFIX + s + nl);
+
+            s = "Message: " + e;
+            console.log(s);
+            txtAreaMsg.value += (this.WR_PREFIX + s + nl);
+        }
+        </script>
+    </head>
+    <body id="main_body" style="padding: 6px;" onload="init()">
+        <div id="main_div">
+    </body>
+</html>
