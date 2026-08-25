@@ -1,0 +1,57 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram29_VariableConversion",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "#.funcs.main", "args": []},
+  	"classes": [],
+  	"vars": [
+		{"sys": "var", "name": "classBool", "val": {"sys": "val", "type": "int", "v": "true"}},
+		{"sys": "var", "name": "classInt", "val": {"sys": "val", "type": "bool", "v": "100"}},
+		{"sys": "var", "name": "classFloat1", "val": {"sys": "val", "type": "float", "v": "213.367"}},
+		{"sys": "var", "name": "classFloat2", "val": {"sys": "val", "type": "float", "v": "330.0"}},
+		{"sys": "var", "name": "classFloat3", "val": {"sys": "val", "type": "float", "v": "0.0"}}
+	],
+  	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [],
+      		"lines": [
+			{"sys": "call", "name": "SYS::wrClassVars", "args": []},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.classInt"}},
+				"op": {"sys": "op", "type": "asgn", "v": "="},
+				"right": {"sys": "call", "name": "SYS::cnvFloatToInt", "args": [
+					{"sys": "ref", "val": {"sys":"val", "type": "float", "v": "#.vars.classFloat1"}}
+				]}
+			},
+			{"sys": "call", "name": "SYS::wrClassVars", "args": []},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.classInt"}},
+				"op": {"sys": "op", "type": "asgn", "v": "="},
+				"right": {"sys": "call", "name": "SYS::cnvFloatToInt", "args": [
+					{"sys": "ref", "val": {"sys":"val", "type": "float", "v": "#.vars.classFloat2"}}
+				]}
+			},
+			{"sys": "call", "name": "SYS::wrClassVars", "args": []},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classBool"}},
+				"op": {"sys": "op", "type": "asgn", "v": "="},
+				"right": {"sys": "call", "name": "SYS::cnvFloatToBool", "args": [
+					{"sys": "ref", "val": {"sys":"val", "type": "float", "v": "#.vars.classFloat3"}}
+				]}
+			},
+			{"sys": "call", "name": "SYS::wrClassVars", "args": []},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classBool"}},
+				"op": {"sys": "op", "type": "asgn", "v": "="},
+				"right": {"sys": "call", "name": "SYS::cnvFloatToBool", "args": [
+					{"sys": "ref", "val": {"sys":"val", "type": "float", "v": "#.vars.classFloat2"}}
+				]}
+			},
+			{"sys": "call", "name": "SYS::wrClassVars", "args": []},
+			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+  	  	]}
+  	],
+  	"comment": "A program that demonstrates variable conversion using system functions."
+}

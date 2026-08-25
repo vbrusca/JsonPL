@@ -185,6 +185,126 @@ class jsonPlState {
    }
 
    /**
+    * Name: sysCnvStrToInt
+    * Desc: A system level conversion function that converts a string argument to an int constant.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: s(a {const} or {ref} string resulting in a string value to convert to an int)
+    * Returns: const(a {const} int object)
+    */
+   sysCnvStrToInt(args, func) {
+      var ret = this.getConst("int", Number.NaN);
+      var funcName = "sysCnvStrToInt"; 
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      if(args[0].val.type !== "string") {
+         this.wr(funcName + ": Error: arg is not a string object");
+         return ret;         
+      }
+
+      var intValStr = this.toInt(args[0].val.v);
+      ret.val.v = intValStr;
+      return ret; 
+   }
+
+   /**
+    * Name: sysCnvStrToFloat
+    * Desc: A system level conversion function that converts a string argument to a float constant.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: s(a {const} or {ref} string resulting in a string value to convert to a float)
+    * Returns: const(a {const} float object)
+    */
+   sysCnvStrToFloat(args, func) {
+      var ret = this.getConst("float", Number.NaN);
+      var funcName = "sysCnvStrToFloat"; 
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      if(args[0].val.type !== "string") {
+         this.wr(funcName + ": Error: arg is not a string object");
+         return ret;         
+      }      
+
+      var floatValStr = this.toFloat(args[0].val.v);
+      ret.val.v = floatValStr;
+      return ret; 
+   }
+
+   /**
+    * Name: sysCnvStrToBool
+    * Desc: A system level conversion function that converts a string argument to a bool constant.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: s(a {const} or {ref} string resulting in a string value to convert to a bool)
+    * Returns: const(a {const} bool object)
+    */
+   sysCnvStrToBool(args, func) {
+      var ret = this.getConst("bool", false);
+      var funcName = "sysCnvStrToBool"; 
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      if(args[0].val.type !== "string") {
+         this.wr(funcName + ": Error: arg is not a string object");
+         return ret;         
+      }
+
+      var boolValStr = this.toBool(args[0].val.v);
+      ret.val.v = boolValStr;
+      return ret; 
+   }   
+
+   /**
     * Name: sysCnvBoolToStr
     * Desc: A system level conversion function that converts a bool argument to a str constant.
     * Arg1: args(an array of {arg} objects)
@@ -214,25 +334,332 @@ class jsonPlState {
          return ret;
       }
 
-      var boolValStr = "";
-      var res = null;
-
-      //process ref for bool value
-      if (this.isSysObjRef(args[0])) {
-         if (this.isRefStringArray(args[0].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg b");
-            return ret;
-         }
-
-         refDec = this.processRef(args[0], func);
-         if (refDec !== null) {
-            boolValStr = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg b");
-            return ret;
-         }
+      if(args[0].val.type !== "bool") {
+         this.wr(funcName + ": Error: arg is not a bool object");
+         return ret;         
       }
 
+      var boolValStr = this.toStr(args[0].val.v);
+      ret.val.v = boolValStr;
+      return ret; 
+   }
+
+   /**
+    * Name: sysCnvBoolToInt
+    * Desc: A system level conversion function that converts a bool argument to an integer constant.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: b(a {const} or {ref} string resulting in a bool value to convert to an integer)
+    * Returns: const(a {const} integer object)
+    */
+   sysCnvBoolToInt(args, func) {
+      var ret = this.getConst("int", "");
+      var funcName = "sysCnvBoolToInt"; 
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      if(args[0].val.type !== "bool") {
+         this.wr(funcName + ": Error: arg is not a bool object");
+         return ret;         
+      }
+
+      var intValStr = this.toInt(args[0].val.v);
+      ret.val.v = intValStr;
+      return ret; 
+   }
+
+   /**
+    * Name: sysCnvBoolToFloat
+    * Desc: A system level conversion function that converts a bool argument to a float constant.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: b(a {const} or {ref} string resulting in a bool value to convert to a float)
+    * Returns: const(a {const} float object)
+    */
+   sysCnvBoolToFloat(args, func) {
+      var ret = this.getConst("float", "");
+      var funcName = "sysCnvBoolToFloat"; 
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      if(args[0].val.type !== "bool") {
+         this.wr(funcName + ": Error: arg is not a bool object");
+         return ret;         
+      }
+
+      var floatValStr = this.toFloat(args[0].val.v);
+      ret.val.v = floatValStr;
+      return ret; 
+   }   
+
+   /**
+    * Name: sysCnvFloatToStr
+    * Desc: A system level conversion function that converts a float argument to a str constant.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: f(a {const} or {ref} string resulting in a float value to convert to a string)
+    * Returns: const(a {const} string object)
+    */
+   sysCnvFloatToStr(args, func) {
+      var ret = this.getConst("string", "");
+      var funcName = "sysCnvFloatToStr";
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      if(args[0].val.type !== "float") {
+         this.wr(funcName + ": Error: arg is not a float object");
+         return ret;         
+      }
+
+      var floatValStr = this.toStr(args[0].val.v);
+      ret.val.v = floatValStr;
+      return ret; 
+   }
+
+   /**
+    * Name: sysCnvIntToStr
+    * Desc: A system level conversion function that converts an integer argument to a string constant.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: i(a {const} or {ref} string resulting in an integer value to convert to a string)
+    * Returns: const(a {const} string object)
+    */
+   sysCnvIntToStr(args, func) {
+      var ret = this.getConst("string", "");
+      var funcName = "sysCnvIntToStr"; 
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      if(args[0].val.type !== "int") {
+         this.wr(funcName + ": Error: arg is not an int object");
+         return ret;         
+      }
+
+      var intValStr = this.toStr(args[0].val.v);
+      ret.val.v = intValStr;
+      return ret; 
+   }
+
+   /**
+    * Name: sysCnvIntToFloat
+    * Desc: A system level conversion function that converts an integer argument to a float constant.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: i(a {const} or {ref} string resulting in an integer value to convert to a float)
+    * Returns: const(a {const} float object)
+    */
+   sysCnvIntToFloat(args, func) {
+      var ret = this.getConst("float", Number.NaN);
+      var funcName = "sysCnvIntToFloat"; 
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      if(args[0].val.type !== "int") {
+         this.wr(funcName + ": Error: arg is not an int object");
+         return ret;         
+      }
+
+      var floatValStr = this.toFloat(args[0].val.v);
+      ret.val.v = floatValStr;
+      return ret; 
+   }
+
+   /**
+    * Name: sysCnvIntToBool
+    * Desc: A system level conversion function that converts an integer argument to a bool constant.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: b(a {const} or {ref} string resulting in an integer value to convert to a bool)
+    * Returns: const(a {const} bool object)
+    */
+   sysCnvIntToBool(args, func) {
+      var ret = this.getConst("bool", false);
+      var funcName = "sysCnvIntToBool"; 
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      if(args[0].val.type !== "int") {
+         this.wr(funcName + ": Error: arg is not an int object");
+         return ret;         
+      }
+
+      var boolValStr = this.toBool(args[0].val.v);
+      ret.val.v = boolValStr;
+      return ret; 
+   }
+
+   /**
+    * Name: sysCnvFloatToInt
+    * Desc: A system level conversion function that converts a float argument to an integer constant.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: f(a {const} or {ref} string resulting in a float value to convert to an integer)
+    * Returns: const(a {const} string object)
+    */
+   sysCnvFloatToInt(args, func) {
+      var ret = this.getConst("int", Number.NaN);
+      var funcName = "sysCnvFloatToInt"; 
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      if(args[0].val.type !== "float") {
+         this.wr(funcName + ": Error: arg is not a float object");
+         return ret;         
+      }
+
+      var intValStr = this.toInt(args[0].val.v);
+      ret.val.v = intValStr;
+      return ret; 
+   }
+
+   /**
+    * Name: sysCnvFloatToBool
+    * Desc: A system level conversion function that converts a float argument to a bool constant.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: f(a {const} or {ref} string resulting in a float value to convert to a bool)
+    * Returns: const(a {const} bool object)
+    */
+   sysCnvFloatToBool(args, func) {
+      var ret = this.getConst("bool", false);
+      var funcName = "sysCnvFloatToBool"; 
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      if(args[0].val.type !== "float") {
+         this.wr(funcName + ": Error: arg is not a float object");
+         return ret;         
+      }
+
+      var boolValStr = this.toBool(args[0].val.v);
       ret.val.v = boolValStr;
       return ret; 
    }
@@ -338,16 +765,36 @@ class jsonPlState {
     * Desc: A system level method to access the last asgn value object.
     * Arg1: args(an array of {arg} objects)
     * Arg2: func(the {func} this system function is called from)
-    * Returns: const(a {const} bool object)
-    */   
+    * Returns: const(a {const} string object indicating an empty string as a failure or a value as the result)
+    */
    sysGetLastAsgnValue(args, func) {
+      //this.wr("sysGetLastAsgnValue: " + JSON.stringify(this.lastAsgnValue));
       if (this.lastAsgnValue !== null) {
-         return this.lastAsgnValue;
+         //force conversion of const object to string type along with the value
+         var tmp = this.lastAsgnValue;
+         tmp.val.type = "string";
+         tmp.val.v = this.toStr(tmp.val.v);
+         return tmp;
+      } else {
+         return this.getConstStr();
+      }
+   }
+   
+   /**
+    * Name: sysGetLastAsgnReturn
+    * Desc: A system level method to access the last asgn return object.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Returns: const(a {const} bool object indicating a failure or a {const} with the last assigned value)
+    */   
+   sysGetLastAsgnReturn(args, func) {
+      if (this.lastAsgnReturn !== null) {
+         return this.lastAsgnReturn;
       } else {
          return this.getConstBool();
       }
    }
-   
+
    /**
     * Name: sysGetLastExpReturn
     * Desc: A system level method to access the last exp return object.
@@ -388,6 +835,25 @@ class jsonPlState {
       ret.sys = "val";
       ret.type = "bool";
       ret.v = "false";
+
+      var ret2 = {};
+      ret2.sys = "const";
+      ret2.val = ret;
+      ret = ret2;
+
+      return ret;
+   }
+
+   /**
+    * Name: getConstStr
+    * Desc: A method to quickly access a constant string value object.
+    * Returns: const(a {const} string object)
+    */
+   getConstStr() {
+      var ret = {};
+      ret.sys = "val";
+      ret.type = "string";
+      ret.v = "";
 
       var ret2 = {};
       ret2.sys = "const";
@@ -2017,30 +2483,45 @@ class jsonPlState {
       if (s !== null && this.isObject(s) && this.isSysObj(s)) {
          s = this.getRef("string", s.val.v);
          v = this.processRef(s, func);
-         if (v !== null) {
-            v = v.val;
-         }
       } else {
          this.wr("sysLen: Error: reference argument cannt be null");
          return ret;
       }
 
-      if (v !== null && this.isSysObj(v)) {
-         if (this.isSysObjValArray(v)) {
-            //ret = this.getConst("int", this.toStr(v.len));
-            ret.val.v  = this.toStr(v.len);
-         } else if(this.type === "string") {
-            ret.val.v = this.toStr((v.v + "").length); 
-         } else if(this.type === "int") {
-            ret.val.v = "4";
-         } else if(this.type === "float") {
-            ret.val.v = "4";
-         } else if(this.type === "bool") {
-            ret.val.v = "1";
-         }            
+      //this.wr("sysLen: Return object pre 1: " + JSON.stringify(v));
+
+      if (v !== null) {
+         v = v.val;
       }
 
-      //this.wrVal(ret.val);
+      //this.wr("sysLen: Return object pre 2: " + JSON.stringify(v));
+
+      if (v !== null && this.isSysObj(v)) {
+         //this.wr("sysLen: 000: " + v.type);
+         if (this.isSysObjValArray(v)) {
+            //this.wr("sysLen: AAA");
+            //ret = this.getConst("int", this.toStr(v.len));
+            ret.val.v  = this.toStr(v.len);
+         } else if(v.type === "string") {
+            //this.wr("sysLen: BBB");            
+            ret.val.v = this.toStr((v.v + "").length); 
+         } else if(v.type === "int") {
+            //this.wr("sysLen: CCC");
+            ret.val.v = "4";
+         } else if(v.type === "float") {
+            //this.wr("sysLen: DDD");            
+            ret.val.v = "4";
+         } else if(v.type === "bool") {
+            //this.wr("sysLen: EEE");            
+            ret.val.v = "1";
+         } else {
+            //this.wr("sysLen: 111");            
+         }            
+      } else {
+         //this.wr("sysLen: 222");
+      }
+
+      //this.wr("sysLen: Return object post: " + JSON.stringify(ret));
       return ret;
    }
 
@@ -2079,11 +2560,8 @@ class jsonPlState {
       }
 
       if (v !== null && this.isSysObj(v)) {
-         //ret = this.getConst("string", this.toStr(v.type));
          ret.val.v = this.toStr(v.type);
       }
-
-      //this.wrVal(ret.val);
       return ret;
    }
 
@@ -2177,6 +2655,7 @@ class jsonPlState {
          if (funcName === null || funcName === "") {
             //lookup class variable
             var v = this.findVar(name, this.program);
+            //this.wr("===================== " + JSON.stringify(v));
             if (v !== null) {
                ret = this.getRef(v.val.type, "#.vars." + v.name);
             }
@@ -2284,8 +2763,6 @@ class jsonPlState {
          }
          this.wr("sysMalloc: Warning: IsClassVar: " + isClassVar + ", Name: " + name + " already exists.");
       }
-
-      //this.wrObj(ret);   
       return ret;
    }
 
@@ -2404,8 +2881,6 @@ class jsonPlState {
          }
          this.wr("sysMallocArray: Warning: IsClassVar: " + isClassVar + ", Name: " + name + " already exists.");
       }
-
-      //this.wrObj(ret);   
       return ret;
    }
 
@@ -2463,70 +2938,6 @@ class jsonPlState {
       var parentIdName = this.toStr(args[3].val.v);
       var res = null;
 
-      //process ref for tagName
-      if (this.isSysObjRef(args[0])) {
-         if (this.isRefStringArray(args[0].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg tagName");
-            return ret;
-         }
-
-         refDec = this.processRef(args[0], func);
-         if (refDec !== null) {
-            tagName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg tagName");
-            return ret;
-         }
-      }
-
-      //process ref for idName
-      if (this.isSysObjRef(args[1])) {
-         if (this.isRefStringArray(args[1].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg id");
-            return ret;
-         }
-
-         refDec = this.processRef(args[1], func);
-         if (refDec !== null) {
-            idName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg id");
-            return ret;
-         }
-      }
-
-      //process ref for pre
-      if (this.isSysObjRef(args[2])) {
-         if (this.isRefBoolArray(args[2].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[2].val.v + ", for arg pre");
-            return ret;
-         }
-
-         refDec = this.processRef(args[2], func);
-         if (refDec !== null) {
-            pre = this.toBool(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[2].val.v + ", for arg pre");
-            return ret;
-         }
-      }
-
-      //process ref for parentIdName
-      if (this.isSysObjRef(args[3])) {
-         if (this.isRefStringArray(args[3].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[3].val.v + ", for arg parentId");
-            return ret;
-         }
-
-         refDec = this.processRef(args[3], func);
-         if (refDec !== null) {
-            parentIdName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[3].val.v + ", for arg parentId");
-            return ret;
-         }
-      }
-
       var parentElm = document.getElementById(parentIdName);
       if(parentElm != null) {
          var elm = document.createElement(tagName);
@@ -2581,46 +2992,12 @@ class jsonPlState {
       var styleStr = this.toStr(args[1].val.v);
       var res = null;
 
-      //process ref for idName
-      if (this.isSysObjRef(args[0])) {
-         if (this.isRefStringArray(args[0].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-
-         refDec = this.processRef(args[0], func);
-         if (refDec !== null) {
-            idName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-      }
-
-      //process ref for styleStr
-      if (this.isSysObjRef(args[1])) {
-         if (this.isRefStringArray(args[1].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg style");
-            return ret;
-         }
-
-         refDec = this.processRef(args[1], func);
-         if (refDec !== null) {
-            styleStr = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg style");
-            return ret;
-         }
-      }
-
       var elm = document.getElementById(idName);
       this.wr("Found style string to set: " + styleStr);
-
       if(elm != null) {
          elm.style.cssText = styleStr;
          ret.val.v = "true";         
       }
-
       return ret;      
    }
 
@@ -2657,29 +3034,10 @@ class jsonPlState {
       var idName = this.toStr(args[0].val.v);
       var res = null;
 
-      //process ref for idName
-      if (this.isSysObjRef(args[0])) {
-         if (this.isRefStringArray(args[0].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-
-         refDec = this.processRef(args[0], func);
-         if (refDec !== null) {
-            idName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-      }
-
       var elm = document.getElementById(idName);
-      this.wr("Found a text content string to set: " + text);
-
       if(elm != null) {
          ret.val.v = elm.textContent;
       }
-
       return ret; 
    }   
 
@@ -2723,52 +3081,17 @@ class jsonPlState {
       var text = this.toStr(args[1].val.v);
       var res = null;
 
-      //process ref for idName
-      if (this.isSysObjRef(args[0])) {
-         if (this.isRefStringArray(args[0].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-
-         refDec = this.processRef(args[0], func);
-         if (refDec !== null) {
-            idName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-      }
-
-      //process ref for text
-      if (this.isSysObjRef(args[1])) {
-         if (this.isRefStringArray(args[1].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg text");
-            return ret;
-         }
-
-         refDec = this.processRef(args[1], func);
-         if (refDec !== null) {
-            text = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg text");
-            return ret;
-         }
-      }
-
       var elm = document.getElementById(idName);
-      this.wr("Found a text content string to set: " + text);
-
       if(elm != null) {
          elm.textContent = text;
          ret.val.v = "true";         
       }
-
       return ret; 
    }
 
    /**
     * Name: sysSetElementInnerHtml
-    * Desc: Sets the textContent of the DOM element with the given id.
+    * Desc: Sets the innerHtml of the DOM element with the given id.
     * Arg1: args(an array of {arg} objects)
     * Arg2: func(the {func} this system function is called from)
     * Arg1[0]: id(a {const} or {ref} string indicating the id of the DOM element to set the style for)
@@ -2806,46 +3129,55 @@ class jsonPlState {
       var html = this.toStr(args[1].val.v);
       var res = null;
 
-      //process ref for idName
-      if (this.isSysObjRef(args[0])) {
-         if (this.isRefStringArray(args[0].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-
-         refDec = this.processRef(args[0], func);
-         if (refDec !== null) {
-            idName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-      }
-
-      //process ref for text
-      if (this.isSysObjRef(args[1])) {
-         if (this.isRefStringArray(args[1].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg html");
-            return ret;
-         }
-
-         refDec = this.processRef(args[1], func);
-         if (refDec !== null) {
-            html = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg html");
-            return ret;
-         }
-      }
-
       var elm = document.getElementById(idName);
-      this.wr("Found an html string to set: " + text);
-
       if(elm != null) {
          elm.innerHTML = html;
          ret.val.v = "true";         
       }
+      return ret; 
+   }
 
+   /**
+    * Name: sysGetElementInnerHtml
+    * Desc: Sets the innerHtml of the DOM element with the given id.
+    * Arg1: args(an array of {arg} objects)
+    * Arg2: func(the {func} this system function is called from)
+    * Arg1[0]: id(a {const} or {ref} string indicating the id of the DOM element to set the style for)
+    * Returns: ret(a {const} object with a string value indicating the value of the innerHtml text)
+    */
+   sysGetElementInnerHtml(args, func) {
+      var ret = this.getConst("string", "");
+      var funcName = "sysGetElementInnerHtml";
+
+      if (args === null) {
+         this.wr(funcName + ": Error: args cannot be null");
+         return ret;
+      } else if (func === null) {
+         this.wr(funcName + ": Error: func cannot be null");
+         return ret;
+      }
+
+      if (this.isArray(args)) {
+         if (!this.isSysObj(args[0]) || !this.isSysObjVal(args[0].val)) {
+            this.wr(funcName + ": Error: arg 0 is not a known object type");
+            return ret;
+         }
+
+         if (!this.isSysObj(args[1]) || !this.isSysObjVal(args[1].val)) {
+            this.wr(funcName + ": Error: arg 1 is not a known object type");
+            return ret;
+         }
+      } else {
+         this.wr(funcName + ": Error: arg is not an array object");
+         return ret;
+      }
+
+      var idName = this.toStr(args[0].val.v);
+      var res = null;
+      var elm = document.getElementById(idName);
+      if(elm != null) {
+         ret.val.v = elm.innerHTML;         
+      }
       return ret; 
    }
 
@@ -2884,29 +3216,11 @@ class jsonPlState {
       var styleStr = null;
       var res = null;
 
-      //process ref for idName
-      if (this.isSysObjRef(args[0])) {
-         if (this.isRefStringArray(args[0].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-
-         refDec = this.processRef(args[0], func);
-         if (refDec !== null) {
-            idName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-      }
-
       var elm = document.getElementById(idName);
-
       if(elm != null) {
          styleStr = elm.style.cssText;
          ret.val.v = styleStr;         
       }
-
       return ret;      
    }
 
@@ -2942,30 +3256,12 @@ class jsonPlState {
 
       var idName = this.toStr(args[0].val.v);
       var res = null;
-
-      //process ref for idName
-      if (this.isSysObjRef(args[0])) {
-         if (this.isRefStringArray(args[0].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-
-         refDec = this.processRef(args[0], func);
-         if (refDec !== null) {
-            idName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-      }
-
       var elm = document.getElementById(idName);
       if(elm != null) {
          elm.removeEventListener("click", this.eventWireUpClick);
          elm.addEventListener("click", this.eventWireUpClick);         
          ret.val.v = "true";
       }
-
       return ret;
    }
 
@@ -3016,54 +3312,6 @@ class jsonPlState {
       var value = this.toStr(args[2].val.v);
       var res = null;
 
-      //process ref for tagName
-      if (this.isSysObjRef(args[0])) {
-         if (this.isRefStringArray(args[0].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-
-         refDec = this.processRef(args[0], func);
-         if (refDec !== null) {
-            idName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-      }
-
-      //process ref for attr
-      if (this.isSysObjRef(args[1])) {
-         if (this.isRefStringArray(args[1].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg attr");
-            return ret;
-         }
-
-         refDec = this.processRef(args[1], func);
-         if (refDec !== null) {
-            attr = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg attr");
-            return ret;
-         }
-      }
-
-      //process ref for value
-      if (this.isSysObjRef(args[2])) {
-         if (this.isRefBoolArray(args[2].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[2].val.v + ", for arg value");
-            return ret;
-         }
-
-         refDec = this.processRef(args[2], func);
-         if (refDec !== null) {
-            value = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[2].val.v + ", for arg value");
-            return ret;
-         }
-      }
-
       var elm = document.getElementById(idName);
       if(elm != null) {      
          if(attr.indexOf(",") != -1) {
@@ -3083,7 +3331,6 @@ class jsonPlState {
          }
          ret.val.v = "true";         
       }
-
       return ret;
    }
 
@@ -3127,38 +3374,6 @@ class jsonPlState {
       var idName = this.toStr(args[0].val.v);
       var attr = this.toStr(args[1].val.v);
       var res = null;
-
-      //process ref for tagName
-      if (this.isSysObjRef(args[0])) {
-         if (this.isRefStringArray(args[0].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-
-         refDec = this.processRef(args[0], func);
-         if (refDec !== null) {
-            idName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg id");
-            return ret;
-         }
-      }
-
-      //process ref for attr
-      if (this.isSysObjRef(args[1])) {
-         if (this.isRefStringArray(args[1].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg attr");
-            return ret;
-         }
-
-         refDec = this.processRef(args[1], func);
-         if (refDec !== null) {
-            attr = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg attr");
-            return ret;
-         }
-      }
 
       var elm = document.getElementById(idName);
       if(elm != null) {
@@ -3233,54 +3448,6 @@ class jsonPlState {
       var pre = this.toBool(args[2].val.v);
       var res = null;
 
-      //process ref for tagName
-      if (this.isSysObjRef(args[0])) {
-         if (this.isRefStringArray(args[0].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[0].val.v + ", for arg tagName");
-            return ret;
-         }
-
-         refDec = this.processRef(args[0], func);
-         if (refDec !== null) {
-            tagName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[0].val.v + ", for arg tagName");
-            return ret;
-         }
-      }
-
-      //process ref for idName
-      if (this.isSysObjRef(args[1])) {
-         if (this.isRefStringArray(args[1].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[1].val.v + ", for arg id");
-            return ret;
-         }
-
-         refDec = this.processRef(args[1], func);
-         if (refDec !== null) {
-            idName = this.toStr(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[1].val.v + ", for arg id");
-            return ret;
-         }
-      }
-
-      //process ref for pre
-      if (this.isSysObjRef(args[2])) {
-         if (this.isRefBoolArray(args[2].val.v)) {
-            this.wr(funcName + ": Error: cannot handle an array item reference, " + args[2].val.v + ", for arg pre");
-            return ret;
-         }
-
-         refDec = this.processRef(args[2], func);
-         if (refDec !== null) {
-            pre = this.toBool(refDec.val.v);
-         } else {
-            this.wr(funcName + ": Error: could not resolve referece value, " + args[2].val.v + ", for arg pre");
-            return ret;
-         }
-      }
-
       if(this.parentDomElement != null) {
          var elm = document.createElement(tagName);
          elm.id = idName;
@@ -3335,22 +3502,6 @@ class jsonPlState {
       var res = null;
       var prog = this.program;
       var refDec = null;
-
-      //process ref for name
-      if (this.isSysObjRef(args[1])) {
-         if (this.isRefStringArray(args[1].val.v)) {
-            this.wr("sysClean: Error: cannot handle an array item reference, " + args[1].val.v + ", for arg name");
-            return ret;
-         }
-
-         refDec = this.processRef(args[1], func);
-         if (refDec !== null) {
-            name = this.toStr(refDec.name);
-         } else {
-            this.wr("sysClean: Error: could not resolve referece value, " + args[1].val.v + ", for arg name");
-            return ret;
-         }
-      }
 
       var obj = null;
       if (isClassVar === true) {
@@ -5390,8 +5541,8 @@ class jsonPlState {
          }
       }
 
-      this.wr("===========================Right: " + JSON.stringify(right));
-      this.wr("===========================Left: " + JSON.stringify(left));      
+      //this.wr("===========================Right: " + JSON.stringify(right));
+      //this.wr("===========================Left: " + JSON.stringify(left));      
 
       if (this.isSysObjConst(right)) {
          //this.wr("===========================WWWWW222AAA");
@@ -5412,7 +5563,6 @@ class jsonPlState {
       } else if (this.isSysObjCall(right)) {
          //this.wr("===========================WWWWW222EEE");         
          right = this.processCall(right, func);
-
       } else {
          this.wr("processAsgn: Error: argument right is an unknown obj: " + this.getSysObjType(right));
          return null;
@@ -5466,11 +5616,11 @@ class jsonPlState {
          var nvals = null;
 
          if(left.val.type === "int") {
-            this.wr("processAsgn: processing int");
+            //this.wr("processAsgn: processing int");
             if (objAsgn.op.v === "==" || objAsgn.op.v === "=") {
-               this.wr("processAsgn: Type AAA: " + this.toInt(right.val.v));
+               //this.wr("processAsgn: Type AAA: " + this.toInt(right.val.v));
                nval = this.toStr(this.toInt(right.val.v));
-               this.wr("processAsgn: Type BBBB: " + nval);
+               //this.wr("processAsgn: Type BBBB: " + nval);
 
             } else if (objAsgn.op.v === "+=") {
                nval = this.toStr(this.toInt(left.val.v) + this.toInt(right.val.v));
@@ -6250,8 +6400,6 @@ class jsonPlState {
          name = this.toStr(objCall.name);
       }
 
-      //TODO: sync2.0
-
       if(this.isRefStringClassLng(name)) {
          name = name.replace("#.classes.", "@.");
       }
@@ -6305,8 +6453,6 @@ class jsonPlState {
       }
 
       args = this.cloneJsonObjList(objCall.args);
-
-      //TODO: sync
 
       var hasClass = false;
       if(this.isRefStringClassDec(name) === true) {
@@ -6416,8 +6562,6 @@ class jsonPlState {
                }
             }
 
-            //TODO: sync
-
             var err = true;
             var lcall = null;
             if(classFunc) {
@@ -6449,9 +6593,21 @@ class jsonPlState {
                      }
 
                      pret = ljpl.runProgram();
+
                      if (this.VERBOSE) {
                         this.wr("processCall: Returning: A:");
                         this.wrObj(pret);
+                     }
+
+                     if (this.isSysObjRef(pret)) {
+                        var tmpArg = null;
+                        tmpArg = this.processRef(pret, func);
+                        if (tmpArg !== null) {
+                           pret.val.v = tmpArg.val.v;
+                        } else {
+                           this.wr("processCall: Error: could not process program return reference, " + JSON.stringify(pret));
+                           return null;
+                        }
                      }
 
                   } else {
@@ -6491,6 +6647,17 @@ class jsonPlState {
                      if (this.VERBOSE) {
                         this.wr("processCall: Returning: B:");
                         this.wrObj(lret);
+                     }
+
+                     if (this.isSysObjRef(lret)) {
+                        var tmpArg = null;
+                        tmpArg = this.processRef(lret, func);
+                        if (tmpArg !== null) {
+                           lret.val.v = tmpArg.val.v;
+                        } else {
+                           this.wr("processCall: Error: could not process program return reference, " + JSON.stringify(lret));
+                           return null;
+                        }
                      }
 
                      err = false;
@@ -6635,9 +6802,6 @@ class jsonPlState {
                   //backup default args and vars
                   funcDef.vars_def = this.cloneJsonObjList(funcDef.vars);
                   funcDef.args_def = this.cloneJsonObjList(funcDef.args);
-
-                  //this.wr("================================================++++++++++");
-                  //this.wrObj(args);
 
                   funcDef.args = args;
 
@@ -7074,6 +7238,11 @@ jsonPlState.prototype.system = {
          ]
       },
       {
+         "sys": "func", "name": "SYS::getLastAsgnReturn", "fname": "sysGetLastAsgnReturn",
+         "args": [
+         ]
+      },      
+      {
          "sys": "func", "name": "SYS::wr", "fname": "sysWr",
          "args": [
          ]
@@ -7238,7 +7407,13 @@ jsonPlState.prototype.system = {
             {"sys": "arg", "name": "id", "val": {"sys": "val", "type": "string", "v": "dom_id"}},
             {"sys": "arg", "name": "innerHtml", "val": {"sys": "val", "type": "string", "v": "inner_html"}}
          ]         
-      },            
+      },
+      {
+         "sys": "func", "name": "SYS::getElementInnerHtml", "fname": "sysGetElementInnerHtml",
+         "args": [
+            {"sys": "arg", "name": "id", "val": {"sys": "val", "type": "string", "v": "dom_id"}}
+         ]         
+      },              
       {
          "sys": "func", "name": "SYS::setElementStyle", "fname": "sysSetElementStyle",
          "args": [
@@ -7287,17 +7462,71 @@ jsonPlState.prototype.system = {
          ]
       },
       {
+         "sys": "func", "name": "SYS::cnvIntToFloat", "fname": "sysCnvIntToFloat",
+         "args": [
+            {"sys": "arg", "name": "i", "val": {"sys": "val", "type": "int", "v": "0"}}
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::cnvIntToBool", "fname": "sysCnvIntToBool",
+         "args": [
+            {"sys": "arg", "name": "i", "val": {"sys": "val", "type": "int", "v": "0"}}
+         ]
+      },      
+      {
+         "sys": "func", "name": "SYS::cnvFloatToBool", "fname": "sysCnvFloatToBool",
+         "args": [
+            {"sys": "arg", "name": "f", "val": {"sys": "val", "type": "float", "v": "0.0"}}
+         ]
+      },
+      {
          "sys": "func", "name": "SYS::cnvFloatToStr", "fname": "sysCnvFloatToStr",
          "args": [
             {"sys": "arg", "name": "f", "val": {"sys": "val", "type": "float", "v": "0.0"}}
          ]
       },
       {
+         "sys": "func", "name": "SYS::cnvFloatToInt", "fname": "sysCnvFloatToInt",
+         "args": [
+            {"sys": "arg", "name": "f", "val": {"sys": "val", "type": "float", "v": "0.0"}}
+         ]
+      },           
+      {
          "sys": "func", "name": "SYS::cnvBoolToStr", "fname": "sysCnvBoolToStr",
          "args": [
             {"sys": "arg", "name": "b", "val": {"sys": "val", "type": "bool", "v": "false"}}
          ]
+      },
+      {
+         "sys": "func", "name": "SYS::cnvBoolToInt", "fname": "sysCnvBoolToInt",
+         "args": [
+            {"sys": "arg", "name": "b", "val": {"sys": "val", "type": "bool", "v": "false"}}
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::cnvBoolToFloat", "fname": "sysCnvBoolToFloat",
+         "args": [
+            {"sys": "arg", "name": "b", "val": {"sys": "val", "type": "bool", "v": "false"}}
+         ]
       },      
+      {
+         "sys": "func", "name": "SYS::cnvStrToInt", "fname": "sysCnvStrToInt",
+         "args": [
+            {"sys": "arg", "name": "s", "val": {"sys": "val", "type": "string", "v": ""}}
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::cnvStrToFloat", "fname": "sysCnvStrToFloat",
+         "args": [
+            {"sys": "arg", "name": "s", "val": {"sys": "val", "type": "string", "v": ""}}
+         ]
+      },
+      {
+         "sys": "func", "name": "SYS::cnvStrToBool", "fname": "sysCnvStrToBool",
+         "args": [
+            {"sys": "arg", "name": "s", "val": {"sys": "val", "type": "string", "v": ""}}
+         ]
+      }
    ]
 };
 

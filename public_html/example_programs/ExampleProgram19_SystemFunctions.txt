@@ -1,0 +1,54 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram19_SystemFunctions",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "#.funcs.main", "args": []},
+  	"classes": [],
+  	"vars": [
+		{"sys": "var", "name": "classInt", "val": {"sys": "val", "type": "int", "v": 0}},
+		{"sys": "var", "name": "classBool", "val": {"sys": "val", "type": "bool", "v": 0}},
+		{"sys": "var", "name": "classStr", "val": {"sys": "val", "type": "string", "v": ""}}
+	],
+  	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [],
+      		"lines": [
+			{"sys": "call", "name": "SYS::wrBool", "args": [
+				{"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classBool"}}
+			]},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.classInt"}},
+				"op": {"sys": "op", "type": "asgn", "v": "="},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "100"}}
+			},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "string", "v": "#.vars.classStr"}},
+				"op": {"sys": "op", "type": "asgn", "v": "="},
+				"right": {"sys": "call", "name": "SYS::getLastAsgnValue", "args": []}
+			},
+			{"sys": "call", "name": "SYS::wrStr", "args": [
+				{"sys": "ref", "val": {"sys": "val", "type": "string", "v": "#.vars.classStr"}}
+			]},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classBool"}},
+				"op": {"sys": "op", "type": "asgn", "v": "="},
+				"right": {"sys": "call", "name": "SYS::getLastAsgnReturn", "args": []}
+			},
+			{"sys": "asgn",
+				"left": {"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classStr"}},
+				"op": {"sys": "op", "type": "asgn", "v": "="},
+				"right": {"sys": "call", "name": "SYS::getLastAsgnValue", "args": []}
+			},
+			{"sys": "call", "name": "SYS::wrBool", "args": [
+				{"sys": "ref", "val": {"sys": "val", "type": "bool", "v": "#.vars.classBool"}}
+			]},
+			{"sys": "call", "name": "SYS::wrStr", "args": [
+				{"sys": "ref", "val": {"sys": "val", "type": "string", "v": "#.vars.classStr"}}
+			]},
+			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+  	  	]}
+  	],
+  	"comment": "A program that demonstrates using system functions and using a {call} object with an {asgn} object."
+}

@@ -38,6 +38,11 @@
                                     {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_0_span"}},
                                     {"sys": "const", "val": {"sys": "val", "type": "string", "v": "Program Source Code / Input:"}}
                                 ]
+                            },
+                            {"sys": "call", "name": "SYS::getElementTextContent",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_0_span"}},
+                                ]
                             },                            
                             {"sys": "call", "name": "SYS::appendNewChildElementToParent",
                                 "args": [
@@ -101,6 +106,12 @@
                                     {"sys": "const", "val": {"sys": "val", "type": "string", "v": "button"}}                                    
                                 ]
                             },
+                            {"sys": "call", "name": "SYS::getElementAttr",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "run_program_button"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "type"}}
+                                ]
+                            },                            
                             {"sys": "call", "name": "SYS::setClickEventHandler",
                                 "args": [
                                     {"sys": "const", "val": {"sys": "val", "type": "string", "v": "run_program_button"}},
