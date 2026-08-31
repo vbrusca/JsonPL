@@ -1,0 +1,32 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram80_Remote",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+	"call": {"sys": "call", "name": "main", "args": [
+      		{"sys": "const", "val": {"sys": "val", "type": "int", "v": "10"}}
+    	]},
+	"classes": [],
+	"vars": [],
+	"funcs": [
+		{"sys": "func", "name": "main",
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+		"args": [
+			{"sys": "arg", "name": "funcInt1", "val": {"sys": "val", "type": "int", "v": "0"}}
+      		],
+      		"vars": [],
+      		"lines": [
+			{"sys": "asgn",
+			"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.remoteInt1->(http://localhost:8000/?jsonpl=true&get=true)"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"url": "http://localhost:8000/?jsonpl=true&asgn=true&op=eq",
+          		"right": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.funcInt1"}}
+        		},
+        		{"sys": "call", "name": "SYS::wr", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Found argument 'funcInt1' with value "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.funcInt1"}}
+          		]},
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+		]}
+	],
+	"comment": "hi this is a comment"
+}

@@ -1,0 +1,77 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram51_Exressions",
+	"ret": {"sys": "val", "type": "float", "v": "0.0"},
+	"call": {"sys": "call", "name": "main", "args": []},
+	"classes": [],
+	"vars": [
+		{"sys": "var", "name": "var1", "val": {"sys": "val", "type": "float", "v": "10.0"}},
+		{"sys": "var", "name": "ptrVar1", "val": {"sys": "val", "type": "string", "v": "#.vars.var1"}}
+	],
+	"funcs": [
+		{"sys": "func", "name": "main",
+		"ret": {"sys": "val", "type": "float", "v": "0.0"},
+		"args": [],
+		"vars": [],
+		"lines": [
+			{"sys": "call", "name": "SYS::wrApp", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": "1: Val: "}},
+				{"sys": "ref", "val": {"sys": "val", "type": "float", "v": "[#.vars.ptrVar1]"}}
+          		]},
+			{"sys": "asgn",
+			"left": {"sys": "ref", "val": {"sys": "val", "type": "float", "v": "[#.vars.ptrVar1]"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "exp",
+				"left": {"sys": "const", "val": {"sys": "val", "type": "float", "v": "5.0"}},
+				"op": {"sys": "op", "type": "exp", "v": "+"},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "float", "v": "5.0"}}
+				}
+        		},
+        		{"sys": "call", "name": "SYS::wrApp", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": "2: Val: "}},
+				{"sys": "ref", "val": {"sys": "val", "type": "float", "v": "[#.vars.ptrVar1]"}}
+          		]},
+        		{"sys": "asgn",
+			"left": {"sys": "ref", "val": {"sys": "val", "type": "float", "v": "[#.vars.ptrVar1]"}},
+			"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "exp",
+            			"left": {"sys": "const", "val": {"sys": "val", "type": "float", "v": "5.0"}},
+				"op": {"sys": "op", "type": "exp", "v": "-"},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "float", "v": "-5.0"}}
+          			}
+			},
+			{"sys": "call", "name": "SYS::wrApp", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": "3: Val: "}},
+				{"sys": "ref", "val": {"sys": "val", "type": "float", "v": "[#.vars.ptrVar1]"}}
+          		]},
+			{
+			"sys": "asgn",
+			"left": {"sys": "ref", "val": {"sys": "val", "type": "float", "v": "[#.vars.ptrVar1]"}},
+			"op": {"sys": "op", "type": "asgn", "v": "="},
+			"right": {"sys": "exp",
+            			"left": {"sys": "const", "val": {"sys": "val", "type": "float", "v": "5.0"}},
+            			"op": {"sys": "op", "type": "exp", "v": "*"},
+            			"right": {"sys": "const", "val": {"sys": "val", "type": "float", "v": "2.0"}}
+          			}
+        		},
+        		{"sys": "call", "name": "SYS::wrApp", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": "4: Val: "}},
+				{"sys": "ref", "val": {"sys": "val", "type": "float", "v": "[#.vars.ptrVar1]"}}
+          		]},
+        		{"sys": "asgn",
+          		"left": {"sys": "ref", "val": {"sys": "val", "type": "float", "v": "[#.vars.ptrVar1]"}},
+			"op": {"sys": "op", "type": "asgn", "v": "="},
+			"right": {"sys": "exp", 
+				"left": {"sys": "const", "val": {"sys": "val", "type": "float", "v": "20.0"}},
+				"op": {"sys": "op", "type": "exp", "v": "/"},
+				"right": {"sys": "const", "val": {"sys": "val", "type": "float", "v": "2.0"}}
+          			}
+        		},
+        		{"sys": "call", "name": "SYS::wrApp", "args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "5: Val: "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "float", "v": "[#.vars.ptrVar1]"}}
+          		]},
+			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "float", "v": "0.0"}}}
+      		]}
+	]
+}

@@ -1,0 +1,51 @@
+{
+  	"sys": "class",
+  	"name": "ExampleProgram32_Arrays",
+  	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "main", "args": []},
+  	"classes": [],
+	"vars": [
+		{"sys": "var", "name": "classVarIntArray", "val": {"sys": "val", "type": "int[]", "strict": "true", "len": "2", "v": [
+          		{"sys": "var", "name": "itm0", "val": {"sys": "val", "type": "int", "v": "1"}},
+          		{"sys": "var", "name": "itm1", "val": {"sys": "val", "type": "int", "v": "0"}}
+        	]}},
+    		{"sys": "var", "name": "classVarFloatArray", "val": {"sys": "val", "type": "float[]", "strict": "true", "len": "2", "v": [
+          		{"sys": "var", "name": "itm0", "val": {"sys": "val", "type": "float", "v": "0.0"}},
+          		{"sys": "var", "name": "itm1", "val": {"sys": "val", "type": "float", "v": "1.0"}}
+        	]}},
+    		{"sys": "var", "name": "classVarBoolArray", "val": {"sys": "val", "type": "bool[]", "strict": "true", "len": "2", "v": [
+          		{"sys": "var", "name": "itm0", "val": {"sys": "val", "type": "bool", "v": "false"}},
+          		{"sys": "var", "name": "itm1", "val": {"sys": "val", "type": "bool", "v": "true"}}
+        	]}},
+    		{"sys": "var", "name": "classVarStringArray", "val": {"sys": "val", "type": "string[]", "strict": "true", "len": "2", "v": [
+          		{"sys": "var", "name": "itm0", "val": {"sys": "val", "type": "string", "v": "0.0"}},
+          		{"sys": "var", "name": "itm1", "val": {"sys": "val", "type": "string", "v": "1.0"}}
+        	]}}
+  	],
+	"funcs": [
+    		{"sys": "func", "name": "main",
+      		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [
+			{"sys": "var", "name": "funcVarIntArray", "val": {"sys": "val", "type": "int[]", "strict": "true", "len": "2", "v": [
+              			{"sys": "var", "name": "itm0", "val": {"sys": "val", "type": "int", "v": "1"}},
+              			{"sys": "var", "name": "itm1", "val": {"sys": "val", "type": "int", "v": "0"}}
+            		]}},
+        		{"sys": "var", "name": "funcVarFloatArray", "val": {"sys": "val", "type": "float[]", "strict": "true", "len": "2", "v": [
+              			{"sys": "var", "name": "itm0", "val": {"sys": "val", "type": "float", "v": "0.0"}},
+              			{"sys": "var", "name": "itm1", "val": {"sys": "val", "type": "float", "v": "1.0"}}
+            		]}},
+        		{"sys": "var", "name": "funcVarBoolArray", "val": {"sys": "val", "type": "bool[]", "strict": "true", "len": "2", "v": [
+              			{"sys": "var", "name": "itm0", "val": {"sys": "val", "type": "bool", "v": "false"}},
+              			{"sys": "var", "name": "itm1", "val": {"sys": "val", "type": "bool", "v": "true"}}
+            		]}},
+        		{"sys": "var", "name": "funcVarStringArray", "val": {"sys": "val", "type": "string[]", "strict": "true", "len": "2", "v": [
+              			{"sys": "var", "name": "itm0", "val": {"sys": "val", "type": "string", "v": "0.0"}},
+              			{"sys": "var",	"name": "itm1", "val": {"sys": "val", "type": "string", "v": "1.0"}}
+            		]}}
+		],
+      		"lines": [
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+      		]}
+  	]
+}

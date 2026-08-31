@@ -1,0 +1,38 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram30_VariableInstantiationAdv",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "#.funcs.main", "args": []},
+  	"classes": [],
+  	"vars": [
+		{"sys": "var", "name": "classInt", "val": {"sys": "val", "type": "int", "v": "100"}},
+		{"sys": "var", "name": "classBool1", "val": {"sys": "val", "type": "int", "v": "false"}},
+		{"sys": "var", "name": "classFloat", "val": {"sys": "val", "type": "int", "v": "200.0"}},
+		{"sys": "var", "name": "classStr", "val": {"sys": "val", "type": "string", "v": "Hi!!"}},
+		{"sys": "var", "name": "toVar1", "val": {"sys": "val", "type": "string", "v": "#.vars.classBool1"}},
+		{"sys": "var", "name": "classBool2", "val": {"sys": "val", "type": "bool", "v": "true"}}
+	],
+  	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [],
+      		"lines": [
+        		{"sys": "call", "name": "SYS::wrFuncVars", "args": []},
+			{"sys": "call", "name": "SYS::mlc", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}},
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": "funcInt1"}},
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": "int"}},
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": "1250"}}
+			]},
+			{"sys": "call", "name": "SYS::wrFuncVars", "args": []},
+			{"sys": "call", "name": "SYS::cln", "args": [
+				{"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}},
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": "funcInt1"}}
+			]},
+			{"sys": "call", "name": "SYS::wrFuncVars", "args": []},
+			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+  	  	]}
+  	],
+  	"comment": "A program that demonstrates system level variables and using system function to add, mlc, and remove, cln, function variables. "
+}

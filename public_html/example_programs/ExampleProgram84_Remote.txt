@@ -1,0 +1,27 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram84_Remote",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "main", "args": []},
+	"classes": [],
+	"vars": [
+		{"sys": "var", "name": "remoteInt1", "val": {"sys": "val", "type": "int", "v": "128"}}
+  	],
+  	"funcs": [
+    		{"sys": "func", "name": "main",
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [
+        		{"sys": "var", "name": "remoteInt1", "val": {"sys": "val", "type": "int", "v": "256"}}
+      		],
+      		"lines": [
+        		{"sys": "asgn",
+          		"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.remoteInt1"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"url": "http://localhost:8000/?jsonpl=true&asgn=true&op=eq",
+          		"right": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.remoteInt1->(http://localhost:8000/?jsonpl=true&get=true)"}}
+        		},
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+      		]}
+	]
+}

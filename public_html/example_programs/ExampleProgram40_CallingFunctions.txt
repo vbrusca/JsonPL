@@ -1,0 +1,37 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram40_CallingFunctions",
+	"ret": {"sys": "val", "type": "bool", "v": "false"},
+	"call": {"sys": "call", "name": "main", "args": []},
+	"classes": [],
+	"vars": [],
+	"funcs": [
+		{"sys": "func", "name": "main",
+      		"ret": {"sys": "val", "type": "bool", "v": "false"},
+      		"args": [],
+      		"vars": [
+        		{"sys": "var", "name": "ptr1", "val": {"sys": "val", "type": "string", "v": "#.funcs.main2"}}
+      		],
+      		"lines": [
+        		{"sys": "call", "name": "SYS::wr", "args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Executing function main..."}}
+          		]},
+        		{"sys": "call", "name": "#.funcs.main2", "args": []},
+        		{"sys": "call", "name": {"sys": "const", "val": {"sys": "val", "type": "string", "v": "#.funcs.main2"}}, "args": []},
+        		{"sys": "call", "name": {"sys": "ref", "val": {"sys": "val", "type": "string", "v": "$.vars.ptr1"}}, "args": []},
+        		{"sys": "call", "name": {"sys": "ref", "val": {"sys": "val", "type": "string", "v": "[$.vars.ptr1]"}}, "args": []},
+        		{"sys": "call", "name": {"sys": "ref", "val": {"sys": "val", "type": "string", "v": "<$.vars.ptr1>"}}, "args": []},
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "true"}}}
+      		]},
+    		{"sys": "func", "name": "main2",
+      		"ret": {"sys": "val", "type": "bool", "v": "false"},
+      		"args": [],
+      		"vars": [],
+      		"lines": [
+        		{"sys": "call", "name": "SYS::wr", "args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Executing function main2..."}}
+          		]},
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "true"}}}
+      		]}
+	]
+}

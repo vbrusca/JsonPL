@@ -1,0 +1,48 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram45_References",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+	"call": {"sys": "call", "name": "main", "args": []},
+	"classes": [],
+	"vars": [
+		{"sys": "var", "name": "ar1", "val": {"sys": "val", "type": "int[]", "strict": "true", "len": "2", "v": [
+          		{"sys": "var", "name": "itm0", "val": {"sys": "val", "type": "int", "v": "0"}},
+          		{"sys": "var", "name": "itm1", "val": {"sys": "val", "type": "int", "v": "1"}}
+        	]}}
+  	],
+  	"funcs": [
+    		{"sys": "func", "name": "main",
+      		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [
+        		{"sys": "var", "name": "ptr1", "val": {"sys": "val", "type": "string", "v": "#.vars.ar1.itm0"}},
+        		{"sys": "var", "name": "ptr2", "val": {"sys": "val", "type": "string", "v": "ar1"}},
+        		{"sys": "var", "name": "ptr3", "val": {"sys": "val", "type": "string", "v": "itm0"}},
+        		{"sys": "var", "name": "ptr4", "val": {"sys": "val", "type": "string", "v": "0"}}
+      		],
+      		"lines": [
+        		{"sys": "asgn",
+          		"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "[$.vars.ptr1]"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "12"}}
+        		},
+        		{"sys": "asgn",
+          		"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.[$.vars.ptr2].itm0"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "36"}}
+        		},
+        		{"sys": "asgn",
+          		"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.[$.vars.ptr2].0"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "48"}}
+        		},
+        		{"sys": "asgn",
+          		"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.[$.vars.ptr2]"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "const", "val": {"sys": "val", "type": "int[]", "strict": "true", "len": "1", "v": [
+                		{"sys": "const", "name": "itm0", "val": {"sys": "val", "type": "int", "v": "108"}}
+              		]}}},
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+      		]}
+  	]
+}

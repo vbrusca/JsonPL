@@ -1,0 +1,41 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram83_Remote",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "main", "args": []},
+  	"classes": [],
+  	"vars": [
+		{"sys": "var", "name": "tmpInt1", "val": {"sys": "val", "type": "int", "v": "10"}}
+	],
+	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [
+        		{"sys": "var", "name": "tmpInt2", "val": {"sys": "val", "type": "int", "v": "20"}}
+      		],
+		"lines": [
+			{"sys": "asgn",
+			"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.tmpInt1"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.tmpInt2"}}
+			},
+			{"sys": "asgn",
+			"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.tmpInt2"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.tmpInt1"}}
+        		},
+        		{"sys": "asgn",
+			"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.tmpInt1"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "=="},
+			"right": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.remoteInt1->(http://localhost:8000/?jsonpl=true&get=true)"}}
+        		},
+        		{"sys": "asgn",
+          		"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.tmpInt2"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "=="},
+          		"right": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.remoteInt1->(http://localhost:8000/?jsonpl=true&get=true)"}}
+        		},
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+      		]}
+  	]
+}

@@ -1,0 +1,38 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram44_References",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+	"call": {"sys": "call", "name": "main", "args": []},
+	"classes": [],
+	"vars": [
+		{"sys": "var", "name": "tmpInt", "val": {"sys": "val", "type": "int", "v": "12"}},
+    		{"sys": "var", "name": "ptrTmpInt", "val": {"sys": "val", "type": "string", "v": "#.vars.tmpInt"}},
+    		{"sys": "var", "name": "ptr2", "val": {"sys": "val", "type": "string", "v": "tmpInt"}}
+  	],
+  	"funcs": [
+    		{"sys": "func", "name": "main",
+ 		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [
+			{"sys": "var", "name": "lInt", "val": {"sys": "val", "type": "int", "v": "24"}}
+      		],
+      		"lines": [
+        		{"sys": "asgn", 
+			"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "[#.vars.ptrTmpInt]"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "24"}}
+        		},
+        		{"sys": "asgn",
+          		"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.[#.vars.ptr2]"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "36"}}
+        		},
+        		{"sys": "asgn",
+          		"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.[#.vars.ptr2]"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.lInt"}}
+			},
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+      		]}
+  	]
+}

@@ -1,0 +1,27 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram85_Pubs",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "main", "args": []},
+	"classes": [],
+	"vars": [
+		{"sys": "var", "name": "tmpInt1", "val": {"sys": "val", "type": "int", "v": "0"},
+      		"pubs": [
+        		"http://localhost:8000?jsonpl=true"
+      		]}
+	],
+	"funcs": [
+		{"sys": "func", "name": "main",
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+		"args": [],
+		"vars": [],
+		"lines": [
+			{"sys": "asgn",
+			"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.tmpInt1"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "5"}}
+			},
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "0"}}}
+		]}
+  	]
+}

@@ -1,7 +1,9 @@
 /**
- * JSON Programming Language
+ * JSON Programming Language: JSONPL
  * EXEC JS
- * Victor G. Brusca 
+ * Developed by:
+ * Victor G. Brusca
+ * Carlo Bruscani 
  * Created on 02/03/2022 1:57 PM EDT
  * Licensed under GNU General Public License v3.0
  */
@@ -15,7 +17,7 @@ class jsonPlState {
       /*
       * The current version number of the interpreter.
       */
-      this.version = "0.5.3";
+      this.version = "0.5.5";
       this.lineNumCurrent = 0;
       this.lineNumPrev = 0;
       this.linNumNext = 0;
@@ -47,6 +49,7 @@ class jsonPlState {
     * Desc: A placeholder for receiving DOM events. Allows for local redirection via prototype redefinition.
     * Arg1: HTML5 DOM event object
     */
+
    /*
       jsonPlState.prototype.eventWireUpClick = function(event) {
          localEventWireUpClick(event);
@@ -1617,6 +1620,8 @@ class jsonPlState {
             } else {
                return true;
             }
+         } else if (this.getSysObjType(obj) === "note") {
+            return true;
          } else {
             return false;
          }
@@ -1641,9 +1646,6 @@ class jsonPlState {
     *   "lines": [asgn | for | if | return | call]
     * }
     */
-
-   //TODO: sync doc
-
    validateSysObjFunc(obj) {
       if (this.isSysObjFunc(obj) && this.validateProperties(obj, ["sys", "name", "args", "vars", "ret", "lines"])) {
          if (!this.validateSysObjVal(obj.ret)) {
@@ -2140,6 +2142,7 @@ class jsonPlState {
                this.wr("validateSysObjVal: Error: array is missing length: " + obj.v + ", type: " + obj.type);
                return false;
             } else {
+               this.wr("======================= " + this.isInteger(obj.len) + ", " + this.toInt(obj.len) + ", " + JSON.stringify(obj));
                if (!this.isInteger(obj.len) || this.toInt(obj.len) < 0) {
                   this.wr("validateSysObjVal: Error: array length is invalid: " + obj.v + ", type: " + obj.type + ", " + obj.len + ", " + this.isInteger(obj.len));
                   return false;
@@ -2170,6 +2173,7 @@ class jsonPlState {
                   }
                } else if (obj.type === "string") {
                   if (!this.isString(this.toStr(obj.v))) {
+                     this.wr("============================= : " + this.toStr(obj.v) + ", " + JSON.stringify(obj));
                      this.wr("validateSysObjVal: Error: value is not a string value: " + obj.v + ", type: " + obj.type);
                      return false;
                   } else {
@@ -3629,7 +3633,6 @@ class jsonPlState {
       return false;
    }
 
-
    /**
     * Name: isRefString
     * Desc: Checks if the given argument is a reference string.
@@ -3791,10 +3794,12 @@ class jsonPlState {
     * Returns: (true | false)
     */
    isString(arg) {
-      if (arg === null) {
+      if (arg === null) {         
          return false;
+      } else if(arg === "") {
+         return true;
       } else if(this.isNumber(arg)) {
-         return false;
+         return true; //false;
       } else if (typeof arg === 'string' || arg instanceof String) {
          return true;
       } else {
@@ -3813,7 +3818,7 @@ class jsonPlState {
       //var tmp = this.toInt(arg);
       if (arg === null) {
          return false;
-      } else if ((typeof tmp === "number" || tmp instanceof Number) && Number.isNaN(tmp) === false) {
+      } else if (!isNaN(Number(tmp)) || ((typeof tmp === "number" || tmp instanceof Number) && Number.isNaN(tmp) === false)) {
          return true;
       } else {
          return false;
@@ -3831,7 +3836,7 @@ class jsonPlState {
       //var tmp = this.toInt(arg);
       if (arg === null) {
          return false;
-      } else if (this.isNumber(tmp) && Number.isInteger(tmp) === true) { // && !this.isFloat(arg)) {
+      } else if (!isNaN(Number(tmp)) || (this.isNumber(tmp) && Number.isInteger(tmp) === true)) { // && !this.isFloat(arg)) {
          return true;
       } else {
          return false;
@@ -4069,6 +4074,9 @@ class jsonPlState {
             return true;
 
          } else if (this.getSysObjType(obj) === "call") {
+            return true;
+
+         } else if (this.getSysObjType(obj) === "note") {
             return true;
 
          } else {
@@ -4396,8 +4404,6 @@ class jsonPlState {
          return null;
       }
 
-      //TODO: sync2.0
-
       if(this.isRefStringClassLng(objRef.val.v)) {
          objRef.val.v = objRef.val.v.replace("#.classes.", "@.");
       }
@@ -4409,7 +4415,7 @@ class jsonPlState {
       path = this.toStr(objRef.val.v);
 
       if (this.VERBOSE) {
-         //this.wr("processRef: Initial Path: " + path);
+         this.wr("processRef: Initial Path: " + path);
       }
 
       //check for URL
@@ -4418,7 +4424,7 @@ class jsonPlState {
       var forceLocal = false;
 
       if (this.VERBOSE) {
-         //this.wr("processRef: Url Start Index: " + urlStart);
+         this.wr("processRef: Url Start Index: " + urlStart);
       }
 
       var nvs = null;
@@ -4435,8 +4441,8 @@ class jsonPlState {
          nurl = nvs[1].substring(0, nvs[1].length - 1).trim();
 
          if (this.VERBOSE) {
-            //this.wr("processRef: New Path: " + npath);
-            //this.wr("processRef: New URL: " + nurl);
+            this.wr("processRef: New Path: " + npath);
+            this.wr("processRef: New URL: " + nurl);
          }
 
          hasUrl = true;
@@ -4449,17 +4455,20 @@ class jsonPlState {
       }
 
       if (this.VERBOSE) {
-         //this.wr("processRef: Has URL: " + hasUrl);
+         this.wr("processRef: Has URL: " + hasUrl);
       }
 
       //check for forced local de-reference for outer bracket only
       if (path.charAt(0) === '<') {
+         //hand off to local var, reset char to take advantage of cleaning
          path = path.replaceAll("<", "[");
          path = path.replaceAll(">", "]");
          forceLocal = true;
       }
 
+      //check for non forced local de-referenc outer bracket
       if (path.charAt(0) === '[') {
+         //clean brackets
          var cnt = 0;
          var i = 0;
          var cs = path;
@@ -4476,6 +4485,7 @@ class jsonPlState {
             }
          }
 
+         //new, bracketless, path
          var nc = path.substring(1, i);
          i += 1;
 
@@ -4487,8 +4497,8 @@ class jsonPlState {
          tmp.val.v = nc;
 
          if (this.VERBOSE) {
-            //this.wr("processRef: Initial De-Reference:");
-            //this.wrObj(tmp);
+            this.wr("processRef: Initial De-Reference Send:");
+            this.wrObj(tmp);
          }
 
          if (!forceLocal) {
@@ -4497,15 +4507,20 @@ class jsonPlState {
             tmp = this.cloneJsonObj(this.processRef(tmp, func, null));
          }
 
+         if (this.VERBOSE) {
+            this.wr("processRef: Initial De-Reference Return:");
+            this.wrObj(tmp);
+         }
+
          if (tmp !== null) {
             if (path.length >= i) {
                tmp.val.v += path.substring(i);
             }
 
             path = this.toStr(tmp.val.v);
-            if (path.indexOf("[") === -1 && path.indexOf("#.") === -1 && path.indexOf("$.") === -1) {
+            if (path != null && path.indexOf("[") === -1 && path.indexOf("#.") === -1 && path.indexOf("$.") === -1) {
                if (this.VERBOSE) {
-                  this.wr("processRef: Returning: ");
+                  this.wr("processRef: Mof 0: Returning: ");
                   this.wrObj(tmp);
                }
                return tmp;
@@ -4516,18 +4531,31 @@ class jsonPlState {
          }
       }
 
-      //TODO: sync2.0
-
-      if(this.isRefStringClassLng(objRef.val.v)) {
-         objRef.val.v = objRef.val.v.replace("#.classes.", "@.");
+      if (this.VERBOSE) {      
+         this.wr("processRef: Path: " + path);
+         this.wrObj(tmp);
       }
 
-      if(this.isRefStringFunc(objRef.val.v)) {
-         objRef.val.v = objRef.val.v.replace("#.funcs.", "");
+      if(tmp != null) {
+         if(this.isRefStringClassLng(tmp.val.v)) {
+            tmp.val.v = tmp.val.v.replace("#.classes.", "@.");
+         }
+
+         if(this.isRefStringFunc(tmp.val.v)) {
+            tmp.val.v = tmp.val.v.replace("#.funcs.", "");
+         }
+
+         path = this.toStr(tmp.val.v);
+         if (this.isSysObjRef(tmp) == false && path != null && path.indexOf("[") === -1 && path.indexOf("#.") === -1 && path.indexOf("$.") === -1) {
+            if (this.VERBOSE) {
+               this.wr("processRef: Mof 1: Returning: ");
+               this.wrObj(tmp);
+            }
+            return tmp;
+         }
       }
 
       vls = path.split(".");
-
       var inDynRef = false;
       var nvls = [];
       var tt = null;
@@ -4568,7 +4596,7 @@ class jsonPlState {
             vls[k] = nvls[k];
 
             if (this.VERBOSE) {
-               //this.wr("processRef: path idx: " + k + " val: " + vls[k]);
+               this.wr("processRef: path idx: " + k + " val: " + vls[k]);
             }
          }
       }
@@ -4596,7 +4624,7 @@ class jsonPlState {
                isFunc = true;
                foundSource = true;
             } else {
-               this.wr("processRef: Error: could not find correct the ref, for source, " + c + ", ref path: " + path);
+               this.wr("processRef: Error 2: could not find correct the ref, for source, " + c + ", ref path: " + path);
                return null;
             }
          } else if (!foundType) {
@@ -4606,7 +4634,7 @@ class jsonPlState {
                   isVars = true;
                   foundType = true;
                } else {
-                  this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFunc + ", ref path: " + path);
+                  this.wr("processRef: Error 3: could not find, for type, " + c + ", for source isFunc = " + isFunc + ", ref path: " + path);
                   return null;
                }
                //function
@@ -4618,7 +4646,7 @@ class jsonPlState {
                   isVars = false;
                   foundType = true;
                } else {
-                  this.wr("processRef: Error: could not find, for type, " + c + ", for source isFunc = " + isFun + ", ref path: " + pathc);
+                  this.wr("processRef: Error 4: could not find, for type, " + c + ", for source isFunc = " + isFun + ", ref path: " + pathc);
                   return null;
                }
             }
@@ -4641,7 +4669,7 @@ class jsonPlState {
                if (tmp !== null && tmp.val.type === "string") {
                   name = this.toStr(tmp.val.v);
                } else {
-                  this.wr("processRef: Error 2: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
+                  this.wr("processRef: Error 5: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
                   return null;
                }
             }
@@ -4658,7 +4686,7 @@ class jsonPlState {
                      fnd = this.findVar(name, prog);
                   }
                } else {
-                  this.wr("processRef: Error: could not find, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
+                  this.wr("processRef: Error 6: could not find, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
                   return null;
                }
                //function
@@ -4689,7 +4717,7 @@ class jsonPlState {
                type = fnd.val.type;
                foundName = true;
             } else {
-               this.wr("processRef: Error: could not find an object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
+               this.wr("processRef: Error 7: could not find an object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
                return null;
             }
          } else if (!foundIndex) {
@@ -4711,8 +4739,6 @@ class jsonPlState {
 
                tmp = this.cloneJsonObj(this.processRef(tmp, func, url));
 
-               //TODO: sync2.0
-
                if (tmp !== null) {
                   if(tmp.val.type === "int") {
                      idx = this.toInt(tmp.val.v);
@@ -4722,7 +4748,7 @@ class jsonPlState {
                      lidx = this.toStr(tmp.val.v);
                   }                  
                } else {
-                  this.wr("processRef: Error 3: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
+                  this.wr("processRef: Error 8: could not lookup object, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
                   return null;
                }
             }
@@ -4762,7 +4788,7 @@ class jsonPlState {
                   }
                }
             } else {
-               this.wr("processRef: Error: index entry is only for vars/args of type array, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
+               this.wr("processRef: Error 9: index entry is only for vars/args of type array, for name, " + name + ", for type isVars, " + isVars + ", for source isFunc = " + isFunc + ", ref path: " + path);
                return null;
             }
          }
@@ -4788,7 +4814,7 @@ class jsonPlState {
       }
 
       if (this.VERBOSE) {
-         this.wr("processRef: Returning: ");
+         this.wr("processRef: Eof: Returning: ");
          this.wrObj(fnd);
       }
       return fnd;

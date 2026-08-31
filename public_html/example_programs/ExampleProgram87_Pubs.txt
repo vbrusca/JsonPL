@@ -1,0 +1,20 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram87_Pubs",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+	"call": {"sys": "call", "name": "main", "args": []},
+	"classes": [],
+	"vars": [],
+	"funcs": [
+		{"sys": "func", "name": "main",
+      		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [],
+      		"lines": [
+			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+		],
+		"pubs": [
+			"http://localhost:8000?jsonpl=true"
+		]}
+  	]
+}

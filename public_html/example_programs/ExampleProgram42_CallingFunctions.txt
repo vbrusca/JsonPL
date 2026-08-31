@@ -1,0 +1,27 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram42_CallingFunctions",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+  	"call": {"sys": "call", "name": "main", "args": []},
+  	"classes": [],
+  	"vars": [
+    		{"sys": "var", "name": "classVarInt", "val": {"sys": "val", "type": "int", "v": "1"}},
+    		{"sys": "var", "name": "classVarFloat", "val": {"sys": "val", "type": "float", "v": "1.0"}},
+    		{"sys": "var", "name": "classVarBool", "val": {"sys": "val", "type": "bool", "v": "true"}},
+    		{"sys": "var", "name": "classVarString", "val": {"sys": "val", "type": "string", "v": "1.0"}}
+  	],
+  	"funcs": [
+    		{"sys": "func", "name": "main",
+      		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [
+        		{"sys": "var", "name": "funcVarInt", "val": {"sys": "val", "type": "int", "v": "0"}},
+        		{"sys": "var", "name": "funcVarFloat", "val": {"sys": "val", "type": "float", "v": "0.0"}},
+        		{"sys": "var", "name": "funcVarBool", "val": {"sys": "val", "type": "bool", "v": "false"}},
+        		{"sys": "var", "name": "funcVarString", "val": {"sys": "val", "type": "string", "v": "0.0"}}
+      		],
+      		"lines": [
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+      		]}
+  	]
+}

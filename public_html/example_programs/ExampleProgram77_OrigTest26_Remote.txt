@@ -1,0 +1,27 @@
+{
+	"sys":"class", "name":"ExampleProgram77_OrigTest26_Remote",
+	"call":{"sys":"call", "name":"main", "args":[]},
+	"vars":[],
+	"funcs":[
+		{"sys":"func", "name":"main",
+		"args":[],
+		"vars":[],
+		"ret":{"sys":"val", "type":"bool", "v":"false"},
+		"lines":[
+			{"sys":"asgn",
+			"url":"http://localhost:8000/?jsonpl=true",
+			"left":{"sys":"ref", "val":{"sys":"val", "type":"int", "v":"#.vars.ar1.1->(http://localhost:8000/?jsonpl=true)"}},
+			"op":{"sys":"op", "type":"asgn", "v":"+="},
+			"right":{"sys":"const", "val":{"sys":"val", "type":"int", "v":"200"}}
+                     	},
+                     	{"sys":"asgn",
+			"url":"http://localhost:8000/?jsonpl=true",
+			"left":{"sys":"ref", "val":{"sys":"val", "type":"string", "v":"$.vars.ptr1->(http://localhost:8000/?jsonpl=true)"}},
+			"op":{"sys":"op", "type":"asgn", "v":"+="},
+			"right":{"sys":"const", "val":{"sys":"val", "type":"string", "v":"hello world!"}}
+                     	},                     
+                     	{"sys":"return", "val":{"sys":"const", "val":{"sys":"val", "type":"bool", "v":"true"}}}
+		]}
+	],
+	"ret":{"sys":"val", "type":"bool", "v":"false"}
+}

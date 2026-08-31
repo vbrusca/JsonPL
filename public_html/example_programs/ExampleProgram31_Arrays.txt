@@ -1,0 +1,108 @@
+{
+	"sys": "class", "name": "ExampleProgram31_Arrays",
+  	"ret": {"sys": "val", "type": "int", "v": "0"},
+	"call": {"sys": "call", "name": "main", "args": [
+		{"sys": "const", "val": {"sys": "val", "type": "int[]", "strict": "true", "len": "2", "v": [
+			{"sys": "const", "name": "itm0", "val": {"sys": "val", "type": "int", "v": "10"}},
+			{"sys": "const", "name": "itm1", "val": {"sys": "val", "type": "int", "v": "20"}}
+          	]}}
+    	]},
+	"classes": [],
+	"vars": [
+		{"sys": "var", "name": "ar1", "val": {"sys": "val", "type": "int[]", "strict": "true", "len": "2", "v": [
+          		{"sys": "var", "name": "itm0", "val": {"sys": "val", "type": "int", "v": "0"}},
+          		{"sys": "var", "name": "itm1", "val": {"sys": "val", "type": "int", "v": "1"}}
+        	]}}
+  	],
+	"funcs": [
+		{"sys": "func", "name": "main", 
+		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"vars": [
+        		{"sys": "var", "name": "ar2", "val": { "sys": "val", "type": "int[]", "strict": "true", "len": "2", "v": [
+              			{"sys": "var", "name": "itm0", "val": {"sys": "val", "type": "int", "v": "0"}},
+              			{"sys": "var", "name": "itm1", "val": {"sys": "val", "type": "int", "v": "1"}}
+            		]}}
+      		],
+      		"args": [
+        		{"sys": "arg", "name": "ar3", "val": {"sys": "val", "type": "int[]", "strict": "true", "len": "2", "v": [
+              			{"sys": "arg", "name": "itm0", "val": {"sys": "val", "type": "int", "v": "0"}},
+              			{"sys": "arg", "name": "itm1", "val": {"sys": "val", "type": "int", "v": "1"}}
+            		]}}
+      		],
+      		"lines": [
+        		{
+			"sys": "asgn", 
+			"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.ar1"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.ar3"}}
+			},
+        		{
+			"sys": "asgn",
+          		"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.ar2"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.ar3"}}
+        		},
+        		{"sys": "call", 
+			"name": "SYS::wr", "args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Found class array variable, ar1, by index"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": ", "}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "#.vars.ar1.0 = "}},
+            			{"sys": "ref", "val": { "sys": "val", "type": "int", "v": "#.vars.ar1.0"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": ", "}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "#.vars.ar1.1 = "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.ar1.1"}}
+          		]},
+        		{"sys": "call", 
+			"name": "SYS::wr", "args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Found class array variable, ar1, by name"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": ", "}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "#.vars.ar1.itm0 = "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.ar1.itm0"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": ", "}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "#.vars.ar1.itm1 = "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "#.vars.ar1.itm1"}}
+          		]},
+        		{"sys": "call",
+          		"name": "SYS::wr", "args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Found func array variable, ar2, by index"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": ", "}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "$.vars.ar2.0 = "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.ar2.0"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": ", "}},
+            			{"sys": "const", "val": {"sys": "val","type": "string", "v": "$.vars.ar2.1 = "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.ar2.1"}}
+			]},
+        		{"sys": "call",
+          		"name": "SYS::wr", "args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Found func array variable, ar2, by name"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": ", "}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "$.vars.ar2.itm0 = "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.ar2.itm0"}},
+				{"sys": "const", "val": {"sys": "val", "type": "string", "v": ", "}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "$.vars.ar2.itm1 = "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.ar2.itm1"}}
+          		]},
+        		{"sys": "call",
+			"name": "SYS::wr", "args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Found func array argument, ar3, by index"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": ", "}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "$.args.ar3.0 = "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.ar3.0"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": ", "}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "$.args.ar3.1 = "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.ar3.1"}}
+          		]},
+        		{"sys": "call",
+			"name": "SYS::wr", "args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Found func array argument, ar3, by name"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": ", "}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "$.args.ar3.itm0 = "}},
+				{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.ar3.itm0"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": ", "}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "$.args.ar3.itm1 = "}},
+            			{"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.args.ar3.itm1"}}
+          		]},
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+      		]}
+  	]
+}

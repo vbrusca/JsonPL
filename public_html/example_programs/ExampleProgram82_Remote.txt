@@ -1,0 +1,26 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram82_Remote",
+	"ret": {"sys": "val", "type": "int", "v": "0"},
+	"call": {"sys": "call", "name": "main", "args": []},
+  	"classes": [],
+  	"vars": [
+		{"sys": "var", "name": "ptr1", "val": {"sys": "val", "type": "string", "v": "#.vars.remoteStr1"}}
+  	],
+  	"funcs": [
+    		{"sys": "func", "name": "main",
+      		"ret": {"sys": "val", "type": "int", "v": "0"},
+      		"args": [],
+      		"vars": [
+        		{"sys": "var", "name": "val1", "val": {"sys": "val", "type": "int", "v": "0"}}
+      		],
+      		"lines": [
+        		{"sys": "asgn",
+          		"left": {"sys": "ref", "val": {"sys": "val", "type": "int", "v": "$.vars.val1"}},
+          		"op": {"sys": "op", "type": "asgn", "v": "="},
+          		"right": {"sys": "ref", "val": {"sys": "val", "type": "string", "v": "<#.vars.ptr1>->(http://localhost:8000/?jsonpl=true&get=true)"}}
+        		},
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
+		]}
+	]
+}

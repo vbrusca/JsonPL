@@ -21,6 +21,25 @@
                             {"sys": "call", "name": "SYS::appendNewChildElementToParent",
                                 "args": [
                                     {"sys": "const", "val": {"sys": "val", "type": "string", "v": "div"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_title"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::setElementInnerHtml",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_title"}},                                    
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "<center><b>JSON-PL RUN SIMPLE</b></center>"}}
+                                ]
+                            },                            
+                            {"sys": "call", "name": "SYS::setElementStyle",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_title"}},
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "width:700px;"}}
+                                ]
+                            },
+                            {"sys": "call", "name": "SYS::appendNewChildElementToParent",
+                                "args": [
+                                    {"sys": "const", "val": {"sys": "val", "type": "string", "v": "div"}},
                                     {"sys": "const", "val": {"sys": "val", "type": "string", "v": "program_code_div_0"}},
                                     {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
                                 ]

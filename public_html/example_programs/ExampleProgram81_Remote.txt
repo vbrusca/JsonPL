@@ -1,0 +1,26 @@
+{
+	"sys": "class",
+	"name": "ExampleProgram81_Remote",
+	"ret": {"sys": "val", "type": "bool", "v": "false"},
+  	"call": {"sys": "call", "name": {"sys": "const", "val": {"sys": "val", "type": "string", "v": "main"}}, "args": []},
+	"classes": [],
+	"vars": [],
+	"funcs": [
+		{"sys": "func", "name": "main",
+		"ret": {"sys": "val", "type": "bool", "v": "false"},
+      		"args": [],
+      		"vars": [],
+      		"lines": [
+			{"sys": "call", "name": "SYS::wr", "args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Executing remote function main2 at URL 'http://localhost:8000/?jsonpl=true'."}}
+          		]},
+        		{"sys": "call", "name": "main2", "args": [
+            			{"sys": "const", "val": {"sys": "val", "type": "int", "v": "10"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "category"}},
+            			{"sys": "const", "val": {"sys": "val", "type": "bool", "v": "false"}}
+          		],
+          		"url": "http://localhost:8000/?jsonpl=true"},
+        		{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "bool", "v": "true"}}}
+		]}
+  	]
+}
