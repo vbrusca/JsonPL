@@ -11,12 +11,11 @@
       		"args": [],
       		"vars": [],
       		"lines": [
-        		{"sys": "call", "name": "SYS::wr",
-          		"args": [
+        		{"sys": "call", "name": "SYS::wr", "args": [
             			{"sys": "const", "val": {"sys": "val", "type": "string", "v": "Hello world!"}}
       			]},
 			{"sys": "return", "val": {"sys": "const", "val": {"sys": "val", "type": "int", "v": "1"}}}
   	  	]}
   	],
-  	"comment": "Example program that prints a hello world message."
+  	"comment": "Example program that prints a hello world message to the console."
 }

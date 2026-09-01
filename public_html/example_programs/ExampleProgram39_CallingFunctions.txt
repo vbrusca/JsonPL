@@ -45,6 +45,7 @@
           		]},
         		{"sys": "call", "name": "@.InnerClass.main2", "args": []},
         		{"sys": "call", "name": {"sys": "const", "val": {"sys": "val", "type": "string", "v": "@.InnerClass.main2"}}, "args": []},
+			{"sys": "call", "name": {"sys": "const", "val": {"sys": "val", "type": "string", "v": "#.classes.InnerClass.main2"}}, "args": []},
         		{"sys": "call", "name": {"sys": "ref", "val": {"sys": "val", "type": "string", "v": "#.vars.ptr1"}}, "args": []},
         		{"sys": "call", "name": {"sys": "ref", "val": {"sys": "val", "type": "string", "v": "[$.vars.ptr1]"}}, "args": []},
         		{"sys": "call", "name": {"sys": "ref", "val": {"sys": "val", "type": "string", "v": "<$.vars.ptr1>"}}, "args": []},

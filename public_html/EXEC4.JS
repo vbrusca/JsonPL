@@ -1206,8 +1206,8 @@ class jsonPlState {
     *    "left": {ref | const | exp | bex | call},
     *    "op": {op & type of bex},
     *    "right": {ref | const | exp | bex | call},
-    *    "thn": [asgn | if | for | call | return],
-    *    "els": [asgn | if | for | call | return]
+    *    "thn": [asgn | if | for | call | return | note],
+    *    "els": [asgn | if | for | call | return | note]
     * }
     */
    validateSysObjIf(obj) {
@@ -1366,17 +1366,17 @@ class jsonPlState {
     * //full version
     * {
     *   "sys": "for",
-    *   "start": {ref | const | exp | bex | call & type of int},
-    *   "stop": {ref | const | exp | bex | call & type of int},
-    *   "inc": {ref | const | exp | bex | call & type of int},
-    *   "lines": [asgn | if | for | call | return]
+    *   "start": {ref | const | exp | bex | call & return type of int},
+    *   "stop": {ref | const | exp | bex | call & return type of int},
+    *   "inc": {ref | const | exp | bex | call & return type of int},
+    *   "lines": [asgn | if | for | call | return | note]
     * }
     *
     * //for-each version
     * {
     *   "sys": "for",
-    *   "each": {ref | const & of type array}
-    *   "lines": [asgn | if | for | call | return]
+    *   "each": {ref | const & type of array}
+    *   "lines": [asgn | if | for | call | return | note]
     * }
     */
    validateSysObjFor(obj) {
@@ -1533,10 +1533,10 @@ class jsonPlState {
     * Struct:
     * {
     *   "sys": "class",
-    *   "name": "some name",
+    *   "name": "string",
     *   "ret": {ret},
     *   "call": {call},
-    *   "classes": [class] (optional),
+    *   "classes": [class](optional),
     *   "vars": [var],
     *   "funcs": [func]
     * }
@@ -1581,7 +1581,7 @@ class jsonPlState {
     * Returns: ret(some bool, true or false)
     * 
     * Struct:
-    * [asgn | for | if | return | call]
+    * [asgn | for | if | return | call | note]
     */
    validateSysObjFuncLine(obj) {
       if (this.isSysObjFuncLine(obj)) {
@@ -1638,12 +1638,12 @@ class jsonPlState {
     * Struct:
     * {
     *   "sys": "func",
-    *   "name": "some name",
+    *   "name": "string",
     *   "ret": {val},
     *   "args": [arg],
     *   "vars": [var],
-    *   "url" : string (optional),
-    *   "lines": [asgn | for | if | return | call]
+    *   "url" : "string"(optional),
+    *   "lines": [asgn | for | if | return | call | note]
     * }
     */
    validateSysObjFunc(obj) {
@@ -1689,7 +1689,7 @@ class jsonPlState {
     * {
     *   "sys": "asgn",
     *   "left": {ref},
-    *   "op": {asgn op},
+    *   "op": {op & type of asgn},
     *   "right": {ref | const | exp | bex | call}
     *   "url": string (optional)
     * }
@@ -1789,7 +1789,7 @@ class jsonPlState {
     * {
     *   "sys": "bex",
     *   "left": {ref | const | exp | bex | call},
-    *   "op": {bex op},
+    *   "op": {op}(& type of bex),
     *   "right": {ref | const | exp | bex | call}
     * }
     */
@@ -1886,7 +1886,7 @@ class jsonPlState {
     * {
     *   "sys": "exp",
     *   "left": {ref | const | exp | bex | call},
-    *   "op": {exp op},
+    *   "op": {op}(& type of exp),
     *   "right": {ref | const | exp | bex | call}
     * }
     */
@@ -1982,7 +1982,7 @@ class jsonPlState {
     * Struct:
     * {
     *   "sys": "call",
-    *   "name": name(string ->(url) (optional) | {const} | {ref}),
+    *   "name": "string"->*url*(optional) | {const} | {ref},
     *   "args": [ref | const],
     *   "url": string (optional)
     * }
@@ -2098,7 +2098,7 @@ class jsonPlState {
     * Struct:
     * {
     *   "sys": "arg",
-    *   "name": "some name",
+    *   "name": "string",
     *   "val": {val}
     * }
     */
@@ -2121,8 +2121,8 @@ class jsonPlState {
     * Struct:
     * {
     *   "sys": "val",
-    *   "type": "string int | float | string | bool | int[] | float[] | string[] | bool[]",
-    *   "v": "some valid value"
+    *   "type": "string"(int | float | string | bool | int[] | float[] | string[] | bool[]),
+    *   "v": "a valid value"
     * }
     */
    validateSysObjVal(obj) {
@@ -2276,8 +2276,12 @@ class jsonPlState {
     * Struct:
     * {
     *   "sys": "ref",
-    *   "val": {val & with as a reference string value like #.vars.tmp1 or $.vars.tmp1}
+    *   "val": {val} (& with v as a reference string value like #.vars.tmp1 or $.vars.tmp1)
     * }
+    * 
+    * class variable reference: #.vars.tmp1
+    * local function variable reference: $.vars.tmp1
+    * local function argument reference: $.args.tmp1
     */
    validateSysObjRef(obj) {
       if (this.isSysObjRef(obj) && this.validateProperties(obj, ["sys", "val"])) {
@@ -6471,7 +6475,7 @@ class jsonPlState {
          }
 
          hasUrl = true;
-         vals = [objCall.url, "unknown_ref_path"];
+         vals = [objCall.url, name]; //"unknown_ref_path"];
          url = vals[0];
          name = vals[1];         
       } else {
