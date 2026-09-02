@@ -1691,7 +1691,7 @@ class jsonPlState {
     *   "left": {ref},
     *   "op": {op & type of asgn},
     *   "right": {ref | const | exp | bex | call}
-    *   "url": string (optional)
+    *   "url": string(optional)
     * }
     */
    validateSysObjAsgn(obj) {
@@ -2302,7 +2302,7 @@ class jsonPlState {
     * Struct:
     * {
     *   "sys": "return",
-    *   "val": {ref} | {const}
+    *   "val": {ref | const}
     * }
     */
    validateSysObjReturn(obj) {
