@@ -758,7 +758,7 @@ This example is a long winded way to increment the value in the "$.vars.idx" loc
 
 ## Asgn
 
-The {asgn} object is used to assign a value to a variable or argument using a {ref} object. The {asgn} object takes an {op} object of type "asgn" which supports the following operators, ==, =, +=, -=, *=, **=, /=, and %=. Next let's take a look at what the structure of the {asgn} object looks like.
+The {asgn} object is used to assign a value to a variable or argument using a {ref} object. The {asgn} object takes an {op} object of type "asgn" which supports the following operators, (== or =), +=, -=, *=, **=, /=, and %=. Next let's take a look at what the structure of the {asgn} object looks like.
 
 <pre>
 {?
