@@ -1,8 +1,8 @@
 # JsonPL Version 0.5.5 - The Json Programming Language
 
-by
-Victor G. Brusca
-Carlo Bruscani
+by<br>
+Victor G. Brusca<br>
+Carlo Bruscani<br><br>
 
 JsonPL is an experiment at creating a simple scripting language using only JSON formatting to define the language objects. The following is an example of an empty JsonPL program.
 
