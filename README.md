@@ -67,24 +67,28 @@ You could also be more explicit.
 
 The JsonPL language includes the following 16 objects, and that's just about it.
 
-<ul>
-    <li>note</li>
-    <li>var</li>
-    <li>arg</li>
-    <li>val</li>
-    <li>ref</li>
-    <li>op</li>
-    <li>const</li>
-    <li>call</li>
-    <li>return</li>
-    <li>bex</li>
-    <li>exp</li>
-    <li>asgb</li>
-    <li>if</li>
-    <li>for</li>
-    <li>func</li>
-    <li>class</li>
-</ul>
+Object Information
+- [Note](#note) <br>
+- [Var](#var) <br>
+- [Arg](#arg) <br>
+- [Val](#val) <br>
+- [Ref](#ref) <br>
+- [Op](#op) <br>
+- [Const](#const) <br>
+- [Call](#call) <br>
+- [Return](#return) <br>
+- [Bex](#bex) <br>
+- [Exp](#exp) <br>
+- [Asgn](#asgn) <br>
+- [If](#if) <br>
+- [For](#for) <br>
+- [Func](#func) <br>
+- [Class](#Class) <br>
+
+Other Information
+- [System Functions](#system-functions) <br>
+- [Executing JsonPL Code](#executing-jsonpl-code) <br>
+- [Next Steps](#next-steps) <br>
 
 Let's take a look at each object in turn. We'll start with the lower level objects and work our way to the {class} object.
 
@@ -536,6 +540,8 @@ Lastly, there is a special hook into the function name that lets you call a syst
 </pre>
 
 There a few system functions you can use that I'll list here. You must use the "SYS::" prefix to denote a system function.
+
+## System Functions
 
 <ul>
     <li>
@@ -1149,7 +1155,9 @@ ljpl.wr("====================== Program Results ======================");
 ljpl.runProgram();
 </pre>
 
-The best place to find JsonPL resources are listed here.
+## Next Steps
+
+The best place to find JsonPL examples/resources are listed here.
 
 <pre>
 A simple program execution environment that examplifies configuring a page's DOM, event handling, and program execution:
