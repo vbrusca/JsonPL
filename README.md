@@ -1139,7 +1139,7 @@ A few real word examples will reinforce all the JsonPL objects we've looked at t
 
 ## Executing JsonPL Code
 
-You can run JsonPL code as shown in the following example.
+The file "/public_html/RUN_SIMPLE.HTML" provides a good example of executing JsonPL code. The Javascript interpreter can be found here, "/public_html/EXEC4.JS". You can run JsonPL code as shown in the following code example. 
 
 <pre>
 var ljpl = new jsonPlState();
