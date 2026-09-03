@@ -341,8 +341,8 @@ Some example of using brackets are:
 This process works for "#.vars" as well as "$.vars" and "$.args" so long as the reference string you build is valid. The brackets can't be nested but you can use multiple in one reference string and the string will get resolved until it reaches the referenced value. This comes in handy with array variables.
 
 <pre>
-#.vars.[#.vars.ptr3].0 -> #.vars.tmpA.0
-#.vars.[#.vars.ptr3].[#.vars.tmp1] -> #.vars.tmpA.itm0
+#.vars.[#.vars.ptr3].0 -> #.vars.tmpA.0 -> current value of array tmpA index 0
+#.vars.[#.vars.ptr3].[#.vars.tmp1] -> #.vars.tmpA.itm0 -> current value of array tmpA index named itm0
 </pre>
 
 You also have access to another type of replacement, a one time, non-nestable replacement bracket, <>. Here is an example of using it to configure a remote variable. Given the following variable.
