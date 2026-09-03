@@ -1051,41 +1051,48 @@ class jsonPlState {
    runProgram() {
       if (this.PROGRAM_VALIDATED || this.validateSysObjClass(this.program)) {
          var start = Date.now();
+         var callFuncName = null;        
          var callObj = this.program.call;
-         var callFuncName = null;
 
-         if (!this.isObject(callObj.name)) {
-            callFuncName = this.toStr(callObj.name);
-         } else {
-            if (this.isSysObjConst(callObj.name)) {
-               callFuncName = this.toStr((callObj.name).val.v);
-            } else if (this.isSysObjRef(callObj.name)) {
-               this.wr("runProgram: Error: cannot process call name {ref} objects at the class level.");
-               return null;
+         if(this.program.call != null && this.program.ret != null) {
+            if (!this.isObject(callObj.name)) {
+               callFuncName = this.toStr(callObj.name);
             } else {
-               this.wr("runProgram: Error: cannot process unknown call name objects at the class level.");
-               return null;
+               if (this.isSysObjConst(callObj.name)) {
+                  callFuncName = this.toStr((callObj.name).val.v);
+               } else if (this.isSysObjRef(callObj.name)) {
+                  this.wr("runProgram: Error: cannot process call name {ref} objects at the class level.");
+                  return null;
+               } else {
+                  this.wr("runProgram: Error: cannot process unknown call name objects at the class level.");
+                  return null;
+               }
             }
+
+            //clean basic function path
+            if(this.isRefStringFunc(callFuncName)) {
+               callFuncName = callFuncName.replace("#.funcs.", "");
+            }
+
+            this.wr("runProgram: Call: " + callFuncName);
+            var callFunc = this.findFunc(callFuncName);
+
+            var ret = null;
+            ret = this.processCall(callObj, callFunc);
+            this.lastProgramReturn = ret;
+
+            this.wr("runProgram: Results: ");
+            this.wrObj(ret);
+
+            var duration = Date.now() - start;
+            this.wr("runProgram: Execution time: " + duration / 1000.0 + "s");
+            return ret;
+         } else {
+            this.wr("runProgram: Program parsed successfuly. No {call} object to process. Exiting...");
+            var duration = Date.now() - start;
+            this.wr("runProgram: Execution time: " + duration / 1000.0 + "s");
+            return null;
          }
-
-         //clean basic function path
-         if(this.isRefStringFunc(callFuncName)) {
-            callFuncName =callFuncName.replace("#.funcs.", "");
-         }
-
-         this.wr("runProgram: Call: " + callFuncName);
-         var callFunc = this.findFunc(callFuncName);
-
-         var ret = null;
-         ret = this.processCall(callObj, callFunc);
-         this.lastProgramReturn = ret;
-
-         this.wr("runProgram: Results: ");
-         this.wrObj(ret);
-
-         var duration = Date.now() - start;
-         this.wr("runProgram: Execution time: " + duration / 1000.0 + "s");
-         return ret;
       } else {
          this.wr("runProgram: Error: could not validate the class object.");
          return null;
@@ -1543,15 +1550,20 @@ class jsonPlState {
     */
    validateSysObjClass(obj) {
       this.PROGRAM_VALIDATED = false;
-      if (this.isSysObjClass(obj) && this.validateProperties(obj, ["sys", "name", "vars", "funcs", "ret", "call"])) {
-         if (!this.validateSysObjVal(obj.ret)) {
+      if (this.isSysObjClass(obj) && this.validateProperties(obj, ["sys", "name", "vars", "funcs"])) { //, "ret", "call"
+         if (obj.hasOwnProperty("ret") && obj.ret != null && !this.validateSysObjVal(obj.ret)) {
             this.wr("validateSysObjClass: Error: could not validate obj as val");
             return false;
          }
 
-         if (obj.call !== null && !this.validateSysObjCall(obj.call)) {
+         if (obj.hasOwnProperty("call") && obj.call !== null && !this.validateSysObjCall(obj.call)) {
             this.wr("validateSysObjClass: Error: could not validate obj as call");
             return false;
+         }
+
+         if(obj.hasOwnProperty("call") && obj.call !== null && (!obj.hasOwnProperty("ret") || obj.ret === null)) {
+            this.wr("validateSysObjClass: Error: call obj is defined but ret obj is not");
+            return false;            
          }
 
          for (var i = 0; i < obj.vars.length; i++) {
@@ -3960,6 +3972,20 @@ class jsonPlState {
    }
 
    /**
+    * Name: isSysObjNote
+    * Desc: Checks if the given object is a note object.
+    * Arg1: obj(sys obj to check)
+    * Returns: (true | false)
+    */
+   isSysObjNote(obj) {
+      if (this.isSysObj(obj) === true && obj.sys === "note") {
+         return true;
+      } else {
+         return false;
+      }
+   }
+
+   /**
     * Name: isSysObjArg
     * Desc: Checks if the given object is an {arg} object.
     * Arg1: obj(sys obj to check)
@@ -5252,7 +5278,7 @@ class jsonPlState {
             line = objLines[j];
 
             //support comments
-            if (line.hasOwnProperty("active") && line.active === false) {
+            if (line.hasOwnProperty("active") && this.toBool(line.active) === false) {
                continue;
             }
 
@@ -5275,6 +5301,8 @@ class jsonPlState {
                   ret = line.val;
                }
                return ret;
+            } else if (this.isSysObjNote(line)) {
+               ret = this.getConst("bool", "true");
             }
 
             //this.wr("processIfForLines:---------------------------");
